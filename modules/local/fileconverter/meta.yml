@@ -1,33 +1,32 @@
-name: thermorawfileparser
-description: convert raw file to mzml files
+name: fileconverter
+description: Converts between different MS file formats
 keywords:
     - raw
     - mzML
     - OpenMS
 tools:
-    - thermorawfileparser:
+    - FileConverter:
         description: |
-            It takes a thermo RAW file as input and outputs indexed mzML
-        homepage: https://github.com/compomics/ThermoRawFileParser
-        documentation: https://github.com/compomics/ThermoRawFileParser
+          Converts between different MS file formats
+        homepage: http://www.openms.de/doxygen/nightly/html/TOPP_FileConverter.html
+        documentation: http://www.openms.de/doxygen/nightly/html/TOPP_FileConverter.html
 input:
     - mzml_id:
-        type: map
+        type:
         description: |
             Groovy Map containing sample information
-    - rawfile:
+    - mzmlfile:
         type: file
         description: |
-          thermo RAW file
+          Input file to convert.
 output:
     - mzml_id:
         type: map
         description: |
             Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
-    - mzml:
+    - mzmls_indexed:
         type: file
-        description: indexed mzML
+        description: indexed mzML file
         pattern: "*.mzML"
     - version:
         type: file
@@ -35,4 +34,3 @@ output:
         pattern: "*.{version.txt}"
 authors:
     - "@Chengxin Dai"
-    - "@Yasset Perez-Riverol"

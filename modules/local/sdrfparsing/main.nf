@@ -12,16 +12,18 @@ process SDRFPARSING {
 
     conda (params.enable_conda ? "bioconda::sdrf-pipelines=0.0.8" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        // TODO Need to built single container
         container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.18--py_0"
     } else {
+        // TODO Need to built single containe
         container "quay.io/biocontainers/sdrf-pipelines:0.0.18--py_0"
     }
 
     input:
-    file sdrf from ch_sdrf
+    path(sdrf)
 
     output:
-    path "experimental_design.tsv", emit: ch_expdesign, ch_pro_quant_exp, ch_expdesign_multiqc
+    path "experimental_design.tsv", emit: ch_expdesign
     path "openms.tsv"             , emit: ch_sdrf_config_file
 
     script:
@@ -29,6 +31,8 @@ process SDRFPARSING {
     """
     ## -t2 since the one-table format parser is broken in OpenMS2.5
     ## -l for legacy behavior to always add sample columns
+    ## TODO Update the sdrf-pipelines to print versions
+
     parse_sdrf convert-openms -t2 -l -s ${sdrf} > sdrf_parsing.log
     """
 }
