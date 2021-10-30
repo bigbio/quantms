@@ -1,0 +1,37 @@
+name: searchenginemsgf
+description: the MS-GF+ protein identification (database search) engine.
+keywords:
+    - identification
+    - OpenMS
+    - search
+tools:
+    - MSGFPlusAdapter :
+        description: |
+          Adapter for the MS-GF+ protein identification (database search) engine.
+        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
+        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
+input:
+    - mzml_id:
+        type: value
+        description: MD5 value
+    - mzml_file:
+        type: file
+        description: Input profile data file.
+output:
+    - mzml_id:
+        type: value
+        description: MD5 value
+    - id_files_msgf:
+        type: file
+        description: Output file
+        pattern: "*.idXML"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@Chengxin Dai"

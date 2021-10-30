@@ -28,6 +28,10 @@ output:
         type: file
         description: indexed mzML file
         pattern: "*.mzML"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
     - version:
         type: file
         description: File containing software version

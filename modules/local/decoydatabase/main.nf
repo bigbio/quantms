@@ -4,36 +4,39 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process FILECONVERTER {
-    label 'process_low'
+process DECOYDATABASE {
+    label 'process_very_low'
     publishDir "${params.outdir}/logs",
         mode: params.publish_dir_mode,
         pattern: '*.log',
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "openms::openms-thirdparty=2.7.0pre" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        // TODO Need to built single container
         container "https://depot.galaxyproject.org/singularity/openms:2.6.0--h4afb90d_0"
     } else {
-        // TODO Need to built single container
         container "quay.io/biocontainers/openms:2.6.0--h4afb90d_0"
     }
 
     input:
-    tuple val(mzml_id), path(mzmlfile)
+    path db_for_decoy
 
     output:
-    tuple val(mzml_id), path("*.mzML"), emit: mzmls_indexed
-    path "*.version.txt"          , emit: version
+    path "*.fasta",   emit: db_decoy
+    path "*.version.txt"    , emit: version
     path "*.log",   emit: log
 
     script:
     def software = getSoftwareName(task.process)
-    """
-    mkdir out
-    FileConverter -in ${mzmlfile} -out out/${mzmlfile.baseName}.mzML > ${mzmlfile.baseName}_mzmlindexing.log
 
-    echo \$(FileConverter 2>&1) > ${software}.version.txt
+    """
+    DecoyDatabase \\
+        -in ${db_for_decoy} \\
+        -out ${db_for_decoy.baseName}_decoy.fasta \\
+        -decoy_string $options.decoy_string \\
+        -decoy_string_position $options.decoy_string_position \\
+        > ${db_for_decoy.baseName}_decoy_database.log
+
+    echo \$(DecoyDatabase --version 2>&1) > ${software}.version.txt
     """
 }

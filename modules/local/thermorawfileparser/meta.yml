@@ -29,10 +29,13 @@ output:
         type: file
         description: indexed mzML
         pattern: "*.mzML"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
     - "@Chengxin Dai"
-    - "@Yasset Perez-Riverol"

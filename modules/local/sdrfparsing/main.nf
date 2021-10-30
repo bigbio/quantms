@@ -6,8 +6,9 @@ options        = initOptions(params.options)
 
 process SDRFPARSING {
     label 'process_low'
-    publishDir "${params.outdir/logs}",
+    publishDir "${params.outdir}/logs",
         mode: params.publish_dir_mode,
+        pattern: '*.log',
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "bioconda::sdrf-pipelines=0.0.8" : null)
@@ -24,7 +25,8 @@ process SDRFPARSING {
 
     output:
     path "experimental_design.tsv", emit: ch_expdesign
-    path "openms.tsv"             , emit: ch_sdrf_config_file
+    path "openms.tsv", emit: ch_sdrf_config_file
+    path "*.log",   emit: log
 
     script:
     def software = getSoftwareName(task.process)

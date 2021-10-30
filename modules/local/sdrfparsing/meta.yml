@@ -24,10 +24,13 @@ output:
         type: file
         description: config file in OpenMS
         pattern: "openms.tsv"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
     - version:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
 authors:
     - "@Chengxin Dai"
-    - "@Yasset Perez-Riverol"
