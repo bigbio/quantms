@@ -8,16 +8,13 @@ process SDRFPARSING {
     label 'process_low'
     publishDir "${params.outdir}/logs",
         mode: params.publish_dir_mode,
-        pattern: '*.log',
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "bioconda::sdrf-pipelines=0.0.8" : null)
+    conda (params.enable_conda ? "bioconda::sdrf-pipelines=0.0.18" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        // TODO Need to built single container
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.18--py_0"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.18--pyhdfd78af_0"
     } else {
-        // TODO Need to built single containe
-        container "quay.io/biocontainers/sdrf-pipelines:0.0.18--py_0"
+        container "quay.io/biocontainers/sdrf-pipelines:0.0.18--pyhdfd78af_0"
     }
 
     input:

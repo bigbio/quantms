@@ -1,0 +1,37 @@
+name: searchenginecomet
+description: Identifies peptides in MS/MS spectra via Comet.
+keywords:
+    - identification
+    - OpenMS
+    - comet
+tools:
+    - MSGFPlusAdapter :
+        description: |
+          Identifies peptides in MS/MS spectra via Comet.
+        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_CometAdapter.html
+        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_CometAdapter.html
+input:
+    - mzml_id:
+        type: value
+        description: MD5 value
+    - mzml_file:
+        type: file
+        description: Input profile data file.
+output:
+    - mzml_id:
+        type: value
+        description: MD5 value
+    - id_files_comet:
+        type: file
+        description: Output file
+        pattern: "*.idXML"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@daichengxin"
