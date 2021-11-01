@@ -1,0 +1,40 @@
+name: mzmlindexing
+description: Converts between different MS file formats
+keywords:
+    - raw
+    - mzML
+    - OpenMS
+tools:
+    - FileConverter:
+        description: |
+          Converts between different MS file formats
+        homepage: http://www.openms.de/doxygen/nightly/html/TOPP_FileConverter.html
+        documentation: http://www.openms.de/doxygen/nightly/html/TOPP_FileConverter.html
+input:
+    - mzml_id:
+        type:
+        description: |
+            Groovy Map containing sample information
+    - mzmlfile:
+        type: file
+        description: |
+          Input file to convert.
+output:
+    - mzml_id:
+        type: map
+        description: |
+            Groovy Map containing sample information
+    - mzmls_indexed:
+        type: file
+        description: indexed mzML file
+        pattern: "*.mzML"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@daichengxin"

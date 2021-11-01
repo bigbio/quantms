@@ -1,0 +1,38 @@
+name: idpepfdr
+description:  Estimates the false discovery rate on peptide and protein level using decoy searches.
+keywords:
+    - FDR
+    - decoy
+    - OpenMS
+tools:
+    - FalseDiscoveryRate :
+        description: |
+          Tool to estimate the false discovery rate on peptide and protein level.
+        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
+        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
+input:
+    - mzml_id:
+        type: value
+        description: MD5
+    - id_file:
+        type: file
+        description: |
+          Identifications from searching a target-decoy database.
+output:
+    - mzml_id:
+        type: value
+        description: MD5
+    - id_files_idx_ForIDPEP_FDR:
+        type: file
+        description: |
+          Identifications with annotated FDR.
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@daichengxin"

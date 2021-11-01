@@ -1,0 +1,41 @@
+name: thermorawfileparser
+description: convert raw file to mzml files
+keywords:
+    - raw
+    - mzML
+    - OpenMS
+tools:
+    - thermorawfileparser:
+        description: |
+            It takes a thermo RAW file as input and outputs indexed mzML
+        homepage: https://github.com/compomics/ThermoRawFileParser
+        documentation: https://github.com/compomics/ThermoRawFileParser
+input:
+    - mzml_id:
+        type: map
+        description: |
+            Groovy Map containing sample information
+    - rawfile:
+        type: file
+        description: |
+          thermo RAW file
+output:
+    - mzml_id:
+        type: map
+        description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test', single_end:false ]
+    - mzml:
+        type: file
+        description: indexed mzML
+        pattern: "*.mzML"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@daichengxin"

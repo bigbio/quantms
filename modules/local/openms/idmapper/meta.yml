@@ -1,0 +1,39 @@
+name: idmapper
+description:  Assigns protein/peptide identifications to features or consensus features.
+keywords:
+    - feature
+    - identification
+    - OpenMS
+tools:
+    - IDMapper :
+        description: |
+          Assigns protein/peptide identifications to features or consensus features.
+        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
+        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
+input:
+    - mzml_id:
+        type: value
+        description: MD5
+    - id_file:
+        type: file
+        description: |
+          Identifications file
+        pattern: "*.{idXML, mzid}"
+    - consensusXML:
+        type: file
+        description: Feature map/consensus map file
+        pattern: "*.{featureXML, consensusXML, mzq}"
+output:
+    - id_map:
+        type: file
+        description: Output file
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@daichengxin"
