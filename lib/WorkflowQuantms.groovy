@@ -10,8 +10,8 @@ class WorkflowQuantms {
     public static void initialise(params, log) {
         genomeExistsError(params, log)
 
-        if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
+        if (!params.input) {
+            log.error "input file not specified with e.g. '--input *.sdrf.tsv' or via a detectable config file."
             System.exit(1)
         }
     }
@@ -55,5 +55,19 @@ class WorkflowQuantms {
                 "==================================================================================="
             System.exit(1)
         }
+    }
+
+    //
+    // Check class of an Object for "List" type
+    //
+    public static boolean isCollectionOrArray(object) {
+        return  [Collection, Object[]].any { it.isAssignableFrom(object.getClass()) }
+    }
+
+    //
+    // check file extension
+    //
+    public static boolean hasExtension(file, extension) {
+        return file.toString().toLowerCase().endsWith(extension.toLowerCase())
     }
 }
