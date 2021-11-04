@@ -2,9 +2,9 @@
 // Create channel for input file
 //
 
-params.options = [:]
+params.sdrfparsing_options = [:]
 
-include { SDRFPARSING } from '../../modules/local/sdrfparsing/main'
+include { SDRFPARSING } from '../../modules/local/sdrfparsing/main' addParams( options: params.sdrfparsing_options)
 
 workflow CREATE_INPUT_CHANNEL {
     take:
@@ -15,9 +15,8 @@ workflow CREATE_INPUT_CHANNEL {
     ch_versions = Channel.empty()
 
     if (sdrf_file) {
-        ch_sdrf = Channel.fromPath(sdrf_file, checkIfExists: true)
-        SDRFPARSING ( ch_sdrf )
-        ch_versions = ch_versions.mix(SDRFPARSING.out.versions)
+        SDRFPARSING ( sdrf_file )
+        ch_versions = ch_versions.mix(SDRFPARSING.out.version)
         SDRFPARSING.out.ch_sdrf_config_file
         .splitCsv(header: true, sep: '\t')
         .multiMap{ row -> id = row.toString().md5()
@@ -88,5 +87,5 @@ workflow CREATE_INPUT_CHANNEL {
     rawfiles                  = branched_input.raw
 
 
-    version        = ch_versions
+    version                   = ch_versions
 }

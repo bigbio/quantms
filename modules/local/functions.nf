@@ -14,8 +14,8 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    options.args            = args.args ?: ''
-    options.args2           = args.args2 ?: ''
+    options.template        = args.template ?: 'default'
+    options.check_ms        = args.check_ms ?: '--CHECK_MS'
     options.args3           = args.args3 ?: ''
     options.publish_by_meta = args.publish_by_meta ?: []
     options.publish_dir     = args.publish_dir ?: ''

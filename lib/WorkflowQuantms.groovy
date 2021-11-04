@@ -8,10 +8,8 @@ class WorkflowQuantms {
     // Check and validate parameters
     //
     public static void initialise(params, log) {
-        genomeExistsError(params, log)
-
-        if (!params.input) {
-            log.error "input file not specified with e.g. '--input *.sdrf.tsv' or via a detectable config file."
+        if (!params.database) {
+            log.error "database file not specified with e.g. '--database *.fasta' or via a detectable config file."
             System.exit(1)
         }
     }
@@ -41,20 +39,6 @@ class WorkflowQuantms {
         yaml_file_text        += "data: |\n"
         yaml_file_text        += "${summary_section}"
         return yaml_file_text
-    }
-
-    //
-    // Exit pipeline if incorrect --genome key provided
-    //
-    private static void genomeExistsError(params, log) {
-        if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "=============================================================================\n" +
-                "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-                "  Currently, the available genome keys are:\n" +
-                "  ${params.genomes.keySet().join(", ")}\n" +
-                "==================================================================================="
-            System.exit(1)
-        }
     }
 
     //

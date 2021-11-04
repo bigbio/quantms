@@ -74,21 +74,13 @@ class WorkflowMain {
 
         // Check input has been provided
         if (!params.input) {
-            log.error "Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'"
+            log.error "Please provide an input sdrf to the pipeline e.g. '--input *.sdrf.csv'"
             System.exit(1)
         }
-    }
 
-    //
-    // Get attribute from genome config file e.g. fasta
-    //
-    public static String getGenomeAttribute(params, attribute) {
-        def val = ''
-        if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-            if (params.genomes[ params.genome ].containsKey(attribute)) {
-                val = params.genomes[ params.genome ][ attribute ]
-            }
+        // check fasta database has been provided
+        if (!params.database) {
+            log.error "Please provide an fasta database to the pipeline e.g. '--database *.fasta'"
         }
-        return val
     }
 }
