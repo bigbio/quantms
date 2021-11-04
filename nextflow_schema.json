@@ -956,6 +956,9 @@
             "$ref": "#/definitions/consensus_id"
         },
         {
+            "$ref": "#/definitions/consensus_process"
+        },
+        {
             "$ref": "#/definitions/protein_inference_"
         },
         {
