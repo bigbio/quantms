@@ -24,7 +24,7 @@ if (tocheck.toLowerCase().endsWith("sdrf") || tocheck.toLowerCase().endsWith("ts
     for (spectra_file in spectra_files) {file(spectra_file, checkIfExists: true)}
     sdrf_file = null
 } else {
-	log.error "EITHER spectra data (mzml/raw) OR an SDRF needs to be  provided as input."; exit 1
+    exit 1, "EITHER spectra data (mzml/raw) OR an SDRF needs to be  provided as input."
 }
 
 if (params.database) { ch_db_for_decoy_creation = file(params.database, checkIfExists: true) } else { exit 1, 'No protein database provided' }
