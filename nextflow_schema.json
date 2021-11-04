@@ -773,13 +773,13 @@
             "description": "Processing consensus files",
             "default": "",
             "properties": {
-                "rt_tolerence": {
+                "rt_tolerance": {
                     "type": "number",
                     "description": "RT tolerance (in seconds) for the matching of peptide identifications and (consensus) features.",
                     "default": 5.0,
                     "fa_icon": "fas fa-sliders-h"
                 },
-                "mz_tolerence": {
+                "mz_tolerance": {
                     "type": "number",
                     "description": "RT tolerance (in seconds) for the matching of peptide identifications and (consensus) features.",
                     "default": 20.0,
