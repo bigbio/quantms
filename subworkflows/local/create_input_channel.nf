@@ -9,7 +9,7 @@ include { SDRFPARSING } from '../../modules/local/sdrfparsing/main' addParams( o
 workflow CREATE_INPUT_CHANNEL {
     take:
     sdrf_file
-    spectra_files
+    exp_file
 
     main:
     ch_versions = Channel.empty()
@@ -32,9 +32,10 @@ workflow CREATE_INPUT_CHANNEL {
         }
         .set{ results }
     } else {
-        ch_spectra = Channel.fromPath(spectra_files, checkIfExists: true)
-        ch_spectra
-        .multiMap{ it -> id = it.toString().md5()
+        exp_file = Channel.fromPath(exp_file, checkIfExists: true)
+        exp_file.splitCsv(header: true, sep: '\t')
+        .multiMap{ row -> filestr = row.Spectra_Filepath.toString()
+            id = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
             isobaricanalyzer_settings: tuple(id, params.label, params.fragment_method)
             comet_settings: msgf_settings: tuple(id, params.fixed_mods, params.variable_mods,
                 params.precursor_mass_tolerance, params.precursor_mass_tolerance_unit,
@@ -43,38 +44,10 @@ workflow CREATE_INPUT_CHANNEL {
             )
             idx_settings: tuple(id, params.enzyme)
             luciphor_settings: tuple(id, params.fragment_method)
-            mzmls: tuple(id, it)
+            mzmls: tuple(id, row.Spectra_Filepath)
         }
         .set{ results }
     }
-
-    //
-    // Divide mzml files
-    //
-    results.mzmls
-    .branch {
-        raw: WorkflowQuantms.hasExtension(it[1], 'raw')
-        mzML: WorkflowQuantms.hasExtension(it[1], 'mzML')
-    }
-    .set {branched_input}
-
-    //TODO we could also check for outdated mzML versions and try to update them
-    branched_input.mzML
-    .branch {
-        nonIndexedMzML: file(it[1]).withReader {
-            f = it; 1.upto(5) {
-                if (f.readLine().contains("indexedmzML")) return false;
-            }
-                return true;
-        }
-        inputIndexedMzML: file(it[1]).withReader {
-            f = it; 1.upto(5) {
-                if (f.readLine().contains("indexedmzML")) return true;
-            }
-                return false;
-        }
-    }
-    .set {branched_input_mzMLs}
 
     emit:
     isobaricanalyzer_settings = results.isobaricanalyzer_settings
@@ -82,9 +55,7 @@ workflow CREATE_INPUT_CHANNEL {
     msgf_settings             = results.msgf_settings
     idx_settings              = results.idx_settings
     luciphor_settings         = results.luciphor_settings
-    nonIndexedMzML            = branched_input_mzMLs.nonIndexedMzML
-    inputIndexedMzML          = branched_input_mzMLs.inputIndexedMzML
-    rawfiles                  = branched_input.raw
+    mzmls                     = results.mzmls
 
 
     version                   = ch_versions

@@ -24,6 +24,10 @@ output:
         type: file
         description: config file in OpenMS
         pattern: "openms.tsv"
+    - mqpar:
+        type: file
+        description: maxquant configuration file
+        pattern: "*.xml"
     - log:
         type: file
         description: log file

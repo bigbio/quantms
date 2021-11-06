@@ -10,21 +10,14 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowQuantms.initialise(params, log)
 
 // Check mandatory parameters and input path to see if they exist
-if (WorkflowQuantms.isCollectionOrArray(params.input))
-{
-    tocheck = params.input[0]
-} else {
-    tocheck = params.input
-}
-if (tocheck.toLowerCase().endsWith("sdrf") || tocheck.toLowerCase().endsWith("tsv")) {
+if (params.input.toLowerCase().contains("sdrf")) {
     sdrf_file = file(params.input, checkIfExists: true)
-    spectra_files = null
-} else if (tocheck.toLowerCase().endsWith("mzml") || tocheck.toLowerCase().endsWith("raw")) {
-    spectra_files = params.input
-    for (spectra_file in spectra_files) {file(spectra_file, checkIfExists: true)}
+    expdesign_file = null
+} else if (params.input.toLowerCase().endsWith("tsv")) {
     sdrf_file = null
+    expdesign_file = file(params.input, checkIfExists: true)
 } else {
-    exit 1, "EITHER spectra data (mzml/raw) OR an SDRF needs to be  provided as input."
+	log.error "An SDRF/Expperimental design needs to be  provided as input."; exit 1
 }
 
 if (params.database) { ch_db_for_decoy_creation = file(params.database, checkIfExists: true) } else { exit 1, 'No protein database provided' }
@@ -99,7 +92,8 @@ workflow QUANTMS {
         )
         ch_sdrf_file = INPUT_CHECK.out.ch_sdrf_file
     } else{
-        ch_sdrf_file = sdrf_file
+        //TODO OpenMS experimental design should be validated
+        ch_sdrf_file = null
     }
 
     //
@@ -107,7 +101,7 @@ workflow QUANTMS {
     //
     CREATE_INPUT_CHANNEL (
         ch_sdrf_file,
-        spectra_files
+        expdesign_file
     )
     ch_software_versions = ch_software_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
 
@@ -115,8 +109,7 @@ workflow QUANTMS {
     // SUBWORKFLOW: File preparation
     //
     FILE_PREPARATION (
-        CREATE_INPUT_CHANNEL.out.rawfiles,
-        CREATE_INPUT_CHANNEL.out.nonIndexedMzML
+        CREATE_INPUT_CHANNEL.out.mzmls
     )
     ch_software_versions = ch_software_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 

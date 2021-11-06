@@ -9,18 +9,46 @@ include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main' add
 
 workflow FILE_PREPARATION {
     take:
-    rawfiles            // channel: [ val(mzml_id), raw ]
-    nonIndexedMzML      // channel: [ val(mzml_id), nonIndexedmzml ]
+    mzmls            // channel: [ val(mzml_id), raw/mzml ]
 
     main:
     ch_versions = Channel.empty()
     ch_results = Channel.empty()
 
-    THERMORAWFILEPARSER( rawfiles )
+    //
+    // Divide mzml files
+    //
+    mzmls
+    .branch {
+        raw: WorkflowQuantms.hasExtension(it[1], 'raw')
+        mzML: WorkflowQuantms.hasExtension(it[1], 'mzML')
+    }
+    .set {branched_input}
+
+    //TODO we could also check for outdated mzML versions and try to update them
+    branched_input.mzML
+    .branch {
+        nonIndexedMzML: file(it[1]).withReader {
+            f = it; 1.upto(5) {
+                if (f.readLine().contains("indexedmzML")) return false;
+            }
+                return true;
+        }
+        inputIndexedMzML: file(it[1]).withReader {
+            f = it; 1.upto(5) {
+                if (f.readLine().contains("indexedmzML")) return true;
+            }
+                return false;
+        }
+    }
+    .set {branched_input_mzMLs}
+
+
+    THERMORAWFILEPARSER( branched_input.raw )
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
     ch_results = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
 
-    MZMLINDEXING( nonIndexedMzML )
+    MZMLINDEXING( branched_input_mzMLs.nonIndexedMzML )
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
     ch_results = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
 
