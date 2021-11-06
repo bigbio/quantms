@@ -17,7 +17,7 @@ if (params.input.toLowerCase().contains("sdrf")) {
     sdrf_file = null
     expdesign_file = file(params.input, checkIfExists: true)
 } else {
-	log.error "An SDRF/Expperimental design needs to be  provided as input."; exit 1
+    log.error "An SDRF/Expperimental design needs to be  provided as input."; exit 1
 }
 
 if (params.database) { ch_db_for_decoy_creation = file(params.database, checkIfExists: true) } else { exit 1, 'No protein database provided' }
