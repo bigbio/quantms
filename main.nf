@@ -30,6 +30,7 @@ include { TMT } from './workflows/tmt'
 //
 // WORKFLOW: Run main nf-core/quantms analysis pipeline
 //
+// TODO determine whether run tmt or lfq
 workflow NFCORE_QUANTMS {
     TMT ()
 }
