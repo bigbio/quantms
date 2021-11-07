@@ -4,7 +4,7 @@
 
 params.options = [:]
 
-include { THERMORAWFILEPARSER } from '../../modules/local/openms/thirdparty/thermorawfileparser/main' addParams(options: params.options)
+include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main' addParams(options: params.options)
 include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main' addParams(options: params.options)
 
 workflow FILE_PREPARATION {
