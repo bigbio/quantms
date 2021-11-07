@@ -25,13 +25,13 @@ WorkflowMain.initialise(workflow, params, log)
 ========================================================================================
 */
 
-include { QUANTMS } from './workflows/quantms'
+include { TMT } from './workflows/tmt'
 
 //
 // WORKFLOW: Run main nf-core/quantms analysis pipeline
 //
 workflow NFCORE_QUANTMS {
-    QUANTMS ()
+    TMT ()
 }
 
 /*

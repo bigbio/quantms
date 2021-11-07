@@ -69,7 +69,7 @@ include { MULTIQC } from '../modules/nf-core/modules/multiqc/main' addParams( op
 // Info required for completion email and summary
 def multiqc_report = []
 
-workflow QUANTMS {
+workflow TMT {
 
     ch_software_versions = Channel.empty()
 
