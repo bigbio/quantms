@@ -9,12 +9,12 @@ include { SDRFPARSING } from '../../modules/local/sdrfparsing/main' addParams( o
 workflow CREATE_INPUT_CHANNEL {
     take:
     sdrf_file
-    exp_file
+    is_sdrf
 
     main:
     ch_versions = Channel.empty()
 
-    if (sdrf_file) {
+    if (is_sdrf) {
         SDRFPARSING ( sdrf_file )
         ch_versions = ch_versions.mix(SDRFPARSING.out.version)
         SDRFPARSING.out.ch_sdrf_config_file
@@ -26,7 +26,7 @@ workflow CREATE_INPUT_CHANNEL {
                 row.FragmentMassToleranceUnit, row.DissociationMethod, row.Enzyme)
             idx_settings: tuple(id, row.Enzyme)
             luciphor_settings: tuple(id, row.DissociationMethod)
-            mzmls: tuple(id, !params.root_folder ? row.URI : params.root_folder + "/"
+            spectra_files: tuple(id, !params.root_folder ? row.URI : params.root_folder + "/"
                 + (params.local_input_type ? row.Filename.take(row.Filename.lastIndexOf('.'))
                 + '.' + params.local_input_type : row.Filename))
         }
@@ -44,7 +44,7 @@ workflow CREATE_INPUT_CHANNEL {
             )
             idx_settings: tuple(id, params.enzyme)
             luciphor_settings: tuple(id, params.fragment_method)
-            mzmls: tuple(id, row.Spectra_Filepath)
+            spectra_files: tuple(id, row.Spectra_Filepath)
         }
         .set{ results }
     }
@@ -55,7 +55,7 @@ workflow CREATE_INPUT_CHANNEL {
     msgf_settings             = results.msgf_settings
     idx_settings              = results.idx_settings
     luciphor_settings         = results.luciphor_settings
-    mzmls                     = results.mzmls
+    spectra_files             = results.spectra_files
 
 
     version                   = ch_versions

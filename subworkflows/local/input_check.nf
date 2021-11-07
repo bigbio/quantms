@@ -4,19 +4,21 @@
 
 params.options = [:]
 
-include { SDRF_CHECK } from '../../modules/local/sdrf_check' addParams( options: params.options )
+include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check' addParams( options: params.options )
 
 workflow INPUT_CHECK {
     take:
-    sdrf_file // file: /path/to/*.sdrf.csv
+    input_file // file: /path/to/input_file
 
     main:
-    ch_logs = Channel.empty()
-
-    SDRF_CHECK ( sdrf_file )
-    ch_logs = ch_logs.mix(SDRF_CHECK.out.log)
+    if (input_file.toString().toLowerCase().contains("sdrf")) {
+        is_sdrf = true
+    } else{
+        is_sdrf = false
+    }
+    SAMPLESHEET_CHECK ( input_file, is_sdrf )
 
     emit:
-    ch_logs      = ch_logs
-    ch_sdrf_file = SDRF_CHECK.out.sdrf
+    ch_input_file = SAMPLESHEET_CHECK.out.checked_file
+    is_sdrf      = is_sdrf
 }

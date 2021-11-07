@@ -5,8 +5,8 @@ params.options = [:]
 
 options = initOptions(params.options)
 
-process SDRF_CHECK {
-    tag "$sdrf_file"
+process SAMPLESHEET_CHECK {
+    tag "$input_file"
     label "process_single_thread"
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -20,14 +20,16 @@ process SDRF_CHECK {
     }
 
     input:
-    path sdrf_file
+    path input_file
+    val is_sdrf
 
     output:
     path "*.log", emit: log
-    path "${sdrf_file}", emit: sdrf
+    path "${input_file}", emit: checked_file
 
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
+    // TODO validate experimental design file
     """
-    check_sdrf.py $options.template "${sdrf_file}" $options.check_ms  > sdrf_check.log
+    check_samplesheet.py $options.template "${input_file}" $options.check_ms  > input_check.log
     """
 }

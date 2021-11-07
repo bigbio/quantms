@@ -10,16 +10,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowQuantms.initialise(params, log)
 
 // Check mandatory parameters and input path to see if they exist
-if (params.input.toLowerCase().contains("sdrf")) {
-    sdrf_file = file(params.input, checkIfExists: true)
-    expdesign_file = null
-} else if (params.input.toLowerCase().endsWith("tsv")) {
-    sdrf_file = null
-    expdesign_file = file(params.input, checkIfExists: true)
-} else {
-    log.error "An SDRF/Expperimental design needs to be  provided as input."; exit 1
-}
-
+if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'An SDRF/Experimental design needs to be  provided as input.' }
 if (params.database) { ch_db_for_decoy_creation = file(params.database, checkIfExists: true) } else { exit 1, 'No protein database provided' }
 
 /*
@@ -85,23 +76,16 @@ workflow QUANTMS {
     //
     // SUBWORKFLOW: Read and validate input files
     //
-
-    if (sdrf_file) {
-        INPUT_CHECK (
-            sdrf_file
-        )
-        ch_sdrf_file = INPUT_CHECK.out.ch_sdrf_file
-    } else{
-        //TODO OpenMS experimental design should be validated
-        ch_sdrf_file = null
-    }
+    INPUT_CHECK (
+        ch_input
+    )
 
     //
     // SUBWORKFLOW: Create input channel
     //
     CREATE_INPUT_CHANNEL (
-        ch_sdrf_file,
-        expdesign_file
+        INPUT_CHECK.out.ch_input_file,
+        INPUT_CHECK.out.is_sdrf
     )
     ch_software_versions = ch_software_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
 
@@ -109,7 +93,7 @@ workflow QUANTMS {
     // SUBWORKFLOW: File preparation
     //
     FILE_PREPARATION (
-        CREATE_INPUT_CHANNEL.out.mzmls
+        CREATE_INPUT_CHANNEL.out.spectra_files
     )
     ch_software_versions = ch_software_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 
