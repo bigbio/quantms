@@ -25,14 +25,23 @@ WorkflowMain.initialise(workflow, params, log)
 ========================================================================================
 */
 
-include { TMT } from './workflows/tmt'
+if (params.quant_method == 'TMT') {
+    include { TMT } from './workflows/tmt'
+} else if (params.quant_method == 'LFQ') {
+    include { LFQ } from './workflows/lfq'
+}
+
 
 //
 // WORKFLOW: Run main nf-core/quantms analysis pipeline
 //
-// TODO determine whether run tmt or lfq
+
 workflow NFCORE_QUANTMS {
-    TMT ()
+    if (params.quant_method == 'TMT') {
+        TMT()
+    } else if (params.quant_method == 'LFQ') {
+        LFQ()
+    }
 }
 
 /*
