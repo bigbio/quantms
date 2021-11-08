@@ -13,14 +13,6 @@ nextflow.enable.dsl = 2
 
 /*
 ========================================================================================
-    GENOME PARAMETER VALUES
-========================================================================================
-*/
-
-params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
-
-/*
-========================================================================================
     VALIDATE & PRINT PARAMETER SUMMARY
 ========================================================================================
 */
@@ -33,13 +25,23 @@ WorkflowMain.initialise(workflow, params, log)
 ========================================================================================
 */
 
-include { QUANTMS } from './workflows/quantms'
+if (params.quant_method == 'TMT') {
+    include { TMT } from './workflows/tmt'
+} else if (params.quant_method == 'LFQ') {
+    include { LFQ } from './workflows/lfq'
+}
+
 
 //
 // WORKFLOW: Run main nf-core/quantms analysis pipeline
 //
+
 workflow NFCORE_QUANTMS {
-    QUANTMS ()
+    if (params.quant_method == 'TMT') {
+        TMT()
+    } else if (params.quant_method == 'LFQ') {
+        LFQ()
+    }
 }
 
 /*

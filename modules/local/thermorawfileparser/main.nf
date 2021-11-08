@@ -11,13 +11,13 @@ process THERMORAWFILEPARSER {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "openms::openms-thirdparty=2.7.0pre" : null)
+    conda (params.enable_conda ? "bioconda::thermorawfileparser=1.3.4" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         // TODO Need to built single container
-        container "https://depot.galaxyproject.org/singularity/openms-thirdparty:2.6.0--0"
+        container "https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0"
     } else {
         // TODO Need to built single container
-        container "quay.io/biocontainers/openms-thirdparty:2.6.0--0"
+        container "quay.io/biocontainers/thermorawfileparser:1.3.4--ha8f3691_0"
     }
 
     input:

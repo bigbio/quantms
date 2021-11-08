@@ -9,13 +9,9 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 // Validate input parameters
 WorkflowQuantms.initialise(params, log)
 
-// TODO nf-core: Add all file path parameters for the pipeline to the list below
-// Check input path parameters to see if they exist
-def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+// Check mandatory parameters and input path to see if they exist
+if (params.input) { ch_input = file(params.input, checkIfExists: true) } else { exit 1, 'An SDRF/Experimental design needs to be  provided as input.' }
+if (params.database) { ch_db_for_decoy_creation = file(params.database, checkIfExists: true) } else { exit 1, 'No protein database provided' }
 
 /*
 ========================================================================================
@@ -40,10 +36,15 @@ def modules = params.modules.clone()
 //
 include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
 
+
+
+
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check' addParams( options: [:] )
+include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel' addParams( sdrfparsing_options: modules['sdrfparsing'] )
+include { FILE_PREPARATION } from '../subworkflows/local/file_preparation' addParams(options: [:])
 
 /*
 ========================================================================================
@@ -57,7 +58,6 @@ multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { FASTQC  } from '../modules/nf-core/modules/fastqc/main'  addParams( options: modules['fastqc'] )
 include { MULTIQC } from '../modules/nf-core/modules/multiqc/main' addParams( options: multiqc_options   )
 
 /*
@@ -69,24 +69,33 @@ include { MULTIQC } from '../modules/nf-core/modules/multiqc/main' addParams( op
 // Info required for completion email and summary
 def multiqc_report = []
 
-workflow QUANTMS {
+workflow TMT {
 
     ch_software_versions = Channel.empty()
 
     //
-    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
+    // SUBWORKFLOW: Read and validate input files
     //
     INPUT_CHECK (
         ch_input
     )
 
     //
-    // MODULE: Run FastQC
+    // SUBWORKFLOW: Create input channel
     //
-    FASTQC (
-        INPUT_CHECK.out.reads
+    CREATE_INPUT_CHANNEL (
+        INPUT_CHECK.out.ch_input_file,
+        INPUT_CHECK.out.is_sdrf
     )
-    ch_software_versions = ch_software_versions.mix(FASTQC.out.version.first().ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
+
+    //
+    // SUBWORKFLOW: File preparation
+    //
+    FILE_PREPARATION (
+        CREATE_INPUT_CHANNEL.out.spectra_files
+    )
+    ch_software_versions = ch_software_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 
     //
     // MODULE: Pipeline reporting
@@ -114,7 +123,6 @@ workflow QUANTMS {
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.collect{it[1]}.ifEmpty([]))
 
     MULTIQC (
         ch_multiqc_files.collect()

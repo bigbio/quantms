@@ -6,7 +6,7 @@ options        = initOptions(params.options)
 
 process SDRFPARSING {
     label 'process_low'
-    publishDir "${params.outdir}/logs",
+    publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
@@ -18,20 +18,24 @@ process SDRFPARSING {
     }
 
     input:
-    path(sdrf)
+    path sdrf
 
     output:
-    path "experimental_design.tsv", emit: ch_expdesign
-    path "openms.tsv", emit: ch_sdrf_config_file
-    path "*.log",   emit: log
+    path "experimental_design.tsv", optional:true, emit: ch_expdesign
+    path "openms.tsv", optional:true, emit: ch_sdrf_config_file
+    path "*.xml", optional:true, emit: mqpar
+    path "*.log", emit: log
+    path "*.version.txt", emit: version
 
     script:
     def software = getSoftwareName(task.process)
     """
     ## -t2 since the one-table format parser is broken in OpenMS2.5
     ## -l for legacy behavior to always add sample columns
-    ## TODO Update the sdrf-pipelines to print versions
+    ## TODO Update the sdrf-pipelines to dynamic print versions
 
-    parse_sdrf convert-openms -t2 -l -s ${sdrf} > sdrf_parsing.log
+    parse_sdrf $options.args -s ${sdrf} > sdrf_parsing.log
+
+    echo "0.0.18" > ${software}.version.txt
     """
 }
