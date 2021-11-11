@@ -14,9 +14,9 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    options.peakpicking_inmemory    = args.peakpicking_inmemory ? "inmemory" : "lowmemory"
-    options.peakpicking_ms_levels   = args.peakpicking_ms_levels ? "-algorithm:ms_levls ${options.peakpicking_ms_levels}" : ""
-    options.pp_debug                = args.pp_debug ?: 0
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
     options.publish_by_meta         = args.publish_by_meta ?: []
     options.publish_dir             = args.publish_dir ?: ''
     options.publish_files           = args.publish_files

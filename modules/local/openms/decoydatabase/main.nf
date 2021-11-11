@@ -2,7 +2,6 @@
 include { initOptions; saveFiles; getSoftwareName } from './functions'
 
 params.options = [:]
-println(params.options)
 options        = initOptions(params.options)
 
 process DECOYDATABASE {
@@ -19,11 +18,11 @@ process DECOYDATABASE {
     }
 
     input:
-    path db_for_decoy
+    path(db_for_decoy)
 
     output:
     path "*.fasta",   emit: db_decoy
-    path "*.version.txt"    , emit: version
+    path "*.version.txt", emit: version
     path "*.log",   emit: log
 
     script:
@@ -33,9 +32,13 @@ process DECOYDATABASE {
     DecoyDatabase \\
         -in ${db_for_decoy} \\
         -out ${db_for_decoy.baseName}_decoy.fasta \\
-        -decoy_string $options.decoy_string \\
-        -decoy_string_position $options.decoy_string_position \\
+        -decoy_string $params.decoy_string \\
+        -decoy_string_position $params.decoy_string_position \\
+        -method $params.decoy_method \\
+        -shuffle_max_attempts $params.shuffle_max_attempts \\
+        -shuffle_sequence_identity_threshold $params.shuffle_sequence_identity_threshold \\
         -debug 100 \\
+        $options.args \\
         > ${db_for_decoy.baseName}_decoy_database.log
 
     echo \$(DecoyDatabase --version 2>&1) > ${software}.version.txt
