@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process INDEXPEPTIDES {
+    tag "$meta.id"
     label 'process_low'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -18,11 +19,11 @@ process INDEXPEPTIDES {
     }
 
     input:
-    tuple val(mzml_id), path(id_file), val(enzyme)
-    path database
+    tuple val(meta), path(id_file), path(database)
+
 
     output:
-    tuple val(mzml_id), path("${id_file.baseName}_idx.idXML"), emit: id_files_idx
+    tuple val(meta), path("${id_file.baseName}_idx.idXML"), emit: id_files_idx
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -32,13 +33,13 @@ process INDEXPEPTIDES {
     // see comment in CometAdapter. Alternative here in PeptideIndexer is to let it auto-detect the enzyme by not specifying.
     if (params.search_engines.contains("msgf"))
     {
-        if (enzyme == 'Trypsin') enzyme = 'Trypsin/P'
-        else if (enzyme == 'Arg-C') enzyme = 'Arg-C/P'
-        else if (enzyme == 'Asp-N') enzyme = 'Asp-N/B'
-        else if (enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin/P'
-        else if (enzyme == 'Lys-C') options.enzyme = 'Lys-C/P'
+        if (meta.enzyme == 'Trypsin') enzyme = 'Trypsin/P'
+        else if (meta.enzyme == 'Arg-C') enzyme = 'Arg-C/P'
+        else if (meta.enzyme == 'Asp-N') enzyme = 'Asp-N/B'
+        else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin/P'
+        else if (meta.enzyme == 'Lys-C') options.enzyme = 'Lys-C/P'
     }
-    if (enzyme == "unspecific cleavage")
+    if (meta.enzyme == "unspecific cleavage")
     {
         params.num_enzyme_termini = "none"
     }
@@ -63,6 +64,6 @@ process INDEXPEPTIDES {
         $options.args \\
         > ${id_file.baseName}_index_peptides.log
 
-    echo \$(PeptideIndexer --version 2>&1) > ${software}.version.txt
+    echo \$(PeptideIndexer 2>&1) > ${software}.version.txt
     """
 }

@@ -14,25 +14,23 @@ workflow DATABASESEARCHENGINES {
     take:
     mzmls_search
     searchengine_in_db
-    searchengine_setting
-    idx_settings
 
     main:
     (ch_id_msgf, ch_id_comet, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty() ]
 
     if (params.search_engines.contains("msgf")){
-        SEARCHENGINEMSGF(searchengine_setting.join(mzmls_search).combine(searchengine_in_db))
+        SEARCHENGINEMSGF(mzmls_search.combine(searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINEMSGF.out.version)
         ch_id_msgf = ch_id_msgf.mix(SEARCHENGINEMSGF.out.id_files_msgf)
     }
 
     if (params.search_engines.contains("comet")){
-        SEARCHENGINECOMET(searchengine_setting.join(mzmls_search).combine(searchengine_in_db))
+        SEARCHENGINECOMET(mzmls_search.combine(searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINECOMET.out.version)
         ch_id_comet = ch_id_comet.mix(SEARCHENGINECOMET.out.id_files_comet)
     }
 
-    INDEXPEPTIDES(ch_id_msgf.mix(ch_id_comet).combine(idx_settings, by: 0), searchengine_in_db)
+    INDEXPEPTIDES(ch_id_msgf.mix(ch_id_comet).combine(searchengine_in_db))
 
     emit:
     ch_id_files_idx = INDEXPEPTIDES.out.id_files_idx

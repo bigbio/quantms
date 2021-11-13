@@ -92,7 +92,7 @@ workflow TMT {
     // SUBWORKFLOW: File preparation
     //
     FILE_PREPARATION (
-        CREATE_INPUT_CHANNEL.out.spectra_files
+        CREATE_INPUT_CHANNEL.out.results
     )
     ch_software_versions = ch_software_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 
@@ -115,9 +115,7 @@ workflow TMT {
     //
     DATABASESEARCHENGINES (
         FILE_PREPARATION.out.results,
-        searchengine_in_db.mix(DECOYDATABASE.out.db_decoy),
-        CREATE_INPUT_CHANNEL.out.comet_settings,
-        CREATE_INPUT_CHANNEL.out.idx_settings
+        searchengine_in_db.mix(DECOYDATABASE.out.db_decoy)
     )
     ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
 

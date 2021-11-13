@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process SEARCHENGINEMSGF {
+    tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -19,10 +20,10 @@ process SEARCHENGINEMSGF {
     }
 
     input:
-    tuple val(mzml_id), val(fixed), val(variable), val(label), val(prec_tol), val(prec_tol_unit), val(frag_tol), val(frag_tol_unit), val(diss_meth), val(enzyme), file(mzml_file), file(database)
+    tuple val(meta),  file(mzml_file), file(database)
 
     output:
-    tuple val(mzml_id), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
+    tuple val(meta), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
     path "*.version.txt",   emit: version
     path "*.log",   emit: log
 
@@ -37,13 +38,13 @@ process SEARCHENGINEMSGF {
 
     def software = getSoftwareName(task.process)
 
-    if (enzyme == 'Trypsin') enzyme = 'Trypsin/P'
-    else if (enzyme == 'Arg-C') enzyme = 'Arg-C/P'
-    else if (enzyme == 'Asp-N') enzyme = 'Asp-N/B'
-    else if (enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin'
-    else if (enzyme == 'Lys-C') enzyme = 'Lys-C/P'
+    if (meta.enzyme == 'Trypsin') enzyme = 'Trypsin/P'
+    else if (meta.enzyme == 'Arg-C') enzyme = 'Arg-C/P'
+    else if (meta.enzyme == 'Asp-N') enzyme = 'Asp-N/B'
+    else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin'
+    else if (meta.enzyme == 'Lys-C') enzyme = 'Lys-C/P'
 
-    if ((frag_tol.toDouble() < 50 && frag_tol_unit == "ppm") || (frag_tol.toDouble() < 0.1 && frag_tol_unit == "Da"))
+    if ((meta.fragmentmasstolerance.toDouble() < 50 && meta.fragmentmasstoleranceunit == "ppm") || (meta.fragmentmasstolerance.toDouble() < 0.1 && meta.fragmentmasstoleranceunit == "Da"))
     {
         inst = params.instrument ?: "high_res"
     } else {
@@ -68,15 +69,15 @@ process SEARCHENGINEMSGF {
         -isotope_error_range $params.isotope_error_range \\
         -enzyme ${enzyme} \\
         -tryptic $params.num_enzyme_termini \\
-        -precursor_mass_tolerance ${prec_tol} \\
-        -precursor_error_units ${prec_tol_unit} \\
-        -fixed_modifications ${fixed.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
-        -variable_modifications ${variable.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
+        -precursor_mass_tolerance $meta.precursormasstolerance \\
+        -precursor_error_units $meta.precursormasstoleranceunit \\
+        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
+        -variable_modifications ${meta.variablemodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
         -max_mods $params.max_mods \\
         -debug $params.db_debug \\
         $options.args \\
         > ${mzml_file.baseName}_msgf.log
 
-    echo \$(MSGFPlusAdapter --version 2>&1) > ${software}.version.txt
+    echo \$(MSGFPlusAdapter 2>&1) > ${software}.version.txt
     """
 }

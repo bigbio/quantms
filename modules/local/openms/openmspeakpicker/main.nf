@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process OPENMSPEAKPICKER {
+    tag "$meta.id"
     label 'process_low'
     publishDir "${params.outdir}/logs",
         mode: params.publish_dir_mode,
@@ -19,10 +20,10 @@ process OPENMSPEAKPICKER {
     }
 
     input:
-    tuple val(mzml_id), path(mzml_file)
+    tuple val(meta), path(mzml_file)
 
     output:
-    tuple val(mzml_id), path("*.mzML"), emit: mzmls_picked
+    tuple val(meta), path("*.mzML"), emit: mzmls_picked
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -42,6 +43,6 @@ process OPENMSPEAKPICKER {
         $options.args \\
         > ${mzml_file.baseName}_pp.log
 
-    echo \$(PeakPickerHiRes --version 2>&1) > ${software}.version.txt
+    echo \$(PeakPickerHiRes 2>&1) > ${software}.version.txt
     """
 }

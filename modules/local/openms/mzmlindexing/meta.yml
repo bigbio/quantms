@@ -11,8 +11,8 @@ tools:
         homepage: http://www.openms.de/doxygen/nightly/html/TOPP_FileConverter.html
         documentation: http://www.openms.de/doxygen/nightly/html/TOPP_FileConverter.html
 input:
-    - mzml_id:
-        type:
+    - meta:
+        type: map
         description: |
             Groovy Map containing sample information
     - mzmlfile:
@@ -20,7 +20,7 @@ input:
         description: |
           Input file to convert.
 output:
-    - mzml_id:
+    - meta:
         type: map
         description: |
             Groovy Map containing sample information

@@ -10,7 +10,7 @@ include { OPENMSPEAKPICKER } from '../../modules/local/openms/openmspeakpicker/m
 
 workflow FILE_PREPARATION {
     take:
-    mzmls            // channel: [ val(mzml_id), raw/mzml ]
+    mzmls            // channel: [ val(meta), raw/mzml ]
 
     main:
     ch_versions = Channel.empty()

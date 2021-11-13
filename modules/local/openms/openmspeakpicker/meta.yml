@@ -10,17 +10,17 @@ tools:
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerHiRes.html
         documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerHiRes.html
 input:
-    - mzml_id:
-        type: value
-        description: MD5 value
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - mzml_file:
         type: file
         description: Input profile data file.
         pattern: "*.mzML"
 output:
-    - mzml_id:
-        type: value
-        description: MD5 value
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - mzmls_picked:
         type: file
         description: Output peak file

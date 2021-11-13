@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process THERMORAWFILEPARSER {
+    tag "$meta.id"
     label 'process_low'
     label 'process_single_thread'
     publishDir "${params.outdir}",
@@ -21,10 +22,10 @@ process THERMORAWFILEPARSER {
     }
 
     input:
-    tuple val(mzml_id), path(rawfile)
+    tuple val(meta), path(rawfile)
 
     output:
-    tuple val(mzml_id), path("*.mzML"), emit: mzmls_converted
+    tuple val(meta), path("*.mzML"), emit: mzmls_converted
     path "*.version.txt",   emit: version
     path "*.log",   emit: log
 
