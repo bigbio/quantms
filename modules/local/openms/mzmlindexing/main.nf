@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process MZMLINDEXING {
+    tag "$meta.id"
     label 'process_low'
     publishDir "${params.outdir}/logs",
         mode: params.publish_dir_mode,
@@ -21,12 +22,12 @@ process MZMLINDEXING {
     }
 
     input:
-    tuple val(mzml_id), path(mzmlfile)
+    tuple val(meta), path(mzmlfile)
 
     output:
-    tuple val(mzml_id), path("*.mzML"), emit: mzmls_indexed
-    path "*.version.txt"          , emit: version
-    path "*.log",   emit: log
+    tuple val(meta), path("*.mzML"), emit: mzmls_indexed
+    path "*.version.txt", emit: version
+    path "*.log", emit: log
 
     script:
     def software = getSoftwareName(task.process)

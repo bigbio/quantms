@@ -19,44 +19,73 @@ workflow CREATE_INPUT_CHANNEL {
         ch_versions = ch_versions.mix(SDRFPARSING.out.version)
         SDRFPARSING.out.ch_sdrf_config_file
         .splitCsv(header: true, sep: '\t')
-        .multiMap{ row -> id = row.toString().md5()
-            isobaricanalyzer_settings: tuple(id, row.Label, row.DissociationMethod)
-            comet_settings: msgf_settings: tuple(id, row.FixedModifications, row.VariableModifications,
-                row.Label, row.PrecursorMassTolerance, row.PrecursorMassToleranceUnit, row.FragmentMassTolerance,
-                row.FragmentMassToleranceUnit, row.DissociationMethod, row.Enzyme)
-            idx_settings: tuple(id, row.Enzyme)
-            luciphor_settings: tuple(id, row.DissociationMethod)
-            spectra_files: tuple(id, !params.root_folder ? row.URI : params.root_folder + "/"
-                + (params.local_input_type ? row.Filename.take(row.Filename.lastIndexOf('.'))
-                + '.' + params.local_input_type : row.Filename))
-        }
-        .set{ results }
+        .map { create_meta_channel(it, is_sdrf) }
+        .set { results }
     } else {
         exp_file = Channel.fromPath(exp_file, checkIfExists: true)
         exp_file.splitCsv(header: true, sep: '\t')
-        .multiMap{ row -> filestr = row.Spectra_Filepath.toString()
-            id = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
-            isobaricanalyzer_settings: tuple(id, params.label, params.fragment_method)
-            comet_settings: msgf_settings: tuple(id, params.fixed_mods, params.variable_mods,
-                params.precursor_mass_tolerance, params.precursor_mass_tolerance_unit,
-                params.fragment_mass_tolerance, params.fragment_mass_tolerance_unit,
-                params.fragment_method, params.enzyme
-            )
-            idx_settings: tuple(id, params.enzyme)
-            luciphor_settings: tuple(id, params.fragment_method)
-            spectra_files: tuple(id, row.Spectra_Filepath)
-        }
-        .set{ results }
+        .map { create_meta_channel(it, is_sdrf) }
+        .set { results }
     }
 
     emit:
-    isobaricanalyzer_settings = results.isobaricanalyzer_settings
-    comet_settings            = results.comet_settings
-    msgf_settings             = results.msgf_settings
-    idx_settings              = results.idx_settings
-    luciphor_settings         = results.luciphor_settings
-    spectra_files             = results.spectra_files
+    results       // [meta, [spectra_files ]]
 
+    version         = ch_versions
+}
 
-    version                   = ch_versions
+// Function to get list of [meta, [ spectra_files ]]
+//
+def create_meta_channel(LinkedHashMap row, is_sdrf) {
+    def meta = [:]
+    def array = []
+
+    if (!is_sdrf) {
+        filestr                         = row.Spectra_Filepath.toString()
+        meta.id                         = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
+        meta.label                      = params.label
+        meta.dissociationmethod         = params.fragment_method
+        meta.fixedmodifications         = params.fixed_mods
+        meta.variablemodifications      = params.variable_mods
+        meta.precursormasstolerance     = params.precursor_mass_tolerance
+        meta.precursormasstoleranceunit = params.precursor_mass_tolerance_unit
+        meta.fragmentmasstolerance      = params.fragment_mass_tolerance
+        meta.fragmentmasstoleranceunit  = params.fragment_mass_tolerance_unit
+        meta.enzyme                     = params.enzyme
+
+        if ((!file(row.Spectra_Filepath).exists())) {
+            exit 1, "ERROR: Please check input file -> File Uri does not exist!\n${row.Spectra_Filepath}"
+        }
+        array = [meta, file(row.Spectra_Filepath)]
+    } else {
+        meta.id                         = row.toString().md5()
+        meta.label                      = row.Label
+        meta.dissociationmethod         = row.DissociationMethod
+        meta.fixedmodifications         = row.FixedModifications
+        meta.variablemodifications      = row.VariableModifications
+        meta.precursormasstolerance     = row.PrecursorMassTolerance
+        meta.precursormasstoleranceunit = row.PrecursorMassToleranceUnit
+        meta.fragmentmasstolerance      = row.FragmentMassTolerance
+        meta.fragmentmasstoleranceunit  = row.FragmentMassToleranceUnit
+        meta.enzyme                     = row.Enzyme
+
+        if (!params.root_folder){
+            if ((!file(row.URI).exists())) {
+                exit 1, "ERROR: Please check input file -> File Uri does not exist!\n${row.URI}"
+            }
+            array = [meta, file(row.URI)]
+        } else {
+            if (!file(params.root_folder + "/"
+                + (params.local_input_type ? row.Filename.take(row.Filename.lastIndexOf('.'))
+                + '.' + params.local_input_type : row.Filename))) {
+                exit 1, "ERROR: Please check input file -> File Path does not exist!\n${row.URI}"
+            } else {
+                array = [meta, file(params.root_folder + "/"
+                    + (params.local_input_type ? row.Filename.take(row.Filename.lastIndexOf('.'))
+                    + '.' + params.local_input_type : row.Filename))]
+            }
+        }
+    }
+
+    return array
 }

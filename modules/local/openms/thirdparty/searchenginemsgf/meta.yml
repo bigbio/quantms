@@ -11,16 +11,19 @@ tools:
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
         documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
 input:
-    - mzml_id:
-        type: value
-        description: MD5 value
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - mzml_file:
         type: file
         description: Input profile data file.
+    - database:
+        type: file
+        description: fasta file
 output:
-    - mzml_id:
-        type: value
-        description: MD5 value
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - id_files_msgf:
         type: file
         description: Output file

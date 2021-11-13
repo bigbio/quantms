@@ -35,9 +35,7 @@ def modules = params.modules.clone()
 // MODULE: Local to the pipeline
 //
 include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
-
-
-
+include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main' addParams( options: modules['decoydatabase'] )
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -45,6 +43,7 @@ include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' 
 include { INPUT_CHECK } from '../subworkflows/local/input_check' addParams( options: [:] )
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel' addParams( sdrfparsing_options: modules['sdrfparsing'] )
 include { FILE_PREPARATION } from '../subworkflows/local/file_preparation' addParams(options: [:])
+include { DATABASESEARCHENGINES } from '../subworkflows/local/databasesearchengines' addParams( options: [:])
 
 /*
 ========================================================================================
@@ -93,9 +92,32 @@ workflow TMT {
     // SUBWORKFLOW: File preparation
     //
     FILE_PREPARATION (
-        CREATE_INPUT_CHANNEL.out.spectra_files
+        CREATE_INPUT_CHANNEL.out.results
     )
     ch_software_versions = ch_software_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
+
+    //
+    // MODULE: Generate decoy database
+    //
+    (searchengine_in_db, pepidx_in_db, plfq_in_db) = ( params.add_decoys
+        ? [ Channel.empty(), Channel.empty(), Channel.empty(), Channel.empty() ]
+        : [ Channel.fromPath(params.database), Channel.fromPath(params.database), Channel.fromPath(params.database) ] )
+    if (params.add_decoys) {
+        DECOYDATABASE(
+            ch_db_for_decoy_creation
+        )
+
+        ch_software_versions = ch_software_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
+    }
+
+    //
+    // SUBWORKFLOW: DatabaseSearchEngines
+    //
+    DATABASESEARCHENGINES (
+        FILE_PREPARATION.out.results,
+        searchengine_in_db.mix(DECOYDATABASE.out.db_decoy)
+    )
+    ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
 
     //
     // MODULE: Pipeline reporting

@@ -6,10 +6,11 @@ params.options = [:]
 
 include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main' addParams(options: params.options)
 include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main' addParams(options: params.options)
+include { OPENMSPEAKPICKER } from '../../modules/local/openms/openmspeakpicker/main' addParams( options: params.options )
 
 workflow FILE_PREPARATION {
     take:
-    mzmls            // channel: [ val(mzml_id), raw/mzml ]
+    mzmls            // channel: [ val(meta), raw/mzml ]
 
     main:
     ch_versions = Channel.empty()
@@ -42,7 +43,7 @@ workflow FILE_PREPARATION {
         }
     }
     .set {branched_input_mzMLs}
-
+    ch_results = ch_results.mix(branched_input_mzMLs.inputIndexedMzML)
 
     THERMORAWFILEPARSER( branched_input.raw )
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
@@ -51,6 +52,16 @@ workflow FILE_PREPARATION {
     MZMLINDEXING( branched_input_mzMLs.nonIndexedMzML )
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
     ch_results = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
+
+    if (params.openms_peakpicking){
+        OPENMSPEAKPICKER (
+            ch_results
+        )
+
+        ch_versions = ch_versions.mix(OPENMSPEAKPICKER.out.version)
+        ch_results = OPENMSPEAKPICKER.out.mzmls_picked
+    }
+
 
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml]

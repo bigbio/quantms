@@ -11,7 +11,7 @@ tools:
         homepage: https://github.com/compomics/ThermoRawFileParser
         documentation: https://github.com/compomics/ThermoRawFileParser
 input:
-    - mzml_id:
+    - meta:
         type: map
         description: |
             Groovy Map containing sample information
@@ -20,11 +20,11 @@ input:
         description: |
           thermo RAW file
 output:
-    - mzml_id:
+    - meta:
         type: map
         description: |
             Groovy Map containing sample information
-            e.g. [ id:'test', single_end:false ]
+            e.g. [ id:'MD5', enzyme:trypsin ]
     - mzml:
         type: file
         description: indexed mzML

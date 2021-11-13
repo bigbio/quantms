@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process SEARCHENGINEMSGF {
+    tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -15,44 +16,68 @@ process SEARCHENGINEMSGF {
         container "https://depot.galaxyproject.org/singularity/openms-thirdparty:2.6.0--0"
     } else {
         container "quay.io/biocontainers/openms-thirdparty:2.6.0--0"
+
     }
 
     input:
-    tuple val(mzml_id), path (mzml_file)
-    path(database)
+    tuple val(meta),  file(mzml_file), file(database)
 
     output:
-    tuple mzml_id, path "${mzml_file.baseName}_msgf.idXML",  emit: id_files_msgf
+    tuple val(meta), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
     path "*.version.txt",   emit: version
     path "*.log",   emit: log
 
     script:
+    // find a way to add MSGFPlus.jar dependence
+    msgf_jar = ''
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
+    } else if (!params.enable_conda){
+        msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
+    }
+
     def software = getSoftwareName(task.process)
+
+    if (meta.enzyme == 'Trypsin') enzyme = 'Trypsin/P'
+    else if (meta.enzyme == 'Arg-C') enzyme = 'Arg-C/P'
+    else if (meta.enzyme == 'Asp-N') enzyme = 'Asp-N/B'
+    else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin'
+    else if (meta.enzyme == 'Lys-C') enzyme = 'Lys-C/P'
+
+    if ((meta.fragmentmasstolerance.toDouble() < 50 && meta.fragmentmasstoleranceunit == "ppm") || (meta.fragmentmasstolerance.toDouble() < 0.1 && meta.fragmentmasstoleranceunit == "Da"))
+    {
+        inst = params.instrument ?: "high_res"
+    } else {
+        inst = params.instrument ?: "low_res"
+    }
 
     """
     MSGFPlusAdapter \\
-        -protocol $options.protocol \\
+        -protocol $params.protocol \\
         -in ${mzml_file} \\
+        -out ${mzml_file.baseName}_msgf.idXML \\
+        ${msgf_jar} \\
         -threads $task.cpus \\
-        -java_memory $task.java_memory.toMega() \\
-        -database $options.database \\
-        -instrument $options.inst \\
-        -matches_per_spec $options.num_hits \\
-        -min_precursor_charge $options.min_precursor_charge \\
-        -max_precursor_charge $options.max_precursor_charge \\
-        -min_peptide_length $options.min_peptide_length \\
-        -max_peptide_length $options.max_peptide_length \\
-        -isotope_error_range $options.isotope_error_range \\
-        -enzyme $options.enzyme \\
-        -tryptic $options.num_enzyme_termini \\
-        -precursor_mass_tolerence $options.prec_tol \\
-        -precursor_error_unit $options.prec_tol_unit \\
-        -fixed_modificaitons $options.fixed \\
-        -variable_modifications $options.variable
-        -max_mods $options.max_mods \\
-        -debug $options.db_debug \\
+        -java_memory ${task.memory.toMega()} \\
+        -database "${database}" \\
+        -instrument ${inst} \\
+        -matches_per_spec $params.num_hits \\
+        -min_precursor_charge $params.min_precursor_charge \\
+        -max_precursor_charge $params.max_precursor_charge \\
+        -min_peptide_length $params.min_peptide_length \\
+        -max_peptide_length $params.max_peptide_length \\
+        -isotope_error_range $params.isotope_error_range \\
+        -enzyme ${enzyme} \\
+        -tryptic $params.num_enzyme_termini \\
+        -precursor_mass_tolerance $meta.precursormasstolerance \\
+        -precursor_error_units $meta.precursormasstoleranceunit \\
+        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
+        -variable_modifications ${meta.variablemodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
+        -max_mods $params.max_mods \\
+        -debug $params.db_debug \\
+        $options.args \\
         > ${mzml_file.baseName}_msgf.log
 
-    echo \$(MSGFPlusAdapter --version 2>&1) > ${software}.version.txt
+    echo \$(MSGFPlusAdapter 2>&1) > ${software}.version.txt
     """
 }

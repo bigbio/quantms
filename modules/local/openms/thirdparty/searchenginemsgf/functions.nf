@@ -14,33 +14,9 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    if (args.enzyme == "Trypsin") options.enzyme = "Trypsin/P"
-    else if (args.enzyme == "Arg-C") options.enzyme = "Arg-C/P"
-    else if (args.enzyme == "Asp-N") options.enzyme = "Arg-N/B"
-    else if (args.enzyme == "Chymotrypsin") options.enzyme = "Chymotrypsin/P"
-    else if (args.enzyme == "Lys-C") options.enzyme = "Lys-C/P"
-
-    if ((args.frag_tol.toDouble() < 50 && args.frag_tol_unit == "ppm") || (args.frag_tol.toDouble() < 0.1 && args.frag_tol_unit == "Da"))
-    {
-        options.inst = args.instrument ?: "high_res"
-    } else {
-        options.inst = args.instrument ?: "low_res"
-    }
-
-    options.protocol                = args.protocol ?: "TMT"
-    options.num_hits                = args.num_hits ?: 1
-    options.min_precursor_charge    = args.min_precursor_charge ?: 2
-    options.max_precursor_charge    = args.max_precursor_charge ?: 3
-    options.min_peptide_length      = args.min_peptide_length ?: 6
-    options.max_peptide_length      = args.max_peptide_length ?: 40
-    options.isotope_error_range     = args.isotope_error_range ?: "0,1"
-    options.num_enzyme_termini      = args.num_enzyme_termini ?: "fully"
-    options.prec_tol                = args.prec_tol ?: 10
-    options.prec_tol_unit           = args.prec_tol_unit ?: "ppm"
-    options.fixed                   = args.fixed ?: "Carbamidomethyl (C)"
-    options.variable                = args.variable ?: "Oxidation (M)"
-    options.max_mods                = args.max_mods ?: 3
-    options.db_debug                = args.db_debug ?: 0
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
     options.publish_by_meta         = args.publish_by_meta ?: []
     options.publish_dir             = args.publish_dir ?: ''
     options.publish_files           = args.publish_files

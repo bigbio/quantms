@@ -14,30 +14,9 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    // see comment in CometAdapter. Alternative here in PeptideIndexer is to let it auto-detect the enzyme by not specifying.
-    if (args.search_engines.contains("msgf"))
-    {
-        if (args.enzyme == 'Trypsin') options.enzyme = 'Trypsin/P'
-        else if (args.enzyme == 'Arg-C') options.enzyme = 'Arg-C/P'
-        else if (args.enzyme == 'Asp-N') options.enzyme = 'Asp-N/B'
-        else if (args.enzyme == 'Chymotrypsin') options.enzyme = 'Chymotrypsin/P'
-        else if (args.enzyme == 'Lys-C') options.enzyme = 'Lys-C/P'
-    }
-    if (args.enzyme == "unspecific cleavage")
-    {
-        args.num_enzyme_termini = "none"
-    }
-    num_enzyme_termini = args.num_enzyme_termini
-    if (args.num_enzyme_termini == "fully")
-    {
-        num_enzyme_termini = "full"
-    }
-    def il = args.IL_equivalent ? '-IL_equivalent' : ''
-    def allow_um = args.allow_unmatched ? '-allow_unmatched' : ''
-
-    options.num_enzyme_termini      = num_enzyme_termini
-    options.il                      = il
-    options.allow_um                = allow_um
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
     options.publish_by_meta         = args.publish_by_meta ?: []
     options.publish_dir             = args.publish_dir ?: ''
     options.publish_files           = args.publish_files

@@ -93,12 +93,34 @@
                     "fa_icon": "fas fa-font",
                     "help_text": "If [`--add-decoys`](#params_add_decoys) was set, this setting is used during generation and passed to all tools that need decoy information.\n If decoys were appended to the database externally, this setting needs to match the used affix. (While OpenMS tools can infer the affix automatically, some thirdparty tools might not.)\nTypical values are 'rev', 'decoy', 'dec'. Look for them in your database."
                 },
-                "affix_type": {
+                "decoy_string_position": {
                     "type": "string",
                     "description": "Location of the decoy marker string in the fasta accession. Before (prefix) or after (suffix)",
                     "default": "prefix",
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Prefix is highly recommended. Only in case an external tool marked decoys with a suffix, e.g. `sp|Q12345|ProteinA_DECOY` change this parameter to suffix."
+                },
+                "decoy_method": {
+                    "type": "string",
+                    "description": "Choose the method to produce decoys from input target database.",
+                    "default": "reverse",
+                    "fa_icon": "fas fa-list-ol",
+                    "enum": [
+                        "reverse",
+                        "shuffle"
+                    ]
+                },
+                "shuffle_max_attempts": {
+                    "type": "integer",
+                    "description": "Maximum nr. of attempts to lower the amino acid sequence identity between target and decoy for the shuffle algorithm",
+                    "default": 30,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "shuffle_sequence_identity_threshold": {
+                    "type": "number",
+                    "description": "Target-decoy amino acid sequence identity threshold for the shuffle algorithm. if the sequence identity is above this threshold, shuffling is repeated. In case of repeated failure, individual amino acids are 'mutated' to produce a difference amino acid sequence.",
+                    "default": 0.5,
+                    "fa_icon": "fas fa-sliders-h"
                 }
             },
             "fa_icon": "fas fa-database",
