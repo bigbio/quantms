@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process IDSCORESWITCHER {
+    tag "$meta.id"
     label 'process_very_low'
     label 'process_single_thread'
     publishDir "${params.outdir}",
@@ -19,10 +20,10 @@ process IDSCORESWITCHER {
     }
 
     input:
-    tuple mzml_id, path id_file
+    tuple val(meta), path(id_file), val(new_score)
 
     output:
-    tuple mzml_id, path "${id_file.baseName}_pep.idXML", emit: id_score_switcher
+    tuple val(meta), path("${id_file.baseName}_pep.idXML"), emit: id_score_switcher
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -34,12 +35,10 @@ process IDSCORESWITCHER {
         -in ${id_file} \\
         -out ${id_file.baseName}_pep.idXML \\
         -threads $task.cpus \\
-        -old_score $options.old_score \\
-        -new_score $options.new_score \\
-        -new_score_type $options.new_score_type \\
-        -new_score_orientation $options.new_score_orientation \\
+        -new_score ${new_score} \\
+        $options.args \\
         > ${id_file.baseName}_switch.log
 
-    echo \$(IDScoreSwitcher --version 2>&1) > ${software}.version.txt
+    echo \$(IDScoreSwitcher 2>&1) > ${software}.version.txt
     """
 }

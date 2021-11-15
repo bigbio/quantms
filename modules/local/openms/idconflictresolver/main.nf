@@ -31,12 +31,12 @@ process IDCONFLICTRESOLVER {
     """
     IDConflictResolver \\
         -in ${consus_file} \\
-        -thread $task.cpus \\
-        -debug $options.res_debug \\
-        -resolve_between_features $options.resolve_between_features \\
+        -threads $task.cpus \\
+        -debug 100 \\
+        -resolve_between_features $params.res_between_fet \\
         -out ${consus_file.baseName}_resconf.consensusXML \\
         > ${consus_file.baseName}_resconf.log
 
-    echo \$(IDConflictResolver --version 2>&1) > ${software}.version.txt
+    echo \$(IDConflictResolver 2>&1) > ${software}.version.txt
     """
 }

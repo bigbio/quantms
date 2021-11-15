@@ -14,16 +14,13 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    options.delete_unreferenced_peptide_hits = args.delete_unreferenced_peptide_hits ?: ''
-    options.remove_decoys                    = args.remove_decoys ?: ''
-    options.remove_shared_peptides           = args.remove_shared_peptides ?: ''
-    options.missed_cleavages                 = args.missed_cleavages ?: ''
-    options.score_level                      = args.score_level ?: 'pep'
-    options.fdr_cut_cutoff                   = args.fdr_cut_cutoff ?: 0.05
-    options.publish_by_meta                  = args.publish_by_meta ?: []
-    options.publish_dir                      = args.publish_dir ?: ''
-    options.publish_files                    = args.publish_files
-    options.suffix                           = args.suffix ?: ''
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
+    options.publish_by_meta         = args.publish_by_meta ?: []
+    options.publish_dir             = args.publish_dir ?: ''
+    options.publish_files           = args.publish_files
+    options.suffix                  = args.suffix ?: ''
     return options
 }
 

@@ -4,8 +4,9 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process IDPEPFDR {
-    label 'process_very_low'
+process CONSENSUSID {
+    label 'process_medium'
+    // TODO could be easily parallelized
     label 'process_single_thread'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -19,25 +20,28 @@ process IDPEPFDR {
     }
 
     input:
-    tuple mzml_id, path id_file
+    tuple val(meta), path(id_file)
 
     output:
-    tuple mzml_id, path "${id_file.baseName}_fdr.idXML", emit: id_files_idx_ForIDPEP_FDR
+    tuple val(meta), path("${meta.id}_consensus.idXML"), emit: consensusids
     path "*.version.txt", emit: version
     path "*.log", emit: log
     script:
     def software = getSoftwareName(task.process)
 
     """
-    FalseDiscoveryRate \\
+    ConsensusID \\
         -in ${id_file} \\
-        -out ${id_file.baseName}_fdr.idXML \\
+        -out ${meta.id}_consensus.idXML \\
+        -per_spectrum \\
         -threads $task.cpus \\
-        -protein false \\
-        -algorithm:add_decoy_peptides \\
-        -algorithm:add_decoy_proteins \\
-        > ${id_file.baseName}_fdr.log
+        -algorithm $params.consensusid_algorithm \\
+        -filter:min_support $params.min_consensus_support \\
+        -filter:considered_hits $params.consensusid_considered_top_hits \\
+        -debug 100 \\
+        $options.args \\
+        > ${meta.id}_consensusID.log
 
-    echo \$(FalseDiscoveryRate --version 2>&1) > ${software}.version.txt
+    echo \$(ConsensusID 2>&1) > ${software}.version.txt
     """
 }

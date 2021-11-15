@@ -14,19 +14,10 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    if (args.diss_meth == "HCD") options.diss_meth = "High-energy collision-induced dissociation"
-    else if (args.diss_meth == "CID") options.diss_meth = "Collision-induced dissociation"
-    else if (args.diss_meth == "ETD") options.diss_meth = "Electron transfer dissociation"
-    else if (args.diss_meth == "ECD") options.diss_meth = "Electron capture dissociation"
 
-    options.label                   = args.label ?: "tmt6plex"
-    options.reporter_mass_shift     = args.reporter_mass_shift ?: 0.002
-    options.min_reporter_intensity  = args.min_reporter_intensity ?: 0.0
-    options.min_precursor_purity    = args.min_precursor_purity ?: 0.0
-    options.precursor_isotope_deviation = args.precursor_isotope_deviation ?: 10.0
-    options.iso_normalization       = args.iso_normalization ? "-quantification:normalization" : ""
-    options.reference_channel       = args.reference_channel ?: 126
-    options.iso_debug               = args.iso_debug ?: 100
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
     options.publish_by_meta         = args.publish_by_meta ?: []
     options.publish_dir             = args.publish_dir ?: ''
     options.publish_files           = args.publish_files

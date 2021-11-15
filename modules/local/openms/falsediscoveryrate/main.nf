@@ -4,14 +4,14 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process EXTRACTPSMFEATURE {
+process FALSEDISCOVERYRATE {
     label 'process_very_low'
     label 'process_single_thread'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "bioconda::openms=2.7.0pre" : null)
+    conda (params.enable_conda ? "openms::openms=2.7.0pre" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/openms:2.6.0--h4afb90d_0"
     } else {
@@ -22,21 +22,23 @@ process EXTRACTPSMFEATURE {
     tuple val(meta), path(id_file)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_feat.idXML"), emit: id_files_idx_feat
+    tuple val(meta), path("${id_file.baseName}_fdr.idXML"), emit: id_files_idx_ForIDPEP_FDR
     path "*.version.txt", emit: version
     path "*.log", emit: log
-
     script:
     def software = getSoftwareName(task.process)
 
     """
-    PSMFeatureExtractor \\
+    FalseDiscoveryRate \\
         -in ${id_file} \\
-        -out ${id_file.baseName}_feat.idXML \\
+        -out ${id_file.baseName}_fdr.idXML \\
         -threads $task.cpus \\
+        -protein false \\
+        -algorithm:add_decoy_peptides \\
+        -algorithm:add_decoy_proteins \\
         $options.args \\
-        > ${id_file.baseName}_extract_psm_feature.log
+        > ${id_file.baseName}_fdr.log
 
-    echo \$(PSMFeatureExtractor 2>&1) > ${software}.version.txt
+    echo \$(FalseDiscoveryRate 2>&1) > ${software}.version.txt
     """
 }

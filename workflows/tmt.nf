@@ -36,14 +36,39 @@ def modules = params.modules.clone()
 //
 include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
 include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main' addParams( options: modules['decoydatabase'] )
+include { CONSENSUSID } from '../modules/local/openms/consensusid/main' addParams( options: modules['consensusid'] )
+include { FILEMERGE } from '../modules/local/openms/filemerge/main' addParams( options: modules['filemerge'] )
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from '../subworkflows/local/input_check' addParams( options: [:] )
+include { INPUT_CHECK } from '../subworkflows/local/input_check' addParams( options: modules['sdrfparsing'] )
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel' addParams( sdrfparsing_options: modules['sdrfparsing'] )
 include { FILE_PREPARATION } from '../subworkflows/local/file_preparation' addParams(options: [:])
 include { DATABASESEARCHENGINES } from '../subworkflows/local/databasesearchengines' addParams( options: [:])
+include { PSMRESCORING } from '../subworkflows/local/psmrescoring' addParams( extract_psm_feature_options: modules['extractpsmfeature'], percolator_options: modules['percolator'])
+
+def psm_idfilter = modules['idfilter']
+def epi_filter = modules['idfilter'].clone()
+
+psm_idfilter.args += Utils.joinModuleArgs(["-score:pep \"$params.psm_pep_fdr_cutoff\""])
+
+def idscoreswitcher_to_qval = modules['idscoreswitcher']
+def idscoreswitcher_for_luciphor = modules['idscoreswitcher'].clone()
+
+idscoreswitcher_to_qval.args += Utils.joinModuleArgs(["-old_score \"Posterior Error Probability\"", "-new_score_type q-value"])
+idscoreswitcher_for_luciphor.args += Utils.joinModuleArgs(["-old_score \"q-value\"", "-new_score_type Posterior Error Probability"])
+
+include { PSMFDRCONTROL } from '../subworkflows/local/psmfdrcontrol' addParams( idscoreswitcher_to_qval: idscoreswitcher_to_qval, idfilter: psm_idfilter)
+include { PHOSPHOSCORING } from '../subworkflows/local/phosphoscoring' addParams ( idscoreswitcher_for_luciphor: idscoreswitcher_for_luciphor)
+include { FEATUREMAPPER } from '../subworkflows/local/featuremapper' addParams( options: [:])
+
+epi_filter.args += Utils.joinModuleArgs(["-score:prot \"$params.protein_level_fdr_cutoff\"",
+                "-delete_unreferenced_peptide_hits", "-remove_decoys"])
+epi_filter.suffix = ".consensusXML"
+
+include { PROTEININFERENCE } from '../subworkflows/local/proteininference' addParams( epifilter: epi_filter)
+include { PROTEINQUANT } from '../subworkflows/local/proteinquant' addParams( options: [:])
 
 /*
 ========================================================================================
@@ -118,6 +143,62 @@ workflow TMT {
         searchengine_in_db.mix(DECOYDATABASE.out.db_decoy)
     )
     ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
+
+    //
+    // SUBWORKFLOW: PSMReScoring
+    //
+    PSMRESCORING (DATABASESEARCHENGINES.out.ch_id_files_idx)
+    ch_software_versions = ch_software_versions.mix(PSMRESCORING.out.versions.ifEmpty(null))
+
+    //
+    // SUBWORKFLOW: PSMFDRCONTROL
+    //
+    ch_psmfdrcontrol = Channel.empty()
+    if (params.search_engines.split(",").size() > 1) {
+        CONSENSUSID(PSMRESCORING.out.results.groupTuple(size: params.search_engines.split(",").size()))
+        ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.version.ifEmpty(null))
+        ch_psmfdrcontrol = CONSENSUSID.out.consensusids
+    } else {
+        ch_psmfdrcontrol = PSMRESCORING.out.results
+    }
+
+    PSMFDRCONTROL(ch_psmfdrcontrol)
+    ch_software_versions = ch_software_versions.mix(PSMFDRCONTROL.out.version.ifEmpty(null))
+
+    //
+    // SUBWORKFLOW：PHOSPHOSCORING
+    //
+    if (params.enable_mod_localization) {
+        PHOSPHOSCORING(FILE_PREPARATION.out.results.join(PSMFDRCONTROL.out.id_filtered))
+        ch_software_versions = ch_software_versions.mix(PHOSPHOSCORING.out.version.ifEmpty(null))
+        ptmt_in_id = PHOSPHOSCORING.out.id_luciphor
+    } else {
+        ptmt_in_id = PSMFDRCONTROL.out.id_filtered
+    }
+
+    //
+    // SUBWORKFLOW: FEATUREMAPPER
+    //
+    FEATUREMAPPER(FILE_PREPARATION.out.results, ptmt_in_id)
+    ch_software_versions = ch_software_versions.mix(FEATUREMAPPER.out.version.ifEmpty(null))
+
+    //
+    // MODULE: FILEMERGE
+    //
+    FILEMERGE(FEATUREMAPPER.out.id_map.collect())
+    ch_software_versions = ch_software_versions.mix(FILEMERGE.out.version.ifEmpty(null))
+
+    //
+    // SUBWORKFLOW: PROTEININFERENCE
+    //
+    PROTEININFERENCE(FILEMERGE.out.id_merge)
+    ch_software_versions = ch_software_versions.mix(PROTEININFERENCE.out.version.ifEmpty(null))
+
+    //
+    // SUBWORKFLOW: PROTEINQUANT
+    //
+    PROTEINQUANT(PROTEININFERENCE.out.epi_idfilter, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    ch_software_versions = ch_software_versions.mix(PROTEINQUANT.out.version.ifEmpty(null))
 
     //
     // MODULE: Pipeline reporting

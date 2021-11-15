@@ -18,28 +18,32 @@ process PROTEININFERENCE {
     }
 
     input:
-    path consus_file
+    tuple val(meta), path(consus_file)
 
     output:
-    path "${consus_file.baseName}_epi.consensusXML", emit: protein_inference
+    tuple val(meta), path("${consus_file.baseName}_epi.consensusXML"), emit: protein_inference
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
     script:
     def software = getSoftwareName(task.process)
 
+
+    // -picked_fdr $params.picked_fdr
+    // -picked_decoy_string $params.decoy_string
+    // -protein_fdr true \\
+    // -Algorithm:score_aggregation_method $params.protein_score \\
+    // TODO update to 2.7.0 !!!! consensusXML is not supported
+
     """
     ProteinInference \\
         -in ${consus_file} \\
-        -protein_fdr true \\
-        -picked_fdr $options.picked_fdr \\
-        -picked_decoy_string $options.decoy_affix \\
         -threads $task.cpus \\
-        -debug $options.epi_debug \\
-        -score_aggregation_method $options.protein_score \\
+        -debug 100 \\
+        -Algorithm:min_peptides_per_protein $params.min_peptides_per_protein \\
         -out ${consus_file.baseName}_epi.consensusXML \\
         > ${consus_file.baseName}_inference.log
 
-    echo \$(ProteinInference --version 2>&1) > ${software}.version.txt
+    echo \$(ProteinInference 2>&1) > ${software}.version.txt
     """
 }

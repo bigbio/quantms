@@ -11,17 +11,17 @@ tools:
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDFilter.html
         documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDFilter.html
 input:
-    - mzml_id:
-        type: value
-        description: MD5
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - id_file:
         type: file
         description: |
           Identifications from searching a target-decoy database.
 output:
-    - mzml_id:
-        type: value
-        description: MD5
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - id_files_idx_ForIDPEP_FDR:
         type: file
         description: Output file

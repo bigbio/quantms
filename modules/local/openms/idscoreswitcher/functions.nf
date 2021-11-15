@@ -14,10 +14,9 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    options.old_score               = args.old_score ?: 'q-value'
-    options.new_score               = args.new_score ?: 'Posterior Error Probability_score'
-    options.new_score_type          = args.new_score_type ?: 'Posterior Error Probability'
-    options.new_score_orientation   = args.new_score_orientation ?: 'lower_better'
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
     options.publish_by_meta         = args.publish_by_meta ?: []
     options.publish_dir             = args.publish_dir ?: ''
     options.publish_files           = args.publish_files

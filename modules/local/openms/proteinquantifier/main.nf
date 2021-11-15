@@ -31,23 +31,27 @@ process PROTEINQUANTIFIER {
     script:
     def software = getSoftwareName(task.process)
 
+    include_all = params.include_all ? "-include_all" : ""
+    fix_peptides = params.fix_peptides ? "-fix_peptides" : ""
+    normalize = params.normalize ? "-consensus:normalize" : ""
+
     """
     ProteinQuantifier \\
         -in ${epi_filt_resolve} \\
         -design ${pro_quant_exp} \\
         -out protein_out.csv \\
+        -mztab out.mzTab \\
         -peptide_out peptide_out.csv \\
-        -top $options.top \\
-        -average $options.average \\
-        $options.include_all \\
-        $options.fix_peptides \\
-        -best_charge_and_fraction \\
+        -top $params.top \\
+        -average $params.average \\
+        ${include_all} \\
+        ${fix_peptides} \\
         -ratios \\
         -threads $task.cpus \\
-        $options.normalize \\
+        ${normalize} \\
         -debug 100 \\
         > pro_quant.log
 
-    echo \$(ProteinQuantifier --version 2>&1) > ${software}.version.txt
+    echo \$(ProteinQuantifier 2>&1) > ${software}.version.txt
     """
 }

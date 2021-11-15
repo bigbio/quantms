@@ -11,9 +11,9 @@ tools:
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
         documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
 input:
-    - mzml_id:
-        type: value
-        description: MD5 value
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - mzml_file:
         type: file
         description: Input spectrum file.
@@ -23,9 +23,9 @@ input:
         description: Protein/peptide identifications file
         pattern: "*.idXML"
 output:
-    - mzml_id:
-        type: value
-        description: MD5 value
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - ptm_in_id_luciphor:
         type: file
         description: Output file

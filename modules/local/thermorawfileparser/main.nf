@@ -32,7 +32,7 @@ process THERMORAWFILEPARSER {
     script:
     def software = getSoftwareName(task.process)
     """
-    ThermoRawFileParser.sh -i=${rawfile} -f=2 -o=./ > ${rawfile}_conversion.log
+    ThermoRawFileParser.sh -i=${rawfile} -f=2 -o=./ > ${rawfile.baseName}_conversion.log
 
     ThermoRawFileParser.sh --version > ${software}.version.txt
     """

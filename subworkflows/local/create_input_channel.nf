@@ -29,7 +29,8 @@ workflow CREATE_INPUT_CHANNEL {
     }
 
     emit:
-    results       // [meta, [spectra_files ]]
+    results                     // [meta, [spectra_files ]]
+    ch_expdesign    = SDRFPARSING.out.ch_expdesign
 
     version         = ch_versions
 }

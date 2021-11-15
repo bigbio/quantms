@@ -25,7 +25,7 @@ WorkflowMain.initialise(workflow, params, log)
 ========================================================================================
 */
 
-if (params.quant_method == 'TMT') {
+if (params.quant_method == 'ISO') {
     include { TMT } from './workflows/tmt'
 } else if (params.quant_method == 'LFQ') {
     include { LFQ } from './workflows/lfq'
@@ -37,7 +37,7 @@ if (params.quant_method == 'TMT') {
 //
 
 workflow NFCORE_QUANTMS {
-    if (params.quant_method == 'TMT') {
+    if (params.quant_method == 'ISO') {
         TMT()
     } else if (params.quant_method == 'LFQ') {
         LFQ()

@@ -11,9 +11,9 @@ tools:
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
         documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
 input:
-    - mzml_id:
-        type: value
-        description: MD5
+    - meta:
+        type: map
+        description: Groovy Map containing sample information
     - id_file:
         type: file
         description: |

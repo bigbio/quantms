@@ -19,12 +19,12 @@ process FILEMERGE {
     }
 
     input:
-    file id_map
+    file(id_map)
 
     output:
-    path "ID_mapper_merge.consensusXML", emit: id_merge
+    tuple val([:]), path("ID_mapper_merge.consensusXML"), emit: id_merge
     path "*.version.txt", emit: version
-    params "*.log", emit: log
+    path "*.log", emit: log
 
     script:
     def software = getSoftwareName(task.process)
@@ -35,11 +35,11 @@ process FILEMERGE {
         -in_type consensusXML \\
         -annotate_file_origin \\
         -append_method 'append_cols' \\
-        -debug $openms.merge_debug \\
+        -debug 10 \\
         -threads $task.cpus \\
         -out ID_mapper_merge.consensusXML \\
         > ID_mapper_merge.log
 
-    echo \$(FileMerger --version 2>&1) > ${software}.version.txt
+    echo \$(FileMerger 2>&1) > ${software}.version.txt
     """
 }

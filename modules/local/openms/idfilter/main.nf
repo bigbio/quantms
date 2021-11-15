@@ -7,14 +7,8 @@ options        = initOptions(params.options)
 process IDFILTER {
     label 'process_vrey_low'
     label 'process_single_thread'
-    publishDir "${params.outdir}/logs",
+    publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        pattern: "*.log",
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
-
-    publishDir "${params.outdir}/ids",
-        mode: params.publish_dir_mode,
-        pattern: "*.idXML",
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "bioconda::openms=2.7.0pre" : null)
@@ -25,10 +19,10 @@ process IDFILTER {
     }
 
     input:
-    tuple mzml_id, path id_file
+    tuple val(meta), path(id_file)
 
     output:
-    tuple mzml_id, path "${id_file.baseName}_filter.idXML", emit: id_filtered
+    tuple val(meta), path("${id_file.baseName}_filter$options.suffix"), emit: id_filtered
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -38,16 +32,12 @@ process IDFILTER {
     """
     IDFilter \\
         -in ${id_file} \\
-        -out ${id_file.baseName}_filter.idXML \\
+        -out ${id_file.baseName}_filter$options.suffix \\
         -threads $task.cpus \\
-        $options.delete_unreferenced_peptide_hits \\
-        $options.remove_decoys \\
-        $options.remove_shared_peptides \\
-        -missed_cleavages $options.missed_cleavages \\
-        -score:$options.score_level $options.fdr_cut_cutoff \\
+        $options.args \\
         -debug 10 \\
+        > ${id_file.baseName}_idfilter.log
 
-
-    echo \$(IDFilter --version 2>&1) > ${software}.version.txt
+    echo \$(IDFilter 2>&1) > ${software}.version.txt
     """
 }

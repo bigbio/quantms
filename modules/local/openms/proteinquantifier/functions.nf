@@ -14,15 +14,13 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    options.include_all                      = args.include_all ? "-include_all" : ""
-    options.fix_peptides                     = args.fix_peptides ? "-fix_peptides" : ""
-    options.normalize                        = args.normalize ? "-consensus:normalize" : ""
-    options.top                              = args.top ?: 3
-    options.average                          = args.average ?: 'median'
-    options.publish_by_meta                  = args.publish_by_meta ?: []
-    options.publish_dir                      = args.publish_dir ?: ''
-    options.publish_files                    = args.publish_files
-    options.suffix                           = args.suffix ?: ''
+    options.args                      = args.args ?: ''
+    options.args1                     = args.args1 ?: ''
+    options.args2                     = args.args2 ?: ''
+    options.publish_by_meta           = args.publish_by_meta ?: []
+    options.publish_dir               = args.publish_dir ?: ''
+    options.publish_files             = args.publish_files
+    options.suffix                    = args.suffix ?: ''
     return options
 }
 

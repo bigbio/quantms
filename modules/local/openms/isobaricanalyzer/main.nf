@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process ISOBARICANALYZER {
+    tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -19,29 +20,36 @@ process ISOBARICANALYZER {
     }
 
     input:
-    tuple val(mzml_id), path (mzml_file)
+    tuple val(meta), path(mzml_file)
 
     output:
-    tuple mzml_id, path "${mzml_file.baseName}_iso.consensusXML",  emit: id_files_consensusXML
+    tuple val(meta), path("${mzml_file.baseName}_iso.consensusXML"),  emit: id_files_consensusXML
     path "*.version.txt",   emit: version
     path "*.log",   emit: log
 
     script:
     def software = getSoftwareName(task.process)
 
+    if (meta.dissociationmethod == "HCD") diss_meth = "High-energy collision-induced dissociation"
+    else if (meta.dissociationmethod == "CID") diss_meth = "Collision-induced dissociation"
+    else if (meta.dissociationmethod == "ETD") diss_meth = "Electron transfer dissociation"
+    else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
+
+    iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
+
     """
     IsobaricAnalyzer \\
-        -type $options.label \\
+        -type $meta.label \\
         -in ${mzml_file} \\
         -threads $task.cpus \\
-        -extraction:select_activation $options.diss_meth \\
-        -extraction:reporter_mass_shift $options.reporter_mass_shift \\
-        -extraction:min_reporter_intensity $options.min_reporter_intensity \\
-        -extraction:min_precursor_purity $options.min_precursor_purity \\
-        -extraction:precursor_isotope_deviation $options.precursor_isotope_deviation \\
-        ${options.iso_normalization} \\
-        -${options.label}:reference_channel $options.reference_channel \\
-        -debug $options.iso_debug \\
+        -extraction:select_activation "${diss_meth}" \\
+        -extraction:reporter_mass_shift $params.reporter_mass_shift \\
+        -extraction:min_reporter_intensity $params.min_reporter_intensity \\
+        -extraction:min_precursor_purity $params.min_precursor_purity \\
+        -extraction:precursor_isotope_deviation $params.precursor_isotope_deviation \\
+        ${iso_normalization} \\
+        -${meta.label}:reference_channel $params.reference_channel \\
+        -debug $params.iso_debug \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
         > ${mzml_file.baseName}_isob.log
 

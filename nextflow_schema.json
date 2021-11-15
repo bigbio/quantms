@@ -22,10 +22,10 @@
                 },
                 "quant_method":{
                     "type": "string",
-                    "description": "quantitative method eg. Tandem Mass Tags quantification (TMT)",
-                    "help_text": "quantitative method eg. Tandem Mass Tags quantification (TMT)",
+                    "description": "quantitative method eg. Label free quantification (LFQ)",
+                    "help_text": "quantitative method eg. Label free Tags quantification (LFQ)",
                     "fa_icon": "fas fa-hdd",
-                    "enum": ["TMT", "LFQ"]
+                    "enum": ["ISO", "LFQ"]
                 },
                 "outdir": {
                     "type": "string",
@@ -718,6 +718,18 @@
                         "remove_associations_only",
                         "remove_proteins_wo_evidence"
                     ]
+                },
+                "keep_best_PSM_only": {
+                    "type":"boolean",
+                    "description": "Epifany uses the best PSM per peptide for inference. Discard the rest (true) or keepe.g. for quantification/reporting?",
+                    "default": true,
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "update_PSM_probabilities": {
+                    "type":"boolean",
+                    "description": "(Experimental:) Update PSM probabilities with their posteriors under consideration of the protein probabilities.",
+                    "default": true,
+                    "fa_icon": "fas fa-list-ol"
                 },
                 "protein_level_fdr_cutoff": {
                     "type": "number",

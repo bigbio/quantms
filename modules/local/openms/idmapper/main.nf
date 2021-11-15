@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process IDMAPPER {
+    tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -18,8 +19,7 @@ process IDMAPPER {
     }
 
     input:
-    tuple mzml_id, path id_file
-    path consensusXML
+    tuple val(meta), path(id_file), path(consensusXML)
 
     output:
     path "${id_file.baseName}_map.consensusXML", emit: id_map
@@ -31,16 +31,17 @@ process IDMAPPER {
 
     """
     IDMapper \\
-        -in ${id_file} \\
+        -id ${id_file} \\
+        -in ${consensusXML} \\
         -threads $task.cpus \\
-        -rt_tolerance $options.rt_tolerance \\
-        -mz_tolerance $options.mz_tolerance \\
-        -mz_measure $options.mz_measure \\
-        -mz_reference $options.mz_reference \\
-        -debug $options.map_debug \\
+        -rt_tolerance $params.rt_tolerance \\
+        -mz_tolerance $params.mz_tolerance \\
+        -mz_measure $params.mz_measure \\
+        -mz_reference $params.mz_reference \\
+        -debug 100 \\
         -out ${id_file.baseName}_map.consensusXML \\
         > ${id_file.baseName}_map.log
 
-    echo \$(IDMapper --version 2>&1) > ${software}.version.txt
+    echo \$(IDMapper 2>&1) > ${software}.version.txt
     """
 }
