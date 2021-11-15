@@ -1,15 +1,15 @@
-name: idscoreswitcher
-description:  Switches between different scores of peptide hits (PSMs) or protein hits in identification data.
+name: idpep
+description:  Tool to estimate the probability of peptide hits to be incorrectly assigned.
 keywords:
-    - Switches
-    - Score
+    - FDR
+    - decoy
     - OpenMS
 tools:
-    - IDScoreSwitcher :
+    - FalseDiscoveryRate :
         description: |
-          Switches between different scores of peptide or protein hits in identification data.
-        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
-        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
+          Tool to estimate the probability of peptide hits to be incorrectly assigned.
+        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDPosteriorErrorProbability.html
+        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDPosteriorErrorProbability.html
 input:
     - meta:
         type: map
@@ -18,15 +18,14 @@ input:
         type: file
         description: |
           Identifications from searching a target-decoy database.
-        pattern: "*.idXML"
 output:
     - meta:
         type: map
         description: Groovy Map containing sample information
-    - id_score_switcher:
+    - id_files_ForIDPEP:
         type: file
         description: |
-          Identifications file
+          Identifications with annotated FDR.
     - log:
         type: file
         description: log file

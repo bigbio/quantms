@@ -18,10 +18,10 @@ process PERCOLATOR {
     }
 
     input:
-    tuple mzml_id, path id_file
+    tuple val(meta), path(id_file)
 
     output:
-    tuple mzml_id, path "${id_file.baseName}_perc.idXML", emit: id_files_perc
+    tuple val(meta), path("${id_file.baseName}_perc.idXML"), val("MS:1001491"), emit: id_files_perc
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -33,12 +33,13 @@ process PERCOLATOR {
         -in ${id_file} \\
         -out ${id_file.baseName}_perc.idXML \\
         -threads $task.cpus \\
-        -subset_max_train $options.subset_max_train \\
-        -decoy_pattern $options.decoy_affix \\
-        -post_processing_tdx \\
+        -subset_max_train $params.subset_max_train \\
+        -decoy_pattern $params.decoy_string \\
+        -post_processing_tdc \\
         -score_type pep \\
+        $options.args \\
         > ${id_file.baseName}_percolator.log
 
-    echo \$(PercolatorAdapter --version 2>&1) > ${software}.version.txt
+    echo \$(PercolatorAdapter 2>&1) > ${software}.version.txt
     """
 }

@@ -33,11 +33,11 @@ process MSSTATSCONVERTER {
     MSstatsConverter \\
         -in ${consensusXML} \\
         -in_design ${exp_file} \\
-        -method $options.quant_method \\
+        -method $params.quant_method \\
         -out out_msstats.csv \\
         -debug 100 \\
         > MSstatsConverter.log
 
-    echo \$(MSstatsConverter --version 2>&1) > ${software}.version.txt
+    echo \$(MSstatsConverter 2>&1) > ${software}.version.txt
     """
 }

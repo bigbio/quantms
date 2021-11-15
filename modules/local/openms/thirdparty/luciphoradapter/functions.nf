@@ -14,18 +14,9 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    def losses = args.luciphor_neutral_losses ? '-neutral_loss "${args}.luciphor_neutral_losses"' : ''
-    def dec_mass = args.luciphor_decoy_mass ? '-decoy_mass "${args}.luciphor_decoy_mass"' : ''
-    def dec_losses = args.luciphor_decoy_neutral_losses ? '-decoy_neutral_losses "${args}.luciphor_decoy_neutral_losses"' : ''
-
-    options.mod_localization        = args.mod_localization ?: "Phospho (S) Phospho (T) Phospho (Y)"
-    options.frag_method             = args.frag_method ?: "CID"
-    options.losses                  = losses
-    options.dec_mass                = dec_mass
-    options.dec_losses              = args.dec_losses
-    options.max_precursor_charge    = args.max_precursor_charge ?: 5
-    options.max_peptide_length      = args.max_peptide_length ?: 40
-    options.luciphor_debug          = args.luciphor_debug ?: 100
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
     options.publish_by_meta         = args.publish_by_meta ?: []
     options.publish_dir             = args.publish_dir ?: ''
     options.publish_files           = args.publish_files

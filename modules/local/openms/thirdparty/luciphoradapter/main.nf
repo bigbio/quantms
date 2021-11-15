@@ -5,6 +5,7 @@ params.options = [:]
 options        = initOptions(params.options)
 
 process LUCIPHORADAPTER {
+    tag "$meta.id"
     label 'process_medium'
     publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
@@ -18,16 +19,20 @@ process LUCIPHORADAPTER {
     }
 
     input:
-    tuple mzml_id, path mzml_file
-    path id_file
+    tuple val(meta), path(mzml_file), path(id_file)
+
 
     output:
-    tuple mzml_id, path "${id_file.baseName}_luciphor.idXML", emit: ptm_in_id_luciphor
+    tuple val(meta), path("${id_file.baseName}_luciphor.idXML"), emit: ptm_in_id_luciphor
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
     script:
     def software = getSoftwareName(task.process)
+
+    def losses = args.luciphor_neutral_losses ? '-neutral_loss "$params.luciphor_neutral_losses"' : ''
+    def dec_mass = args.luciphor_decoy_mass ? '-decoy_mass "${params}.luciphor_decoy_mass"' : ''
+    def dec_losses = args.luciphor_decoy_neutral_losses ? '-decoy_neutral_losses "${params}.luciphor_decoy_neutral_losses"' : ''
 
     """
     LuciphorAdapter \\
@@ -36,16 +41,16 @@ process LUCIPHORADAPTER {
         -out ${id_file.baseName}_luciphor.idXML \\
         -threads $task.cpus \\
         -num_threads $task.cpus \\
-        -target_modifications $options.mod_localization \\
-        -fragment_method $options.frag_method \\
-        $options.losses \\
-        $options.dec_mass \\
-        $options.dec_losses \\
-        -max_charge_state $options.max_precursor_charge \\
-        -max_peptide_length $options.max_peptide_length \\
-        -debug $options.luciphor_debug \\
+        -target_modifications $params.mod_localization \\
+        -fragment_method $meta.DissociationMethod \\
+        ${losses} \\
+        ${dec_mass} \\
+        ${dec_losses} \\
+        -max_charge_state $params.max_precursor_charge \\
+        -max_peptide_length $params.max_peptide_length \\
+        -debug $params.luciphor_debug \\
         > ${id_file.baseName}_luciphor.log
 
-    echo \$(LuciphorAdapter --version 2>&1) > ${software}.version.txt
+    echo \$(LuciphorAdapter 2>&1) > ${software}.version.txt
     """
 }

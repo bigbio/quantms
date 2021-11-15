@@ -18,10 +18,10 @@ process EPIFANY {
     }
 
     input:
-    path consus_file
+    tuple val(meta), path(consus_file)
 
     output:
-    path "${consus_file.baseName}_epi.consensusXML", emit: epi_inference
+    tuple val(meta), path("${consus_file.baseName}_epi.consensusXML"), emit: epi_inference
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -33,14 +33,14 @@ process EPIFANY {
         -in ${consus_file} \\
         -protein_fdr true \\
         -threads $task.cpus \\
-        -debug $options.epi_debug \\
-        -algorithm:keep_best_PSM_only $options.keep_best_PSM_only \\
-        -algorithm:update_PSM_probabilities $options.update_PSM_probabilities \\
-        -greedy_group_resolution $options.greedy_group_resolution \\
-        -algorithm:top_PSMs $options.top_PSMs \\
+        -debug 100 \\
+        -algorithm:keep_best_PSM_only $params.keep_best_PSM_only \\
+        -algorithm:update_PSM_probabilities $params.update_PSM_probabilities \\
+        -greedy_group_resolution $params.greedy_group_resolution \\
+        -algorithm:top_PSMs $params.top_PSMs \\
         -out ${consus_file.baseName}_epi.consensusXML \\
         > ${consus_file.baseName}_inference.log
 
-    echo \$(Epifany --version 2>&1) > ${software}.version.txt
+    echo \$(Epifany 2>&1) > ${software}.version.txt
     """
 }

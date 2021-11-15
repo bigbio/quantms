@@ -14,12 +14,13 @@ def getSoftwareName(task_process) {
 //
 def initOptions(Map args) {
     def Map options = [:]
-    options.res_debug                        = args.res_debug ?: 100
-    options.resolve_between_features         = args.resolve_between_features ?: 'off'
-    options.publish_by_meta                  = args.publish_by_meta ?: []
-    options.publish_dir                      = args.publish_dir ?: ''
-    options.publish_files                    = args.publish_files
-    options.suffix                           = args.suffix ?: ''
+    options.args                    = args.args ?: ''
+    options.args1                   = args.args1 ?: ''
+    options.args2                   = args.args2 ?: ''
+    options.publish_by_meta         = args.publish_by_meta ?: []
+    options.publish_dir             = args.publish_dir ?: ''
+    options.publish_files           = args.publish_files
+    options.suffix                  = args.suffix ?: ''
     return options
 }
 
