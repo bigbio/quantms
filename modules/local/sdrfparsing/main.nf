@@ -36,6 +36,6 @@ process SDRFPARSING {
 
     parse_sdrf $options.args -s ${sdrf} > sdrf_parsing.log
 
-    echo "0.0.18" > ${software}.version.txt
+    echo "0.0.18" > sdrf-pipelines.version.txt
     """
 }

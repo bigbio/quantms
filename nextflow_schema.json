@@ -737,6 +737,17 @@
                     "default": 0.01,
                     "fa_icon": "fas fa-filter",
                     "help_text": "This can be protein level if 'strictly_unique_peptides' are used for protein quantification. See [`--protein_quant`](#params_protein_quant)"
+                },
+                "protein_inference": {
+                    "type": "string",
+                    "description": "The inference method to use. 'aggregation' (default) or 'bayesian'.",
+                    "default": "aggregation",
+                    "fa_icon": "fas fa-list-ol",
+                    "help_text": "Infer proteins through:\n\n* 'aggregation'  =  aggregates all peptide scores across a protein (by calculating the maximum) (default)\n* 'bayesian'        =  compute a posterior probability for every protein based on a Bayesian network (i.e. using Epifany)\n* ('percolator' not yet supported)\n\n**Note:** If protein grouping is performed also depends on the `protein_quant` parameter (i.e. if peptides have to be unique or unique to a group only)",
+                    "enum": [
+                        "aggregation",
+                        "bayesian"
+                    ]
                 }
             },
             "fa_icon": "fab fa-hubspot"
@@ -793,6 +804,53 @@
                     "description": "Include results for proteins with fewer proteotypic peptide than indicated by top.",
                     "default": false,
                     "fa_icon": "fas fa-check-square"
+                },
+                "protein_quant": {
+                    "type": "string",
+                    "description": "Quantify proteins based on:\n\n* 'unique_peptides' = use peptides mapping to single proteins or a group of indistinguishable proteins (according to the set of experimentally identified peptides)\n* 'strictly_unique_peptides' = use peptides mapping to a unique single protein only\n* 'shared_peptides' = use shared peptides, too, but only greedily for its best group (by inference score)",
+                    "default": "unique_peptides",
+                    "enum": [
+                        "unique_peptides",
+                        "strictly_unique_peptides",
+                        "shared_peptides"
+                    ],
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "quantification_method": {
+                    "type": "string",
+                    "description": "Choose between feature-based quantification based on integrated MS1 signals ('feature_intensity'; default) or spectral counting of PSMs ('spectral_counting'). **WARNING:** 'spectral_counting' is not compatible with our MSstats step yet. MSstats will therefore be disabled automatically with that choice.",
+                    "default": "feature_intensity",
+                    "enum": [
+                        "feature_intensity",
+                        "spectral_counting"
+                    ],
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "mass_recalibration": {
+                    "type": "boolean",
+                    "description": "Recalibrates masses based on precursor mass deviations to correct for instrument biases. (default: 'false')",
+                    "fa_icon": "far fa-check-square"
+                },
+                "transfer_ids": {
+                    "type": "string",
+                    "description": "Tries a targeted requantification in files where an ID is missing, based on aggregate properties (i.e. RT) of the features in other aligned files (e.g. 'mean' of RT). (**WARNING:** increased memory consumption and runtime). 'false' turns this feature off. (default: 'false')",
+                    "default": "false",
+                    "enum": [
+                        "false",
+                        "mean"
+                    ],
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "targeted_only": {
+                    "type": "boolean",
+                    "description": "Only looks for quantifiable features at locations with an identified spectrum. Set to false to include unidentified features so they can be linked and matched to identified ones (= match between runs). (default: 'true')",
+                    "default": true,
+                    "fa_icon": "far fa-check-square"
+                },
+                "inf_quant_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
+                    "fa_icon": "fas fa-bug"
                 }
             },
             "fa_icon": "fas fa-braille"

@@ -17,7 +17,10 @@ def parse_args(args=None):
     parser = argparse.ArgumentParser(description=Description, epilog=Epilog)
     parser.add_argument("TEMPLATE", help="Input sdrf file.")
     parser.add_argument("SDRF", help="SDRF file to be validated")
+    parser.add_argument("ISSDRF", help="SDRF file or Expdesign file")
     parser.add_argument("--CHECK_MS", help="check mass spectrometry fields in SDRF.", action="store_true")
+
+
     return parser.parse_args(args)
 
 
@@ -47,8 +50,11 @@ def check_sdrf(template, check_ms, sdrf):
     print(errors)
 
 def main(args=None):
+    # TODO validate expdesign file
     args = parse_args(args)
-    check_sdrf(args.TEMPLATE, args.CHECK_MS, args.SDRF)
+
+    if args.ISSDRF == "true" :
+        check_sdrf(args.TEMPLATE, args.CHECK_MS, args.SDRF)
 
 
 if __name__ == "__main__":

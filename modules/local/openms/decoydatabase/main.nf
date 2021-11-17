@@ -41,6 +41,6 @@ process DECOYDATABASE {
         $options.args \\
         > ${db_for_decoy.baseName}_decoy_database.log
 
-    echo \$(DecoyDatabase --version 2>&1) > ${software}.version.txt
+    echo \$(DecoyDatabase 2>&1) > ${software}.version.txt
     """
 }

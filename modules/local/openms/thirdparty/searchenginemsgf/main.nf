@@ -44,6 +44,12 @@ process SEARCHENGINEMSGF {
     else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin'
     else if (meta.enzyme == 'Lys-C') enzyme = 'Lys-C/P'
 
+    if (enzyme.toLowerCase() == "unspecific cleavage") {
+        msgf_num_enzyme_termini = "non"
+    } else {
+        msgf_num_enzyme_termini = params.num_enzyme_termini
+    }
+
     if ((meta.fragmentmasstolerance.toDouble() < 50 && meta.fragmentmasstoleranceunit == "ppm") || (meta.fragmentmasstolerance.toDouble() < 0.1 && meta.fragmentmasstoleranceunit == "Da"))
     {
         inst = params.instrument ?: "high_res"
@@ -68,7 +74,7 @@ process SEARCHENGINEMSGF {
         -max_peptide_length $params.max_peptide_length \\
         -isotope_error_range $params.isotope_error_range \\
         -enzyme ${enzyme} \\
-        -tryptic $params.num_enzyme_termini \\
+        -tryptic ${msgf_num_enzyme_termini} \\
         -precursor_mass_tolerance $meta.precursormasstolerance \\
         -precursor_error_units $meta.precursormasstoleranceunit \\
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
@@ -78,6 +84,7 @@ process SEARCHENGINEMSGF {
         $options.args \\
         > ${mzml_file.baseName}_msgf.log
 
-    echo \$(MSGFPlusAdapter 2>&1) > ${software}.version.txt
+    echo \$(MSGFPlusAdapter 2>&1) > msgfplusadapter.version.txt
+    echo \$(msgf_plus 2>&1) > msgfplus.version.txt
     """
 }

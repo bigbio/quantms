@@ -30,6 +30,6 @@ process SAMPLESHEET_CHECK {
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
     // TODO validate experimental design file
     """
-    check_samplesheet.py $options.template "${input_file}" $options.check_ms  > input_check.log
+    check_samplesheet.py $options.template "${input_file}" ${is_sdrf} $options.check_ms > input_check.log
     """
 }

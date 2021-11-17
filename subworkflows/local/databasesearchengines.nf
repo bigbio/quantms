@@ -31,6 +31,7 @@ workflow DATABASESEARCHENGINES {
     }
 
     INDEXPEPTIDES(ch_id_msgf.mix(ch_id_comet).combine(searchengine_in_db))
+    ch_versions = ch_versions.mix(INDEXPEPTIDES.out.version)
 
     emit:
     ch_id_files_idx = INDEXPEPTIDES.out.id_files_idx

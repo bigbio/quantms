@@ -11,7 +11,7 @@ process IDFILTER {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "bioconda::openms=2.7.0pre" : null)
+    conda (params.enable_conda ? "openms::openms=2.7.0pre" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/openms:2.6.0--h4afb90d_0"
     } else {
@@ -38,6 +38,6 @@ process IDFILTER {
         -debug 10 \\
         > ${id_file.baseName}_idfilter.log
 
-    echo \$(IDFilter 2>&1) > ${software}.version.txt
+    echo \$(IDFilter 2>&1) > idfilter.version.txt
     """
 }

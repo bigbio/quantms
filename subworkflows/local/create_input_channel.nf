@@ -5,6 +5,7 @@
 params.sdrfparsing_options = [:]
 
 include { SDRFPARSING } from '../../modules/local/sdrfparsing/main' addParams( options: params.sdrfparsing_options)
+include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign' addParams( options: [:] )
 
 workflow CREATE_INPUT_CHANNEL {
     take:
@@ -14,23 +15,28 @@ workflow CREATE_INPUT_CHANNEL {
     main:
     ch_versions = Channel.empty()
 
-    if (is_sdrf) {
+    if (sdrf_file.toString().toLowerCase().contains("sdrf")) {
+        is_sdrf = true
         SDRFPARSING ( sdrf_file )
         ch_versions = ch_versions.mix(SDRFPARSING.out.version)
         SDRFPARSING.out.ch_sdrf_config_file
-        .splitCsv(header: true, sep: '\t')
-        .map { create_meta_channel(it, is_sdrf) }
-        .set { results }
+            .splitCsv(header: true, sep: '\t')
+            .map { create_meta_channel(it, is_sdrf) }
+            .set { results }
+        ch_expdesign    = SDRFPARSING.out.ch_expdesign
     } else {
-        exp_file = Channel.fromPath(exp_file, checkIfExists: true)
-        exp_file.splitCsv(header: true, sep: '\t')
-        .map { create_meta_channel(it, is_sdrf) }
-        .set { results }
+        is_sdrf = false
+        PREPROCESS_EXPDESIGN( sdrf_file )
+        sdrf_file
+            .splitCsv(header: true, sep: '\t')
+            .map { create_meta_channel(it, is_sdrf) }
+            .set { results }
+        ch_expdesign = PREPROCESS_EXPDESIGN.out.ch_expdesign
     }
 
     emit:
     results                     // [meta, [spectra_files ]]
-    ch_expdesign    = SDRFPARSING.out.ch_expdesign
+    ch_expdesign
 
     version         = ch_versions
 }
@@ -54,9 +60,9 @@ def create_meta_channel(LinkedHashMap row, is_sdrf) {
         meta.fragmentmasstoleranceunit  = params.fragment_mass_tolerance_unit
         meta.enzyme                     = params.enzyme
 
-        if ((!file(row.Spectra_Filepath).exists())) {
-            exit 1, "ERROR: Please check input file -> File Uri does not exist!\n${row.Spectra_Filepath}"
-        }
+        // if ((!file(row.Spectra_Filepath).exists())) {
+        //     exit 1, "ERROR: Please check input file -> File Path does not exist!\n${row.Spectra_Filepath}"
+        // }
         array = [meta, file(row.Spectra_Filepath)]
     } else {
         meta.id                         = row.toString().md5()
