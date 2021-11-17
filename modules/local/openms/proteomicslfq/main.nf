@@ -39,6 +39,8 @@ process PROTEOMICSLFQ {
     script:
     def software = getSoftwareName(task.process)
     def msstats_present = params.quantification_method == "feature_intensity" ? '-out_msstats out.csv' : ''
+    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? '-out_triqler out_triqler.tsv' : ''
+    def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
 
     """
     ProteomicsLFQ \\
@@ -46,15 +48,18 @@ process PROTEOMICSLFQ {
         -ids ${(id_files as List).join(' ')} \\
         -design ${expdes} \\
         -fasta ${fasta} \\
-        -protein_inference ${params.protein_inference} \\
+        -protein_inference ${params.protein_inference_method} \\
         -quantification_method ${params.quantification_method} \\
         -targeted_only ${params.targeted_only} \\
         -mass_recalibration ${params.mass_recalibration} \\
         -transfer_ids ${params.transfer_ids} \\
         -protein_quantification ${params.protein_quant} \\
+        -alignment_order ${params.alignment_order} \\
         -out out.mzTab \\
         -threads ${task.cpus} \\
         ${msstats_present} \\
+        ${triqler_present} \\
+        ${decoys_present} \\
         -out_cxml out.consensusXML \\
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         -debug ${params.inf_quant_debug} \\

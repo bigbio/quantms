@@ -15,7 +15,7 @@ def get_versions(software, version_file):
         'nextflow': r"(\S+)",
         'sdrf-pipelines': semver_regex,
         'thermorawfileparser': r"(\S+)",
-        'FileConverter':  semver_regex,
+        'fileconverter':  semver_regex,
         'decoydatabase':  semver_regex,
         'isobaricanalyzer': semver_regex,
         'msgfplusadapter': semver_regex,
@@ -28,17 +28,18 @@ def get_versions(software, version_file):
         'percolator': r"([0-9].[0-9]{2}.[0-9])",
         'idfilter': semver_regex,
         'idscoreswitcher': semver_regex,
-        'FalseDiscoveryRate': semver_regex,
+        'falsediscoveryrate': semver_regex,
         'IDPosteriorErrorProbability': semver_regex,
+        'consensusid': semver_regex,
         'filemerge': semver_regex,
         'idmapper': semver_regex,
         'epifany': semver_regex,
         'proteininference': semver_regex,
         'idconflictresolver': semver_regex,
-        'ProteomicsLFQ': semver_regex,
+        'proteomicslfq': semver_regex,
         'proteinquantifier': semver_regex,
         'msstatsconverter': semver_regex,
-        'MSstats': r"(\S+)"
+        'msstats': r"(\S+)"
     }
 
     match = re.search(regexes[software], version_file).group(1)

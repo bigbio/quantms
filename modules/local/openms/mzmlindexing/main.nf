@@ -34,6 +34,6 @@ process MZMLINDEXING {
     mkdir out
     FileConverter -in ${mzmlfile} -out out/${mzmlfile.baseName}.mzML > ${mzmlfile.baseName}_mzmlindexing.log
 
-    echo \$(FileConverter 2>&1) > ${software}.version.txt
+    echo \$(FileConverter 2>&1) > fileconverter.version.txt
     """
 }

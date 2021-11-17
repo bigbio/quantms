@@ -21,7 +21,7 @@ process IDPEP {
     tuple val(meta), path(id_file)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_fdr.idXML"), val("q-value_score"), emit: id_files_ForIDPEP
+    tuple val(meta), path("${id_file.baseName}_idpep.idXML"), val("q-value_score"), emit: id_files_ForIDPEP
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -38,6 +38,6 @@ process IDPEP {
         $options.args \\
         > ${id_file.baseName}_idpep.log
 
-    echo \$(IDPosteriorErrorProbability 2>&1) > ${software}.version.txt
+    echo \$(IDPosteriorErrorProbability 2>&1) > IDPosteriorErrorProbability.version.txt
     """
 }

@@ -25,13 +25,16 @@ workflow CREATE_INPUT_CHANNEL {
             .set { results }
         ch_expdesign    = SDRFPARSING.out.ch_expdesign
     } else {
+        ch_expdesign = Channel.fromPath( sdrf_file )
         is_sdrf = false
         PREPROCESS_EXPDESIGN( sdrf_file )
-        sdrf_file
+        // TODO need to find a better way to parse expdesign
+        ch_expdesign
             .splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf) }
             .set { results }
-        ch_expdesign = PREPROCESS_EXPDESIGN.out.ch_expdesign
+
+        ch_expdesign    = PREPROCESS_EXPDESIGN.out.ch_expdesign
     }
 
     emit:

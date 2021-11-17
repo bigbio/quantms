@@ -1,14 +1,17 @@
 
-include { initOptions; saveFiles } from './functions'
+include { saveFiles } from './functions'
 
 params.options = [:]
-options = initOptions(params.options)
 
 // Fixing file endings only necessary if the experimental design is user-specified
-    process PREPROCESS_EXPDESIGN {
+process PREPROCESS_EXPDESIGN {
 
     label 'process_very_low'
     label 'process_single_thread'
+
+    publishDir "${params.outdir}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'expdesign_post', meta:[:], publish_by_meta:[]) }
 
     input:
     path design

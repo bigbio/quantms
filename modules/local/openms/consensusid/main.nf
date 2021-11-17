@@ -20,7 +20,7 @@ process CONSENSUSID {
     }
 
     input:
-    tuple val(meta), path(id_file)
+    tuple val(meta), path(id_file), val(qval_score)
 
     output:
     tuple val(meta), path("${meta.id}_consensus.idXML"), emit: consensusids

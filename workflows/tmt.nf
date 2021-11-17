@@ -42,16 +42,14 @@ include { FILEMERGE } from '../modules/local/openms/filemerge/main' addParams( o
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { INPUT_CHECK } from '../subworkflows/local/input_check' addParams( options: modules['sdrfparsing'] )
-include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel' addParams( sdrfparsing_options: modules['sdrfparsing'] )
-include { FILE_PREPARATION } from '../subworkflows/local/file_preparation' addParams(options: [:])
-include { DATABASESEARCHENGINES } from '../subworkflows/local/databasesearchengines' addParams( options: [:])
-include { PSMRESCORING } from '../subworkflows/local/psmrescoring' addParams( extract_psm_feature_options: modules['extractpsmfeature'], percolator_options: modules['percolator'])
-
 def psm_idfilter = modules['idfilter']
 def epi_filter = modules['idfilter'].clone()
 
 psm_idfilter.args += Utils.joinModuleArgs(["-score:pep \"$params.psm_pep_fdr_cutoff\""])
+
+epi_filter.args += Utils.joinModuleArgs(["-score:prot \"$params.protein_level_fdr_cutoff\"",
+                "-delete_unreferenced_peptide_hits", "-remove_decoys"])
+epi_filter.suffix = ".consensusXML"
 
 def idscoreswitcher_to_qval = modules['idscoreswitcher']
 def idscoreswitcher_for_luciphor = modules['idscoreswitcher'].clone()
@@ -59,14 +57,14 @@ def idscoreswitcher_for_luciphor = modules['idscoreswitcher'].clone()
 idscoreswitcher_to_qval.args += Utils.joinModuleArgs(["-old_score \"Posterior Error Probability\"", "-new_score_type q-value"])
 idscoreswitcher_for_luciphor.args += Utils.joinModuleArgs(["-old_score \"q-value\"", "-new_score_type Posterior Error Probability"])
 
+include { INPUT_CHECK } from '../subworkflows/local/input_check' addParams( options: modules['sdrfparsing'] )
+include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel' addParams( sdrfparsing_options: modules['sdrfparsing'] )
+include { FILE_PREPARATION } from '../subworkflows/local/file_preparation' addParams(options: [:])
+include { DATABASESEARCHENGINES } from '../subworkflows/local/databasesearchengines' addParams( options: [:])
+include { PSMRESCORING } from '../subworkflows/local/psmrescoring' addParams( extract_psm_feature_options: modules['extractpsmfeature'], percolator_options: modules['percolator'])
 include { PSMFDRCONTROL } from '../subworkflows/local/psmfdrcontrol' addParams( idscoreswitcher_to_qval: idscoreswitcher_to_qval, idfilter: psm_idfilter)
 include { PHOSPHOSCORING } from '../subworkflows/local/phosphoscoring' addParams ( idscoreswitcher_for_luciphor: idscoreswitcher_for_luciphor)
 include { FEATUREMAPPER } from '../subworkflows/local/featuremapper' addParams( options: [:])
-
-epi_filter.args += Utils.joinModuleArgs(["-score:prot \"$params.protein_level_fdr_cutoff\"",
-                "-delete_unreferenced_peptide_hits", "-remove_decoys"])
-epi_filter.suffix = ".consensusXML"
-
 include { PROTEININFERENCE } from '../subworkflows/local/proteininference' addParams( epifilter: epi_filter)
 include { PROTEINQUANT } from '../subworkflows/local/proteinquant' addParams( options: [:])
 
