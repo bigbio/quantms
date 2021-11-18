@@ -55,6 +55,7 @@ process PROTEOMICSLFQ {
         -transfer_ids ${params.transfer_ids} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
+        -picked_proteinFDR \\
         -out out.mzTab \\
         -threads ${task.cpus} \\
         ${msstats_present} \\
@@ -63,8 +64,9 @@ process PROTEOMICSLFQ {
         -out_cxml out.consensusXML \\
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         -debug ${params.inf_quant_debug} \\
+        $options.args \\
         > proteomicslfq.log
 
-    echo \$(ProteinQuantifier 2>&1) > ${software}.version.txt
+    echo \$(ProteomicsLFQ 2>&1) > ${software}.version.txt
     """
 }
