@@ -28,22 +28,19 @@ process PROTEININFERENCE {
     script:
     def software = getSoftwareName(task.process)
 
-
-    // -picked_fdr $params.picked_fdr
-    // -picked_decoy_string $params.decoy_string
-    // -protein_fdr true \\
-    // -Algorithm:score_aggregation_method $params.protein_score \\
-    // TODO update to 2.7.0 !!!! consensusXML is not supported
-
     """
     ProteinInference \\
         -in ${consus_file} \\
         -threads $task.cpus \\
+        -picked_fdr $params.picked_fdr \\
+        -picked_decoy_string $params.decoy_string \\
+        -protein_fdr true \\
+        -Algorithm:score_aggregation_method $params.protein_score \\
         -debug 100 \\
         -Algorithm:min_peptides_per_protein $params.min_peptides_per_protein \\
         -out ${consus_file.baseName}_epi.consensusXML \\
         > ${consus_file.baseName}_inference.log
 
-    echo \$(ProteinInference 2>&1) > ${software}.version.txt
+    echo \$(ProteinInference 2>&1) > proteininference.version.txt
     """
 }

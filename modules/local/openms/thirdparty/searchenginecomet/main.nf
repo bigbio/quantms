@@ -93,6 +93,7 @@ process SEARCHENGINECOMET {
         $options.args \\
         > ${mzml_file.baseName}_comet.log
 
-    echo \$(CometAdapter 2>&1) > ${software}.version.txt
+    echo \$(CometAdapter 2>&1) > cometadapter.version.txt
+    echo \$(comet 2>&1) > comet.version.txt
     """
 }

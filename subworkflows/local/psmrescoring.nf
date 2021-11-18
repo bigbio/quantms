@@ -19,6 +19,7 @@ workflow PSMRESCORING {
     main:
     ch_versions = Channel.empty()
     ch_results = Channel.empty()
+    ch_fdridpep = Channel.empty()
 
     if (params.posterior_probabilities == 'percolator') {
         EXTRACTPSMFEATURE(id_files)
@@ -33,8 +34,9 @@ workflow PSMRESCORING {
             FDRIDPEP(id_files)
             ch_versions = ch_versions.mix(FDRIDPEP.out.version)
             id_files = Channel.empty()
+            ch_fdridpep = FDRIDPEP.out.id_files_idx_ForIDPEP_FDR
         }
-        IDPEP(FDRIDPEP.out.id_files_idx_ForIDPEP_FDR.mix(id_files))
+        IDPEP(ch_fdridpep.mix(id_files))
         ch_versions = ch_versions.mix(IDPEP.out.version)
         ch_results = IDPEP.out.id_files_ForIDPEP
     }
