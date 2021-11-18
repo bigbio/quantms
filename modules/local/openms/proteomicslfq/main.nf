@@ -55,7 +55,7 @@ process PROTEOMICSLFQ {
         -transfer_ids ${params.transfer_ids} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
-        -picked_proteinFDR \\
+        -picked_proteinFDR true \\
         -out out.mzTab \\
         -threads ${task.cpus} \\
         ${msstats_present} \\
