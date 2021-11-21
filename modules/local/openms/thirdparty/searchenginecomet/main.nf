@@ -33,12 +33,12 @@ process SEARCHENGINECOMET {
         // Note: This uses an arbitrary rule to decide if it was hi-res or low-res
         // and uses Comet's defaults for bin size, in case unsupported unit "ppm" was given.
         if (meta.fragmentmasstolerance.toDouble() < 50) {
-            bin_tol = "0.015"
-            bin_offset = "0.0"
+            bin_tol = 0.015
+            bin_offset = 0.0
             inst = params.instrument ?: "high_res"
         } else {
-            bin_tol = "0.50025"
-            bin_offset = "0.4"
+            bin_tol = 0.50025
+            bin_offset = 0.4
             inst = params.instrument ?: "low_res"
         }
         log.warn "The chosen search engine Comet does not support ppm fragment tolerances. We guessed a " + inst +
@@ -46,10 +46,10 @@ process SEARCHENGINECOMET {
     } else {
         // TODO expose the fragment_bin_offset parameter of comet
         bin_tol = meta.fragmentmasstolerance.toDouble()
-        bin_offset = meta.fragmentmasstolerance <= 0.05 ? "0.0" : "0.4"
+        bin_offset = bin_tol <= 0.05 ? 0.0 : 0.4
         if (!params.instrument)
         {
-            inst = meta.fragmentmasstolerance <= 0.05 ? "high_res" : "low_res"
+            inst = bin_tol <= 0.05 ? "high_res" : "low_res"
         } else {
             inst = params.instrument
         }
