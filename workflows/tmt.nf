@@ -38,6 +38,7 @@ include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' 
 include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main' addParams( options: modules['decoydatabase'] )
 include { CONSENSUSID } from '../modules/local/openms/consensusid/main' addParams( options: modules['consensusid'] )
 include { FILEMERGE } from '../modules/local/openms/filemerge/main' addParams( options: modules['filemerge'] )
+include { PMULTIQC } from '../modules/local/pmultiqc/main' addParams( options: modules['pmultiqc'] )
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -76,6 +77,10 @@ include { PROTEINQUANT } from '../subworkflows/local/proteinquant' addParams( op
 
 def multiqc_options   = modules['multiqc']
 multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"$params.multiqc_title\""]) : ''
+if (!workflow.containerEngine && !params.enable_conda) {
+    multiqc_options.args += Utils.joinModuleArgs(["--disable_plugin"])
+}
+
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -197,6 +202,19 @@ workflow TMT {
     //
     PROTEINQUANT(PROTEININFERENCE.out.epi_idfilter, CREATE_INPUT_CHANNEL.out.ch_expdesign)
     ch_software_versions = ch_software_versions.mix(PROTEINQUANT.out.version.ifEmpty(null))
+
+    //
+    // MODULE: PMULTIQC
+    // TODO PMULTIQC package will be improved and restructed
+    FILE_PREPARATION.out.results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_mzmls }
+    PSMRESCORING.out.results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_ids }
+
+    PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), PROTEINQUANT.out.out_mztab, ch_pmultiqc_ids.collect())
+    ch_software_versions = ch_software_versions.mix(PMULTIQC.out.version.ifEmpty(null))
 
     //
     // MODULE: Pipeline reporting
