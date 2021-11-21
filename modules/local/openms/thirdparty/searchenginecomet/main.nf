@@ -55,10 +55,20 @@ process SEARCHENGINECOMET {
         }
     }
 
+    def isoSlashComet = "0/1"
+    if (params.isotope_error_range) {
+        def isoRangeComet = params.isotope_error_range.split(",")
+        isoSlashComet = ""
+        for (c in isoRangeComet[0].toInteger()..isoRangeComet[1].toInteger()-1) {
+            isoSlashComet += c + "/"
+        }
+        isoSlashComet += isoRangeComet[1]
+    }
     // for consensusID the cutting rules need to be the same. So we adapt to the loosest rules from MSGF
     // TODO find another solution. In ProteomicsLFQ we re-run PeptideIndexer (remove??) and if we
     // e.g. add XTandem, after running ConsensusID it will lose the auto-detection ability for the
     // XTandem specific rules.
+    enzyme = meta.enzyme
     if (params.search_engines.contains("msgf")){
         if (meta.enzyme == "Trypsin") enzyme = "Trypsin/P"
         else if (meta.enzyme == "Arg-C") enzyme = "Arg-C/P"
@@ -79,7 +89,8 @@ process SEARCHENGINECOMET {
         -max_peptide_length $params.max_peptide_length \\
         -num_hits $params.num_hits \\
         -num_enzyme_termini $params.num_enzyme_termini \\
-        -enzyme ${enzyme} \\
+        -enzyme "${enzyme}" \\
+        -isotope_error ${isoSlashComet} \\
         -precursor_charge $params.min_precursor_charge:$params.max_precursor_charge \\
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
         -variable_modifications ${meta.variablemodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\

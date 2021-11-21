@@ -29,6 +29,7 @@ workflow PROTEINQUANT {
 
     emit:
     msstats_csv = MSSTATSCONVERTER.out.out_msstats
+    out_mztab   = PROTEINQUANTIFIER.out.out_mztab
 
     version     = ch_version
 }

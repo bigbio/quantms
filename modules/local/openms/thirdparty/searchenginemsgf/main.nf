@@ -30,9 +30,7 @@ process SEARCHENGINEMSGF {
     script:
     // find a way to add MSGFPlus.jar dependence
     msgf_jar = ''
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
-    } else if (!params.enable_conda){
+    if (workflow.containerEngine) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 
