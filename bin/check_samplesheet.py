@@ -91,7 +91,7 @@ def check_expdesign(expdesign):
     check_expdesign_logic(data, s_DataFrame)
 
 def check_expdesign_logic(fTable, sTable):
-    if max(fTable.Fraction_Group) > len(set(fTable.Fraction_Group)):
+    if int(max(fTable.Fraction_Group)) > len(set(fTable.Fraction_Group)):
         print("Fraction_Group discontinuous!")
         sys.exit(1)
     fTable_D = fTable.drop_duplicates(['Fraction_Group', 'Fraction', 'Label', 'Sample'])
