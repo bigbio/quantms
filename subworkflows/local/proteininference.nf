@@ -7,7 +7,7 @@ params.protein_inference = [:]
 params.epifilter = [:]
 
 include { EPIFANY } from '../../modules/local/openms/epifany/main' addParams( options: params.epifany )
-include { PROTEININFERENCE as PROTEIN_INFERENCE} from '../../modules/local/openms/proteininference/main' addParams( options: params.protein_inference )
+include { PROTEININFERENCE as PROTEININFERENCER} from '../../modules/local/openms/proteininference/main' addParams( options: params.protein_inference )
 include { IDFILTER as EPIFILTER } from '../../modules/local/openms/idfilter/main' addParams( options: params.epifilter )
 
 workflow PROTEININFERENCE {
@@ -22,9 +22,9 @@ workflow PROTEININFERENCE {
         ch_version = ch_version.mix(EPIFANY.out.version)
         ch_epifilter = EPIFANY.out.epi_inference
     } else {
-        PROTEIN_INFERENCE(consus_file)
-        ch_version = ch_version.mix(PROTEIN_INFERENCE.out.version)
-        ch_epifilter = PROTEIN_INFERENCE.out.protein_inference
+        PROTEININFERENCER(consus_file)
+        ch_version = ch_version.mix(PROTEININFERENCER.out.version)
+        ch_epifilter = PROTEININFERENCER.out.protein_inference
     }
 
     EPIFILTER(ch_epifilter)
