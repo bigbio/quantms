@@ -36,6 +36,7 @@ process SEARCHENGINEMSGF {
 
     def software = getSoftwareName(task.process)
 
+    enzyme = meta.enzyme
     if (meta.enzyme == 'Trypsin') enzyme = 'Trypsin/P'
     else if (meta.enzyme == 'Arg-C') enzyme = 'Arg-C/P'
     else if (meta.enzyme == 'Asp-N') enzyme = 'Asp-N/B'
