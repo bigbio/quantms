@@ -17,7 +17,11 @@ Bottom-up proteomics is a common method to identify proteins and characterize th
    - :doc:`pquant`
    - :doc:`pmultiqc`
 
-Mass spectrometry quantitative data analysis can be divided in three main steps: (i) peptide/protein identification, (ii) quantification, (iii) downstream data analysis.
+Mass spectrometry quantitative data analysis can be divided in three main steps:
+
+- peptide/protein identification
+- protein quantification
+- downstream data analysis and quality contronl
 
 quantms workflow in a nutshell
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
