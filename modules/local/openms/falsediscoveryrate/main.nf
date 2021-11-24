@@ -39,6 +39,6 @@ process FALSEDISCOVERYRATE {
         $options.args \\
         > ${id_file.baseName}_fdr.log
 
-    echo \$(FalseDiscoveryRate 2>&1) > ${software}.version.txt
+    echo \$(FalseDiscoveryRate 2>&1) > falsediscoveryrate.version.txt
     """
 }

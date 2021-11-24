@@ -29,6 +29,7 @@ process INDEXPEPTIDES {
     script:
     def software = getSoftwareName(task.process)
 
+    enzyme = meta.enzyme
     // see comment in CometAdapter. Alternative here in PeptideIndexer is to let it auto-detect the enzyme by not specifying.
     if (params.search_engines.contains("msgf"))
     {
@@ -36,7 +37,7 @@ process INDEXPEPTIDES {
         else if (meta.enzyme == 'Arg-C') enzyme = 'Arg-C/P'
         else if (meta.enzyme == 'Asp-N') enzyme = 'Asp-N/B'
         else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin/P'
-        else if (meta.enzyme == 'Lys-C') options.enzyme = 'Lys-C/P'
+        else if (meta.enzyme == 'Lys-C') enzyme = 'Lys-C/P'
     }
     if (meta.enzyme == "unspecific cleavage")
     {

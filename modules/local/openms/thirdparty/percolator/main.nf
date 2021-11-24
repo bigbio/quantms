@@ -40,6 +40,8 @@ process PERCOLATOR {
         $options.args \\
         > ${id_file.baseName}_percolator.log
 
-    echo \$(PercolatorAdapter 2>&1) > ${software}.version.txt
+    echo \$(PercolatorAdapter 2>&1) > percolatoradapter.version.txt
+    percolator -h &> percolator.version.txt
+
     """
 }

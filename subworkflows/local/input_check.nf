@@ -19,6 +19,6 @@ workflow INPUT_CHECK {
     SAMPLESHEET_CHECK ( input_file, is_sdrf )
 
     emit:
-    ch_input_file = SAMPLESHEET_CHECK.out.checked_file
-    is_sdrf      = is_sdrf
+    ch_input_file   = SAMPLESHEET_CHECK.out.checked_file
+    is_sdrf         = is_sdrf
 }

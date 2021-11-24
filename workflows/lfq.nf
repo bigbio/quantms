@@ -37,20 +37,14 @@ def modules = params.modules.clone()
 include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
 include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main' addParams( options: modules['decoydatabase'] )
 include { CONSENSUSID } from '../modules/local/openms/consensusid/main' addParams( options: modules['consensusid'] )
-include { FILEMERGE } from '../modules/local/openms/filemerge/main' addParams( options: modules['filemerge'] )
-include { PMULTIQC } from '../modules/local/pmultiqc/main' addParams( options: modules['pmultiqc'] )
+include { PROTEOMICSLFQ } from '../modules/local/openms/proteomicslfq/main' addParams( options: [:])
+include { PMULTIQC } from '../modules/local/pmultiqc/main' addParams( options: modules['pmultiqc'])
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 def psm_idfilter = modules['idfilter']
-def epi_filter = modules['idfilter'].clone()
-
 psm_idfilter.args += Utils.joinModuleArgs(["-score:pep \"$params.psm_pep_fdr_cutoff\""])
-
-epi_filter.args += Utils.joinModuleArgs(["-score:prot \"$params.protein_level_fdr_cutoff\"",
-                "-delete_unreferenced_peptide_hits", "-remove_decoys"])
-epi_filter.suffix = ".consensusXML"
 
 def idscoreswitcher_to_qval = modules['idscoreswitcher']
 def idscoreswitcher_for_luciphor = modules['idscoreswitcher'].clone()
@@ -65,9 +59,6 @@ include { DATABASESEARCHENGINES } from '../subworkflows/local/databasesearchengi
 include { PSMRESCORING } from '../subworkflows/local/psmrescoring' addParams( extract_psm_feature_options: modules['extractpsmfeature'], percolator_options: modules['percolator'])
 include { PSMFDRCONTROL } from '../subworkflows/local/psmfdrcontrol' addParams( idscoreswitcher_to_qval: idscoreswitcher_to_qval, idfilter: psm_idfilter)
 include { PHOSPHOSCORING } from '../subworkflows/local/phosphoscoring' addParams ( idscoreswitcher_for_luciphor: idscoreswitcher_for_luciphor)
-include { FEATUREMAPPER } from '../subworkflows/local/featuremapper' addParams( isobaric: modules['isobaricanalyzer'], idmapper: modules['idmapper'])
-include { PROTEININFERENCE } from '../subworkflows/local/proteininference' addParams( epifany: modules['epifany'], protein_inference: modules['proteininference'], epifilter: epi_filter)
-include { PROTEINQUANT } from '../subworkflows/local/proteinquant' addParams( resolve_conflict: modules['idconflictresolver'], pro_quant: modules['proteinquantifier'], msstatsconverter: modules['msstatsconverter'])
 
 /*
 ========================================================================================
@@ -80,7 +71,6 @@ multiqc_options.args += params.multiqc_title ? Utils.joinModuleArgs(["--title \"
 if (!workflow.containerEngine && !params.enable_conda) {
     multiqc_options.args += Utils.joinModuleArgs(["--disable_plugin"])
 }
-
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -96,7 +86,7 @@ include { MULTIQC } from '../modules/nf-core/modules/multiqc/main' addParams( op
 // Info required for completion email and summary
 def multiqc_report = []
 
-workflow TMT {
+workflow LFQ {
 
     ch_software_versions = Channel.empty()
 
@@ -174,47 +164,35 @@ workflow TMT {
     if (params.enable_mod_localization) {
         PHOSPHOSCORING(FILE_PREPARATION.out.results.join(PSMFDRCONTROL.out.id_filtered))
         ch_software_versions = ch_software_versions.mix(PHOSPHOSCORING.out.version.ifEmpty(null))
-        ptmt_in_id = PHOSPHOSCORING.out.id_luciphor
+        plfq_in_id = PHOSPHOSCORING.out.id_luciphor
     } else {
-        ptmt_in_id = PSMFDRCONTROL.out.id_filtered
+        plfq_in_id = PSMFDRCONTROL.out.id_filtered
     }
 
     //
-    // SUBWORKFLOW: FEATUREMAPPER
+    // SUBWORKFLOW: PROTEOMICSLFQ
     //
-    FEATUREMAPPER(FILE_PREPARATION.out.results, ptmt_in_id)
-    ch_software_versions = ch_software_versions.mix(FEATUREMAPPER.out.version.ifEmpty(null))
-
-    //
-    // MODULE: FILEMERGE
-    //
-    FILEMERGE(FEATUREMAPPER.out.id_map.collect())
-    ch_software_versions = ch_software_versions.mix(FILEMERGE.out.version.ifEmpty(null))
-
-    //
-    // SUBWORKFLOW: PROTEININFERENCE
-    //
-    PROTEININFERENCE(FILEMERGE.out.id_merge)
-    ch_software_versions = ch_software_versions.mix(PROTEININFERENCE.out.version.ifEmpty(null))
-
-    //
-    // SUBWORKFLOW: PROTEINQUANT
-    //
-    PROTEINQUANT(PROTEININFERENCE.out.epi_idfilter, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-    ch_software_versions = ch_software_versions.mix(PROTEINQUANT.out.version.ifEmpty(null))
+    FILE_PREPARATION.out.results.join(plfq_in_id)
+        .multiMap { it ->
+            mzmls: pmultiqc_mzmls: it[1]
+            ids: it[2]
+        }
+        .set{ ch_plfq }
+    PROTEOMICSLFQ(ch_plfq.mzmls.collect(),
+                ch_plfq.ids.collect(),
+                CREATE_INPUT_CHANNEL.out.ch_expdesign,
+                searchengine_in_db
+            )
+    ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.version.ifEmpty(null))
 
     //
     // MODULE: PMULTIQC
     // TODO PMULTIQC package will be improved and restructed
-    FILE_PREPARATION.out.results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_mzmls }
-    PSMRESCORING.out.results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_ids }
-
-    PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), PROTEINQUANT.out.out_mztab, ch_pmultiqc_ids.collect())
-    ch_software_versions = ch_software_versions.mix(PMULTIQC.out.version.ifEmpty(null))
+    PSMRESCORING.out.results.map { it -> it[1] }.set { ch_ids_pmultiqc }
+    PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_plfq.pmultiqc_mzmls.collect(),
+                PROTEOMICSLFQ.out.out_mztab.combine(PROTEOMICSLFQ.out.out_consensusXML).combine(PROTEOMICSLFQ.out.out_msstats),
+                ch_ids_pmultiqc.collect()
+            )
 
     //
     // MODULE: Pipeline reporting

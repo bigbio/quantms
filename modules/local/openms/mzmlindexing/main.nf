@@ -7,9 +7,8 @@ options        = initOptions(params.options)
 process MZMLINDEXING {
     tag "$meta.id"
     label 'process_low'
-    publishDir "${params.outdir}/logs",
+    publishDir "${params.outdir}",
         mode: params.publish_dir_mode,
-        pattern: '*.log',
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
     conda (params.enable_conda ? "openms::openms=2.7.0pre" : null)
@@ -25,7 +24,7 @@ process MZMLINDEXING {
     tuple val(meta), path(mzmlfile)
 
     output:
-    tuple val(meta), path("*.mzML"), emit: mzmls_indexed
+    tuple val(meta), path("out/*.mzML"), emit: mzmls_indexed
     path "*.version.txt", emit: version
     path "*.log", emit: log
 
@@ -35,6 +34,6 @@ process MZMLINDEXING {
     mkdir out
     FileConverter -in ${mzmlfile} -out out/${mzmlfile.baseName}.mzML > ${mzmlfile.baseName}_mzmlindexing.log
 
-    echo \$(FileConverter 2>&1) > ${software}.version.txt
+    echo \$(FileConverter 2>&1) > fileconverter.version.txt
     """
 }

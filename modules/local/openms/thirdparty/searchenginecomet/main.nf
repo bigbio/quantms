@@ -33,12 +33,12 @@ process SEARCHENGINECOMET {
         // Note: This uses an arbitrary rule to decide if it was hi-res or low-res
         // and uses Comet's defaults for bin size, in case unsupported unit "ppm" was given.
         if (meta.fragmentmasstolerance.toDouble() < 50) {
-            bin_tol = "0.015"
-            bin_offset = "0.0"
+            bin_tol = 0.015
+            bin_offset = 0.0
             inst = params.instrument ?: "high_res"
         } else {
-            bin_tol = "0.50025"
-            bin_offset = "0.4"
+            bin_tol = 0.50025
+            bin_offset = 0.4
             inst = params.instrument ?: "low_res"
         }
         log.warn "The chosen search engine Comet does not support ppm fragment tolerances. We guessed a " + inst +
@@ -46,19 +46,29 @@ process SEARCHENGINECOMET {
     } else {
         // TODO expose the fragment_bin_offset parameter of comet
         bin_tol = meta.fragmentmasstolerance.toDouble()
-        bin_offset = meta.fragmentmasstolerance <= 0.05 ? "0.0" : "0.4"
+        bin_offset = bin_tol <= 0.05 ? 0.0 : 0.4
         if (!params.instrument)
         {
-            inst = meta.fragmentmasstolerance <= 0.05 ? "high_res" : "low_res"
+            inst = bin_tol <= 0.05 ? "high_res" : "low_res"
         } else {
             inst = params.instrument
         }
     }
 
+    def isoSlashComet = "0/1"
+    if (params.isotope_error_range) {
+        def isoRangeComet = params.isotope_error_range.split(",")
+        isoSlashComet = ""
+        for (c in isoRangeComet[0].toInteger()..isoRangeComet[1].toInteger()-1) {
+            isoSlashComet += c + "/"
+        }
+        isoSlashComet += isoRangeComet[1]
+    }
     // for consensusID the cutting rules need to be the same. So we adapt to the loosest rules from MSGF
     // TODO find another solution. In ProteomicsLFQ we re-run PeptideIndexer (remove??) and if we
     // e.g. add XTandem, after running ConsensusID it will lose the auto-detection ability for the
     // XTandem specific rules.
+    enzyme = meta.enzyme
     if (params.search_engines.contains("msgf")){
         if (meta.enzyme == "Trypsin") enzyme = "Trypsin/P"
         else if (meta.enzyme == "Arg-C") enzyme = "Arg-C/P"
@@ -79,7 +89,8 @@ process SEARCHENGINECOMET {
         -max_peptide_length $params.max_peptide_length \\
         -num_hits $params.num_hits \\
         -num_enzyme_termini $params.num_enzyme_termini \\
-        -enzyme ${enzyme} \\
+        -enzyme "${enzyme}" \\
+        -isotope_error ${isoSlashComet} \\
         -precursor_charge $params.min_precursor_charge:$params.max_precursor_charge \\
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
         -variable_modifications ${meta.variablemodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
@@ -93,6 +104,7 @@ process SEARCHENGINECOMET {
         $options.args \\
         > ${mzml_file.baseName}_comet.log
 
-    echo \$(CometAdapter 2>&1) > ${software}.version.txt
+    echo \$(CometAdapter 2>&1) > cometadapter.version.txt
+    echo \$(comet 2>&1) > comet.version.txt
     """
 }
