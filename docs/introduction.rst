@@ -26,7 +26,7 @@ Mass spectrometry quantitative data analysis can be divided in three main steps:
 - protein quantification
 - downstream data analysis and quality control
 
-.. image:: images/quantms.svg
+.. image:: images/quantms.png
    :width: 350
 
 References
