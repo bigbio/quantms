@@ -33,6 +33,7 @@ The RAW data (files from the instrument) can be provided to quantms pipeline in 
 
 .. important:: Automatic RAW file conversion is only supported from Thermo Scientific.
 
+Additionally to file conversion, the Raw conversion step allows the users to perform an extra peak-picking step ```openmspeakpicker true``` for those datasets/projects where peaks can be extracted using the Thermo RAW API. Read more about the OpenMS peak picker algorithm `here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerWavelet.html>`_ .
 
 
 References
