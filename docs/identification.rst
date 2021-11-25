@@ -35,9 +35,18 @@ The RAW data (files from the instrument) can be provided to quantms pipeline in 
 
 Additionally to file conversion, the Raw conversion step allows the users to perform an extra peak-picking step ```openmspeakpicker true``` for those datasets/projects where peaks can be extracted using the Thermo RAW API. Read more about the OpenMS peak picker algorithm `here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerWavelet.html>`_ .
 
+Target/Decoy database generation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Target/Decoy is the most common approach to control the number of false positive peptides and proteins identified by the corresponding workflow [ref 3]. The user can provide the protein FSATA database with the decoys already attached or generate the database within the pipeline by using the following option: ```add_decoys```.
+
+.. hint:: Additionally, the user can define the prefix for the decoy proteins  (e.g. DECOY_) by using the parameter ```decoy_string```. We STRONGLY recommend to use DECOY_ prefix for all the decoy proteins for better compatibility with exiting tools such as :doc:`pquant` or :doc:`pmultiqc`
+
 
 References
 ---------------------
 
 [1] Perez-Riverol Y, Wang R, Hermjakob H, Müller M, Vesada V, Vizcaíno JA. Open source libraries and frameworks for mass spectrometry based proteomics: a developer's perspective. Biochim Biophys Acta. 2014 Jan;1844(1 Pt A):63-76. doi: 10.1016/j.bbapap.2013.02.032. Epub 2013 Mar 1. PMID: 23467006; PMCID: PMC3898926.
 [2] Perez-Riverol Y, Moreno P. Scalable Data Analysis in Proteomics and Metabolomics Using BioContainers and Workflows Engines. Proteomics. 2020 May;20(9):e1900147. doi: 10.1002/pmic.201900147. Epub 2019 Dec 18. PMID: 31657527.
+[3] Elias JE, Gygi SP. Target-decoy search strategy for mass spectrometry-based proteomics. Methods Mol Biol. 2010;604:55-71. doi: 10.1007/978-1-60761-444-9_5. PMID: 20013364; PMCID: PMC2922680.
+
