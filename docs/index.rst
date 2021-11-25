@@ -17,6 +17,10 @@ Contents
    .. toctree::
    :maxdepth: 2
 
+   formats
+   .. toctree::
+   :maxdepth: 2
+
    identification
    .. toctree::
    :maxdepth: 2
