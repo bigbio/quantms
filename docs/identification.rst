@@ -6,7 +6,8 @@ The peptide/protein identification workflow is the cornerstone of the Data depen
 In DDA mode, the mass spectrometer first records the mass/charge (m/z) of each peptide ion and then selects the peptide ions individually to obtain sequence information via MS/MS (Figure 1). As a result for each sample, millions of MS and corresponding MS/MS are obtained which correspond to all peptides in the mixture.
 
 .. image:: images/msms.png
-   :width: 350
+   :width: 600
+   :align: center
 
 In order to identified the MS/MS spectra, several computational algorithms and tools can now be used to identify peptides and proteins. The most popular ones are based on protein sequence databases, where the experimental MS/MS is compared with the theoretical MS/MS of each peptide obtained from the insilico digestion of the protein database [read review ref 1].
 
@@ -21,7 +22,8 @@ However, most of the computational proteomics tools are designed as single-tiere
 - creation of reports
 
 .. image:: images/id-dda-pipeline.png
-   :width: 350
+   :width: 400
+   :align: center
 
 Mass spectra processing: Raw conversion
 ---------------------------------------
