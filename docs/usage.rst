@@ -1,4 +1,4 @@
-quantms installation and usage
+Installation and usage
 ==========================
 
 The quantms is built using `Nextflow <https://www.nextflow.io>`_, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
