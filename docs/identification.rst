@@ -5,15 +5,30 @@ The peptide/protein identification workflow is the cornerstone of the Data depen
 
 In DDA mode, the mass spectrometer first records the mass/charge (m/z) of each peptide ion and then selects the peptide ions individually to obtain sequence information via MS/MS (Figure 1). As a result for each sample, millions of MS and corresponding MS/MS are obtained which correspond to all peptides in the mixture.
 
-In order to identified the MS/MS spectra, Several computational methods can now be used to identify peptides and proteins. The most popular ones are based on protein sequence databases, where the experimental MS/MS is compared with the theoretical MS/MS of each peptide obtained from the in-silico digestion of the protein database [read review 1].
+.. image:: images/msms.png
+   :width: 350
 
-.. note:: As a result, there are several well established software applications like Mascot [12], X!Tandem [13], Sequest [14], MyriMatch [15], SpectraST [11], OMSSA [16], and Andromeda [17], among others.
+In order to identified the MS/MS spectra, several computational algorithms and tools can now be used to identify peptides and proteins. The most popular ones are based on protein sequence databases, where the experimental MS/MS is compared with the theoretical MS/MS of each peptide obtained from the insilico digestion of the protein database [read review ref 1].
 
+.. note:: Several well established software applications like Mascot and MaxQuant can be used for peptide and protein identification.
 
+However, most of the computational proteomics tools are designed as single-tiered/monolithic software application where the analytics tasks cannot be distributed, limiting the scalability and reproducibility of the data analysis [ref 2]. The identification sub-workflow of the `quantms workflow <https://github.com/bigbio/quantms>`_ enables to distribute in cloud/distributed environments all the different steps of a peptide identification workflow including:
+
+- target/decoy database creation
+- peptide identification
+- false positive control
+- creation of reports
+
+quantms identification workflow
+---------------------
 
 .. image:: images/id-dda-pipeline.png
    :width: 350
 
+
+
 References
+---------------------
 
 [1] Perez-Riverol Y, Wang R, Hermjakob H, Müller M, Vesada V, Vizcaíno JA. Open source libraries and frameworks for mass spectrometry based proteomics: a developer's perspective. Biochim Biophys Acta. 2014 Jan;1844(1 Pt A):63-76. doi: 10.1016/j.bbapap.2013.02.032. Epub 2013 Mar 1. PMID: 23467006; PMCID: PMC3898926.
+[2] Perez-Riverol Y, Moreno P. Scalable Data Analysis in Proteomics and Metabolomics Using BioContainers and Workflows Engines. Proteomics. 2020 May;20(9):e1900147. doi: 10.1002/pmic.201900147. Epub 2019 Dec 18. PMID: 31657527.
