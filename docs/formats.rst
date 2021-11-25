@@ -1,0 +1,33 @@
+Formats in quantms
+===============================
+
+The quantms is natively based on HUPO-PSI standard file formats:
+
+- `mzML <https://www.psidev.info/mzML>`_: The mzML format is an open, XML-based format for mass spectrometer output files, developed with the full participation of vendors and researchers in order to create a single open format that would be supported by all software.
+
+- `mzTab <https://www.psidev.info/mztab>`_: mzTab is intended as a lightweight supplement to the existing standard mzML to store and represent peptide and protein and identifications together with experimental metadata and basic quantitative information.
+
+- `sdrf <https://github.com/bigbio/proteomics-metadata-standard>`_: The SDRF-Proteomics format describes the sample characteristics and the relationships between samples and data files included in a dataset. The information in SDRF files is organised so that it follows the natural flow of a proteomics experiment.
+
+Apart of this three main file formats, additionally, multiple file formats are used within the workflow between steps and as a final output for downstream analysis including: idXML, consensusXML, MSstats output, etc.
+
+Input formats
+---------------------------
+
+The quantms should receive three main inputs: Spectra data files (RAW or mzML); Protein database (Fasta);  Experimental design (SDRF).
+
+Protein databases
+~~~~~~~~~~~~~~~~~~
+
+Protein databases can be download from multiple sources; the most common ones are `UNIPROT <https://www.uniprot.org/>`_ and `ENSEMBL <https://www.ensembl.org/info/data/ftp/index.html>`_.
+
+.. hint:: Contaminants should be appended to the database. For each contaminant protein the prefix ``CONTAMINANT_`` should be added as prefix of the protein.
+
+Spectra Data
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The spectra data can be provided in RAW files (Thermo instruments) or preferably in mzML. If RAW files are provided, the first step of the identification pipeline convert them into mzML, read :ref:`identification:Mass spectra processing: Raw conversion`.
+
+Output formats
+---------------------------
+
