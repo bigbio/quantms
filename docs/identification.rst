@@ -15,6 +15,7 @@ In order to identified the MS/MS spectra, several computational algorithms and t
 However, most of the computational proteomics tools are designed as single-tiered/monolithic software application where the analytics tasks cannot be distributed, limiting the scalability and reproducibility of the data analysis [ref 2]. The identification sub-workflow of the `quantms workflow <https://github.com/bigbio/quantms>`_ enables to distribute in cloud/distributed environments all the different steps of a peptide identification workflow including:
 
 - target/decoy database creation
+- mass spectra processing
 - peptide identification
 - false positive control
 - creation of reports
@@ -24,6 +25,13 @@ quantms identification workflow
 
 .. image:: images/id-dda-pipeline.png
    :width: 350
+
+Mass spectra processing: Raw conversion
+~~~~~~~~~~~~~~~~~~~~~~
+
+The RAW data (files from the instrument) can be provided to quantms pipeline in two different formats: (i) RAW files - instrument files; (ii) mzML files (HUPO-PSI standard file format). quantms uses the `thermorawfileparser <https://github.com/compomics/ThermoRawFileParser>`_ to convert the input RAW files to mzML and all the following steps are built in top of the standard mzML.
+
+.. important:: Automatic RAW file conversion is only supported from Thermo Scientific.
 
 
 
