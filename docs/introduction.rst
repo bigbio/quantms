@@ -5,7 +5,8 @@ Bottom-up proteomics is a common method to identify proteins and characterize th
 
 
 .. image:: images/ms-proteomics.png
-   :width: 350
+   :width: 400
+   :align: center
 
 
 .. sidebar:: Pipelines and tools
