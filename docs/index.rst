@@ -15,8 +15,13 @@ Contents
 
    identification
    .. toctree::
-   :maxdepth: 2 
+   :maxdepth: 2
 
+The following links should be follow to get support and help with the quantms maintainers:
+
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23quantms-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/quantms)
+[![Report Issue](https://img.shields.io/github/issues/bigbio/quantms)](https://github.com/bigbio/quantms/issues)
+[![Get help on GitHub Forum](https://img.shields.io/badge/Github-Discussions-green)](https://github.com/bigbio/quantms/discussions)
 
 
 
