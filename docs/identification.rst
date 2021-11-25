@@ -44,7 +44,7 @@ Target/Decoy is the most common approach to control the number of false positive
 Peptide Identification
 ------------------------------------
 
-The peptide identification step in the quantms pipeline can be performed (**independently** or **combined**) with two different open-source tools : `Comet <http://comet-ms.sourceforge.net/>`_ or `MS-GF+ <https://github.com/MSGFPlus/msgfplus>`_. The parameters for the search engine Comet or MS-GF+ are read from the SDRF input parameters including the post-translation modifications (annotated with UNIMOD accessions), precursor and fragment ion mass tolerances, etc. The only parameter that MUST be provided by commandline to the quantms workflow is the psm and peptide FDR threshold ``psm_pep_fdr_cutoff`` (default value ``0.01``).
+The peptide identification step in the quantms pipeline can be performed (**independently** or **combined**) with two different open-source tools : `Comet <https://github.com/UWPR/Comet>`_ or `MS-GF+ <https://github.com/MSGFPlus/msgfplus>`_. The parameters for the search engine Comet or MS-GF+ are read from the SDRF input parameters including the post-translation modifications (annotated with UNIMOD accessions), precursor and fragment ion mass tolerances, etc. The only parameter that MUST be provided by commandline to the quantms workflow is the psm and peptide FDR threshold ``psm_pep_fdr_cutoff`` (default value ``0.01``).
 
 .. note:: The benefit of using multiple database search engine combined has been proved to be efficient to identified more around **15% peptides** more than using only one search engine. However, you need to be aware that adding another search engine will increase the CPU computing time. :doc:`identification-benchmarks`.
 
@@ -59,6 +59,14 @@ FDR filtering and ConsensusID
 The FDR filtering at peptide spectrum match (PSM) level can be applied for each peptide results. To filter the peptides first the tool compute the peptide error probability (PEP) and then filter using the provided thershold. The PEP score is the probability that a peptide (PSM-peptide spectral match) is incorrect. Basically, the higher the score the more confidence you can have that the given peptide identification is correct.
 
 When multiple search engines are used ```search_engines msgf,comet``` the results for each RAW file is combined into one single identification file including the combination of both search engines. The `ConsensusID tool <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ConsensusID.html>`_ is used to combined the results from different search engines.
+
+Individual tools
+-----------------------------
+
+- `Comet <https://github.com/UWPR/Comet>`_: Comet is an open source tandem mass spectrometry (MS/MS) sequence database search tool written primarily in C/C++.
+- `MS-GF+ <https://github.com/MSGFPlus/msgfplus>`_: MS-GF+ (aka MSGF+ or MSGFPlus) performs peptide identification by scoring MS/MS spectra against peptides derived from a protein sequence database.
+- `Percolator <https://github.com/percolator/percolator>`_: Percolator uses a semi-supervised machine learning to discriminate correct from incorrect peptide-spectrum matches.
+
 
 References
 ---------------------

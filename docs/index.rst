@@ -13,6 +13,10 @@ Contents
    .. toctree::
    :maxdepth: 2
 
+   usage
+   .. toctree::
+   :maxdepth: 2
+
    identification
    .. toctree::
    :maxdepth: 2
