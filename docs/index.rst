@@ -3,8 +3,8 @@ quantms: A cloud-based workflow for peptide and protein quantification.
 
 Welcome to the `quantms workflow <https://github.com/bigbio/quantms>`_, a cloud-based workflow for quantitative proteomics analysis of large mass-spectrometric data sets. Several labeling techniques as well as label-free quantification are supported.
 
-.. image:: images/ms-proteomics.png
-   :width: 500
+.. image:: images/quantms.png
+   :width: 600
    :align: center
 
 Contents
