@@ -8,6 +8,7 @@ Bottom-up proteomics is a common method to identify proteins and characterize th
    :width: 400
    :align: center
 
+|
 
 .. sidebar:: Pipelines and tools
    :subtitle: **It can make your life easier** if you want to explore individual tools:
@@ -30,7 +31,8 @@ Mass spectrometry quantitative data analysis can be divided in three main steps:
 - downstream data analysis and quality control
 
 .. image:: images/quantms.png
-   :width: 350
+   :width: 450
+   :align: center
 
 References
 --------------------------------

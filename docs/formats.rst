@@ -21,6 +21,21 @@ SDRF: experimental design
 
 The HUPO-PSI and ProteomeXchange recently developed the MAGE-TAB an standard file format for experimental design representation. Within the MAGE-TAB, the Sample and Data Relationship Format (SDRF) is a lightweight tab delimited format to represent the sample metadata and its relation with the data files (RAW or mzML files).
 
+.. image:: https://raw.githubusercontent.com/bigbio/proteomics-metadata-standard/master/sdrf-proteomics/images/sdrf-nutshell.png
+   :width: 900
+   :align: center
+
+|
+Multiple concepts from SDRF and **relevant and important** for the quantms pipeline:
+
+**Peptide Search Parameters**:
+
+- comment[cleavage agent details]: enzyme used in the experiment, including sites and positions.
+- comment[modification parameters]: post-translation modifications that will be consider within the peptide/protein search
+- comment[precursor mass tolerance], comment[fragment mass tolerance]: Precursor mass tolerance use for the peptide search. Both each engines Comet and MSGF+ use this parameter.
+
+
+
 Spectra Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

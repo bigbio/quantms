@@ -29,6 +29,8 @@ Contents
    .. toctree::
    :maxdepth: 2
 
+|
+
 The following links should be follow to get support and help with the quantms maintainers:
 
 |Get help on Slack|   |Report Issue| |Get help on GitHub Forum|
