@@ -34,7 +34,16 @@ Multiple concepts from SDRF and **relevant and important** for the quantms pipel
 - comment[modification parameters]: post-translation modifications that will be consider within the peptide/protein search
 - comment[precursor mass tolerance], comment[fragment mass tolerance]: Precursor mass tolerance use for the peptide search. Both each engines Comet and MSGF+ use this parameter.
 
+**Experimental Design**:
 
+- factor value[disease]: The factor value is the variable under study. In a proteomics study it can be the disease, organism part, tumor location, etc. The study variable will have multiple values depending of the samples and conditions. For example, in the SDRF above, the variable under study **factor value[phenotype]** has to values (one for each sample), control (sample 1) and primary tumor (sample 2).
+
+.. important:: When multiple conditions are under study, the user can create multiple SDRFs (one for each variable under study). This is needed because in the LFQ data analysis when match between runs is enable (MBR), the proteomicsLFQ quantification step needs to match samples that belongs to the same condition value.
+
+- characteristics[biological replicate]: Biological replicates are samples that belongs to the same condition value and material source.
+- comment[technical replicate]: Technical replicates are repetitions of measures of the same sample.
+- comment[fraction identifier]: Fraction identifiers are use to numbered and identified each fraction (for any fractionation method).
+- comment[label]: Label is used by quantms to associate samples to labels/channels in the experiment (e.g. TMT127).
 
 Spectra Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
