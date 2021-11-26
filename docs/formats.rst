@@ -58,7 +58,30 @@ Protein databases can be download from multiple sources; the most common ones ar
 
 .. hint:: Contaminants should be appended to the database. For each contaminant protein the prefix ``CONTAMINANT_`` should be added as prefix of the protein.
 
-
 Output formats
 ---------------------------
+
+The main output of the quantms is the standard HUPO-PSI format `mztab <https://www.psidev.info/mztab>`_. The mzTab allows quantms to store quantification/identification information from proteomics experiments in a single file.
+
+Additionally, `MSstats <https://github.com/Vitek-Lab>`_ and `Triqler <https://github.com/statisticalbiotechnology/triqler>`_  output for downstream analysis are exported. If you would like to have another output included in the pipeline please countact the developers over the discussion forum, slack or open an issue.
+
+|Get help on Slack|   |Report Issue| |Get help on GitHub Forum|
+
+.. |Get help on Slack| image:: http://img.shields.io/badge/slack-nf--core%20%23quantms-4A154B?labelColor=000000&logo=slack
+                   :target: https://nfcore.slack.com/channels/quantms
+
+.. |Report Issue| image:: https://img.shields.io/github/issues/bigbio/quantms
+                   :target: https://github.com/bigbio/quantms/issues
+
+.. |Get help on GitHub Forum| image:: https://img.shields.io/badge/Github-Discussions-green
+                   :target: https://github.com/bigbio/quantms/discussions
+
+Intermediate formats
+------------------------
+
+`OpenMS <https://www.openms.de/>`_ adapters are a cornerstone of quantms, they allows to convert between file formats, handle proteomics data such as enzymes definitions, PTMs, etc. OpenMS offers an open-source software C++ library (+ python bindings) for LC/MS data management and analyses. Multiple files from OpenMS ecosystem are use within quantms to store intermediate steps, among these files are:
+
+- idXML: A xml-based file format to store PSMs, peptide, and protein evidences. More information about the idXML can be `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1IdXMLFile.html>`_.
+
+- consensusXML: A xml-baed file format that extend the idXML containing the quantification data.  More information about the idXML can be `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1ConsensusXMLFile.html>`_.
 
