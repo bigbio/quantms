@@ -14,7 +14,18 @@ Apart of this three main file formats, additionally, multiple file formats are u
 Input formats
 ---------------------------
 
-The quantms should receive three main inputs: Spectra data files (RAW or mzML); Protein database (Fasta);  Experimental design (SDRF).
+The quantms should receive three main inputs: Experimental design (SDRF); Spectra data files (RAW or mzML); Protein database (Fasta).
+
+SDRF: experimental design
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The HUPO-PSI and ProteomeXchange recently developed the MAGE-TAB an standard file format for experimental design representation. Within the MAGE-TAB, the Sample and Data Relationship Format (SDRF) is a lightweight tab delimited format to represent the sample metadata and its relation with the data files (RAW or mzML files).
+
+Spectra Data
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The spectra data can be provided in RAW files (Thermo instruments) or preferably in mzML. If RAW files are provided, the first step of the identification pipeline `convert them into mzML <https://quantms.readthedocs.io/en/latest/identification.html#mass-spectra-processing-raw-conversion>`_.
+
 
 Protein databases
 ~~~~~~~~~~~~~~~~~~
@@ -23,10 +34,6 @@ Protein databases can be download from multiple sources; the most common ones ar
 
 .. hint:: Contaminants should be appended to the database. For each contaminant protein the prefix ``CONTAMINANT_`` should be added as prefix of the protein.
 
-Spectra Data
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The spectra data can be provided in RAW files (Thermo instruments) or preferably in mzML. If RAW files are provided, the first step of the identification pipeline convert them into mzML, read :ref:`identification:Mass spectra processing: Raw conversion`.
 
 Output formats
 ---------------------------
