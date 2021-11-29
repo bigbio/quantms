@@ -12,7 +12,7 @@ process THERMORAWFILEPARSER {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "bioconda::thermorawfileparser=1.3.4" : null)
+    conda (params.enable_conda ? "conda-forge::mono bioconda::thermorawfileparser=1.3.4" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         // TODO Need to built single container
         container "https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0"
