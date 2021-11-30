@@ -26,7 +26,8 @@ process PROTEOMICSLFQ {
     output:
     path "out.mzTab", emit: out_mztab
     path "out.consensusXML", emit: out_consensusXML
-    path "out.csv", emit: out_msstats
+    path "out_msstats.csv", emit: out_msstats
+    path "out_triqler.tsv", emit: out_triqler optional true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs optional true
     path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference optional true
     path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved optional true
@@ -38,7 +39,7 @@ process PROTEOMICSLFQ {
 
     script:
     def software = getSoftwareName(task.process)
-    def msstats_present = params.quantification_method == "feature_intensity" ? '-out_msstats out.csv' : ''
+    def msstats_present = params.quantification_method == "feature_intensity" ? '-out_msstats out_msstats.csv' : ''
     def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? '-out_triqler out_triqler.tsv' : ''
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
 
