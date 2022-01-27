@@ -25,7 +25,7 @@
                     "description": "quantitative method eg. Label free quantification (LFQ)",
                     "help_text": "quantitative method eg. Label free Tags quantification (LFQ)",
                     "fa_icon": "fas fa-hdd",
-                    "enum": ["ISO", "LFQ"]
+                    "enum": ["ISO", "LFQ", "DIA"]
                 },
                 "outdir": {
                     "type": "string",
@@ -446,13 +446,13 @@
             "default": "",
             "properties": {
                 "allow_unmatched": {
-                    "type": "string",
+                    "type": "boolean",
                     "description": "Do not fail if there are some unmatched peptides. Only activate as last resort, if you know that the rest of your settings are fine!",
-                    "default": "false",
+                    "default": false,
                     "fa_icon": "far fa-check-square",
                     "enum": [
-                        "false",
-                        "true"
+                        false,
+                        true
                     ]
                 },
                 "IL_equivalent": {
@@ -675,7 +675,7 @@
                 "protein_fdr": {
                     "type": "boolean",
                     "description": "Additionally calculate the target-decoy FDR on protein-level based on the posteriors",
-                    "default": "false",
+                    "default": true,
                     "fa_icon": "fas fa-list-ol"
                 },
                 "picked_fdr": {
@@ -802,7 +802,7 @@
                 "include_all": {
                     "type": "boolean",
                     "description": "Include results for proteins with fewer proteotypic peptide than indicated by top.",
-                    "default": false,
+                    "default": true,
                     "fa_icon": "fas fa-check-square"
                 },
                 "protein_quant": {
@@ -916,6 +916,11 @@
                     "type": "string",
                     "description": "Specify a yaml file for the report layout (see PTXQC documentation) (TODO not yet fully implemented)",
                     "fa_icon": "far fa-file"
+                },
+                "enable_pmultiqc": {
+                    "type": "boolean",
+                    "description": "Enable generation of pmultiqc report? default: 'false'",
+                    "fa_icon": "fas fa-toggle-on"
                 }
             },
             "fa_icon": "fas fa-file-medical-alt"
