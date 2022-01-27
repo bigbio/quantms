@@ -40,7 +40,8 @@ def get_versions(software, version_file):
         'proteomicslfq': semver_regex,
         'proteinquantifier': semver_regex,
         'msstatsconverter': semver_regex,
-        'msstats': r"(\S+)"
+        'msstats': r"(\S+)",
+        'idfileconverter': semver_regex
     }
 
     match = re.search(regexes[software], version_file).group(1)

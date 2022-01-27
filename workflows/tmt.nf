@@ -206,15 +206,18 @@ workflow TMT {
     //
     // MODULE: PMULTIQC
     // TODO PMULTIQC package will be improved and restructed
-    FILE_PREPARATION.out.results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_mzmls }
-    PSMRESCORING.out.results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_ids }
+    if (enable_pmultiqc) {
+        FILE_PREPARATION.out.results
+            .map { it -> it[1] }
+            .set { ch_pmultiqc_mzmls }
+        PSMRESCORING.out.results
+            .map { it -> it[1] }
+            .set { ch_pmultiqc_ids }
 
-    PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), PROTEINQUANT.out.out_mztab, ch_pmultiqc_ids.collect())
-    ch_software_versions = ch_software_versions.mix(PMULTIQC.out.version.ifEmpty(null))
+        PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), PROTEINQUANT.out.out_mztab, ch_pmultiqc_ids.collect())
+        ch_software_versions = ch_software_versions.mix(PMULTIQC.out.version.ifEmpty(null))
+    }
+
 
     //
     // MODULE: Pipeline reporting
