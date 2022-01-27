@@ -188,7 +188,7 @@ workflow LFQ {
     //
     // MODULE: PMULTIQC
     // TODO PMULTIQC package will be improved and restructed
-    if (enable_pmultiqc) {
+    if (params.enable_pmultiqc) {
         PSMRESCORING.out.results.map { it -> it[1] }.set { ch_ids_pmultiqc }
         PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_plfq.pmultiqc_mzmls.collect(),
             PROTEOMICSLFQ.out.out_mztab.combine(PROTEOMICSLFQ.out.out_consensusXML).combine(PROTEOMICSLFQ.out.out_msstats),

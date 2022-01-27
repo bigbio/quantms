@@ -206,7 +206,7 @@ workflow TMT {
     //
     // MODULE: PMULTIQC
     // TODO PMULTIQC package will be improved and restructed
-    if (enable_pmultiqc) {
+    if (params.enable_pmultiqc) {
         FILE_PREPARATION.out.results
             .map { it -> it[1] }
             .set { ch_pmultiqc_mzmls }
