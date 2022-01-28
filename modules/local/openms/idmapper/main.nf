@@ -38,7 +38,7 @@ process IDMAPPER {
         -mz_tolerance $params.mz_tolerance \\
         -mz_measure $params.mz_measure \\
         -mz_reference $params.mz_reference \\
-        -mz_reference 'precursor'
+        -mz_reference 'precursor' \\
         -debug 100 \\
         -out ${id_file.baseName}_map.consensusXML \\
         > ${id_file.baseName}_map.log
