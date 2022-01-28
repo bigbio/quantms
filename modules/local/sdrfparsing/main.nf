@@ -10,11 +10,11 @@ process SDRFPARSING {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.19" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.20" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.18--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.20--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/sdrf-pipelines:0.0.18--pyhdfd78af_0"
+        container "quay.io/biocontainers/sdrf-pipelines:0.0.20--pyhdfd78af_0"
     }
 
     input:
@@ -36,6 +36,6 @@ process SDRFPARSING {
 
     parse_sdrf $options.args -s ${sdrf} > sdrf_parsing.log
 
-    echo "0.0.19" > sdrf-pipelines.version.txt
+    echo "0.0.20" > sdrf-pipelines.version.txt
     """
 }
