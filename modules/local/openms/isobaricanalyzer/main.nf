@@ -30,7 +30,7 @@ process ISOBARICANALYZER {
     script:
     def software = getSoftwareName(task.process)
 
-    if (meta.dissociationmethod == "HCD") diss_meth = "High-energy collision-induced dissociation"
+    if (meta.dissociationmethod == "HCD" || meta.dissociationmethod == "HCID") diss_meth = "auto"
     else if (meta.dissociationmethod == "CID") diss_meth = "Collision-induced dissociation"
     else if (meta.dissociationmethod == "ETD") diss_meth = "Electron transfer dissociation"
     else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
