@@ -12,7 +12,7 @@ process ISOBARICANALYZER {
         pattern: "*.log",
         saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
-    conda (params.enable_conda ? "bioconda::bumbershoot bioconda::comet-ms bioconda::crux-toolkit=3.2 bioconda::fido=1.0 conda-forge::gnuplot bioconda::luciphor2=2020_04_03 bioconda::msgf_plus=2021.03.22 bioconda::openms=2.7.0 bioconda::pepnovo=20101117 bioconda::percolator=3.5 bioconda::sirius-csifingerid=4.0.1 bioconda::thermorawfileparser=1.3.4 bioconda::xtandem=15.12.15.2 bioconda::openms-thirdparty=2.7.0" : null)
+    conda (params.enable_conda ? "openms::openms=2.8.0.dev" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/openms-thirdparty:2.7.0--h9ee0642_1"
     } else {
@@ -30,7 +30,7 @@ process ISOBARICANALYZER {
     script:
     def software = getSoftwareName(task.process)
 
-    if (meta.dissociationmethod == "HCD") diss_meth = "High-energy collision-induced dissociation"
+    if (meta.dissociationmethod == "HCD" || meta.dissociationmethod == "HCID") diss_meth = "auto"
     else if (meta.dissociationmethod == "CID") diss_meth = "Collision-induced dissociation"
     else if (meta.dissociationmethod == "ETD") diss_meth = "Electron transfer dissociation"
     else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
