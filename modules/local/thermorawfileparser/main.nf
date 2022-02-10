@@ -14,10 +14,8 @@ process THERMORAWFILEPARSER {
 
     conda (params.enable_conda ? "conda-forge::mono bioconda::thermorawfileparser=1.3.4" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        // TODO Need to built single container
         container "https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0"
     } else {
-        // TODO Need to built single container
         container "quay.io/biocontainers/thermorawfileparser:1.3.4--ha8f3691_0"
     }
 
