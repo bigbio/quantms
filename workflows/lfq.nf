@@ -34,7 +34,6 @@ def modules = params.modules.clone()
 //
 // MODULE: Local to the pipeline
 //
-include { GET_SOFTWARE_VERSIONS } from '../modules/local/get_software_versions' addParams( options: [publish_files : ['tsv':'']] )
 include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main' addParams( options: modules['decoydatabase'] )
 include { CONSENSUSID } from '../modules/local/openms/consensusid/main' addParams( options: modules['consensusid'] )
 include { PROTEOMICSLFQ } from '../modules/local/openms/proteomicslfq/main' addParams( options: [:])
@@ -208,7 +207,7 @@ workflow LFQ {
         .collect()
         .set { ch_software_versions }
 
-    GET_SOFTWARE_VERSIONS (
+    CUSTOM_DUMPSOFTWAREVERSIONS (
         ch_software_versions.map { it }.collect()
     )
 
@@ -222,7 +221,7 @@ workflow LFQ {
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(GET_SOFTWARE_VERSIONS.out.yaml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.yaml.collect())
 
     SUMMARYPIPELINE (
         ch_multiqc_files.collect()
