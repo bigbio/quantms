@@ -34,26 +34,26 @@ The output consists of the following folders (follow the links for a more detail
 results
 
 * ids
-  * [\*.idXML](#identifications)
+    * [\*.idXML](#identifications)
 * logs (extended log files for all steps)
-  * \*.log
+    * \*.log
 * msstats
-  * [ComparisonPlot.pdf](#msstats-plots)
-  * [VolcanoPlot.pdf](#msstats-plots)
-  * [Heatmap.pdf](#msstats-plots)
-  * [msstats\_results.csv](#msstats-table)
-  * [msstats_out.mzTab](#msstats-mztab)
+    * [ComparisonPlot.pdf](#msstats-plots)
+    * [VolcanoPlot.pdf](#msstats-plots)
+    * [Heatmap.pdf](#msstats-plots)
+    * [msstats\_results.csv](#msstats-table)
+    * [msstats_out.mzTab](#msstats-mztab)
 * pipeline\_info (general nextflow infos)
-  * [...](#nextflow-pipeline-info)
+    * [...](#nextflow-pipeline-info)
 * proteomics\_lfq
-  * [debug\_\*.idXML](#debug-output)
-  * [out.consensusXML](#consenusxml)
-  * [out.csv](#msstats-ready-quantity-table)
-  * [out.mzTab](#mztab)
+    * [debug\_\*.idXML](#debug-output)
+    * [out.consensusXML](#consenusxml)
+    * [out.csv](#msstats-ready-quantity-table)
+    * [out.mzTab](#mztab)
 * ptxqc (quality control)
-  * [report\_vX.X.X\_out.yaml](#ptxqc-yaml-config)
-  * [report\_vX.X.X\_out\_${hash}.html](#ptxqc-report)
-  * [report\_vX.X.X\_out\_${hash}.pdf](#ptxqc-report)
+    * [report\_vX.X.X\_out.yaml](#ptxqc-yaml-config)
+    * [report\_vX.X.X\_out\_${hash}.html](#ptxqc-report)
+    * [report\_vX.X.X\_out\_${hash}.pdf](#ptxqc-report)
 
 ## Output description
 
