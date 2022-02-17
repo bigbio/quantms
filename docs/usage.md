@@ -137,9 +137,9 @@ To bypass this error you would need to find exactly which resources are set by t
 
 ```nextflow
 process {
-  withName: STAR_ALIGN {
-    memory = 100.GB
-  }
+    withName: STAR_ALIGN {
+        memory = 100.GB
+    }
 }
 ```
 
