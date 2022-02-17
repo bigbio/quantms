@@ -18,12 +18,15 @@ jobs:
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/quantms') }}
     runs-on: ubuntu-latest
+    env:
+      NXF_VER: ${{ matrix.nxf_ver }}
+      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Nextflow versions
         include:
           # Test pipeline minimum Nextflow version
-          - NXF_VER: '21.04.0'
+          - NXF_VER: '21.10.3'
             NXF_EDGE: ''
           # Test latest edge release of Nextflow
           - NXF_VER: ''
