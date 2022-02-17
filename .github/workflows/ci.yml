@@ -26,7 +26,7 @@ jobs:
         # Nextflow versions
         include:
           # Test pipeline minimum Nextflow version
-          - NXF_VER: '21.04.0'
+          - NXF_VER: '21.10.3'
             NXF_EDGE: ''
           # Test latest edge release of Nextflow
           - NXF_VER: ''
