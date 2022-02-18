@@ -26,14 +26,18 @@ if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input sample
 ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
 ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
+
 /*
 ========================================================================================
     IMPORT LOCAL MODULES/SUBWORKFLOWS
 ========================================================================================
 */
 
-include { TMT } from './tmt'
-include { LFQ } from './lfq'
+// Don't overwrite global params.modules, create a copy instead and use that within the main script.
+def modules = params.modules.clone()
+
+include { TMT } from 'tmt'
+include { LFQ } from 'lfq'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
