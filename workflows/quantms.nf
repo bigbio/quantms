@@ -65,6 +65,7 @@ def multiqc_report = []
 
 workflow QUANTMS {
 
+    // TODO check what the standard is here: ch_versions or ch_software_versions
     ch_software_versions = Channel.empty()
 
     //
@@ -96,6 +97,8 @@ workflow QUANTMS {
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
+    // TODO ID could also be moved into TMT and LFQ
+    // TODO remove the unneeded quant_method parameter
     if (CREATE_INPUT_CHANNEL.out.quant_type == 'iso') {
         ID()
         TMT()
@@ -104,7 +107,7 @@ workflow QUANTMS {
         LFQ()
     }
     // TODO do those statements have to be outside here???
-    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    ch_software_versions = ch_software_versions.mix(INPUT_CHECK.out.versions)
 
     PMULTIQC(
         // Whatever you need there from the subworkflow results
@@ -116,7 +119,7 @@ workflow QUANTMS {
     // MODULE: Pipeline reporting
     //
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+        ch_software_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
     //
