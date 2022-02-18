@@ -111,7 +111,8 @@ workflow TMT {
     //
     CREATE_INPUT_CHANNEL (
         ch_input,
-        INPUT_CHECK.out.is_sdrf
+        INPUT_CHECK.out.is_sdrf,
+        "iso"
     )
     ch_software_versions = ch_software_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
 
