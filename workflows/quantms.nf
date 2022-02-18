@@ -36,8 +36,8 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 // Don't overwrite global params.modules, create a copy instead and use that within the main script.
 def modules = params.modules.clone()
 
-include { TMT } from 'tmt'
-include { LFQ } from 'lfq'
+include { TMT } from './tmt'
+include { LFQ } from './lfq'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
