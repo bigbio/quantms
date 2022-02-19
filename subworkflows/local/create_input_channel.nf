@@ -9,51 +9,77 @@ include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign'
 
 workflow CREATE_INPUT_CHANNEL {
     take:
-    sdrf_file
+    ch_sdrf_or_design
     is_sdrf
+    quant_type
 
     main:
     ch_versions = Channel.empty()
 
-    if (sdrf_file.toString().toLowerCase().contains("sdrf")) {
-        is_sdrf = true
-        SDRFPARSING ( sdrf_file )
+    if (is_sdrf) {
+        SDRFPARSING ( ch_sdrf_or_design )
         ch_versions = ch_versions.mix(SDRFPARSING.out.version)
-        SDRFPARSING.out.ch_sdrf_config_file
-            .splitCsv(header: true, sep: '\t')
-            .map { create_meta_channel(it, is_sdrf) }
-            .set { results }
+        ch_in_design = SDRFPARSING.out.ch_sdrf_config_file
+
         ch_expdesign    = SDRFPARSING.out.ch_expdesign
     } else {
-        ch_expdesign = Channel.fromPath( sdrf_file )
-        is_sdrf = false
-        PREPROCESS_EXPDESIGN( sdrf_file )
-        // TODO need to find a better way to parse expdesign
-        ch_expdesign
-            .splitCsv(header: true, sep: '\t')
-            .map { create_meta_channel(it, is_sdrf) }
-            .set { results }
+        PREPROCESS_EXPDESIGN( ch_sdrf_or_design )
+        ch_in_design = Channel.fromPath( ch_sdrf_or_design )
 
         ch_expdesign    = PREPROCESS_EXPDESIGN.out.ch_expdesign
     }
 
+    Set enzymes = []
+    Set files = []
+    quant_type = ""
+
+    ch_in_design.splitCsv(header: true, sep: '\t')
+             .map { create_meta_channel(it, is_sdrf, quant_type, enzymes, files) }
+             .set { ch_meta_config }
+
     emit:
-    results                     // [meta, [spectra_files ]]
+    ch_meta_config                     // [meta, [spectra_files ]]
     ch_expdesign
+    quant_type
 
     version         = ch_versions
 }
 
 // Function to get list of [meta, [ spectra_files ]]
-//
-def create_meta_channel(LinkedHashMap row, is_sdrf) {
+def create_meta_channel(LinkedHashMap row, is_sdrf, quant_type, enzymes, files) {
     def meta = [:]
     def array = []
 
+
     if (!is_sdrf) {
         filestr                         = row.Spectra_Filepath.toString()
-        meta.id                         = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
-        meta.label                      = params.label
+    } else {
+        if (!params.root_folder) {
+            filestr                     = row.URI.toString()
+        } else {
+            filestr                     = row.Filename.toString()
+        }
+    }
+    
+    meta.id                             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
+
+    // apply transformations given by specified root_folder and type
+    if (params.root_folder) {
+        filestr = params.root_folder + File.separator + filestr
+    }
+    
+    filestr = (params.local_input_type ? filestr.take(filestr.lastIndexOf('.')) 
+                                            + '.' + params.local_input_type 
+                                       : filestr))
+
+    // existance check
+    if ((!file(filestr).exists())) {
+        exit 1, "ERROR: Please check input file -> File Uri does not exist!\n${filestr}"
+    }
+
+    // for sdrf read from config file, without it, read from params
+    if (!is_sdrf) {
+        meta.labelling_type             = params.labelling_type
         meta.dissociationmethod         = params.fragment_method
         meta.fixedmodifications         = params.fixed_mods
         meta.variablemodifications      = params.variable_mods
@@ -62,14 +88,8 @@ def create_meta_channel(LinkedHashMap row, is_sdrf) {
         meta.fragmentmasstolerance      = params.fragment_mass_tolerance
         meta.fragmentmasstoleranceunit  = params.fragment_mass_tolerance_unit
         meta.enzyme                     = params.enzyme
-
-        // if ((!file(row.Spectra_Filepath).exists())) {
-        //     exit 1, "ERROR: Please check input file -> File Path does not exist!\n${row.Spectra_Filepath}"
-        // }
-        array = [meta, file(row.Spectra_Filepath)]
     } else {
-        meta.id                         = row.toString().md5()
-        meta.label                      = row.Label
+        meta.labelling_type             = row.Label
         meta.dissociationmethod         = row.DissociationMethod
         meta.fixedmodifications         = row.FixedModifications
         meta.variablemodifications      = row.VariableModifications
@@ -79,23 +99,35 @@ def create_meta_channel(LinkedHashMap row, is_sdrf) {
         meta.fragmentmasstoleranceunit  = row.FragmentMassToleranceUnit
         meta.enzyme                     = row.Enzyme
 
-        if (!params.root_folder){
-            if ((!file(row.URI).exists())) {
-                exit 1, "ERROR: Please check input file -> File Uri does not exist!\n${row.URI}"
-            }
-            array = [meta, file(row.URI)]
-        } else {
-            if (!file(params.root_folder + "/"
-                + (params.local_input_type ? row.Filename.take(row.Filename.lastIndexOf('.'))
-                + '.' + params.local_input_type : row.Filename))) {
-                exit 1, "ERROR: Please check input file -> File Path does not exist!\n${row.URI}"
-            } else {
-                array = [meta, file(params.root_folder + "/"
-                    + (params.local_input_type ? row.Filename.take(row.Filename.lastIndexOf('.'))
-                    + '.' + params.local_input_type : row.Filename))]
-            }
+        enzymes += row.Enzyme
+        if (enzymes.size() > 1)
+        {
+          log.error "Currently only one enzyme is supported for the whole experiment. Specified was '${enzymes}'. Check or split your SDRF."
+          log.error filestr
+          exit 1
         }
     }
+    if (quant_type == "") {
+        if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq")) {
+            quant_type = "iso"
+        } else if (meta.labelling_type.contains("label free")) {
+            quant_type = "lfq"
+        } else {
+            log.error "Unsupported quantification type '${meta.labelling_type}'."
+            exit 1 
+        }
+    } else if (quant_type != meta.labelling_type) {
+        log.error "Only one quantification type allowed per experiment. '${meta.labelling_type}' does not match the one before. Check or split your SDRF."
+        exit 1 
+    }
 
-    return array
+    if (quant_type == "lfq") {
+        if (filestr in files) {
+            log.error "Currently only one search engine setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
+            exit 1
+        }
+        files += filestr
+    }
+
+    return [meta, filestr]
 }

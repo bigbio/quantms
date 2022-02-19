@@ -3,7 +3,7 @@ include { saveFiles } from './functions'
 
 params.options = [:]
 
-// Fixing file endings only necessary if the experimental design is user-specified
+// Fixes file endings in experimental design. E.g. if an old experimental design was specified but the files were converted already
 process PREPROCESS_EXPDESIGN {
 
     label 'process_very_low'

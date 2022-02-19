@@ -17,7 +17,7 @@ process SAMPLESHEET_CHECK {
     path "${input_file}", emit: checked_file
 
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
-    // TODO validate experimental design file
+    // TODO validate experimental design file, especially that the numbers are consecutive and starting from one
     """
     check_samplesheet.py $options.template "${input_file}" ${is_sdrf} $options.check_ms > input_check.log
     """
