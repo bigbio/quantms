@@ -2,13 +2,9 @@
 // ProteinInference
 //
 
-params.epifany = [:]
-params.protein_inference = [:]
-params.epifilter = [:]
-
-include { EPIFANY } from '../../modules/local/openms/epifany/main' addParams( options: params.epifany )
-include { PROTEININFERENCE as PROTEININFERENCER} from '../../modules/local/openms/proteininference/main' addParams( options: params.protein_inference )
-include { IDFILTER as EPIFILTER } from '../../modules/local/openms/idfilter/main' addParams( options: params.epifilter )
+include { EPIFANY } from '../../modules/local/openms/epifany/main'
+include { PROTEININFERENCE as PROTEININFERENCER} from '../../modules/local/openms/proteininference/main'
+include { IDFILTER as EPIFILTER } from '../../modules/local/openms/idfilter/main'
 
 workflow PROTEININFERENCE {
     take:

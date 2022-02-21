@@ -7,22 +7,16 @@
 //
 // MODULES: Local to the pipeline
 //
-include { CONSENSUSID } from '../modules/local/openms/consensusid/main' addParams( options: modules['consensusid'] )
-include { FILEMERGE } from '../modules/local/openms/filemerge/main' addParams( options: modules['filemerge'] )
+include { FILEMERGE } from '../modules/local/openms/filemerge/main'
+include { PMULTIQC } from '../modules/local/pmultiqc/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 //
-def epi_filter = modules['idfilter'].clone()
-
-epi_filter.args += Utils.joinModuleArgs(["-score:prot \"$params.protein_level_fdr_cutoff\"",
-                "-delete_unreferenced_peptide_hits", "-remove_decoys"])
-epi_filter.suffix = ".consensusXML"
-
-include { FEATUREMAPPER } from '../subworkflows/local/featuremapper' addParams( isobaric: modules['isobaricanalyzer'], idmapper: modules['idmapper'])
-include { PROTEININFERENCE } from '../subworkflows/local/proteininference' addParams( epifany: modules['epifany'], protein_inference: modules['proteininference'], epifilter: epi_filter)
-include { PROTEINQUANT } from '../subworkflows/local/proteinquant' addParams( resolve_conflict: modules['idconflictresolver'], pro_quant: modules['proteinquantifier'], msstatsconverter: modules['msstatsconverter'])
-
+include { FEATUREMAPPER } from '../subworkflows/local/featuremapper'
+include { PROTEININFERENCE } from '../subworkflows/local/proteininference'
+include { PROTEINQUANT } from '../subworkflows/local/proteinquant'
+include { ID } from '../subworkflows/local/id'
 
 /*
 ========================================================================================
@@ -31,11 +25,24 @@ include { PROTEINQUANT } from '../subworkflows/local/proteinquant' addParams( re
 */
 
 workflow TMT {
+    take:
+    file_preparation_results
+    ch_expdesign
+
+    main:
+
+    ch_software_versions = Channel.empty()
+
+    //
+    // SUBWORKFLOWS: ID
+    //
+    ID(file_preparation_results)
+    ch_software_versions = ch_software_versions.mix(ID.out.version.ifEmpty(null))
 
     //
     // SUBWORKFLOW: FEATUREMAPPER
     //
-    FEATUREMAPPER(FILE_PREPARATION.out.results, ptmt_in_id)
+    FEATUREMAPPER(file_preparation_results, ID.out.id_results)
     ch_software_versions = ch_software_versions.mix(FEATUREMAPPER.out.version.ifEmpty(null))
 
     //
@@ -53,6 +60,21 @@ workflow TMT {
     //
     // SUBWORKFLOW: PROTEINQUANT
     //
-    PROTEINQUANT(PROTEININFERENCE.out.epi_idfilter, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    PROTEINQUANT(PROTEININFERENCE.out.epi_idfilter, ch_expdesign)
     ch_software_versions = ch_software_versions.mix(PROTEINQUANT.out.version.ifEmpty(null))
+
+    //
+    // MODULE: PMULTIQC
+    // TODO PMULTIQC package will be improved and restructed
+    if (params.enable_pmultiqc) {
+        file_preparation_results
+            .map { it -> it[1] }
+            .set { ch_pmultiqc_mzmls }
+        ID.out.psmrescoring_results
+            .map { it -> it[1] }
+            .set { ch_pmultiqc_ids }
+
+        PMULTIQC(ch_expdesign, ch_pmultiqc_mzmls.collect(), PROTEINQUANT.out.out_mztab, ch_pmultiqc_ids.collect())
+        ch_software_versions = ch_software_versions.mix(PMULTIQC.out.version.ifEmpty(null))
+    }
 }

@@ -33,9 +33,6 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ========================================================================================
 */
 
-// Don't overwrite global params.modules, create a copy instead and use that within the main script.
-def modules = params.modules.clone()
-
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
 
@@ -43,7 +40,8 @@ include { LFQ } from './lfq'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
-
+include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
+include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
 ========================================================================================
@@ -54,7 +52,7 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check'
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MULTIQC                     } from '../modules/nf-core/modules/multiqc/main'
+include { MULTIQC as SUMMARYPIPELINE } from '../modules/nf-core/modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 
@@ -70,7 +68,7 @@ def multiqc_report = []
 workflow QUANTMS {
 
     // TODO check what the standard is here: ch_versions or ch_software_versions
-    ch_software_versions = Channel.empty()
+    ch_versions = Channel.empty()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
@@ -78,6 +76,7 @@ workflow QUANTMS {
     INPUT_CHECK (
         ch_input
     )
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
 
     //
     // SUBWORKFLOW: Create input channel
@@ -86,60 +85,36 @@ workflow QUANTMS {
         ch_input,
         INPUT_CHECK.out.is_sdrf
     )
-    // TODO do those statements have to be outside here???
-    ch_softwareversions = ch_software_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
 
     //
     // SUBWORKFLOW: File preparation
     //
     FILE_PREPARATION (
-        CREATE_INPUT_CHANNEL.out.results
+        CREATE_INPUT_CHANNEL.out.ch_meta_config
     )
-    // TODO do those statements have to be outside here???
-    ch_software_versions = ch_software_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
-    // TODO ID could also be moved into TMT and LFQ
-    // TODO remove the unneeded quant_method parameter
-    if (CREATE_INPUT_CHANNEL.out.quant_type == 'iso') {
-        ID()
-        TMT()
-    } else if (CREATE_INPUT_CHANNEL.out.quant_type == 'lfq') {
-        ID()
-        LFQ()
+    if ( params.labelling_type.contains('tmt') | params.labelling_type.contains("itraq")) {
+        TMT(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    } else if ( params.labelling_type.contains('label free')) {
+        LFQ(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
     }
-    // TODO do those statements have to be outside here???
-    ch_software_versions = ch_software_versions.mix(INPUT_CHECK.out.versions)
-
-    PMULTIQC(
-        // Whatever you need there from the subworkflow results
-    )
 
 
-    // TODO I dont know which one of those two ways is the new standard. Figure it out
-    //
-    // MODULE: Pipeline reporting
-    //
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_software_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    // PMULTIQC(
+    //     // Whatever you need there from the subworkflow results
+    // )
 
     //
     // MODULE: Pipeline reporting
     //
-    ch_software_versions
-        .map { it -> if (it) [ it.baseName, it ] }
-        .groupTuple()
-        .map { it[1][0] }
-        .flatten()
-        .collect()
-        .set { ch_software_versions }
-
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_software_versions.map { it }.collect()
-    )
+    // CUSTOM_DUMPSOFTWAREVERSIONS (
+    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    // )
 
     // BIG TODO do we need this???
     //
@@ -152,13 +127,13 @@ workflow QUANTMS {
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.yaml.collect())
+    // ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
     SUMMARYPIPELINE (
         ch_multiqc_files.collect()
     )
-    multiqc_report       = SUMMARYPIPELINE.out.report.toList()
-    ch_software_versions = ch_software_versions.mix(SUMMARYPIPELINE.out.version.ifEmpty(null))
+    multiqc_report      = SUMMARYPIPELINE.out.report.toList()
+    ch_versions         = ch_versions.mix(SUMMARYPIPELINE.out.versions)
 
 }
 

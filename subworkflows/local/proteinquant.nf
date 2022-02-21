@@ -2,13 +2,9 @@
 // ProteinQuant
 //
 
-params.resolve_conflict = [:]
-params.pro_quant = [:]
-params.msstatsconverter = [:]
-
-include { IDCONFLICTRESOLVER } from '../../modules/local/openms/idconflictresolver/main' addParams( options: params.resolve_conflict)
-include { PROTEINQUANTIFIER } from '../../modules/local/openms/proteinquantifier/main' addParams( options: params.pro_quant )
-include { MSSTATSCONVERTER } from '../../modules/local/openms/msstatsconverter/main' addParams( options: params.msstatsconverter )
+include { IDCONFLICTRESOLVER } from '../../modules/local/openms/idconflictresolver/main'
+include { PROTEINQUANTIFIER } from '../../modules/local/openms/proteinquantifier/main'
+include { MSSTATSCONVERTER } from '../../modules/local/openms/msstatsconverter/main'
 
 workflow PROTEINQUANT {
     take:

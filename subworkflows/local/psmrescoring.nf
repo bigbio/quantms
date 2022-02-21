@@ -2,15 +2,10 @@
 // Extract psm feature and ReScoring psm
 //
 
-params.extract_psm_feature_options = [:]
-params.percolator_options = [:]
-params.fdridpep_options = [:]
-params.idpep_options = [:]
-
-include { EXTRACTPSMFEATURE } from '../../modules/local/openms/extractpsmfeature/main' addParams( options: params.extract_psm_feature_options )
-include { PERCOLATOR } from '../../modules/local/openms/thirdparty/percolator/main' addParams( options: params.percolator_options )
-include { FALSEDISCOVERYRATE as FDRIDPEP } from '../../modules/local/openms/falsediscoveryrate/main' addParams( options: params.fdridpep_options )
-include { IDPEP } from '../../modules/local/openms/idpep/main' addParams( options: params.idpep_options )
+include { EXTRACTPSMFEATURE } from '../../modules/local/openms/extractpsmfeature/main'
+include { PERCOLATOR } from '../../modules/local/openms/thirdparty/percolator/main'
+include { FALSEDISCOVERYRATE as FDRIDPEP } from '../../modules/local/openms/falsediscoveryrate/main'
+include { IDPEP } from '../../modules/local/openms/idpep/main'
 
 workflow PSMRESCORING {
     take:

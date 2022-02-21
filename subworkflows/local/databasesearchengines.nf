@@ -2,13 +2,9 @@
 // search engines msgf,comet and index peptide
 //
 
-params.msgf_options = [:]
-params.comet_options = [:]
-params.indexpeptides_options = [:]
-
-include { SEARCHENGINEMSGF } from '../../modules/local/openms/thirdparty/searchenginemsgf/main' addParams( options: params.msgf_options )
-include { SEARCHENGINECOMET} from '../../modules/local/openms/thirdparty/searchenginecomet/main' addParams( options: params.comet_options )
-include { INDEXPEPTIDES } from '../../modules/local/openms/indexpeptides/main' addParams( options: params.indexpeptides_options)
+include { SEARCHENGINEMSGF } from '../../modules/local/openms/thirdparty/searchenginemsgf/main'
+include { SEARCHENGINECOMET} from '../../modules/local/openms/thirdparty/searchenginecomet/main'
+include { INDEXPEPTIDES } from '../../modules/local/openms/indexpeptides/main'
 
 workflow DATABASESEARCHENGINES {
     take:

@@ -1,34 +1,24 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process OPENMSPEAKPICKER {
     tag "$meta.id"
     label 'process_low'
-    publishDir "${params.outdir}/logs",
-        mode: params.publish_dir_mode,
-        pattern: "*.log",
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "openms::openms=2.8.0.dev" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/openms-thirdparty:2.7.0--h9ee0642_1"
-    } else {
-        container "quay.io/biocontainers/openms-thirdparty:2.7.0--h9ee0642_1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.7.0--h9ee0642_1' :
+        'quay.io/biocontainers/openms-thirdparty:2.7.0--h9ee0642_1' }"
 
     input:
     tuple val(meta), path(mzml_file)
 
     output:
     tuple val(meta), path("*.mzML"), emit: mzmls_picked
-    path "*.version.txt", emit: version
+    path "versions.yml", emit: version
     path "*.log", emit: log
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
     in_mem = params.peakpicking_inmemory ? "inmermory" : "lowmemory"
     lvls = params.peakpicking_ms_levels ? "-algorithm:ms_levels ${params.peakpicking_ms_levels}" : ""
 
@@ -40,9 +30,12 @@ process OPENMSPEAKPICKER {
         -debug $params.pp_debug \\
         -processOption ${in_mem} \\
         ${lvls} \\
-        $options.args \\
+        $args \\
         > ${mzml_file.baseName}_pp.log
 
-    echo \$(PeakPickerHiRes 2>&1) > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        PeakPickerHiRes: echo \$(PeakPickerHiRes 2>&1)
+    END_VERSIONS
     """
 }

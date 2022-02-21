@@ -20,13 +20,6 @@
                     "help_text": "The input to the pipeline can be specified in two **mutually exclusive** ways:\n  - using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and\nannotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\nAn OpenMS-style experimental design will be generated based on the factor columns of the SDRF. The settings for the\nfollowing parameters will currently be overwritten by the ones specified in the SDRF:\n\n    * `fixed_mods`,\n    * `variable_mods`,\n    * `precursor_mass_tolerance`,\n    * `precursor_mass_tolerance_unit`,\n    * `fragment_mass_tolerance`,\n    * `fragment_mass_tolerance_unit`,\n    * `fragment_method`,\n    * `enzyme`\n  - by specifying globbing patterns to the input spectrum files in Thermo RAW or mzML format (e.g. `/data/experiment{1,2,3}_rep*.mzML`). An experimental design should be provided with the `expdesign` parameter.",
                     "fa_icon": "fas fa-file-csv"
                 },
-                "quant_method":{
-                    "type": "string",
-                    "description": "quantitative method eg. Label free quantification (LFQ)",
-                    "help_text": "quantitative method eg. Label free Tags quantification (LFQ)",
-                    "fa_icon": "fas fa-hdd",
-                    "enum": ["ISO", "LFQ", "DIA"]
-                },
                 "outdir": {
                     "type": "string",
                     "description": "The output directory where the results will be saved.",
@@ -161,12 +154,12 @@
             "description": "Extracts and normalizes labeling information",
             "default": "",
             "properties": {
-                "label": {
+                "labelling_type": {
                     "type": "string",
                     "description": "label method",
                     "fa_icon": "fas fa-font",
                     "help_text": "Isobaric Quantification method used in the experiment",
-                    "enum": ["itraq4plex", "itraq8plex", "tmt6plex", "tmt10plex", "tmt11plex", "tmt16plex"]
+                    "enum": ["label free sample","itraq4plex", "itraq8plex", "tmt6plex", "tmt10plex", "tmt11plex", "tmt16plex"]
                 },
                 "select_activation": {
                     "type": "string",
@@ -1019,6 +1012,22 @@
                     "type": "boolean",
                     "description": "Display help text.",
                     "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
+                "publish_dir_mode": {
+                    "type": "string",
+                    "default": "copy",
+                    "description": "Method used to save pipeline results to output directory.",
+                    "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
+                    "fa_icon": "fas fa-copy",
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {

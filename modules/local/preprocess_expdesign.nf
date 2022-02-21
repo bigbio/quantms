@@ -1,26 +1,19 @@
-
-include { saveFiles } from './functions'
-
-params.options = [:]
-
-// Fixes file endings in experimental design. E.g. if an old experimental design was specified but the files were converted already
+// Fixing file endings only necessary if the experimental design is user-specified
 process PREPROCESS_EXPDESIGN {
-
     label 'process_very_low'
     label 'process_single_thread'
-
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:'expdesign_post', meta:[:], publish_by_meta:[]) }
 
     input:
     path design
 
     output:
     path "experimental_design.tsv", emit: ch_expdesign
+    path "process_experimental_design.tsv", emit: process_ch_expdesign
 
     script:
+
     """
     sed 's/.raw\\t/.mzML\\t/I' $design > experimental_design.tsv
+    a=\$(grep -n '^\$' $design | head -n1| awk -F":" '{print \$1}'); sed -e ''"\${a}"',\$d' $design > process_experimental_design.tsv
     """
 }

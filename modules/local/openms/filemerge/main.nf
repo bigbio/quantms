@@ -1,33 +1,22 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process FILEMERGE {
     label 'process_medium'
     label 'process_single_thread'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:[:], publish_by_meta:[]) }
 
     conda (params.enable_conda ? "openms::openms=2.8.0.dev" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/openms-thirdparty:2.7.0--h9ee0642_1"
-    } else {
-        container "quay.io/biocontainers/openms-thirdparty:2.7.0--h9ee0642_1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.7.0--h9ee0642_1' :
+        'quay.io/biocontainers/openms-thirdparty:2.7.0--h9ee0642_1' }"
 
     input:
     file(id_map)
 
     output:
     tuple val([:]), path("ID_mapper_merge.consensusXML"), emit: id_merge
-    path "*.version.txt", emit: version
+    path "versions.yml", emit: version
     path "*.log", emit: log
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
 
     """
     FileMerger \\
@@ -40,6 +29,9 @@ process FILEMERGE {
         -out ID_mapper_merge.consensusXML \\
         > ID_mapper_merge.log
 
-    echo \$(FileMerger 2>&1) > ${software}.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        FileMerger: echo \$(FileMerger 2>&1)
+    END_VERSIONS
     """
 }
