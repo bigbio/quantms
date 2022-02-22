@@ -31,7 +31,7 @@ process ISOBARICANALYZER {
         -type $meta.labelling_type \\
         -in ${mzml_file} \\
         -threads $task.cpus \\
-        -extraction:select_activation "Collision-induced dissociation" \\
+        -extraction:select_activation "${diss_meth}" \\
         -extraction:reporter_mass_shift $params.reporter_mass_shift \\
         -extraction:min_reporter_intensity $params.min_reporter_intensity \\
         -extraction:min_precursor_purity $params.min_precursor_purity \\

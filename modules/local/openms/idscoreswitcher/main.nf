@@ -27,6 +27,7 @@ process IDSCORESWITCHER {
         -threads $task.cpus \\
         -new_score ${new_score} \\
         $args \\
+        -debug 100 \\
         > ${id_file.baseName}_switch.log
 
     cat <<-END_VERSIONS > versions.yml

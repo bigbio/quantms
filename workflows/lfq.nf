@@ -8,7 +8,6 @@
 // MODULES: Local to the pipeline
 //
 include { PROTEOMICSLFQ } from '../modules/local/openms/proteomicslfq/main'
-include { PMULTIQC } from '../modules/local/pmultiqc/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -55,16 +54,14 @@ workflow LFQ {
             )
     ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.version.ifEmpty(null))
 
-    //
-    // MODULE: PMULTIQC
-    // TODO PMULTIQC package will be improved and restructed
-    if (params.enable_pmultiqc) {
-        ID.out.psmrescoring_results.map { it -> it[1] }.set { ch_ids_pmultiqc }
-        PMULTIQC(ch_expdesign, ch_plfq.pmultiqc_mzmls.collect(),
-            PROTEOMICSLFQ.out.out_mztab.combine(PROTEOMICSLFQ.out.out_consensusXML).combine(PROTEOMICSLFQ.out.out_msstats),
-            ch_ids_pmultiqc.collect()
-        )
-    }
+    ID.out.psmrescoring_results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_ids }
+
+    emit:
+    ch_pmultiqc_ids = ch_pmultiqc_ids
+    final_result    = PROTEOMICSLFQ.out.out_mztab.combine(PROTEOMICSLFQ.out.out_consensusXML).combine(PROTEOMICSLFQ.out.out_msstats)
+    versions        = ch_software_versions
 }
 
 /*

@@ -35,6 +35,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
+include { PMULTIQC } from '../modules/local/pmultiqc/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -94,24 +95,36 @@ workflow QUANTMS {
         CREATE_INPUT_CHANNEL.out.ch_meta_config
     )
     ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
+    FILE_PREPARATION.out.results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_mzmls }
 
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
     if ( params.labelling_type.contains('tmt') | params.labelling_type.contains("itraq")) {
         TMT(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+        TMT.out.ch_pmultiqc_ids.set { ch_ids_pmultiqc }
+        TMT.out.final_result.set{ pipeline_results }
+        ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
     } else if ( params.labelling_type.contains('label free')) {
         LFQ(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+        LFQ.out.ch_pmultiqc_ids.set { ch_ids_pmultiqc }
+        LFQ.out.final_result.set{ pipeline_results }
+        ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
     }
 
-
-    // PMULTIQC(
-    //     // Whatever you need there from the subworkflow results
-    // )
+    //
+    // MODULE: PMULTIQC
+    // TODO PMULTIQC package will be improved and restructed
+    if (params.enable_pmultiqc) {
+        PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), pipeline_results, ch_ids_pmultiqc.collect())
+        ch_versions = ch_versions.mix(PMULTIQC.out.version.ifEmpty(null))
+    }
 
     //
     // MODULE: Pipeline reporting
-    //
+    // OpenMS does't support print version directly, how to print customized versions better
     // CUSTOM_DUMPSOFTWAREVERSIONS (
     //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
     // )

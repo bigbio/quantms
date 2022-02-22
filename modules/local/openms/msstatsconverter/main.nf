@@ -18,11 +18,17 @@ process MSSTATSCONVERTER {
     script:
     def args = task.ext.args ?: ''
 
+    if ( params.labelling_type.contains('tmt') | params.labelling_type.contains("itraq")) {
+        quant_method = "ISO"
+    } else if ( params.labelling_type.contains('label free')) {
+        quant_method = "LFQ"
+    }
+
     """
     MSstatsConverter \\
         -in ${consensusXML} \\
         -in_design ${exp_file} \\
-        -method $params.quant_method \\
+        -method ${quant_method} \\
         -out out_msstats.csv \\
         -debug 100 \\
         > MSstatsConverter.log

@@ -24,11 +24,17 @@ process PMULTIQC {
     script:
     def args = task.ext.args ?: ''
 
+    if ( params.labelling_type.contains('tmt') | params.labelling_type.contains("itraq")) {
+        quant_method = "ISO"
+    } else if ( params.labelling_type.contains('label free')) {
+        quant_method = "LFQ"
+    }
+
     """
     multiqc \\
         --exp_design ${expdesign} \\
         --mzMLs ./mzMLs \\
-        --quant_method $params.quant_method \\
+        --quant_method ${quant_method} \\
         --raw_ids ./raw_ids \\
         ./quantms_results \\
         -o .
