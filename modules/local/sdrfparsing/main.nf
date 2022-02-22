@@ -24,7 +24,7 @@ process SDRFPARSING {
     ## -l for legacy behavior to always add sample columns
     ## TODO Update the sdrf-pipelines to dynamic print versions
 
-    parse_sdrf $args -s ${sdrf} > sdrf_parsing.log
+    parse_sdrf convert-openms -t2 -l -s ${sdrf} > sdrf_parsing.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
