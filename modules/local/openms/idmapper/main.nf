@@ -2,10 +2,10 @@ process IDMAPPER {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "openms::openms=2.8.0.dev" : null)
+    conda (params.enable_conda ? "openms::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.7.0--h9ee0642_1' :
-        'quay.io/biocontainers/openms-thirdparty:2.7.0--h9ee0642_1' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
 
     input:
     tuple val(meta), path(id_file), path(consensusXML)

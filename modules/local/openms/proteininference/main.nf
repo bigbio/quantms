@@ -1,7 +1,7 @@
 process PROTEININFERENCE {
     label 'process_medium'
 
-    conda (params.enable_conda ? "openms::openms=2.8.0.dev" : null)
+    conda (params.enable_conda ? "openms::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://ftp.pride.ebi.ac.uk/pride/data/tools/quantms-dev.sif' :
         'quay.io/bigbio/quantms:dev' }"
