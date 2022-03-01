@@ -30,7 +30,7 @@ workflow CREATE_INPUT_CHANNEL {
     labelling_type = ""
 
     ch_in_design.splitCsv(header: true, sep: '\t')
-            .map { create_meta_channel(it, is_sdrf, enzymes, files) }
+            .map { create_meta_channel(it, is_sdrf, enzymes, files, labelling_type) }
             .set { ch_meta_config }
 
     emit:
@@ -42,7 +42,7 @@ workflow CREATE_INPUT_CHANNEL {
 }
 
 // Function to get list of [meta, [ spectra_files ]]
-def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files) {
+def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, labelling_type) {
     def meta = [:]
     def array = []
 
