@@ -87,7 +87,6 @@ workflow QUANTMS {
         INPUT_CHECK.out.is_sdrf
     )
     ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
-    CREATE_INPUT_CHANNEL.out.ch_expdesign.into{ch_expdesign_lfq; ch_expdesign_iso}
 
     //
     // SUBWORKFLOW: File preparation
@@ -118,12 +117,12 @@ workflow QUANTMS {
     ch_pipeline_results = Channel.empty()
     ch_ids_pmultiqc = Channel.empty()
 
-    TMT(FILE_PREPARATION_TMT.out.results, ch_expdesign_iso)
+    TMT(FILE_PREPARATION_TMT.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
     ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-    LFQ(FILE_PREPARATION_LFQ.out.results, ch_expdesign_lfq)
+    LFQ(FILE_PREPARATION_LFQ.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
