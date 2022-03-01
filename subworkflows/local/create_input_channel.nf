@@ -38,7 +38,7 @@ workflow CREATE_INPUT_CHANNEL {
 
     ch_meta_config_lfq = Channel.empty()
     ch_meta_config_iso = Channel.empty()
-    log.warn "TYPE: '${labelling_type}'."
+    log.warn "TYPE: '${wrapper.labelling_type}'."
     if (wrapper.labelling_type.contains("tmt") || wrapper.labelling_type.contains("itraq")){
         ch_meta_config_iso = ch_meta_config
     } else {
