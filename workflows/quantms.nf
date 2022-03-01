@@ -41,7 +41,7 @@ include { PMULTIQC } from '../modules/local/pmultiqc/main'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
+//include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
