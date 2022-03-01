@@ -27,16 +27,19 @@ workflow CREATE_INPUT_CHANNEL {
 
     Set enzymes = []
     Set files = []
-    labelling_type = ""
+    class Wrapper {
+        def labelling_type
+    }
+    def wrapper = new Wrapper()
 
     ch_in_design.splitCsv(header: true, sep: '\t')
-            .map { create_meta_channel(it, is_sdrf, enzymes, files, labelling_type) }
+            .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .set { ch_meta_config }
 
     ch_meta_config_lfq = Channel.empty()
     ch_meta_config_iso = Channel.empty()
     log.warn "TYPE: '${labelling_type}'."
-    if (labelling_type.contains("tmt") || labelling_type.contains("itraq")){
+    if (wrapper.labelling_type.contains("tmt") || wrapper.labelling_type.contains("itraq")){
         ch_meta_config_iso = ch_meta_config
     } else {
         ch_meta_config_lfq = ch_meta_config
@@ -46,13 +49,13 @@ workflow CREATE_INPUT_CHANNEL {
     ch_meta_config_iso                     // [meta, [spectra_files ]]
     ch_meta_config_lfq                     // [meta, [spectra_files ]]
     ch_expdesign
-    labelling_type
+    wrapper.labelling_type
 
     version         = ch_versions
 }
 
 // Function to get list of [meta, [ spectra_files ]]
-def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, labelling_type) {
+def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
     def meta = [:]
     def array = []
 
@@ -114,21 +117,21 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, labelling_ty
         }
     }
 
-    if (!labelling_type) {
+    if (!wrapper.labelling_type) {
         if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
-            labelling_type = meta.labelling_type
+            wrapper.labelling_type = meta.labelling_type
         } else {
             log.error "Unsupported quantification type '${meta.labelling_type}'."
             exit 1
         }
     } else {
-        if (meta.labelling_type != labelling_type) {
-            log.error "Only one label type supported: was '${labelling_type}', now is '${meta.labelling_type}'."
+        if (meta.labelling_type != wrapper.labelling_type) {
+            log.error "Only one label type supported: was '${wrapper.labelling_type}', now is '${meta.labelling_type}'."
             exit 1
         }
     }
 
-    if (labelling_type.contains("label free")) {
+    if (wrapper.labelling_type.contains("label free")) {
         if (filestr in files) {
             log.error "Currently only one search engine setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
             exit 1
