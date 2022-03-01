@@ -102,12 +102,14 @@ workflow QUANTMS {
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
-    if ( params.labelling_type.contains('tmt') | params.labelling_type.contains("itraq")) {
-        TMT(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    // TODO if we ever allow mixed labelling types, we need to split the files according to meta.labelling_type which contains
+    // labelling_type per file
+    if ( CREATE_INPUT_CHANNEL.out.labelling_type.contains('tmt') | CREATE_INPUT_CHANNEL.out.labelling_type.contains("itraq")) {
+        TMT(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign, CREATE_INPUT_CHANNEL.out.labelling_type)
         TMT.out.ch_pmultiqc_ids.set { ch_ids_pmultiqc }
         TMT.out.final_result.set{ pipeline_results }
         ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
-    } else if ( params.labelling_type.contains('label free')) {
+    } else if ( CREATE_INPUT_CHANNEL.out.labelling_type.contains('label free')) {
         LFQ(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
         LFQ.out.ch_pmultiqc_ids.set { ch_ids_pmultiqc }
         LFQ.out.final_result.set{ pipeline_results }

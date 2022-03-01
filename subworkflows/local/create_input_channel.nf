@@ -36,6 +36,7 @@ workflow CREATE_INPUT_CHANNEL {
     emit:
     ch_meta_config                     // [meta, [spectra_files ]]
     ch_expdesign
+    labelling_type
 
     version         = ch_versions
 }
@@ -102,16 +103,24 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files) {
             exit 1
         }
     }
-        if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq")) {
-            quant_type = "iso"
-        } else if (meta.labelling_type.contains("label free")) {
-            quant_type = "lfq"
+
+    if (!labelling_type) {
+        if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
+            labelling_type = meta.labelling_type
         } else {
             log.error "Unsupported quantification type '${meta.labelling_type}'."
             exit 1
         }
+    } else {
+        if (meta.labelling_type != labelling_type)
+        {
+            log.error "Only one label type supported: was '${labelling_type}', now is '${meta.labelling_type}'."
+            exit 1
+        }
+    }
 
-    if (quant_type == "lfq") {
+
+    if (labelling_type == "lfq") {
         if (filestr in files) {
             log.error "Currently only one search engine setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
             exit 1
