@@ -90,6 +90,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
 
     // for sdrf read from config file, without it, read from params
     if (is_sdrf.toString().toLowerCase().contains("false")) {
+        log.warn " NO SDRF!!!"
         meta.labelling_type             = params.labelling_type
         meta.dissociationmethod         = params.fragment_method
         meta.fixedmodifications         = params.fixed_mods
