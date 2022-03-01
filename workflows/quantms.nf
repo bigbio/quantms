@@ -116,7 +116,7 @@ workflow QUANTMS {
     // TODO if we ever allow mixed labelling types, we need to split the files according to meta.labelling_type which contains
     // labelling_type per file
     ch_pipeline_results = Channel.empty()
-    ch_pmultiqc_ids = Channel.empty()
+    ch_ids_pmultiqc = Channel.empty()
 
     TMT(FILE_PREPARATION_TMT.out.results, ch_expdesign_iso)
     ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
