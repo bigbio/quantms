@@ -131,7 +131,7 @@ workflow QUANTMS {
     // MODULE: PMULTIQC
     // TODO PMULTIQC package will be improved and restructed
     if (params.enable_pmultiqc) {
-        PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), pipeline_results, ch_ids_pmultiqc.collect())
+        PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), ch_pipeline_results, ch_ids_pmultiqc.collect())
         ch_versions = ch_versions.mix(PMULTIQC.out.version.ifEmpty(null))
     }
 
