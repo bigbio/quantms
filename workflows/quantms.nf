@@ -41,8 +41,7 @@ include { PMULTIQC } from '../modules/local/pmultiqc/main'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { FILE_PREPARATION as FILE_PREPARATION_LFQ } from '../subworkflows/local/file_preparation'
-include { FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
+include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
@@ -89,6 +88,7 @@ workflow QUANTMS {
     )
     ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
     CREATE_INPUT_CHANNEL.out.ch_expdesign.set{ch_expdesign_lfq, ch_expdesign_iso}
+
     //
     // SUBWORKFLOW: File preparation
     //

@@ -78,7 +78,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, labelling_ty
                                             : filestr)
 
     // existance check
-    if ((!file(filestr).exists())) {
+    if (!file(filestr).exists()) {
         exit 1, "ERROR: Please check input file -> File Uri does not exist!\n${filestr}"
     }
 
@@ -121,8 +121,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, labelling_ty
             exit 1
         }
     } else {
-        if (meta.labelling_type != labelling_type)
-        {
+        if (meta.labelling_type != labelling_type) {
             log.error "Only one label type supported: was '${labelling_type}', now is '${meta.labelling_type}'."
             exit 1
         }
