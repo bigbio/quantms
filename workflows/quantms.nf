@@ -105,7 +105,7 @@ workflow QUANTMS {
     // TODO if we ever allow mixed labelling types, we need to split the files according to meta.labelling_type which contains
     // labelling_type per file
     if ( CREATE_INPUT_CHANNEL.out.labelling_type.contains('tmt') | CREATE_INPUT_CHANNEL.out.labelling_type.contains("itraq")) {
-        TMT(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign, CREATE_INPUT_CHANNEL.out.labelling_type)
+        TMT(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
         TMT.out.ch_pmultiqc_ids.set { ch_ids_pmultiqc }
         TMT.out.final_result.set{ pipeline_results }
         ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))

@@ -119,8 +119,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, labelling_ty
         }
     }
 
-
-    if (labelling_type == "lfq") {
+    if (labelling_type.contains("label free")) {
         if (filestr in files) {
             log.error "Currently only one search engine setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
             exit 1
