@@ -4,6 +4,10 @@
 include { SDRFPARSING } from '../../modules/local/sdrfparsing/main'
 include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign'
 
+class Wrapper {
+    def labelling_type
+}
+
 workflow CREATE_INPUT_CHANNEL {
     take:
     ch_sdrf_or_design
@@ -27,9 +31,7 @@ workflow CREATE_INPUT_CHANNEL {
 
     Set enzymes = []
     Set files = []
-    class Wrapper {
-        def labelling_type
-    }
+
     def wrapper = new Wrapper()
 
     ch_in_design.splitCsv(header: true, sep: '\t')
