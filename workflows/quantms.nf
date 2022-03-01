@@ -4,18 +4,18 @@
 ========================================================================================
 */
 
-//def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 // Validate input parameters
-//WorkflowQuantms.initialise(params, log)
+WorkflowQuantms.initialise(params, log)
 
 // TODO nf-core: Add all file path parameters for the pipeline to the list below
 // Check input path parameters to see if they exist
-//def checkPathParamList = [ params.input ]
-//for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
+def checkPathParamList = [ params.input ]
+for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
 // Check mandatory parameters
-//if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 /*
 ========================================================================================
@@ -23,8 +23,8 @@
 ========================================================================================
 */
 
-//ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
-//ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
+ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
+ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
 
 
 /*
@@ -33,16 +33,16 @@
 ========================================================================================
 */
 
-//include { TMT } from './tmt'
-//include { LFQ } from './lfq'
-//include { PMULTIQC } from '../modules/local/pmultiqc/main'
+include { TMT } from './tmt'
+include { LFQ } from './lfq'
+include { PMULTIQC } from '../modules/local/pmultiqc/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-//include { INPUT_CHECK } from '../subworkflows/local/input_check'
-//include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
-//include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
+include { INPUT_CHECK } from '../subworkflows/local/input_check'
+include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
+include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
 ========================================================================================
@@ -53,8 +53,8 @@
 //
 // MODULE: Installed directly from nf-core/modules
 //
-//include { MULTIQC as SUMMARYPIPELINE } from '../modules/nf-core/modules/multiqc/main'
-//include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { MULTIQC as SUMMARYPIPELINE } from '../modules/nf-core/modules/multiqc/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 
 /*
@@ -64,7 +64,7 @@
 */
 
 // Info required for completion email and summary
-//def multiqc_report = []
+def multiqc_report = []
 
 workflow QUANTMS {
 
