@@ -41,7 +41,8 @@ include { PMULTIQC } from '../modules/local/pmultiqc/main'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
+include { FILE_PREPARATION as FILE_PREPARATION_LFQ } from '../subworkflows/local/file_preparation'
+include { FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
@@ -91,30 +92,41 @@ workflow QUANTMS {
     //
     // SUBWORKFLOW: File preparation
     //
-    FILE_PREPARATION (
-        CREATE_INPUT_CHANNEL.out.ch_meta_config
+    FILE_PREPARATION_TMT (
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso
     )
-    ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
-    FILE_PREPARATION.out.results
+    FILE_PREPARATION_LFQ (
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso
+    )
+    ch_versions = ch_versions.mix(FILE_PREPARATION_TMT.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(FILE_PREPARATION_LFQ.out.version.ifEmpty(null))
+    FILE_PREPARATION_LFQ.out.results
         .map { it -> it[1] }
-        .set { ch_pmultiqc_mzmls }
+        .set { ch_pmultiqc_mzmls_lfq }
+
+    FILE_PREPARATION_TMT.out.results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_mzmls_iso }
+
+    ch_pmultiqc_mzmls = ch_pmultiqc_mzmls_lfq.mix(ch_pmultiqc_mzmls_iso)
 
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
     // TODO if we ever allow mixed labelling types, we need to split the files according to meta.labelling_type which contains
     // labelling_type per file
-    if ( CREATE_INPUT_CHANNEL.out.labelling_type.contains('tmt') | CREATE_INPUT_CHANNEL.out.labelling_type.contains("itraq")) {
-        TMT(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-        TMT.out.ch_pmultiqc_ids.set { ch_ids_pmultiqc }
-        TMT.out.final_result.set{ pipeline_results }
-        ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
-    } else if ( CREATE_INPUT_CHANNEL.out.labelling_type.contains('label free')) {
-        LFQ(FILE_PREPARATION.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-        LFQ.out.ch_pmultiqc_ids.set { ch_ids_pmultiqc }
-        LFQ.out.final_result.set{ pipeline_results }
-        ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
-    }
+    ch_pipeline_results = Channel.empty()
+    ch_pmultiqc_ids = Channel.empty()
+
+    TMT(FILE_PREPARATION_TMT.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
+    ch_pipeline_results.mix(TMT.out.final_result)
+    ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
+
+    LFQ(FILE_PREPARATION_LFQ.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
+    ch_pipeline_results.mix(LFQ.out.final_result)
+    ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
     //
     // MODULE: PMULTIQC
