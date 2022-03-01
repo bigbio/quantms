@@ -87,7 +87,7 @@ workflow QUANTMS {
         INPUT_CHECK.out.is_sdrf
     )
     ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
-    CREATE_INPUT_CHANNEL.out.ch_expdesign.set{ch_expdesign_lfq; ch_expdesign_iso}
+    CREATE_INPUT_CHANNEL.out.ch_expdesign.into{ch_expdesign_lfq; ch_expdesign_iso}
 
     //
     // SUBWORKFLOW: File preparation
