@@ -42,7 +42,10 @@ workflow CREATE_INPUT_CHANNEL {
               ch_meta_config_iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
               ch_meta_config_tmt: it[0].labelling_type.contains("label free")
             }
-
+            .set{result}
+    ch_meta_config_iso = result.ch_meta_config_iso
+    ch_meta_config_tmt = result.ch_meta_config_tmt
+    
     emit:
     ch_meta_config_iso                     // [meta, [spectra_files ]]
     ch_meta_config_lfq                     // [meta, [spectra_files ]]
