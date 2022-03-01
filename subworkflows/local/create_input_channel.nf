@@ -32,7 +32,7 @@ workflow CREATE_INPUT_CHANNEL {
     ch_in_design.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, labelling_type) }
             .set { ch_meta_config }
-    if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq"){
+    if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq")){
         ch_meta_config_iso = ch_meta_config
         ch_meta_config_lfq = Channel.empty()
     } else {
