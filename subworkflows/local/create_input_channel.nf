@@ -120,6 +120,8 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         }
     }
 
+    log.warn "Label: '${meta.labelling_type}'"
+
     if (wrapper.labelling_type.equals("")) {
         if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
             wrapper.labelling_type = meta.labelling_type
