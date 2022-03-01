@@ -33,8 +33,8 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 ========================================================================================
 */
 
-include { TMT } from './tmt'
-include { LFQ } from './lfq'
+//include { TMT } from './tmt'
+//include { LFQ } from './lfq'
 include { PMULTIQC } from '../modules/local/pmultiqc/main'
 
 //
@@ -42,7 +42,7 @@ include { PMULTIQC } from '../modules/local/pmultiqc/main'
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
-//include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
+include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
 ========================================================================================
