@@ -32,21 +32,16 @@ workflow CREATE_INPUT_CHANNEL {
     Set enzymes = []
     Set files = []
 
+    // TODO remove. We can't use the variable to direct channels anyway
     wrapper = new Wrapper()
     wrapper.labelling_type = ""
 
     ch_in_design.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
-            .set { ch_meta_config }
-
-    ch_meta_config_lfq = Channel.empty()
-    ch_meta_config_iso = Channel.empty()
-    log.warn "TYPE: '${wrapper.labelling_type}'."
-    if (wrapper.labelling_type.contains("tmt") || wrapper.labelling_type.contains("itraq")){
-        ch_meta_config_iso = ch_meta_config
-    } else {
-        ch_meta_config_lfq = ch_meta_config
-    }
+            .branch { 
+              ch_meta_config_iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
+              ch_meta_config_tmt: it[0].labelling_type.contains("label free")
+            }
 
     emit:
     ch_meta_config_iso                     // [meta, [spectra_files ]]
