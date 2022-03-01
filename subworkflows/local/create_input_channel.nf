@@ -33,6 +33,7 @@ workflow CREATE_INPUT_CHANNEL {
     Set files = []
 
     wrapper = new Wrapper()
+    wrapper.labelling_type = ""
 
     ch_in_design.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
