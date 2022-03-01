@@ -40,11 +40,11 @@ workflow CREATE_INPUT_CHANNEL {
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .branch { 
               ch_meta_config_iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
-              ch_meta_config_tmt: it[0].labelling_type.contains("label free")
+              ch_meta_config_lfq: it[0].labelling_type.contains("label free")
             }
             .set{result}
     ch_meta_config_iso = result.ch_meta_config_iso
-    ch_meta_config_tmt = result.ch_meta_config_tmt
+    ch_meta_config_lfq = result.ch_meta_config_lfq
     
     emit:
     ch_meta_config_iso                     // [meta, [spectra_files ]]
