@@ -5,7 +5,7 @@ include { SDRFPARSING } from '../../modules/local/sdrfparsing/main'
 include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign'
 
 class Wrapper {
-    def labelling_type
+    def labelling_type = ""
 }
 
 workflow CREATE_INPUT_CHANNEL {
