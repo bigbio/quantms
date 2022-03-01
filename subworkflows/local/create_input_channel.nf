@@ -119,7 +119,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         }
     }
 
-    if (!wrapper.labelling_type) {
+    if (wrapper.labelling_type == "") {
         if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
             wrapper.labelling_type = meta.labelling_type
         } else {
