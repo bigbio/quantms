@@ -20,7 +20,7 @@ workflow PROTEINQUANT {
     PROTEINQUANTIFIER(IDCONFLICTRESOLVER.out.pro_resconf, expdesign_file)
     ch_version = ch_version.mix(PROTEINQUANTIFIER.out.version)
 
-    MSSTATSCONVERTER(IDCONFLICTRESOLVER.out.pro_resconf, expdesign_file)
+    MSSTATSCONVERTER(IDCONFLICTRESOLVER.out.pro_resconf, expdesign_file, "ISO")
     ch_version = ch_version.mix(MSSTATSCONVERTER.out.version)
 
     emit:
