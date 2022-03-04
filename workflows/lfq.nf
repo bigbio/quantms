@@ -60,7 +60,7 @@ workflow LFQ {
 
     emit:
     ch_pmultiqc_ids = ch_pmultiqc_ids
-    final_result    = PROTEOMICSLFQ.out.out_mztab.combine(PROTEOMICSLFQ.out.out_consensusXML).combine(PROTEOMICSLFQ.out.out_msstats)
+    final_result    = PROTEOMICSLFQ.out.out_mztab
     versions        = ch_software_versions
 }
 
