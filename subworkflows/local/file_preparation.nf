@@ -2,13 +2,9 @@
 // Raw file conversion and mzml indexing
 //
 
-params.thermorawfileparser = [:]
-params.mzmlindexing = [:]
-params.openmspeakpicker = [:]
-
-include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main' addParams(options: params.thermorawfileparser)
-include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main' addParams(options: params.mzmlindexing)
-include { OPENMSPEAKPICKER } from '../../modules/local/openms/openmspeakpicker/main' addParams( options: params.openmspeakpicker )
+include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main'
+include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main'
+include { OPENMSPEAKPICKER } from '../../modules/local/openms/openmspeakpicker/main'
 
 workflow FILE_PREPARATION {
     take:
