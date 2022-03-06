@@ -3,8 +3,8 @@ process PROTEOMICSLFQ {
 
     conda (params.enable_conda ? "openms::openms=2.8.0.dev" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://ftp.pride.ebi.ac.uk/pride/data/tools/quantms-dev.sif' :
-        'quay.io/bigbio/quantms:dev' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
 
     input:
     path(mzmls)
@@ -59,7 +59,7 @@ process PROTEOMICSLFQ {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ProteomicsLFQ: echo \$(ProteomicsLFQ 2>&1)
+        ProteomicsLFQ: \$(ProteomicsLFQ 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

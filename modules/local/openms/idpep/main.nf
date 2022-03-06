@@ -30,7 +30,7 @@ process IDPEP {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IDPosteriorErrorProbability: echo \$(IDPosteriorErrorProbability 2>&1)
+        IDPosteriorErrorProbability: \$(IDPosteriorErrorProbability 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

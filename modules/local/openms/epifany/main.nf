@@ -33,7 +33,7 @@ process EPIFANY {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DecoyDatabase: echo \$(Epifany 2>&1)
+        DecoyDatabase: \$(Epifany 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

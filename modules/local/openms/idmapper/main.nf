@@ -33,7 +33,7 @@ process IDMAPPER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IDMapper: echo \$(IDMapper 2>&1)
+        IDMapper: \$(IDMapper 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

@@ -30,7 +30,7 @@ process IDFILTER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IDFilter:  echo \$(IDFilter 2>&1)
+        IDFilter: \$(IDFilter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

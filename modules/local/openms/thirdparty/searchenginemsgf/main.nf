@@ -74,8 +74,8 @@ process SEARCHENGINEMSGF {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MSGFPlusAdapter: echo \$(MSGFPlusAdapter 2>&1)
-        msgf_plus: echo \$(msgf_plus 2>&1)
+        MSGFPlusAdapter: \$(MSGFPlusAdapter 2>&1 | grep -E '^Version(.*)' | sed "s/Version: //g")
+        msgf_plus: \$(msgf_plus 2>&1 | grep -E '^MS-GF\\+ Release.*')
     END_VERSIONS
     """
 }

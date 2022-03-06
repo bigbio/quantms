@@ -56,7 +56,7 @@ process INDEXPEPTIDES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        PeptideIndexer: echo \$(PeptideIndexer 2>&1)
+        PeptideIndexer: \$(PeptideIndexer 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

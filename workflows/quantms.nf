@@ -35,7 +35,7 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
-include { PMULTIQC } from '../modules/local/pmultiqc/main'
+include { PMULTIQC as SUMMARYPIPELINE } from '../modules/local/pmultiqc/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -53,7 +53,6 @@ include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channe
 //
 // MODULE: Installed directly from nf-core/modules
 //
-include { MULTIQC as SUMMARYPIPELINE } from '../modules/nf-core/modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 
 
@@ -128,23 +127,14 @@ workflow QUANTMS {
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
     //
-    // MODULE: PMULTIQC
-    // TODO PMULTIQC package will be improved and restructed
-    if (params.enable_pmultiqc) {
-        PMULTIQC(CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_pmultiqc_mzmls.collect(), ch_pipeline_results, ch_ids_pmultiqc.collect())
-        ch_versions = ch_versions.mix(PMULTIQC.out.version.ifEmpty(null))
-    }
-
-    //
     // MODULE: Pipeline reporting
-    // OpenMS does't support print version directly, how to print customized versions better
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
-
-    // BIG TODO do we need this???
     //
-    // MODULE: MultiQC
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
+
+    //
+    // MODULE: pmultiqc
     //
     workflow_summary    = WorkflowQuantms.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
@@ -153,12 +143,17 @@ workflow QUANTMS {
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_custom_config.collect().ifEmpty([]))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    // ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_quantms_logo = file("$projectDir/assets/nf-core-quantms_logo_light.png")
 
     SUMMARYPIPELINE (
-        ch_multiqc_files.collect()
+        CREATE_INPUT_CHANNEL.out.ch_expdesign,
+        ch_pmultiqc_mzmls.collect(),
+        ch_pipeline_results.combine(ch_multiqc_files.collect()),
+        ch_ids_pmultiqc.collect(),
+        ch_multiqc_quantms_logo
     )
-    multiqc_report      = SUMMARYPIPELINE.out.report.toList()
+    multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
     ch_versions         = ch_versions.mix(SUMMARYPIPELINE.out.versions)
 
 }
@@ -169,7 +164,6 @@ workflow QUANTMS {
 ========================================================================================
 */
 
-// BIG TODO the report should come from pmultiQC
 workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)

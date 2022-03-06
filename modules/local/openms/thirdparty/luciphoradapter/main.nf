@@ -44,7 +44,7 @@ process LUCIPHORADAPTER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        LuciphorAdapter: echo \$(LuciphorAdapter 2>&1)
+        LuciphorAdapter: \$(LuciphorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

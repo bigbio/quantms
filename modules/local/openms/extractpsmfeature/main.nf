@@ -29,7 +29,7 @@ process EXTRACTPSMFEATURE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        PSMFeatureExtractor:  echo \$(PSMFeatureExtractor 2>&1)
+        PSMFeatureExtractor: \$(PSMFeatureExtractor 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

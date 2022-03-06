@@ -25,7 +25,7 @@ process MZMLINDEXING {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        FileConverter: echo \$(FileConverter 2>&1)
+        FileConverter: \$(FileConverter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

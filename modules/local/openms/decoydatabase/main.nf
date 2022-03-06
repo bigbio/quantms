@@ -31,7 +31,7 @@ process DECOYDATABASE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DecoyDatabase: echo \$(DecoyDatabase 2>&1)
+        DecoyDatabase: \$(DecoyDatabase 2>&1  | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

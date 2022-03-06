@@ -9,15 +9,16 @@ process PMULTIQC {
     }
 
     input:
-    file expdesign
-    file 'mzMLs/*'
-    file 'quantms_results/*'
-    file 'raw_ids/*'
+    path expdesign
+    path 'mzMLs/*'
+    path 'results/*'
+    path 'raw_ids/*'
+    path quantms_log
 
     output:
     path "*.html", emit: ch_pmultiqc_report
     path "*.db", emit: ch_pmultiqc_db
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*_data", emit: data
     path "*_plots", optional:true, emit: plots
 
@@ -29,7 +30,8 @@ process PMULTIQC {
         --exp_design ${expdesign} \\
         --mzMLs ./mzMLs \\
         --raw_ids ./raw_ids \\
-        ./quantms_results \\
+        --config ./results/multiqc_config.yaml \\
+        ./results \\
         -o .
 
     cat <<-END_VERSIONS > versions.yml
