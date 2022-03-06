@@ -96,8 +96,8 @@ process SEARCHENGINECOMET {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        CometAdapter:  echo \$(CometAdapter 2>&1)
-        Comet:  echo \$(comet 2>&1)
+        CometAdapter: \$(CometAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        Comet: \$(comet 2>&1 | grep -E "Comet version.*" | sed 's/Comet version //g' | sed 's/"//g')
     END_VERSIONS
     """
 }

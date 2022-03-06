@@ -45,7 +45,7 @@ process ISOBARICANALYZER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IsobaricAnalyzer: echo \$(IsobaricAnalyzer --version 2>&1)
+        IsobaricAnalyzer: \$(IsobaricAnalyzer --version 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

@@ -30,7 +30,7 @@ process MSSTATSCONVERTER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MSstatsConverter: echo \$(MSstatsConverter 2>&1)
+        MSstatsConverter: \$(MSstatsConverter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }
