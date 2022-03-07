@@ -25,13 +25,27 @@ Contents
    .. toctree::
    :maxdepth: 2
 
-   identification
+   dda
    .. toctree::
    :maxdepth: 2
 
+   dia
+   .. toctree::
+   :maxdepth: 2
+
+   statistics
+   .. toctree::
+   :maxdepth: 1
+
+   qc
+   .. toctree::
+   :maxdepth: 1
+
+
+
 |
 
-The following links should be follow to get support and help with the quantms maintainers:
+The following links should be followed to get support and help with the quantms maintainers:
 
 |Get help on Slack|   |Report Issue| |Get help on GitHub Forum|
 
