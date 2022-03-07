@@ -39,7 +39,7 @@ Start running your own analysis!
 
 
 See `usage docs <https://nf-co.re/quantms/usage>`_ for all of the available options when running the pipeline. Or configure the pipeline via
-`nf-core launch <https://nf-co.re/launch>`_ from the web or the command line.
+`nf-core launch <https://nf-co.re/launch/quantms>`_ from the web or the command line.
 
 Contact Us
 --------------------

@@ -1,5 +1,25 @@
-DDA Identification workflow
+Peptide identification from fragment spectra
 =========================
+
+.. toctree::
+   :maxdepth: 1
+
+   searchengines
+   .. toctree::
+   :maxdepth: 2
+
+   rescoring
+   .. toctree::
+   :maxdepth: 2
+
+   fdr
+   .. toctree::
+   :maxdepth: 2
+
+   modlocal
+   .. toctree::
+   :maxdepth: 2
+
 
 The peptide/protein identification workflow is the cornerstone of the Data dependant acquisition (DDA) quantification methods such as LFQ or TMT. To identify proteins by mass spectrometry, the proteins of interest in the sample are reduced and then digested into peptides using a proteolytic enzyme (e.g. trypsin). The peptides complex mixture is then separated by liquid chromatography which is coupled to the mass spectrometer.
 
