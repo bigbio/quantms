@@ -5,8 +5,6 @@ Protein quantification in data-dependent acquisition experiments
    :maxdepth: 2
 
    identification
-   .. toctree::
-   :maxdepth: 2
 
    iso
    .. toctree::

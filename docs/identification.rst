@@ -1,5 +1,28 @@
 Peptide identification from fragment spectra
 =========================
+.. sidebar:: Details on the substeps
+    .. toctree::
+       :maxdepth: 1
+
+       searchengines
+       .. toctree::
+       :maxdepth: 2
+
+       consensusid
+       .. toctree::
+       :maxdepth: 2
+
+       rescoring
+       .. toctree::
+       :maxdepth: 2
+
+       fdr
+       .. toctree::
+       :maxdepth: 2
+
+       modlocal
+       .. toctree::
+       :maxdepth: 2
 
 The peptide identification workflow is the cornerstone of data-dependent acquisition (DDA)
 quantification methods such as LFQ or TMT and can also be used to create transition libraries for DIA.
@@ -34,30 +57,6 @@ The peptide identification step in the quantms pipeline can be performed (**inde
 .. note:: Using multiple database search engine combined can yield up to **15% more peptides**
     compared to using only one search engine. However, you need to be aware that adding another
     search engine will increase the CPU computing time. :doc:`identification-benchmarks`.
-
-
-.. toctree::
-   :maxdepth: 1
-
-   searchengines
-   .. toctree::
-   :maxdepth: 2
-
-   consensusid
-   .. toctree::
-   :maxdepth: 2
-
-   rescoring
-   .. toctree::
-   :maxdepth: 2
-
-   fdr
-   .. toctree::
-   :maxdepth: 2
-
-   modlocal
-   .. toctree::
-   :maxdepth: 2
 
 
 References
