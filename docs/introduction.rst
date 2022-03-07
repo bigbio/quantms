@@ -30,9 +30,9 @@ Acquisition strategies can be divided into the highly reproducible
 (e.g., SWATH) and the well-proven, sensitive
 :doc:`data-dependent acquisition (DDA) <dda>`.
 With respect to usually more expensive labelling strategies, the most commonly
-employed ones are the isobaric chemical labels :doc:`iTraq and TMT <tmt>` and the metabolic
+employed ones are the isobaric chemical labels :doc:`iTraq and TMT <iso>` and the metabolic
 labelling strategies (usually based on isotopically labelled amino acids) like SILAC (TODO link)
-(not yet supported by this pipeline).
+(SILAC is not yet supported by this pipeline).
 The advantage of labels is that they allow multiplexing of samples and
 avoiding retention alignment and the implied requirement of having a
 very reproducible chromatography.

@@ -5,9 +5,4 @@ Peptide database search engines
    :maxdepth: 2
 
    comet
-   .. toctree::
-   :maxdepth: 2
-
    msgf
-   .. toctree::
-   :maxdepth: 2

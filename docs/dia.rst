@@ -1,17 +1,9 @@
-Data independent acquisition (DIA)
+Data-independent acquisition (DIA) quantification
 ==================================
 
 .. toctree::
    :maxdepth: 1
 
    identification
-   .. toctree::
-   :maxdepth: 2
-
    diaumpire
-   .. toctree::
-   :maxdepth: 2
-
    openswath
-   .. toctree::
-   :maxdepth: 2

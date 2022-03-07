@@ -1,19 +1,10 @@
-Protein quantification in data-dependent acquisition experiments
-======================
+Data-dependent acquisition (DDA) quantification
+===============================================
 
 .. toctree::
    :maxdepth: 2
 
    identification
-
    iso
-   .. toctree::
-   :maxdepth: 2
-
    lfq
-   .. toctree::
-   :maxdepth: 2
-
    inference
-   .. toctree::
-   :maxdepth: 2
