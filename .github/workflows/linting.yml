@@ -4,6 +4,8 @@ name: nf-core linting
 on:
   push:
   pull_request:
+    branches-ignore:
+      - readthedocs
   release:
     types: [published]
 
