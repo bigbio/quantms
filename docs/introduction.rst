@@ -66,6 +66,7 @@ the rich pipeline execution reports.
 .. sidebar:: Subworkflows and tools
     :subtitle: Here you can find information about individual subworkflows and tools:
 
+    - :doc:`Preprocessing and conversion <preprocessing>`
     - :doc:`Peptide identification <identification>`
         - :doc:`Peptide search engines <searchengines>`
             - :doc:`Comet <comet>`

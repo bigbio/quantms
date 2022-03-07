@@ -1,26 +1,6 @@
 Peptide identification from fragment spectra
 =========================
 
-.. toctree::
-   :maxdepth: 1
-
-   searchengines
-   .. toctree::
-   :maxdepth: 2
-
-   rescoring
-   .. toctree::
-   :maxdepth: 2
-
-   fdr
-   .. toctree::
-   :maxdepth: 2
-
-   modlocal
-   .. toctree::
-   :maxdepth: 2
-
-
 The peptide identification workflow is the cornerstone of data-dependent acquisition (DDA)
 quantification methods such as LFQ or TMT and can also be used to create transition libraries for DIA.
 To identify proteins by mass spectrometry, the proteins of interest in the sample are
@@ -28,7 +8,7 @@ digested into peptides using a proteolytic enzyme (e.g., trypsin).
 The complex peptide mixture is then separated by liquid chromatography which is coupled to the mass spectrometer.
 
 In DDA mode, the mass spectrometer first records the mass/charge (m/z) of each peptide ion and then selects
-the peptide ions individually for fragmentation to obtain sequence information via MS/MS spectra(Figure 1).
+the peptide ions individually for fragmentation to obtain sequence information via MS/MS spectra (Figure 1).
 As a result for each sample, millions of MS and corresponding MS/MS are obtained
 which correspond to all peptides in the mixture.
 
@@ -45,28 +25,39 @@ digestion of the protein database [read review ref 1].
    :width: 400
    :align: center
 
-Mass spectra processing: Raw conversion
----------------------------------------
-
-The RAW data (files from the instrument) can be provided to quantms pipeline in two different formats: (i) RAW files - instrument files; (ii) mzML files (HUPO-PSI standard file format). quantms uses the `thermorawfileparser <https://github.com/compomics/ThermoRawFileParser>`_ to convert the input RAW files to mzML and all the following steps are built in top of the standard mzML.
-
-.. important:: Automatic RAW file conversion is only supported from Thermo Scientific.
-
-Additionally to file conversion, the Raw conversion step allows the users to perform an extra peak-picking step ``openmspeakpicker true`` for those datasets/projects where peaks can be extracted using the Thermo RAW API. Read more about the OpenMS peak picker algorithm `here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerWavelet.html>`_ .
-
-Target/Decoy database generation
-----------------------------------------
-
-Target/Decoy is the most common approach to control the number of false positive peptides and proteins identified by the corresponding workflow [ref 3]. The user can provide the protein FSATA database with the decoys already attached or generate the database within the pipeline by using the following option: ``add_decoys``.
-
-.. hint:: Additionally, the user can define the prefix for the decoy proteins  (e.g. DECOY_) by using the parameter ``decoy_string``. We STRONGLY recommend to use DECOY_ prefix for all the decoy proteins for better compatibility with exiting tools such as :doc:`pquant` or :doc:`pmultiqc`
 
 Peptide Identification
 ------------------------------------
 
 The peptide identification step in the quantms pipeline can be performed (**independently** or **combined**) with two different open-source tools : `Comet <https://github.com/UWPR/Comet>`_ or `MS-GF+ <https://github.com/MSGFPlus/msgfplus>`_. The parameters for the search engine Comet or MS-GF+ are read from the SDRF input parameters including the post-translation modifications (annotated with UNIMOD accessions), precursor and fragment ion mass tolerances, etc. The only parameter that MUST be provided by commandline to the quantms workflow is the psm and peptide FDR threshold ``psm_pep_fdr_cutoff`` (default value ``0.01``).
 
-.. note:: The benefit of using multiple database search engine combined has been proved to be efficient to identified more around **15% peptides** more than using only one search engine. However, you need to be aware that adding another search engine will increase the CPU computing time. :doc:`identification-benchmarks`.
+.. note:: Using multiple database search engine combined can yield up to **15% more peptides**
+    compared to using only one search engine. However, you need to be aware that adding another
+    search engine will increase the CPU computing time. :doc:`identification-benchmarks`.
+
+
+.. toctree::
+   :maxdepth: 1
+
+   searchengines
+   .. toctree::
+   :maxdepth: 2
+
+   consensusid
+   .. toctree::
+   :maxdepth: 2
+
+   rescoring
+   .. toctree::
+   :maxdepth: 2
+
+   fdr
+   .. toctree::
+   :maxdepth: 2
+
+   modlocal
+   .. toctree::
+   :maxdepth: 2
 
 
 References
