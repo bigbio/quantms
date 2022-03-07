@@ -1,34 +1,131 @@
 Quantitative mass spectrometry data analysis
 ==================================
 
-Bottom-up proteomics is a common method to identify proteins and characterize their amino acid sequences and post-translational modifications by proteolytic digestion of proteins prior to analysis by mass spectrometry. In bottom-up proteomics, the protein extract is enzymatically digested, followed by one or more dimensions of separation of the peptides by liquid chromatography coupled to mass spectrometry, a technique known as shotgun proteomics [1]. By comparing the masses of the proteolytic peptides or their tandem mass spectra with those predicted from a sequence database, peptides can be identified and multiple peptide identifications assembled into a protein identification.
+Bottom-up proteomics is a common method to identify proteins
+and characterize their amino acid sequences and post-translational
+modifications by proteolytic digestion of proteins prior to analysis
+by mass spectrometry. In bottom-up proteomics, the protein extract
+is enzymatically digested, followed by one or more dimensions of
+separation of the peptides by liquid chromatography coupled to
+mass spectrometry, a technique known as shotgun proteomics [1].
+By comparing the masses of the proteolytic peptides or their
+tandem mass spectra with those predicted from a sequence database,
+peptides can be identified and multiple peptide identifications
+assembled into a protein identification.
 
 
 .. image:: images/ms-proteomics.png
    :width: 400
    :align: center
 
+Quantification strategies in proteomics depend on the acquisition strategy
+used on the mass spectrometer and how/if the peptides were labelled with
+special reagents or isotopes.
+Acquisition strategies can be divided into the highly reproducible
+:doc:`data-independent acquisition (DIA) strategies <dia>`
+(e.g., SWATH) and the well-proven, sensitive
+:doc:`data-dependent acquisition (DDA) <dda>`.
+With respect to usually more expensive labelling strategies, the most commonly
+employed ones are the isobaric chemical labels :doc:`iTraq and TMT <tmt>` and the metabolic
+labelling strategies (usually based on isotopically labelled amino acids) like SILAC (TODO link)
+(not yet supported by this pipeline).
+The advantage of labels is that they allow multiplexing of samples and
+avoiding retention alignment and the implied requirement of having a
+very reproducible chromatography.
+
 |
 
-.. sidebar:: Pipelines and tools
-   :subtitle: **It can make your life easier** if you want to explore individual tools:
+.. sidebar:: Subworkflows and tools
+    :subtitle: Here you can find information about individual subworkflows and tools:
 
-   - :doc:`identification`
-   - :doc:`lfq`
-   - :doc:`tmt`
-   - :doc:`pquant`
-   - :doc:`pmultiqc`
+    - :doc:`Peptide identification <identification>`
+        - :doc:`Peptide search engines <searchengines>`
+            - :doc:`Comet <comet>`
+            - :doc:`MSGF+ <msgf>`
+        - :doc:`PSM rescoring <rescoring>`
+            - :doc:`Distribution-based <idpep>`
+            - :doc:`Percolator <percolator>`
+        - :doc:`ConsensusID <consensusid>`
+        - :doc:`False discovery rates <fdr>`
+        - :doc:`Modification localization <modlocal>`
+    - :doc:`Label-free quantification <lfq>`
+        - :doc:`Peptide identification <identification>`
+        - :doc:`ProteomicsLFQ metatool <proteomicslfq>`
+        - :doc:`Protein inference <inference>`
+    - :doc:`Isobaric labelled quantification <iso>`
+        - :doc:`Peptide identification <identification>`
+        - :doc:`Isobaric quantification <isobaricquantifier>`
+        - :doc:`Protein inference <inference>`
+    - :doc:`Data-independent acquistion <dia>`
+        - :doc:`DIAUmpire <diaumpire>`
+        - :doc:`OpenSwath <openswath>`
+    - :doc:`Statistical postprocessing <statistics>`
+        - :doc:`MSstats <msstats>`
+        - :doc:`Triqler <triqler>`
+    - :doc:`Quality control <qc>`
+        - :doc:`pmultiqc`
+        - :doc:`ptxqc`
 
 quantms workflow in a nutshell
 --------------------------------
 
-Mass spectrometry quantitative data analysis can be divided in three main steps:
+Mass spectrometry quantitative data analysis can be divided in the following main steps.
+Make sure to follow the links to get to know more about the implementation
+details of specific steps in the pipeline.
 
-- peptide/protein identification
-   - :doc:`identification`
-   - DIA Identification
-- protein quantification
-- downstream data analysis and quality control
+- Peptide identification
+    Through matching of peptide fragment spectra
+        - with protein database and known modifications [implemented]
+        - with protein database and unknown modifications [in development]
+        - with spectrum database [currently unsupported]
+        - without database (de novo) [currently unsupported]
+- Peptide quantification
+    - DDA
+        - label-free
+        Through finding interesting features (or 3D peaks) on MS1 level, consisting
+        of isotopic traces with the same elution profile (either targeted
+        at locations with identifications or untargeted), aligning and
+        matching them between runs, potentially requantifiying missing features
+        and lastly integrating the intensity of the raw peaks in those features.
+
+        - isobaric labels
+        Through comparing the intensity of reporter ions arising from the
+        fragmentation of the isobaric label in the fragment spectra (either
+        in the MS2 spectrum used for identification or in separate MS3 spectra
+        (SPS) TODO link)
+
+        - metabolic labels [currently unsupported]
+        Through feature finding (as in label-free) and linking features with a mass shift depending
+        on the isotopes in the label. Matching modifications in the fragment spectra
+        if available can be used to confirm links.
+    - DIA
+        - (transition) library-free
+        Through creating a library of transitions to extract and compare
+        based on the results from peptide search engines, aligning the extracted
+        peak groups, and performing rigorous statistical
+        testing of those peak group to classify them correctly.
+
+        - with a library of transitions [currently unsupported? TODO]
+
+- Protein inference and quantification
+    This is done to map ambiguous peptides to the mostly likely proteins of origin
+    and to create protein groups based on the ambiguity level between them.
+    Heuristics based on inference scores and groupings can then help in deciding which peptides
+    to use for quantification of which protein. Aggregation of quantities
+    to the protein level can be performed by several different rules (e.g., top-3)
+    or left to the downstream statistical tools.
+
+- Downstream (statistical) data analysis
+    Downstream data analysis tools like MSstats and Triqler can
+    perform more elaborate normarlization, imputation, aggregation
+    and statistical significance testing based on the raw intensities,
+    protein associations and scores from the upstream pipeline.
+
+- Quality control
+    Our chosen and developed quality control tools gather required
+    information from the resulting mzTab file and optionally
+    intermediate results to provide statistics and summary plots of
+    important quality control metrics like (TODO).
 
 .. image:: images/quantms.png
    :width: 450
