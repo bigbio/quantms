@@ -4,10 +4,10 @@ Quantitative mass spectrometry data analysis
 Bottom-up proteomics is a common method to identify proteins
 and characterize their amino acid sequences and post-translational
 modifications by proteolytic digestion of proteins prior to analysis
-by mass spectrometry. In bottom-up proteomics, the protein extract
+by mass spectrometry. In bottom-up or shotgun proteomics[1], the protein extract
 is enzymatically digested, followed by one or more dimensions of
 separation of the peptides by liquid chromatography coupled to
-mass spectrometry, a technique known as shotgun proteomics [1].
+mass spectrometry.
 By comparing the masses of the proteolytic peptides or their
 tandem mass spectra with those predicted from a sequence database,
 peptides can be identified and multiple peptide identifications
@@ -17,6 +17,10 @@ assembled into a protein identification.
 .. image:: images/ms-proteomics.png
    :width: 400
    :align: center
+
+
+Different quantification strategies
+-------------------------
 
 Quantification strategies in proteomics depend on the acquisition strategy
 used on the mass spectrometer and how/if the peptides were labelled with
@@ -33,11 +37,36 @@ The advantage of labels is that they allow multiplexing of samples and
 avoiding retention alignment and the implied requirement of having a
 very reproducible chromatography.
 
+
+Workflow-based analysis
+-----------------------
+
+While there exist tools for the analysis of shotgun proteomics data (like MaxQuant TODO cite), most of these
+tools are designed as single-tiered/monolithic software application where tasks cannot be distributed or evaluated
+separately, therefore limiting the scalability and reproducibility of the data analysis [ref 2].
+The different sub-workflows of the `quantms workflow <https://github.com/bigbio/quantms>`_ on the other hand
+enable the distribution of all the different steps of a peptide identification and quantification workflow in
+cloud or HPC environments through the usage of nextflow (TODO cite). It also features rich quality control
+reports and different methods for automated downstream statistical post-processing including reports on
+significance analysis for differential expression which all can be emailed to you after successful completion of
+the pipeline.
+The workflow can be configured solely by an SDRF input file for easy one-command-reanalyses of PRIDE datasets
+but also offers extensive configurabilty on either a web-based or a guided command-line interface provided
+through its integration into nf-core (TODO cite). The membership in nf-core additionally secures best practices
+of open and collaborative development of the pipeline including continuous testing after every contribution.
+The used software is strictly versioned through the exclusive usage of (bio-)conda packages (TODO cite) whose
+association with the biocontainer ecosystem (TODO cite) also
+allows us to provide a workflow profile for several containerization softwares (like docker, singularity, podman, etc.).
+Containerization ensures an even more reproducible environment for your analyses.
+The pipeline can easily be supervised on-the-fly via nf-tower (TODO link). Failed runs can be debugged by investigating
+the rich pipeline execution reports.
+
 |
 
 .. sidebar:: Subworkflows and tools
     :subtitle: Here you can find information about individual subworkflows and tools:
 
+    - :doc:`Preprocessing and conversion <preprocessing>`
     - :doc:`Peptide identification <identification>`
         - :doc:`Peptide search engines <searchengines>`
             - :doc:`Comet <comet>`
@@ -135,3 +164,4 @@ References
 --------------------------------
 
 [1] Aebersold, R., Mann, M. Mass spectrometry-based proteomics. Nature 422, 198–207 (2003). https://doi.org/10.1038/nature01511
+[2] Perez-Riverol Y, Moreno P. Scalable Data Analysis in Proteomics and Metabolomics Using BioContainers and Workflows Engines. Proteomics. 2020 May;20(9):e1900147. doi: 10.1002/pmic.201900147. Epub 2019 Dec 18. PMID: 31657527.
