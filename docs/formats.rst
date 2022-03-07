@@ -113,7 +113,7 @@ OpenMS offers an open-source software C++ library (+ python bindings) for LC/MS 
 Multiple files from OpenMS ecosystem are use within quantms to store intermediate steps. Among these files are:
 
 - OpenMS' experimental design:
-    OpenMS has its own simplified, TSV-based `experimental design format <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details>`.
+    OpenMS has its own simplified, TSV-based `experimental design format <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details>`_.
     It currently can be used as a replacement to SDRF, if all missing search engine parameters are given
     on the command line. This type of input might be deprecated in the future. Since SDRF will be converted to the
     this format plus a configuration table internally, it might be worthwhile to know the format for debugging purposes.
@@ -127,6 +127,7 @@ Multiple files from OpenMS ecosystem are use within quantms to store intermediat
 
 The easiest way to parse these files is to use `pyopenms <https://pyopenms.readthedocs.io/en/latest/>`_
 with its `pandas dataframe conversion capabilities <https://pyopenms.readthedocs.io/en/latest/pandas_df_conversion.html>`_.
+
 |Get help on Slack|   |Report Issue| |Get help on GitHub Forum|
 
 .. |Get help on Slack| image:: http://img.shields.io/badge/slack-nf--core%20%23quantms-4A154B?labelColor=000000&logo=slack

@@ -1,12 +1,13 @@
 Installation and usage
 ==========================
 
-The quantms is built using `Nextflow <https://www.nextflow.io>`_, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It comes with docker containers making installation trivial and results highly reproducible.
+The quantms pipeline is built using `Nextflow <https://www.nextflow.io>`_, a workflow tool to run tasks across multiple compute infrastructures in a very portable manner.
+It comes with docker/singularity/podman... containers making installation trivial and results highly reproducible.
 
 The pre-requisites to run quantms are:
 
 - `Nextflow <https://www.nextflow.io>`_
-- Container or Package environment: `Docker <https://docs.docker.com/engine/installation/>`_, `Singularity <https://www.sylabs.io/guides/3.0/user-guide/>`_ or `Conda <https://conda.io/miniconda.html>`_
+- Container or Package environment: `Docker <https://docs.docker.com/engine/installation/>`_, `Singularity <https://www.sylabs.io/guides/3.0/user-guide/>`_, Podman or `Conda <https://conda.io/miniconda.html>`_
 
 
 Installation steps
@@ -14,7 +15,7 @@ Installation steps
 
 1. Installing `Nextflow <https://nf-co.re/usage/installation>`_
 
-2. Install either `Docker <https://docs.docker.com/engine/installation/>`_ or `Singularity <https://www.sylabs.io/guides/3.0/user-guide/>`_ or `Conda <https://conda.io/miniconda.html>`_; see nf-core guidelines for basic `configuration profiles <https://nf-co.re/usage/configuration#basic-configuration-profiles>`_
+2. Install either `Docker <https://docs.docker.com/engine/installation/>`_, `Singularity <https://www.sylabs.io/guides/3.0/user-guide/>`_, Podman, **or** `Conda <https://conda.io/miniconda.html>`_; see nf-core guidelines for basic `configuration profiles <https://nf-co.re/usage/configuration#basic-configuration-profiles>`_
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
@@ -32,6 +33,7 @@ Usage
 Start running your own analysis!
 
 .. code-block:: bash
+
    nextflow run bigbio\quantms -profile <docker/singularity/conda/institute> \
       --input '*.mzml' \
       --database 'myProteinDB.fasta' \

@@ -1,28 +1,14 @@
 Peptide identification from fragment spectra
 =========================
-.. sidebar:: Details on the substeps
-    .. toctree::
-       :maxdepth: 1
 
-       searchengines
-       .. toctree::
-       :maxdepth: 2
+.. toctree::
+   :maxdepth: 1
 
-       consensusid
-       .. toctree::
-       :maxdepth: 2
-
-       rescoring
-       .. toctree::
-       :maxdepth: 2
-
-       fdr
-       .. toctree::
-       :maxdepth: 2
-
-       modlocal
-       .. toctree::
-       :maxdepth: 2
+   searchengines
+   consensusid
+   rescoring
+   fdr
+   modlocal
 
 The peptide identification workflow is the cornerstone of data-dependent acquisition (DDA)
 quantification methods such as LFQ or TMT and can also be used to create transition libraries for DIA.

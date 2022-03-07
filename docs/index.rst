@@ -13,35 +13,17 @@ Contents
 .. toctree::
    :maxdepth: 1
 
-   introduction
-   .. toctree::
-   :maxdepth: 2
-
    usage
-   .. toctree::
-   :maxdepth: 2
-
+   introduction
    formats
-   .. toctree::
-   :maxdepth: 2
-
+   identification
    dda
-   .. toctree::
-   :maxdepth: 2
-
    dia
-   .. toctree::
-   :maxdepth: 2
-
    statistics
-   .. toctree::
-   :maxdepth: 1
-
    qc
-   .. toctree::
-   :maxdepth: 1
-
-
+   debug
+   faq
+   contact
 
 |
 
