@@ -64,7 +64,7 @@ very reproducible chromatography.
         - :doc:`Triqler <triqler>`
     - :doc:`Quality control <qc>`
         - :doc:`pmultiqc`
-        - :doc:`ptxqc`
+        - :doc:`PTXQC <ptxqc>`
 
 quantms workflow in a nutshell
 --------------------------------
