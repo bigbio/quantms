@@ -21,25 +21,25 @@ Peptide identification from fragment spectra
    :maxdepth: 2
 
 
-The peptide/protein identification workflow is the cornerstone of the Data dependant acquisition (DDA) quantification methods such as LFQ or TMT. To identify proteins by mass spectrometry, the proteins of interest in the sample are reduced and then digested into peptides using a proteolytic enzyme (e.g. trypsin). The peptides complex mixture is then separated by liquid chromatography which is coupled to the mass spectrometer.
+The peptide identification workflow is the cornerstone of data-dependent acquisition (DDA)
+quantification methods such as LFQ or TMT and can also be used to create transition libraries for DIA.
+To identify proteins by mass spectrometry, the proteins of interest in the sample are
+digested into peptides using a proteolytic enzyme (e.g., trypsin).
+The complex peptide mixture is then separated by liquid chromatography which is coupled to the mass spectrometer.
 
-In DDA mode, the mass spectrometer first records the mass/charge (m/z) of each peptide ion and then selects the peptide ions individually to obtain sequence information via MS/MS (Figure 1). As a result for each sample, millions of MS and corresponding MS/MS are obtained which correspond to all peptides in the mixture.
+In DDA mode, the mass spectrometer first records the mass/charge (m/z) of each peptide ion and then selects
+the peptide ions individually for fragmentation to obtain sequence information via MS/MS spectra(Figure 1).
+As a result for each sample, millions of MS and corresponding MS/MS are obtained
+which correspond to all peptides in the mixture.
 
 .. image:: images/msms.png
    :width: 600
    :align: center
 
-In order to identified the MS/MS spectra, several computational algorithms and tools can now be used to identify peptides and proteins. The most popular ones are based on protein sequence databases, where the experimental MS/MS is compared with the theoretical MS/MS of each peptide obtained from the insilico digestion of the protein database [read review ref 1].
-
-.. note:: Several well established software applications like Mascot and MaxQuant can be used for peptide and protein identification.
-
-However, most of the computational proteomics tools are designed as single-tiered/monolithic software application where the analytics tasks cannot be distributed, limiting the scalability and reproducibility of the data analysis [ref 2]. The identification sub-workflow of the `quantms workflow <https://github.com/bigbio/quantms>`_ enables to distribute in cloud/distributed environments all the different steps of a peptide identification workflow including:
-
-- target/decoy database creation
-- mass spectra processing
-- peptide identification
-- false positive control
-- creation of reports
+In order to identify the MS/MS spectra, several computational algorithms and tools
+can now be used to identify peptides and proteins. The most popular ones are based on protein sequence databases,
+where the experimental MS/MS is compared with the theoretical MS/MS of each peptide obtained from the *in silico*
+digestion of the protein database [read review ref 1].
 
 .. image:: images/id-dda-pipeline.png
    :width: 400
@@ -68,25 +68,6 @@ The peptide identification step in the quantms pipeline can be performed (**inde
 
 .. note:: The benefit of using multiple database search engine combined has been proved to be efficient to identified more around **15% peptides** more than using only one search engine. However, you need to be aware that adding another search engine will increase the CPU computing time. :doc:`identification-benchmarks`.
 
-Percolator: Boosting peptide identifications
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-`Percolator <https://github.com/percolator/percolator>`_ uses a semi-supervised machine learning to discriminate correct from incorrect peptide-spectrum matches. Percolator uses different properties from the peptide identifications such as retention time, number of missed-cleavages, peptide identification score, to train a SVM model that separates more accurately the true positive identifications from false positives.
-
-FDR filtering and ConsensusID
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The FDR filtering at peptide spectrum match (PSM) level can be applied for each peptide results. To filter the peptides first the tool compute the peptide error probability (PEP) and then filter using the provided thershold. The PEP score is the probability that a peptide (PSM-peptide spectral match) is incorrect. Basically, the higher the score the more confidence you can have that the given peptide identification is correct.
-
-When multiple search engines are used ```search_engines msgf,comet``` the results for each RAW file is combined into one single identification file including the combination of both search engines. The `ConsensusID tool <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ConsensusID.html>`_ is used to combined the results from different search engines.
-
-Individual tools
------------------------------
-
-- `Comet <https://github.com/UWPR/Comet>`_: Comet is an open source tandem mass spectrometry (MS/MS) sequence database search tool written primarily in C/C++.
-- `MS-GF+ <https://github.com/MSGFPlus/msgfplus>`_: MS-GF+ (aka MSGF+ or MSGFPlus) performs peptide identification by scoring MS/MS spectra against peptides derived from a protein sequence database.
-- `Percolator <https://github.com/percolator/percolator>`_: Percolator uses a semi-supervised machine learning to discriminate correct from incorrect peptide-spectrum matches.
-
 
 References
 ---------------------
@@ -95,5 +76,4 @@ References
 
 [2] Perez-Riverol Y, Moreno P. Scalable Data Analysis in Proteomics and Metabolomics Using BioContainers and Workflows Engines. Proteomics. 2020 May;20(9):e1900147. doi: 10.1002/pmic.201900147. Epub 2019 Dec 18. PMID: 31657527.
 
-[3] Elias JE, Gygi SP. Target-decoy search strategy for mass spectrometry-based proteomics. Methods Mol Biol. 2010;604:55-71. doi: 10.1007/978-1-60761-444-9_5. PMID: 20013364; PMCID: PMC2922680.
 
