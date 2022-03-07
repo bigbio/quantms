@@ -41,10 +41,19 @@ divided into two categories:
 
 **Experimental Design**:
 
-- ``factor value[disease]``: The factor value is the variable under study. In a proteomics study it can be the disease, organism part, tumor location, etc. The study variable will have multiple values depending of the samples and conditions. For example, in the SDRF above, the variable under study **factor value[phenotype]** has to values (one for each sample), control (sample 1) and primary tumor (sample 2).
+- ``factor value[disease]``: The factor value is the variable under study.
+    In a proteomics study it can be the disease, organism part, tumor location, etc.
+    The study variable will have multiple values depending of the samples and conditions.
+    For example, in the SDRF above, the variable under study **factor value[phenotype]**
+    has two values (one for each sample), control (sample 1) and primary tumor (sample 2).
+
+.. hint:: To simplify handling of conditions in downstream statistical software (e.g., MSstats), all factor value
+    columns will be appended for each row with the ``|`` separator. Consider this when building contrasts for
+    the MSstats parameters (see TODO link to params and :doc:`msstats` ).
 
 .. important:: Unequal fractionations are not supported yet, please remove superfluous fractions in all samples
     if a run failed or was discarded.
+
 .. important:: When multiple conditions are under study which cannot be reliably aligned or compared (e.g., due to
     different instruments, chromatographies, fractionations, and/or quantification strategies), the user should create
     multiple SDRFs (one for each experiment).
@@ -58,7 +67,9 @@ divided into two categories:
 Spectra Data
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The spectra data can be provided in RAW files (Thermo instruments) or preferably in mzML. If RAW files are provided, the first step of the identification pipeline `converts them into mzML <https://quantms.readthedocs.io/en/latest/identification.html#mass-spectra-processing-raw-conversion>`_.
+The spectra data can be provided in RAW files (for Thermo-Fisher instruments only) or preferably in mzML.
+If RAW files are provided, the first step of the identification pipeline
+`converts them into mzML <https://quantms.readthedocs.io/en/latest/identification.html#mass-spectra-processing-raw-conversion>`_.
 
 
 Protein databases
@@ -92,9 +103,15 @@ Intermediate formats
 
 `OpenMS <https://www.openms.de/>`_ adapters are a cornerstone of quantms, they allows to convert between file formats, handle proteomics data such as enzymes definitions, PTMs, etc. OpenMS offers an open-source software C++ library (+ python bindings) for LC/MS data management and analyses. Multiple files from OpenMS ecosystem are use within quantms to store intermediate steps, among these files are:
 
+- OpenMS' experimental design: OpenMS has its own simplified, TSV-based `experimental design format <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details>`.
+    It currently can be used as a replacement to SDRF, if all missing search engine parameters are given
+    on the command line. This type of input might be deprecated in the future. Since SDRF will be converted to the
+    this format plus a configuration table internally, it might be worthwhile to know the format for debugging purposes.
+    The converted design can be found in the ``SDRFPARSING`` output folder.
+
 - idXML: An xml-based file format to store PSMs, peptide, and protein evidences. More information about the idXML can be `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1IdXMLFile.html>`_.
 
-- consensusXML: An xml-based file format that extends idXML to include quantification data across multiple runs.  More information about the idXML can be `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1ConsensusXMLFile.html>`_.
+- consensusXML: An xml-based file format that extends idXML to include quantification data across multiple runs. More information about the idXML can be `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1ConsensusXMLFile.html>`_.
 
 
 |Get help on Slack|   |Report Issue| |Get help on GitHub Forum|
