@@ -73,13 +73,13 @@ Mass spectrometry quantitative data analysis can be divided in the following mai
 Make sure to follow the links to get to know more about the implementation
 details of specific steps in the pipeline.
 
-- peptide identification
+- Peptide identification
     Through matching of peptide fragment spectra
         - with protein database and known modifications [implemented]
         - with protein database and unknown modifications [in development]
         - with spectrum database [currently unsupported]
         - without database (de novo) [currently unsupported]
-- peptide quantification
+- Peptide quantification
     - DDA
         - label-free
         Through finding interesting features (or 3D peaks) on MS1 level, consisting
@@ -87,11 +87,13 @@ details of specific steps in the pipeline.
         at locations with identifications or untargeted), aligning and
         matching them between runs, potentially requantifiying missing features
         and lastly integrating the intensity of the raw peaks in those features.
+
         - isobaric labels
         Through comparing the intensity of reporter ions arising from the
         fragmentation of the isobaric label in the fragment spectra (either
         in the MS2 spectrum used for identification or in separate MS3 spectra
         (SPS) TODO link)
+
         - metabolic labels [currently unsupported]
         Through feature finding (as in label-free) and linking features with a mass shift depending
         on the isotopes in the label. Matching modifications in the fragment spectra
@@ -102,20 +104,24 @@ details of specific steps in the pipeline.
         based on the results from peptide search engines, aligning the extracted
         peak groups, and performing rigorous statistical
         testing of those peak group to classify them correctly.
+
         - with a library of transitions [currently unsupported? TODO]
-- protein inference and quantification
+
+- Protein inference and quantification
     This is done to map ambiguous peptides to the mostly likely proteins of origin
     and to create protein groups based on the ambiguity level between them.
     Heuristics based on inference scores and groupings can then help in deciding which peptides
     to use for quantification of which protein. Aggregation of quantities
     to the protein level can be performed by several different rules (e.g., top-3)
     or left to the downstream statistical tools.
-- downstream data analysis
+
+- Downstream (statistical) data analysis
     Downstream data analysis tools like MSstats and Triqler can
     perform more elaborate normarlization, imputation, aggregation
     and statistical significance testing based on the raw intensities,
     protein associations and scores from the upstream pipeline.
-- quality control
+
+- Quality control
     Our chosen and developed quality control tools gather required
     information from the resulting mzTab file and optionally
     intermediate results to provide statistics and summary plots of
