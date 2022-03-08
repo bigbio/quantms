@@ -12,6 +12,14 @@ number of experiments, it heavily relies on correct linking of corresponding pep
 Labeling techniques, like isobaric labeling, circumvent, to some extent, the problem of 
 linking corresponding peptides as they allow measuring more than one experimental condition 
 in a single MS run.
+Both labeled and label-free quantification techniques yield **relative quantities** for an analyte and can
+be used to calculate *fold changes* between conditions. Absolute quantification values
+(e.g., how many micromoles of a peptide is contained in a sample) are inherently more
+complex to obtain. One reason is that different peptides have different physiochemical
+properties and ionization efficiency. To obtain absolute quantities isotope-labeled
+standards of known concentrations can be added during sample processing. The
+relative quantity of a peptide can be matched to the calibration curve of its isotopelabeled
+version and converted into an absolute quantity.
 
 .. toctree::
    :maxdepth: 2
