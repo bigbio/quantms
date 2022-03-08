@@ -1,8 +1,9 @@
 Data-dependent acquisition (DDA) quantification
 ===============================================
 
-In bottom-up proteomics, DDA is used to collect tandem MS spectra for identification 
-is combined with differnt techniques to quantify analytes.
+In bottom-up proteomics, the DDA method is used to collect tandem MS spectra 
+for peptide identification and is combined with conceptually different techniques 
+for peptide quantify analytes.
 Existing techniques can be loosely categorized in labeled and label-free approaches.
 Label-free quantification (LFQ) is probably the most direct way of determining quantities of
 analytes from several biological samples as they detect and integrate chromatographic 
