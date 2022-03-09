@@ -4,7 +4,7 @@ Quantitative mass spectrometry data analysis
 Bottom-up proteomics is a common method to identify proteins
 and characterize their amino acid sequences and post-translational
 modifications by proteolytic digestion of proteins prior to analysis
-by mass spectrometry. In bottom-up or shotgun proteomics[1], the protein extract
+by mass spectrometry. In bottom-up or shotgun proteomics [AEBERSOLD2003]_, the protein extract
 is enzymatically digested, followed by one or more dimensions of
 separation of the peptides by liquid chromatography coupled to
 mass spectrometry.
@@ -43,7 +43,7 @@ Workflow-based analysis
 
 While there exist tools for the analysis of shotgun proteomics data (like MaxQuant TODO cite), most of these
 tools are designed as single-tiered/monolithic software application where tasks cannot be distributed or evaluated
-separately, therefore limiting the scalability and reproducibility of the data analysis [ref 2].
+separately, therefore limiting the scalability and reproducibility of the data analysis [RIVEROL2020]_.
 The different sub-workflows of the `quantms workflow <https://github.com/bigbio/quantms>`_ on the other hand
 enable the distribution of all the different steps of a peptide identification and quantification workflow in
 cloud or HPC environments through the usage of nextflow (TODO cite). It also features rich quality control
@@ -156,6 +156,7 @@ details of specific steps in the pipeline.
     intermediate results to provide statistics and summary plots of
     important quality control metrics like (TODO).
 
+
 .. image:: images/quantms.png
    :width: 450
    :align: center
@@ -163,5 +164,8 @@ details of specific steps in the pipeline.
 References
 --------------------------------
 
-[1] Aebersold, R., Mann, M. Mass spectrometry-based proteomics. Nature 422, 198–207 (2003). https://doi.org/10.1038/nature01511
-[2] Perez-Riverol Y, Moreno P. Scalable Data Analysis in Proteomics and Metabolomics Using BioContainers and Workflows Engines. Proteomics. 2020 May;20(9):e1900147. doi: 10.1002/pmic.201900147. Epub 2019 Dec 18. PMID: 31657527.
+.. [AEBERSOLD2003]
+    Aebersold, R., Mann, M. Mass spectrometry-based proteomics. Nature 422, 198–207 (2003). https://doi.org/10.1038/nature01511
+
+.. [RIVEROL2020]
+    Perez-Riverol Y, Moreno P. Scalable Data Analysis in Proteomics and Metabolomics Using BioContainers and Workflows Engines. Proteomics. 2020 May;20(9):e1900147. doi: 10.1002/pmic.201900147. Epub 2019 Dec 18. PMID: 31657527.
