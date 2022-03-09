@@ -24,22 +24,11 @@ Mixture modelling using the *IDPosteriorErrorProbability* tool is a fallback for
  but on average yields a lower number of identifications.
 
 **Main publications:**
-
-Lukas Käll, Jesse Canterbury, Jason Weston, William Stafford Noble and Michael J. MacCoss.
-Semi-supervised learning for peptide identification from shotgun proteomics datasets
-Nature Methods 4:923 – 925, November 2007
-
-Matthew The, William Stafford Noble, Michael J. MacCoss and Lukas Käll
-Fast and Accurate Protein False Discovery Rates on Large-Scale Proteomics Data Sets with Percolator 3.0
-J. Am. Soc. Mass Spectrom. (2016) 27: 1719, November 2016
+    .. [KAELL2007] Lukas Käll, Jesse Canterbury, Jason Weston, William Stafford Noble and Michael J. MacCoss. **Semi-supervised learning for peptide identification from shotgun proteomics datasets.** *Nature Methods 4:923 – 925, November 2007*
+    .. [THE2016] Matthew The, William Stafford Noble, Michael J. MacCoss and Lukas Käll. **Fast and Accurate Protein False Discovery Rates on Large-Scale Proteomics Data Sets with Percolator 3.0.** *J. Am. Soc. Mass Spectrom. (2016) 27: 1719, November 2016*
 
 **Details on Percolator’s q-value calculation method can be found in:**
-
-Lukas Käll, John D. Storey, Michael J. MacCoss and William Stafford Noble
-Assigning confidence measures to peptides identified by tandem mass spectrometry
-Journal of Proteome Research, 7(1):29-34, January 2008
+    .. [KAELL2008A] Lukas Käll, John D. Storey, Michael J. MacCoss and William Stafford Noble. **Assigning confidence measures to peptides identified by tandem mass spectrometry.** *Journal of Proteome Research, 7(1):29-34, January 2008*
 
 **Details on Percolator’s posterior error probability calculation method can be found in:**
-Lukas Käll, John D. Storey and William Stafford Noble
-Nonparametric estimation of posterior error probabilities associated with peptides identified by tandem mass spectrometry
-Bioinformatics, 24(16):i42-i48, August 2008
+    .. [KAELL2008B] Lukas Käll, John D. Storey and William Stafford Noble. **Nonparametric estimation of posterior error probabilities associated with peptides identified by tandem mass spectrometry.** *Bioinformatics, 24(16):i42-i48, August 2008*
