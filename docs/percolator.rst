@@ -5,7 +5,26 @@ Percolator (SVM-based rescoring)
 It uses semi-supervised machine learning to discriminate correct from incorrect peptide-spectrum matches.
 Different properties from the peptide identifications such as retention time, number of missed-cleavages, peptide identification score, are used to train a SVM model that separates more accurately the true positive identifications from false positives.
 
+quantMS uses Percolator to improve identification results and to obtain error probabilities for peptide spectrum matches.
+In order to build a good mode for discriminating correct and incorrect matches, the tool needs sufficient correct peptide spectrum
+matches.
+
+**Percolator features used in quantMS:**
+- score recalibration
+- calculation of (posterior) error probabilities for individual PSMs
+- limited batch sizes
+
+**Troubleshooting:**
+
+Score recalibration fails. This might be a result of setting the wrong search parameters resulting in too little identifications.
+
+**Alternatives:**
+
+Mixture modelling using the *IDPosteriorErrorProbability* tool is a fallback for Percolator. It is more robust, works with less data 
+ but on average yields a lower number of identifications.
+
 **Main publications:**
+
 Lukas Käll, Jesse Canterbury, Jason Weston, William Stafford Noble and Michael J. MacCoss.
 Semi-supervised learning for peptide identification from shotgun proteomics datasets
 Nature Methods 4:923 – 925, November 2007
@@ -15,6 +34,7 @@ Fast and Accurate Protein False Discovery Rates on Large-Scale Proteomics Data S
 J. Am. Soc. Mass Spectrom. (2016) 27: 1719, November 2016
 
 **Details on Percolator’s q-value calculation method can be found in:**
+
 Lukas Käll, John D. Storey, Michael J. MacCoss and William Stafford Noble
 Assigning confidence measures to peptides identified by tandem mass spectrometry
 Journal of Proteome Research, 7(1):29-34, January 2008
