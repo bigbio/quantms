@@ -1,2 +1,2 @@
-Triqler (TODO acronym?)
+Triqler
 =======

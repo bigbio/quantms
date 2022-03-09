@@ -1,5 +1,5 @@
 Peptide identification from fragment spectra
-=========================
+============================================
 
 .. toctree::
    :maxdepth: 1
@@ -17,7 +17,7 @@ digested into peptides using a proteolytic enzyme (e.g., trypsin).
 The complex peptide mixture is then separated by liquid chromatography which is coupled to the mass spectrometer.
 
 In DDA mode, the mass spectrometer first records the mass/charge (m/z) of each peptide ion and then selects
-the peptide ions individually for fragmentation to obtain sequence information via MS/MS spectra (Figure :numref:`fig_msms`).
+the peptide ions individually for fragmentation to obtain sequence information via MS/MS spectra (:numref:`fig_msms`).
 As a result for each sample, millions of MS and corresponding MS/MS are obtained
 which correspond to all peptides in the mixture.
 
@@ -25,6 +25,8 @@ which correspond to all peptides in the mixture.
 .. figure:: images/msms.png
    :width: 600
    :align: center
+
+   MS/MS spectrum.
 
 In order to identify the MS/MS spectra, several computational algorithms and tools
 can now be used to identify peptides and proteins. The most popular ones are based on protein sequence databases,
