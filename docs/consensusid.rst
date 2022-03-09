@@ -10,11 +10,11 @@ is used to combine the results from different search engines. (TODO cite)
 ConsensusID provides three algorithms to choose from, to score the PSM sequences from different engines per spectrum
 (TODO mention param name):
 
-- best: Just chooses the PSM with the highest probability. Here it is enough for each engine to provide only one top hit.
-- PEPMatrix: Calculates a matrix of similarities across sequences of different engines to increase the weight for
-    sequences that have a similar counterpart for another engine.
-- PEPIons: Calculates a matrix of the number of shared matched ions across sequences of different engines to increase the weight for
-    sequences that have a similar counterpart for another engine.
+- **best:** Just chooses the PSM with the highest probability. Here it is enough for each engine to provide only one top hit.
+- **PEPMatrix:** Calculates a matrix of similarities across sequences of different engines to increase the weight for
+  sequences that have a similar counterpart for another engine.
+- **PEPIons:** Calculates a matrix of the number of shared matched ions across sequences of different engines to increase the weight for
+  sequences that have a similar counterpart for another engine.
 
 Additionally, minimal supports can be required (e.g., to enforce that a PSM was found by at least n engines).
 TODO mention param.
