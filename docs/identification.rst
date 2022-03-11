@@ -56,7 +56,7 @@ chooses the PSM with the highest probability. Here it is enough for each engine 
           to increase the weight for sequences that have a similar counterpart for another engine.
 
 Rescoring of peptide-spectrum matches
-=====================================
+------------------------------------
 
 To bring scores on a comparable level and to potentially improve their ranking the pipeline employs PSM
 re-scoring procedures. Re-scoring methods used multiple properties from the PMS's like retention time, to increase the
