@@ -5,7 +5,7 @@ Peptide identification from fragment spectra
    :maxdepth: 1
 
    searchengines
-   rescoring
+   percolator
    fdr
    modlocal
 
@@ -63,7 +63,35 @@ chooses the PSM with the highest probability. Here it is enough for each engine 
           **PEPIons** - calculates a matrix of the number of shared matched ions across sequences of different engines
           to increase the weight for sequences that have a similar counterpart for another engine.
 
+Rescoring of peptide-spectrum matches
+=====================================
 
+To bring scores on a comparable level and to potentially improve their ranking the pipeline employs PSM
+re-scoring procedures. Re-scoring methods used multiple properties from the PMS's like retention time, to increase the
+differences between the target and decoy peptides. Multiple algorithms and tools has been developed in proteomics to
+boost the number of peptide identifications and the score of the final peptide hits.
+
+quantms provides two different algorithms and tools for re-scoring of the peptide identifications: :doc:`percolator`
+and :doc:`idpep`. By default, quantms uses the :doc:`percolator` algorithm, which has proved to increase peptide
+identifications for :doc:`comet` and :doc:`msgf` search engines.
+
+.. note:: In some cases, Percolator fails to boost the original search engines, especially in cases like small datasets
+          where the number of peptide identifications is insufficient). As an alternative, quantms offers a fully parameterized
+          unsupervised or semi-supervised distribution approach inspired by PeptideProphet.
+          The distribution families are currently fixed (Gumbel distribution for incorrect and Gaussian for
+          correct PSMs). In order to switch the use to **idpep**, the user should provide the following parameter:
+
+After the re-scoring of the peptide identification and combination of the results from multiple search engines
+(if multiple search engines are allowed), quantms allows the fdr calculation steps (read more in :doc:`fdr`) and
+optionally the modification sites localization (read more in :doc:`modlocal`).
+
+
+.. toctree::
+   :maxdepth: 1
+
+   percolator
+   fdr
+   modlocal
 
 References
 ---------------------------
