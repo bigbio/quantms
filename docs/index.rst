@@ -13,25 +13,23 @@ Contents
 .. toctree::
    :maxdepth: 1
 
-   introduction
-   .. toctree::
-   :maxdepth: 2
-
    usage
-   .. toctree::
-   :maxdepth: 2
-
+   introduction
    formats
-   .. toctree::
-   :maxdepth: 2
-
+   preprocessing
    identification
-   .. toctree::
-   :maxdepth: 2
+   dda
+   dia
+   statistics
+   qc
+   debug
+   faq
+   dev
+   contact
 
 |
 
-The following links should be follow to get support and help with the quantms maintainers:
+The following links should be followed to get support and help with the quantms maintainers:
 
 |Get help on Slack|   |Report Issue| |Get help on GitHub Forum|
 

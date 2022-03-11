@@ -1,2 +1,2 @@
-Quality Control in quantms
-===========================
+pMultiQC
+========
