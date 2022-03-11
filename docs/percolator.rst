@@ -20,10 +20,13 @@ Score recalibration fails. This might be a result of setting the wrong search pa
 
 **Alternatives:**
 
-Mixture modelling using the *IDPosteriorErrorProbability* tool is a fallback for Percolator. It is more robust, works with less data 
+Mixture modelling using the *IDPosteriorErrorProbability* tool is a fallback for Percolator. It is more robust, works with less data
  but on average yields a lower number of identifications.
 
 For additional details on the main algorithm [KAELL2007]_, [THE2016]_, the q-value calculation method [KAELL2008A]_, and posterior error probability estimation [KAELL2008B]_ please refer to the publications.
+
+References
+-----------------------------
 
     .. [KAELL2007] Lukas Käll, Jesse Canterbury, Jason Weston, William Stafford Noble and Michael J. MacCoss. **Semi-supervised learning for peptide identification from shotgun proteomics datasets.** *Nature Methods 4:923 – 925, November 2007*
     .. [THE2016] Matthew The, William Stafford Noble, Michael J. MacCoss and Lukas Käll. **Fast and Accurate Protein False Discovery Rates on Large-Scale Proteomics Data Sets with Percolator 3.0.** *J. Am. Soc. Mass Spectrom. (2016) 27: 1719, November 2016*
