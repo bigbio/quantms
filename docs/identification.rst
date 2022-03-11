@@ -1,14 +1,6 @@
 Peptide identification from fragment spectra
 ============================================
 
-.. toctree::
-   :maxdepth: 1
-
-   searchengines
-   percolator
-   fdr
-   modlocal
-
 The peptide identification workflow is the cornerstone of data-dependent acquisition (DDA)
 quantification methods such as LFQ or TMT. To identify proteins by mass spectrometry, the proteins of interest in the sample are
 digested into peptides using a proteolytic enzyme (e.g., trypsin). The complex peptide mixture is then separated by
@@ -89,6 +81,7 @@ optionally the modification sites localization (read more in :doc:`modlocal`).
 .. toctree::
    :maxdepth: 1
 
+   searchengines
    percolator
    fdr
    modlocal
