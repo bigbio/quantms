@@ -2,11 +2,8 @@
 // Assigns protein/peptide identifications to features or consensus features.
 //
 
-params.isobaric = [:]
-params.idmapper = [:]
-
-include { ISOBARICANALYZER } from '../../modules/local/openms/isobaricanalyzer/main' addParams( options: params.isobaric )
-include { IDMAPPER } from '../../modules/local/openms/idmapper/main' addParams( options: params.idmapper )
+include { ISOBARICANALYZER } from '../../modules/local/openms/isobaricanalyzer/main'
+include { IDMAPPER } from '../../modules/local/openms/idmapper/main'
 
 workflow FEATUREMAPPER {
     take:

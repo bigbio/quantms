@@ -1,39 +1,31 @@
-// Import generic module functions
-include { initOptions; saveFiles; getSoftwareName } from './functions'
-
-params.options = [:]
-options        = initOptions(params.options)
-
 process MZMLINDEXING {
     tag "$meta.id"
     label 'process_low'
-    publishDir "${params.outdir}",
-        mode: params.publish_dir_mode,
-        saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), meta:meta, publish_by_meta:['id']) }
 
-    conda (params.enable_conda ? "openms::openms=2.7.0pre" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        // TODO Need to built single container
-        container "https://ftp.pride.ebi.ac.uk/pride/data/tools/quantms-dev.sif"
-    } else {
-        // TODO Need to built single container
-        container "quay.io/bigbio/quantms:dev"
-    }
+    conda (params.enable_conda ? "openms::openms=2.8.0" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
 
     input:
     tuple val(meta), path(mzmlfile)
 
     output:
     tuple val(meta), path("out/*.mzML"), emit: mzmls_indexed
-    path "*.version.txt", emit: version
+    path "versions.yml", emit: version
     path "*.log", emit: log
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
     mkdir out
     FileConverter -in ${mzmlfile} -out out/${mzmlfile.baseName}.mzML > ${mzmlfile.baseName}_mzmlindexing.log
 
-    echo \$(FileConverter 2>&1) > fileconverter.version.txt
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        FileConverter: \$(FileConverter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+    END_VERSIONS
     """
 }

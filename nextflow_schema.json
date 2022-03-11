@@ -20,13 +20,6 @@
                     "help_text": "The input to the pipeline can be specified in two **mutually exclusive** ways:\n  - using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and\nannotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\nAn OpenMS-style experimental design will be generated based on the factor columns of the SDRF. The settings for the\nfollowing parameters will currently be overwritten by the ones specified in the SDRF:\n\n    * `fixed_mods`,\n    * `variable_mods`,\n    * `precursor_mass_tolerance`,\n    * `precursor_mass_tolerance_unit`,\n    * `fragment_mass_tolerance`,\n    * `fragment_mass_tolerance_unit`,\n    * `fragment_method`,\n    * `enzyme`\n  - by specifying globbing patterns to the input spectrum files in Thermo RAW or mzML format (e.g. `/data/experiment{1,2,3}_rep*.mzML`). An experimental design should be provided with the `expdesign` parameter.",
                     "fa_icon": "fas fa-file-csv"
                 },
-                "quant_method":{
-                    "type": "string",
-                    "description": "quantitative method eg. Label free quantification (LFQ)",
-                    "help_text": "quantitative method eg. Label free Tags quantification (LFQ)",
-                    "fa_icon": "fas fa-hdd",
-                    "enum": ["ISO", "LFQ"]
-                },
                 "outdir": {
                     "type": "string",
                     "description": "The output directory where the results will be saved.",
@@ -161,12 +154,12 @@
             "description": "Extracts and normalizes labeling information",
             "default": "",
             "properties": {
-                "label": {
+                "labelling_type": {
                     "type": "string",
                     "description": "label method",
                     "fa_icon": "fas fa-font",
                     "help_text": "Isobaric Quantification method used in the experiment",
-                    "enum": ["itraq4plex", "itraq8plex", "tmt6plex", "tmt10plex", "tmt11plex", "tmt16plex"]
+                    "enum": ["label free sample","itraq4plex", "itraq8plex", "tmt6plex", "tmt10plex", "tmt11plex", "tmt16plex"]
                 },
                 "select_activation": {
                     "type": "string",
@@ -446,13 +439,13 @@
             "default": "",
             "properties": {
                 "allow_unmatched": {
-                    "type": "string",
+                    "type": "boolean",
                     "description": "Do not fail if there are some unmatched peptides. Only activate as last resort, if you know that the rest of your settings are fine!",
-                    "default": "false",
+                    "default": false,
                     "fa_icon": "far fa-check-square",
                     "enum": [
-                        "false",
-                        "true"
+                        false,
+                        true
                     ]
                 },
                 "IL_equivalent": {
@@ -675,7 +668,7 @@
                 "protein_fdr": {
                     "type": "boolean",
                     "description": "Additionally calculate the target-decoy FDR on protein-level based on the posteriors",
-                    "default": "false",
+                    "default": true,
                     "fa_icon": "fas fa-list-ol"
                 },
                 "picked_fdr": {
@@ -802,7 +795,7 @@
                 "include_all": {
                     "type": "boolean",
                     "description": "Include results for proteins with fewer proteotypic peptide than indicated by top.",
-                    "default": false,
+                    "default": true,
                     "fa_icon": "fas fa-check-square"
                 },
                 "protein_quant": {
@@ -916,6 +909,11 @@
                     "type": "string",
                     "description": "Specify a yaml file for the report layout (see PTXQC documentation) (TODO not yet fully implemented)",
                     "fa_icon": "far fa-file"
+                },
+                "enable_pmultiqc": {
+                    "type": "boolean",
+                    "description": "Enable generation of pmultiqc report? default: 'false'",
+                    "fa_icon": "fas fa-toggle-on"
                 }
             },
             "fa_icon": "fas fa-file-medical-alt"
@@ -940,12 +938,6 @@
                     "default": "https://raw.githubusercontent.com/nf-core/configs/master",
                     "hidden": true,
                     "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
-                    "fa_icon": "fas fa-users-cog"
-                },
-                "hostnames": {
-                    "type": "string",
-                    "description": "Institutional configs hostname.",
-                    "hidden": true,
                     "fa_icon": "fas fa-users-cog"
                 },
                 "config_profile_name": {
@@ -1098,13 +1090,6 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "Instead of directly downloading Singularity images for use with Singularity, force the workflow to pull and convert Docker containers instead.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-toolbox",
-                    "help_text": "This may be useful for example if you are unable to directly pull Singularity containers to run the pipeline due to http/https proxy issues."
                 }
             }
         }
