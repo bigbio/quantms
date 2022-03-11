@@ -48,6 +48,8 @@ The peptide identification step in the quantms pipeline can be performed (**inde
     search engine will increase the CPU computing time. :doc:`identification-benchmarks`.
 
 
+References
+---------------------------
 
 .. [RIVEROL2014]
     Perez-Riverol Y, Wang R, Hermjakob H, Müller M, Vesada V, Vizcaíno JA. Open source libraries and frameworks for mass spectrometry based proteomics: a developer's perspective. Biochim Biophys Acta. 2014 Jan;1844(1 Pt A):63-76. doi: 10.1016/j.bbapap.2013.02.032. Epub 2013 Mar 1. PMID: 23467006; PMCID: PMC3898926.

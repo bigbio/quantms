@@ -52,5 +52,7 @@ FDR control on protein (group) level uses the same formula as above, based on a 
 protein scores/probabilities after inference. On protein level, picked protein FDR can be chosen, which
 only counts the highest scoring hit for every target-decoy protein pair (TODO cite).
 
+References
+----------------------------
 
 .. [ELIAS2010] Elias JE, Gygi SP. Target-decoy search strategy for mass spectrometry-based proteomics. Methods Mol Biol. 2010;604:55-71. doi: 10.1007/978-1-60761-444-9_5. PMID: 20013364; PMCID: PMC2922680.
