@@ -79,7 +79,7 @@ the rich pipeline execution reports.
         - :doc:`Modification localization <modlocal>`
     - :doc:`Label-free quantification <lfq>`
         - :doc:`Peptide identification <identification>`
-        - :doc:`ProteomicsLFQ metatool <proteomicslfq>`
+        - :doc:`proteomicsLFQ metatool <proteomicslfq>`
         - :doc:`Protein inference <inference>`
     - :doc:`Isobaric labelled quantification <iso>`
         - :doc:`Peptide identification <identification>`
