@@ -78,7 +78,6 @@ After the re-scoring of the peptide identification and combination of the result
 (if multiple search engines are allowed), quantms allows the fdr calculation steps (read more in :doc:`fdr`) and
 optionally the modification sites localization (read more in :doc:`modlocal`).
 
-
 .. toctree::
    :maxdepth: 1
 
