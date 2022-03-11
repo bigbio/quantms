@@ -26,10 +26,10 @@ ProteomicsLFQ supports **ID-based feature extraction** or a combined **ID-based 
 1. **ID-based feature extraction** uses targeted feature detection using RT and m/z information derived from identification data to extract features. Only identifications found in a particular MS run are used to extract features in the same run. No transfer of IDs (match between runs) is performed.
 2. **ID-based + untargeted extraction** adds untargeted feature detection to obtain quantities from unidentified features. Transfer of IDs (match between runs) is performed by transfering feature identifications to coeluting, unidentified features with similar mass and RT in other runs.
 
-Requantification:
+Re-quantification:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Optionally, a re-quantification step is performed that tries to fill missing values. If a peptide has been quantified in more than half of all maps, the peptide is selected for requantification. In that case, the mean observed RT (and theoretical m/z) of the peptide is used to perform a second round of targeted extraction.
+Optionally, a re-quantification step is performed that tries to fill missing values. If a peptide has been quantified in more than half of all maps, the peptide is selected for requantification. In that case, the mean observed RT (and theoretical m/z) of the peptide is used to perform a second round of targeted extraction.
 
 Map alignment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
