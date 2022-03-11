@@ -21,9 +21,7 @@ Luciphor score is added to each PTM site in the mzTab (:doc:`formats`) for each 
 References
 ------------------------------------
 
-.. [CHALKLEY2012]
-Chalkley RJ; Clauser KR Modification Site Localization Scoring: Strategies and Performance. Mol. Cell Proteomics 2012, 11 (5), 3–14. 10.1074/mcp.R111.015305.
+.. [CHALKLEY2012] Chalkley RJ; Clauser KR Modification Site Localization Scoring: Strategies and Performance. Mol. Cell Proteomics 2012, 11 (5), 3–14. 10.1074/mcp.R111.015305.
 
-.. [FERMIN2013]
-Fermin D; Walmsley SJ; Gingras A-C; Choi H; Nesvizhskii AI LuciPHOr: Algorithm for Phosphorylation Site Localization with False Localization Rate Estimation Using Modified Target-Decoy Approach. Mol. Cell Proteomics 2013, 12 (11), 3409–3419. 10.1074/mcp.M113.028928.
+.. [FERMIN2013] Fermin D; Walmsley SJ; Gingras A-C; Choi H; Nesvizhskii AI LuciPHOr: Algorithm for Phosphorylation Site Localization with False Localization Rate Estimation Using Modified Target-Decoy Approach. Mol. Cell Proteomics 2013, 12 (11), 3409–3419. 10.1074/mcp.M113.028928.
 

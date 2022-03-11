@@ -90,9 +90,7 @@ optionally the modification sites localization (read more in :doc:`modlocal`).
 References
 ---------------------------
 
-.. [RIVEROL2014]
-    Perez-Riverol Y, Wang R, Hermjakob H, Müller M, Vesada V, Vizcaíno JA. Open source libraries and frameworks for mass spectrometry based proteomics: a developer's perspective. Biochim Biophys Acta. 2014 Jan;1844(1 Pt A):63-76. doi: 10.1016/j.bbapap.2013.02.032. Epub 2013 Mar 1. PMID: 23467006; PMCID: PMC3898926.
+.. [RIVEROL2014] Perez-Riverol Y, Wang R, Hermjakob H, Müller M, Vesada V, Vizcaíno JA. Open source libraries and frameworks for mass spectrometry based proteomics: a developer's perspective. Biochim Biophys Acta. 2014 Jan;1844(1 Pt A):63-76. doi: 10.1016/j.bbapap.2013.02.032. Epub 2013 Mar 1. PMID: 23467006; PMCID: PMC3898926.
 
-.. [NAHNSEN2011]
-   Nahnsen S, Bertsch A, Rahnenführer J, Nordheim A, Kohlbacher O. Probabilistic consensus scoring improves tandem mass spectrometry peptide identification. J Proteome Res. 2011 Aug 5;10(8):3332-43. doi: 10.1021/pr2002879. Epub 2011 Jun 23. PMID: 21644507.
+.. [NAHNSEN2011] Nahnsen S, Bertsch A, Rahnenführer J, Nordheim A, Kohlbacher O. Probabilistic consensus scoring improves tandem mass spectrometry peptide identification. J Proteome Res. 2011 Aug 5;10(8):3332-43. doi: 10.1021/pr2002879. Epub 2011 Jun 23. PMID: 21644507.
 

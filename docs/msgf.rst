@@ -15,7 +15,6 @@ In quantms, PSMs are exported from the search engine into .idXML (read more :doc
 References
 ------------------
 
-.. [KIM2014]
-Sangtae Kim and Pavel A Pevzner. Nat Commun. MS-GF+ makes progress towards a universal database search tool for proteomics.
+.. [KIM2014] Sangtae Kim and Pavel A Pevzner. Nat Commun. MS-GF+ makes progress towards a universal database search tool for proteomics.
 2014 Oct 31; 5:5277. doi: 10.1038/ncomms6277.
 PubMed ID 25358478

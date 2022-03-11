@@ -33,18 +33,15 @@ and posterior error probability estimation [KAELL2008B]_ please refer to the pub
 References
 -----------------------------
 
-.. [KAELL2007]
-   Lukas Käll, Jesse Canterbury, Jason Weston, William Stafford Noble and Michael J. MacCoss.
+.. [KAELL2007] Lukas Käll, Jesse Canterbury, Jason Weston, William Stafford Noble and Michael J. MacCoss.
    Semi-supervised learning for peptide identification from shotgun proteomics datasets. Nature Methods 4:923 – 925,
    November 2007
 
-.. [THE2016]
-   Matthew The, William Stafford Noble, Michael J. MacCoss and Lukas Käll. Fast and Accurate Protein False Discovery
+.. [THE2016] Matthew The, William Stafford Noble, Michael J. MacCoss and Lukas Käll. Fast and Accurate Protein False Discovery
    Rates on Large-Scale Proteomics Data Sets with Percolator 3.0. J. Am. Soc. Mass Spectrom. (2016) 27: 1719,
    November 2016
 
-.. [KAELL2008A]
-   Lukas Käll, John D. Storey, Michael J. MacCoss and William Stafford Noble. Assigning confidence measures to peptides
+.. [KAELL2008A] Lukas Käll, John D. Storey, Michael J. MacCoss and William Stafford Noble. Assigning confidence measures to peptides
    identified by tandem mass spectrometry. Journal of Proteome Research, 7(1):29-34, January 2008
 
 .. [KAELL2008B] Lukas Käll, John D. Storey and William Stafford Noble. Nonparametric estimation of posterior error

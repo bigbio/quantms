@@ -12,7 +12,7 @@ In quantms, the user can provide the protein FASTA database with the decoys alre
 attached or generate the database within the pipeline by using the following option: ``add_decoys``.
 
 .. hint:: Additionally, the user can define the prefix for the decoy proteins  (e.g. `DECOY_`) by using the parameter
-    ``decoy_string``. We STRONGLY recommend to use `DECOY_` prefix for all the decoy proteins for better compatibility
+    ``decoy_string``. We **STRONGLY** recommend to use `DECOY_` prefix for all the decoy proteins for better compatibility
     with downstream QC tools such as :doc:`pmultiqc`
 
 .. warning:: Currently, only appended decoy databases are supported, such that target and decoy sequences compete during
