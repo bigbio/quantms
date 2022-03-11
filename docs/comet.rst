@@ -1,18 +1,17 @@
 Comet search engine
 ===================
 
-`Comet <https://github.com/UWPR/Comet>`_ [ENG2015]_ is an open source tandem mass spectrometry (MS/MS) sequence database search
-tool released under the Apache 2.0 license. Comet is multithreaded, supports multiple input and output formats, and
-binaries are available for both Windows and Linux operating systems.
+`Comet <https://github.com/UWPR/Comet>`_ [ENG2015]_ is an **open source** tandem mass spectrometry (MS/MS) sequence database search
+tool released under the Apache 2.0 license. Among some of the main features of the algorithm are: multithreading, speed and
+memory allocation.
 
-In quantms, comet has proved to be faster compare with :doc:`msgf` while identifying less than **15%** PSMs. In addition,
-comet consume less memory than :doc:`msgf` in general.
+.. note:: In quantms, comet has proved to be faster compare with :doc:`msgf` while identifying less than **15%** PSMs. In addition, comet consume less memory than :doc:`msgf` in general, while consuming more CPU.
 
 .. image:: images/resources-search-engine.png
-   :width: 400
+   :width: 800
    :align: center
 
-.. note::
+In quantms, PSMs are exported from the search engine into .idXML (read more :doc:`formats`) without filtering for the re-scoring (see :doc:`identification`) step with percolator. The pipeline stores these original file results in the result folder under `searchenginecomet`.
 
 References
 ------------------
