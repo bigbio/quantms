@@ -72,6 +72,7 @@ identifications for :doc:`comet` and :doc:`msgf` search engines.
           unsupervised or semi-supervised distribution approach inspired by PeptideProphet.
           The distribution families are currently fixed (Gumbel distribution for incorrect and Gaussian for
           correct PSMs). In order to switch the use to **idpep**, the user should provide the following parameter:
+          `--posterior_probabilities 'fit_distributions'`
 
 After the re-scoring of the peptide identification and combination of the results from multiple search engines
 (if multiple search engines are allowed), quantms allows the fdr calculation steps (read more in :doc:`fdr`) and
