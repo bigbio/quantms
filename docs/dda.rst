@@ -30,7 +30,7 @@ but absolute expression is also possible to perform (read more :doc:`absolute`)
    :maxdepth: 2
 
    identification
-   iso
    lfq
+   iso
    inference
    modlocal

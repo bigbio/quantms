@@ -81,7 +81,8 @@ optionally the modification sites localization (read more in :doc:`modlocal`).
 .. toctree::
    :maxdepth: 1
 
-   searchengines
+   comet
+   msgf
    percolator
    fdr
    modlocal
