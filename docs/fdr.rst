@@ -34,6 +34,9 @@ therefore this usually improved estimate is used when Percolator was chosen.
 .. warning:: Choosing peptide-level FDR with Percolator will discard all but the best PSM per peptide. Use with caution
     if you need full traceability.
 
+When using OpenMS' distribution-fitting approach, a standard formula for FDR calculation is used
+(TODO add formula) and is currently only available for the PSM level.
+
 The FDR filtering at peptide spectrum match (PSM) level is currently always applied at the single file level.
 We argue that experiment-wide FDR control at the end of the workflow on the protein level is sufficient to limit error
 rates for the overall analysis. Nonetheless, an option for experiment-wide re-scoring and FDR control on PSM/peptide-level

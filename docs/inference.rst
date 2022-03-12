@@ -1,6 +1,12 @@
 Protein inference
 =================
 
+.. toctree::
+   :maxdepth: 1
+
+   identification
+   epifany
+
 Assembling peptides identified (:doc:`identification`) from tandem mass spectra into a list of proteins, referred to as protein inference, is a critical step in proteomics research [HUANG2012]_. Due to the existence of shared peptides across multiple proteins, it is very difficult to determine which proteins are present in the sample.
 
 .. image:: images/protein-inference-protein-groups.png
@@ -79,6 +85,12 @@ for large proteomics experiments [SAV2015]_.
           the theoretical treatment of the matter.
 
 
+.. toctree::
+   :maxdepth: 1
+
+   epifany
+   identification
+
 References
 ------------------------
 
@@ -92,10 +104,6 @@ References
 
 .. [SAV2015] Savitski MM, Wilhelm M, Hahne H, Kuster B, Bantscheff M. A Scalable Approach for Protein False Discovery Rate Estimation in Large Proteomic Data Sets. Mol Cell Proteomics. 2015 Sep;14(9):2394-404. doi: 10.1074/mcp.M114.046995. Epub 2015 May 17. PMID: 25987413; PMCID: PMC4563723.
 
-.. toctree::
-   :maxdepth: 1
 
-   epifany
-   identification
 
 

@@ -1,6 +1,15 @@
 Label-free quantification with DDA (LFQ)
 ========================================
 
+.. toctree::
+   :maxdepth: 1
+
+   identification
+   inference
+   msstats
+   formats
+
+
 LFQ algorithms detect isotopic patterns of eluting peptides and integrate their chromatographic intensities.
 
 .. image:: images/label-free-linking.png
