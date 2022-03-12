@@ -1,2 +1,63 @@
 MSstats and MSstatsTMT
 ======================
+
+`MSstats <https://github.com/Vitek-Lab/MSstats>`_ is an R package for statistical relative quantification of proteins
+and peptides in mass spectrometry-based proteomics [CHOI2014]_. MSstats supports label-free and label-based experimental workflows
+and data-dependent, targeted and data-independent spectral acquisition. It takes as input identified and quantified
+spectral peaks, and outputs a list of differentially abundant peptides or proteins, or summaries of peptide or protein
+relative abundance. MSstats relies on a flexible family of linear mixed models.
+
+MSstats provides workflows for:
+
+1. detecting differentially abundant proteins for MS experiments with chromatography-based quantification, with complex designs.
+2. characterizing MS assays in terms of limit of blank and limit of detection (LOB/LOD).
+3. longitudinal monitoring of quality control and system suitability testing (SST).
+
+Among these main workflows, MSstats also allows to perform multiple steps of the downstream analysis including: normalization,
+missing values imputation, and differential expression analysis across conditions.
+
+quantms & MSstats
+-------------------
+
+quantms exports the MSstats input after the quantification steps in the LFQ analysis (:doc:`lfq`) and the isobaric
+analysis (:doc:`iso`). The following table is an example how the exported file should looks like:
+
+============  ===============   ===============  ============  ==============  ================  =========  ============  ====  ============  ================
+ProteinName   PeptideSequence   PrecursorCharge  FragmentIon   ProductCharge   IsotopeLabelType  Condition  BioReplicate  Run   Intensity     Reference
+============  ===============   ===============  ============  ==============  ================  =========  ============  ====  ============  ================
+P36578        AAAAAAALQAK       2                  NA             0                 L              heart          1         1    2.240129e08  Prosser_1004.mzML
+============  ===============   ===============  ============  ==============  ================  =========  ============  ====  ============  ================
+
+
+.. note:: The msstats output is stored in the `proteomicslfq` folder for lfq experiments and in the `msstatsconverter` folder for the
+isobaric (TMT) experiments.
+
+MSstats example snippet
+--------------------------
+
+.. code-block:: R
+
+   library('MSstats', warn.conflicts = F, quietly = T, verbose = F)
+
+   protein_expression = 'protein_expression.csv'
+   raw.om <- read.csv('out_msstats.csv', header = TRUE, sep = ',')
+   raw.om <- raw.om[!grepl("DECOY", raw.om$ProteinName),]
+
+   quantms.proposed <- MSstats::dataProcess(raw = raw.om,
+                                           normalization = 'equalizeMedians',
+                                           summaryMethod = 'TMP',
+                                           censoredInt = "NA",
+                                           MBimpute = TRUE)
+
+    # Write the expression protein log values into the expression csv
+    Protein.Expression <- quantms.proposed$ProteinLevelData[, c('Protein', 'LogIntensities', 'GROUP')]
+    write.csv(Protein.Expression, file=protein_expression, row.names=FALSE)
+
+
+References
+------------------------
+
+.. [CHOI2014] Choi M, Chang CY, Clough T, Broudy D, Killeen T, MacLean B, Vitek O. MSstats: an R package for statistical
+   analysis of quantitative mass spectrometry-based proteomic experiments. Bioinformatics. 2014 Sep 1;30(17):2524-6.
+   doi: 10.1093/bioinformatics/btu305. Epub 2014 May 2. PMID: 24794931.
+
