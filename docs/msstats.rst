@@ -9,9 +9,9 @@ relative abundance. MSstats relies on a flexible family of linear mixed models.
 
 MSstats provides workflows for:
 
-1. detecting differentially abundant proteins for MS experiments with chromatography-based quantification, with complex designs.
-2. characterizing MS assays in terms of limit of blank and limit of detection (LOB/LOD).
-3. longitudinal monitoring of quality control and system suitability testing (SST).
+- Detecting differentially abundant proteins for MS experiments with chromatography-based quantification, with complex designs.
+- Characterizing MS assays in terms of limit of blank and limit of detection (LOB/LOD).
+- Longitudinal monitoring of quality control and system suitability testing (SST).
 
 Among these main workflows, MSstats also allows to perform multiple steps of the downstream analysis including: normalization,
 missing values imputation, and differential expression analysis across conditions.
