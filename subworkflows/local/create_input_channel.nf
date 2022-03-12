@@ -38,9 +38,7 @@ workflow CREATE_INPUT_CHANNEL {
     wrapper.labelling_type = ""
     wrapper.acqusition_method = ""
 
-    ch_in_design.splitCsv(header: ["URI", "Filename", "FixedModifications", "VariableModifications",
-            "PDAM", "Label", "PrecursorMassTolerance", "PrecursorMassToleranceUnit", "FragmentMassTolerance",
-            "FragmentMassToleranceUnit", "DissociationMethod", "Enzyme"], sep: '\t', skip: 1)
+    ch_in_design.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .branch {
                 ch_meta_config_dia: it[0].acqusition_method.contains("dia")
@@ -107,9 +105,9 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.enzyme                     = params.enzyme
         meta.acqusition_method          = params.acqusition_method
     } else {
-        if (row.PDAM.contains("Data-Dependent Acquisition")) {
+        if (row["Proteomics Data Acquisition Method"].contains("Data-Dependent Acquisition")) {
             meta.acqusition_method = "dda"
-        } else if (row.PDAM.contains("Data-Independent Acquisition")){
+        } else if (row["Proteomics Data Acquisition Method"].contains("Data-Independent Acquisition")){
             meta.acqusition_method = "dia"
         } else {
             log.error "Currently DIA and DDA are supported for the pipeline. Check and Fix your SDRF."
