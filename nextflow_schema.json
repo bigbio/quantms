@@ -864,6 +864,40 @@
             },
             "fa_icon": "fas fa-braille"
         },
+        "DIA-NN": {
+            "title": "DIA-NN",
+            "type": "object",
+            "description": "DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
+            "default": "",
+            "properties": {
+                "acqusition_method": {
+                    "type": "string",
+                    "description": "Proteomics data acquistion method",
+                    "default": "DDA",
+                    "enum": [
+                        "DDA",
+                        "DIA"
+                    ],
+                    "fa_icon": "far fa-list-ol"
+                },
+                "matrix_spec_q": {
+                    "type": "number",
+                    "description": "run-specific protein q-value filtering will be used, in addition to the global q-value filtering, when saving protein matrices. The ability to filter based on run-specific protein q-values, which allows to generate highly reliable data, is one of the advantages of DIA-NN",
+                    "default": 0.01,
+                    "fa_icon": "fas fa-filter"
+                },
+                "diann_debug": {
+                    "type": "integer",
+                    "description": "Debug level",
+                    "default": 3,
+                    "fa_icon": "fas fa-bug",
+                    "enum": [
+                        0, 1, 2, 3, 4
+                    ]
+                }
+            },
+            "fa_icon": "fas fa-braille"
+        },
         "statistical_post_processing": {
             "title": "Statistical post-processing",
             "type": "object",
