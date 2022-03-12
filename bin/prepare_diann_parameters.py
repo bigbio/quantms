@@ -44,7 +44,7 @@ def convert_mod(unimod_csv, fix_mod, var_mod):
     unimod = pd.read_csv(unimod_csv, header=0, sep=",")
     for mod in fix_mod.split(","):
         diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
-        site = re.findall(pattern, mod.split(" ")[1])[0]
+        site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
         if site == "Protein N-term":
             site = "*n"
         elif site == "N-term":
@@ -57,7 +57,7 @@ def convert_mod(unimod_csv, fix_mod, var_mod):
 
     for mod in var_mod.split(","):
         diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
-        site = re.findall(pattern, mod.split(" ")[1])[0]
+        site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
         if site == "Protein N-term":
             site = "*n"
         elif site == "N-term":

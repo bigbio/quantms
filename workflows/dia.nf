@@ -44,6 +44,7 @@ workflow DIA {
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
     DIANN(DIANNCFG.out.mzmls_for_diann.collect(), Channel.fromPath(params.database), DIANNCFG.out.diann_cfg)
+    ch_software_versions = ch_software_versions.mix(DIANN.out.version.ifEmpty(null))
 
     CONVERT2MSSTATS(DIANN.out.report, ch_expdesign)
     versions        = ch_software_versions
