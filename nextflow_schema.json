@@ -1175,6 +1175,9 @@
             "$ref": "#/definitions/protein_quantification"
         },
         {
+            "$ref": "#/definitions/DIA-NN"
+        },
+        {
             "$ref": "#/definitions/statistical_post_processing"
         },
         {
