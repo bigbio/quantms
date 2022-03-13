@@ -6,7 +6,7 @@ on:
       - dev
   pull_request:
     branches-ignore:
-      - readthedocs
+      - 'readthedocs'
   release:
     types: [published]
 
