@@ -23,18 +23,20 @@ def generate_cfg(ctx, unimod_csv, enzyme, fix_mod, var_mod, precursor_tolerence,
     cut = enzyme_cut(enzyme)
     fix_ptm, var_ptm = convert_mod(unimod_csv, fix_mod, var_mod)
     mass_acc, mass_acc_ms1 = mass_tolerence(precursor_tolerence, precursor_tolerence_unit, fragment_tolerence, fragment_tolerence_unit)
-    mass_acc = " --mass_acc " + str(mass_acc)
-    mass_acc_ms1 = " --mass_acc_ms1 " + str(mass_acc_ms1)
+    mass_acc = " --mass-acc " + str(mass_acc)
+    mass_acc_ms1 = " --mass-acc-ms1 " + str(mass_acc_ms1)
 
     var_ptm_str = " --var-mod "
     fix_ptm_str = " --fixed-mod "
+    diann_fix_ptm = ""
+    diann_var_ptm = ""
     for mod in fix_ptm:
-        fix_ptm_str += mod
+        diann_fix_ptm += (fix_ptm_str + mod)
     for mod in var_ptm:
-        var_ptm_str += mod
+        diann_var_ptm += (var_ptm_str + mod)
 
     with open("diann_config.cfg", "w") as f:
-        f.write("--dir ./mzMLs --cut " + cut + fix_ptm_str + var_ptm_str + mass_acc + mass_acc_ms1 +
+        f.write("--dir ./mzMLs --cut " + cut + diann_fix_ptm + diann_var_ptm + mass_acc + mass_acc_ms1 +
                 " --fasta-search --matrices --report-lib-info")
 
 def convert_mod(unimod_csv, fix_mod, var_mod):
