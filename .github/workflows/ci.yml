@@ -5,8 +5,9 @@ on:
     branches:
       - dev
   pull_request:
-    branches-ignore:
-      - 'readthedocs'
+    branches:
+      - dev
+      - master
   release:
     types: [published]
 
