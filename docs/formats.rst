@@ -91,7 +91,6 @@ They can also be created by translating transcripts.
 
 .. hint:: Contaminants should be appended to the database. For each contaminant protein the prefix ``CONTAMINANT_`` should be added as prefix of the protein.
 
-
 Output formats
 ---------------------------
 
@@ -101,7 +100,7 @@ If MSstats was activated, the workflow outputs two mzTab:
  - one in the msstats folder, with intensities replaced by the output from MSstats(TMT). This contains normalized and
     potentially imputed quantities.
 
-Additionally, `MSstats <https://github.com/Vitek-Lab>`_ and `Triqler <https://github.com/statisticalbiotechnology/triqler>`_  output for downstream analysis are exported. If you would like to have another output included in the pipeline please countact the developers over the discussion forum, slack or open an issue.
+Additionally, :doc:`msstats` and :doc:`triqler`  output for downstream analysis are exported. If you would like to have another output included in the pipeline please contact the developers over the discussion forum, slack or open an issue.
 
 
 Intermediate formats
