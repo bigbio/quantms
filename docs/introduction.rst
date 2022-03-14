@@ -73,7 +73,6 @@ the rich pipeline execution reports.
         - :doc:`PSM re-scoring <rescoring>`
             - :doc:`Distribution-based <idpep>`
             - :doc:`Percolator <percolator>`
-        - :doc:`ConsensusID <consensusid>`
         - :doc:`False discovery rates <fdr>`
         - :doc:`Modification localization <modlocal>`
     - :doc:`Label-free quantification <lfq>`
@@ -84,7 +83,6 @@ the rich pipeline execution reports.
         - :doc:`Peptide identification <identification>`
         - :doc:`Protein inference <inference>`
     - :doc:`Data-independent acquistion <dia>`
-        - :doc:`OpenSwath <openswath>`
     - :doc:`Statistical postprocessing <statistics>`
         - :doc:`MSstats <msstats>`
         - :doc:`Triqler <triqler>`
