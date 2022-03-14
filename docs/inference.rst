@@ -4,8 +4,8 @@ Protein inference
 .. toctree::
    :maxdepth: 1
 
-   identification
    epifany
+   idpep
 
 Assembling peptides identified (:doc:`identification`) from tandem mass spectra into a list of proteins, referred to as protein inference, is a critical step in proteomics research [HUANG2012]_. Due to the existence of shared peptides across multiple proteins, it is very difficult to determine which proteins are present in the sample.
 
@@ -84,12 +84,6 @@ for large proteomics experiments [SAV2015]_.
           no bias and, therefore, explains the superior performance of the picked TDS, in line with prior work on
           the theoretical treatment of the matter.
 
-
-.. toctree::
-   :maxdepth: 1
-
-   epifany
-   identification
 
 References
 ------------------------

@@ -1,5 +1,5 @@
 Peptide identification from fragment spectra
-============================================
+=============================================
 
 .. toctree::
    :maxdepth: 1
@@ -9,7 +9,6 @@ Peptide identification from fragment spectra
    percolator
    fdr
    modlocal
-
 
 The peptide identification workflow is the cornerstone of data-dependent acquisition (DDA)
 quantification methods such as LFQ or TMT. To identify proteins by mass spectrometry, the proteins of interest in the sample are
@@ -48,7 +47,7 @@ quantms workflow is the psm and peptide FDR threshold ``psm_pep_fdr_cutoff`` (de
 
 .. note:: Using multiple database search engine combined can yield up to **15% more peptides** compared to using only
           one search engine. However, you need to be aware that adding another search engine will increase the CPU
-          computing time. :doc:`identification-benchmarks`.
+          computing time. :doc:`benchmarks`.
 
 When multiple search engines are used ```--search_engines msgf,comet``` the results for each input file are
 combined into one single identification file including the combination of all listed search engines.
@@ -65,8 +64,8 @@ chooses the PSM with the highest probability. Here it is enough for each engine 
           **PEPIons** - calculates a matrix of the number of shared matched ions across sequences of different engines
           to increase the weight for sequences that have a similar counterpart for another engine.
 
-Rescoring of peptide-spectrum matches
-------------------------------------
+Re-scoring of peptide-spectrum matches
+---------------------------------------
 
 To bring scores on a comparable level and to potentially improve their ranking the pipeline employs PSM
 re-scoring procedures. Re-scoring methods used multiple properties from the PMS's like retention time, to increase the
@@ -87,15 +86,6 @@ identifications for :doc:`comet` and :doc:`msgf` search engines.
 After the re-scoring of the peptide identification and combination of the results from multiple search engines
 (if multiple search engines are allowed), quantms allows the fdr calculation steps (read more in :doc:`fdr`) and
 optionally the modification sites localization (read more in :doc:`modlocal`).
-
-.. toctree::
-   :maxdepth: 1
-
-   comet
-   msgf
-   percolator
-   fdr
-   modlocal
 
 References
 ---------------------------

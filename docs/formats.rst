@@ -26,8 +26,7 @@ The HUPO-PSI and ProteomeXchange recently developed the MAGE-TAB an standard fil
    :align: center
 
 |
-The columns specified in the SDRF that are **relevant and important** for the quantms pipeline can be
-divided into two categories:
+The columns specified in the SDRF that are **relevant and important** for the quantms pipeline can be divided into two categories:
 
 **Peptide Search Parameters**:
 

@@ -29,8 +29,6 @@ but absolute expression is also possible to perform (read more :doc:`absolute`)
 .. toctree::
    :maxdepth: 2
 
-   identification
    lfq
    iso
    inference
-   modlocal
