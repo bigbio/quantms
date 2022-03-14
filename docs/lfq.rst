@@ -39,7 +39,7 @@ spectral count algorithms. By default, proteomicsLFQ uses the most reliable meth
 `quantification_method = 'feature_intensity'`, however if the users wants to quantified based on spectral counting, the
 can pass the following option `quantification_method 'spectral_counting'`.
 
-**Quantify Decoys**: By default, the quantms do not quantified decoy peptide hits, this behaviour can be changed by using the paramter `quantify_decoys`
+**Quantify Decoys**: By default, the quantms do not quantified decoy peptide hits, this behaviour can be changed by using the parameter `quantify_decoys` and is auto-enabled when triqler output is enable (:doc:`triqler`).
 
 Match between runs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
