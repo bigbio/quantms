@@ -8,7 +8,7 @@ Quantification with isobaric labels (TMT or iTraq) is a mass spectrometry strate
    :align: center
 
 Isobaric quantification with quantms
-------------------------------
+--------------------------------------
 
 In quantms, the LFQ (:doc:`lfq`) and the isobaric pipelines shares the all the identification steps (:doc:`identification`) including peptide identification, re-scoring with percolator (:doc:`percolator`) and the peptide fdr (:doc:`fdr`) filtering. In isobaric experiments, three steps are combined in a different way compare to :doc:`lfq` workflow: protein inference, isobaric information analyzer and protein quantification.
 

@@ -31,22 +31,23 @@ Depending of the debug parameter, the log file will contains more or less detail
 Debug nextflow and architecture errors
 ---------------------------------------
 
-Some errors of the pipeline are not related with the pipeline but with the architecture running the pipeline or `nextflow <https://www.nextflow.io>`_. Nextlow enables to debug the pipeline by using the variable `NXF_DEBUG`, for example, if the user wants to debug an error not related with the data or a tool, it can set the variable before running `export NXF_DEBUG=3`.
+Some errors of the pipeline are not related with the pipeline but with the architecture running the pipeline
+or `nextflow <https://www.nextflow.io>`_. Nextlow enables to debug the pipeline by using the variable `NXF_DEBUG`,
+for example, if the user wants to debug an error not related with the data or a tool,
+it can set the variable before running `export NXF_DEBUG=3`.
 
-.. tip:: Nextlow allows users to `resume <https://www.nextflow.io/blog/2019/troubleshooting-nextflow-resume.html>`_ a previous failing run using the nextflow parameter `-resume`. This feature enables to start the processing from the steps that have fail and do not need to run the entire pipeline again.
+.. tip:: Nextflow allows users to `resume <https://www.nextflow.io/blog/2019/troubleshooting-nextflow-resume.html>`__
+    a previous failing run using the nextflow parameter `-resume`. This feature enables to start the processing
+    from the steps that have fail and do not need to run the entire pipeline again.
 
-For specific errors, and details about how nextflow is executed on each architecture, please read the details in `Nextflow executors <https://www.nextflow.io/docs/latest/executor.html>`_.
+For specific errors, and details about how nextflow is executed on each architecture,
+please read the details in `Nextflow executors <https://www.nextflow.io/docs/latest/executor.html>`_.
 
 How to find files in failing process/tools
 -------------------------------------------
 
-When running the pipeline, the quantms (and nextflow) stores the intermediate files and running scripts into a root folder called `work/step_running_hash/` (e.g. /work/94/dfdfb63d5816c9c65889ae34511b32/). When the pipeline fails it gives the absolute path of the folder where the step that has fail is stored. The user can go inside the folder and detect the error that has been thrown by the tool or the pipeline.
-
-.. toctree::
-   :maxdepth: 1
-
-   usage
-   identification
-   dda
-   dia
+When running the pipeline, the quantms (and nextflow) stores the intermediate files and running scripts
+into a root folder called `work/step_running_hash/` (e.g. /work/94/dfdfb63d5816c9c65889ae34511b32/).
+When the pipeline fails it gives the absolute path of the folder where the step that has fail is stored.
+The user can go inside the folder and detect the error that has been thrown by the tool or the pipeline.
 

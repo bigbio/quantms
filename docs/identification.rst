@@ -2,11 +2,12 @@ Peptide identification from fragment spectra
 =============================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    comet
    msgf
    percolator
+   idpep
    fdr
    modlocal
 

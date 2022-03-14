@@ -26,7 +26,9 @@ The HUPO-PSI and ProteomeXchange recently developed the MAGE-TAB an standard fil
    :align: center
 
 |
-The columns specified in the SDRF that are **relevant and important** for the quantms pipeline can be divided into two categories:
+
+The columns specified in the SDRF that are **relevant and important** for the quantms pipeline can be
+divided into two categories:
 
 **Peptide Search Parameters**:
 
@@ -93,8 +95,10 @@ They can also be created by translating transcripts.
 Output formats
 ---------------------------
 
-The main output of the quantms is the standard HUPO-PSI format `mztab <https://www.psidev.info/mztab>`_. The mzTab allows quantms to store quantification/identification information from proteomics experiments in a single file.
+The main output of the quantms is the standard HUPO-PSI format `mzTab <https://www.psidev.info/mztab>`__.
+The mzTab allows quantms to store quantification/identification information from proteomics experiments in a single file.
 If MSstats was activated, the workflow outputs two mzTab:
+
  - one in the proteomicslfq or proteininferencer folder, containing raw intensities from OpenMS for each feature/channel
  - one in the msstats folder, with intensities replaced by the output from MSstats(TMT). This contains normalized and
     potentially imputed quantities.
@@ -118,13 +122,16 @@ Multiple files from OpenMS ecosystem are use within quantms to store intermediat
     The converted design can be found in the ``SDRFPARSING`` output folder.
 
 - idXML:
-    An xml-based file format to store PSMs, peptide, and protein evidences. More information about the idXML can be `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1IdXMLFile.html>`_.
+    An xml-based file format to store PSMs, peptide, and protein evidences. More information about the idXML can be
+    `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1IdXMLFile.html>`__.
 
 - consensusXML:
-    An xml-based file format that extends idXML to include quantification data across multiple runs. More information about the consensusXML can be `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1ConsensusXMLFile.html>`_.
+    An xml-based file format that extends idXML to include quantification data across multiple runs.
+    More information about the consensusXML can be
+    `found here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1ConsensusXMLFile.html>`__.
 
 The easiest way to parse these files is to use `pyopenms <https://pyopenms.readthedocs.io/en/latest/>`_
-with its `pandas dataframe conversion capabilities <https://pyopenms.readthedocs.io/en/latest/pandas_df_conversion.html>`_.
+with its `pandas dataframe conversion capabilities <https://pyopenms.readthedocs.io/en/latest/pandas_df_conversion.html>`__.
 
 |Get help on Slack|   |Report Issue| |Get help on GitHub Forum|
 
