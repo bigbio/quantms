@@ -23,7 +23,7 @@ Relevant Parameters
 ----------------------------
 
 **Peptides used for quantification**: By default, protein quantification is performed only in unique peptides
-`protein_quant='unique_peptides'`, if the users prefer to include also use shared peptides `protein_quant 'shared_peptides'`.
+`--protein_quant= unique_peptides'`, if the users prefer to include also use shared peptides `--protein_quant 'shared_peptides'`.
 
 **Quantification Method**: LFQ analytical methods uses two main approaches for quantification intensity-based and
 spectral count algorithms. By default, proteomicsLFQ uses the most reliable method intensity-based

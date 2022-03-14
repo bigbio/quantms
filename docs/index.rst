@@ -22,6 +22,7 @@ Contents
    dia
    statistics
    pmultiqc
+   benchmarks
    debug
    faq
    dev

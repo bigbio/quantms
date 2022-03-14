@@ -1,12 +1,6 @@
 Protein inference
 =================
 
-.. toctree::
-   :maxdepth: 1
-
-   epifany
-   idpep
-
 Assembling peptides identified (:doc:`identification`) from tandem mass spectra into a list of proteins, referred to as protein inference, is a critical step in proteomics research [HUANG2012]_. Due to the existence of shared peptides across multiple proteins, it is very difficult to determine which proteins are present in the sample.
 
 .. image:: images/protein-inference-protein-groups.png
@@ -31,7 +25,7 @@ In quantms provides two major methods for protein inference: **bayesian** and **
 Bayesian inference
 -----------------------------
 
-Bayesian inference is performed using the Epifany (:doc:`epifany`) algorithm [PFEU2020]_. To perform protein inference,
+Bayesian inference is performed using the Epifany algorithm [PFEU2020]_. To perform protein inference,
 Epifany combines a loopy belief propagation algorithm with convolution trees for efficient processing of Bayesian networks.
 
 To enable protein inference in quantms, the user must provide the following parameter: `--protein_inference_method 'bayesian'`.

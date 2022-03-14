@@ -39,5 +39,5 @@ Triqler can be run in the quantms output by using the following command:
 References
 ---------------------------
 
-.. [THE2018]] The M, Käll L. Integrated Identification and Quantification Error Probabilities for Shotgun Proteomics.
-Mol Cell Proteomics. 2019 Mar;18(3):561-570. doi: 10.1074/mcp.RA118.001018. Epub 2018 Nov 27. PMID: 30482846; PMCID: PMC6398204.
+.. [THE2018] The M, Käll L. Integrated Identification and Quantification Error Probabilities for Shotgun Proteomics.
+    Mol Cell Proteomics. 2019 Mar;18(3):561-570. doi: 10.1074/mcp.RA118.001018. Epub 2018 Nov 27. PMID: 30482846; PMCID: PMC6398204.

@@ -94,14 +94,6 @@ pmultiqc uses two tables **Quantification Result** and **Peptide-Spectrum Matche
    :width: 800
    :align: center
 
-.. toctree::
-   :maxdepth: 1
-
-   identification
-   msgf
-   comet
-   formats
-
 References
 --------------------------
 
