@@ -10,7 +10,6 @@ Peptide identification from fragment spectra
    fdr
    modlocal
 
-
 The peptide identification workflow is the cornerstone of data-dependent acquisition (DDA)
 quantification methods such as LFQ or TMT. To identify proteins by mass spectrometry, the proteins of interest in the sample are
 digested into peptides using a proteolytic enzyme (e.g., trypsin). The complex peptide mixture is then separated by
@@ -87,15 +86,6 @@ identifications for :doc:`comet` and :doc:`msgf` search engines.
 After the re-scoring of the peptide identification and combination of the results from multiple search engines
 (if multiple search engines are allowed), quantms allows the fdr calculation steps (read more in :doc:`fdr`) and
 optionally the modification sites localization (read more in :doc:`modlocal`).
-
-.. toctree::
-   :maxdepth: 1
-
-   comet
-   msgf
-   percolator
-   fdr
-   modlocal
 
 References
 ---------------------------
