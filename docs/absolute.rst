@@ -1,5 +1,5 @@
 Absolute expression using quantms
-----------------------------------------
+==================================
 
 Absolute quantification values
 (e.g., how many micromoles of a peptide is contained in a sample) are inherently more

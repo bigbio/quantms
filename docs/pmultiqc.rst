@@ -105,4 +105,4 @@ pmultiqc uses two tables **Quantification Result** and **Peptide-Spectrum Matche
 References
 --------------------------
 
-.. [MORUZ2014]] Moruz L, Käll L. GradientOptimizer: an open-source graphical environment for calculating optimized gradients in reversed-phase liquid chromatography. Proteomics. 2014 Jun;14(12):1464-6. doi: 10.1002/pmic.201400036. Epub 2014 May 15. PMID: 24700534.
+.. [MORUZ2014] Moruz L, Käll L. GradientOptimizer: an open-source graphical environment for calculating optimized gradients in reversed-phase liquid chromatography. Proteomics. 2014 Jun;14(12):1464-6. doi: 10.1002/pmic.201400036. Epub 2014 May 15. PMID: 24700534.

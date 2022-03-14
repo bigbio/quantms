@@ -1,12 +1,5 @@
-Isobaric labelling strategies
-=============================
-
-.. toctree::
-   :maxdepth: 1
-
-   identification
-   epifany
-   formats
+Isobaric quantification with DDA
+================================
 
 Quantification with isobaric labels (TMT or iTraq) is a mass spectrometry strategy used in quantitative proteomics [CHEN2022]_. Peptides or proteins are labeled with various chemical groups that are (at least nominally) identical masses (isobaric), but vary in terms of distribution of heavy isotopes around their structure. These tags, commonly referred to as tandem mass tags, are designed so that the mass tag is cleaved at a specific linker region upon high-energy CID (HCD) during tandem mass spectrometry yielding reporter ions of different masses. The most common isobaric tags are amine-reactive tags. Isobaric labeling methods include tandem mass tags (TMT), isobaric tags for relative and absolute quantification (iTRAQ), mass differential tags for absolute and relative quantification, and dimethyl labeling. TMTs and iTRAQ methods are most common and developed of these methods.
 
@@ -67,10 +60,3 @@ References
 
 .. [SILVA2006] Silva JC, Gorenstein MV, Li GZ, Vissers JP, Geromanos SJ. Absolute quantification of proteins by LCMSE: a virtue of parallel MS acquisition. Mol Cell Proteomics. 2006 Jan;5(1):144-56. doi: 10.1074/mcp.M500230-MCP200. Epub 2005 Oct 11. PMID: 16219938.
 
-
-.. toctree::
-   :maxdepth: 1
-
-   identification
-   isobaricquantifier
-   inference

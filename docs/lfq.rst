@@ -1,15 +1,6 @@
 Label-free quantification with DDA (LFQ)
 ========================================
 
-.. toctree::
-   :maxdepth: 1
-
-   identification
-   inference
-   msstats
-   formats
-
-
 LFQ algorithms detect isotopic patterns of eluting peptides and integrate their chromatographic intensities.
 
 .. image:: images/label-free-linking.png
@@ -74,14 +65,6 @@ Three main formats are exported as a result of porteomicsLFQ analysis (read more
 1. mzTab file with analysis results
 2. Analysis results for statistical downstream analysis in MSstats and Triqler
 3. ConsensusXML file for visualization and further processing in OpenMS
-
-.. toctree::
-   :maxdepth: 1
-
-   identification
-   inference
-   msstats
-   formats
 
 References
 -----------------------
