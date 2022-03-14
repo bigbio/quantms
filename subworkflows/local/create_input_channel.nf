@@ -6,6 +6,7 @@ include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign'
 
 class Wrapper {
     def labelling_type = ""
+    def acqusition_method = ""
 }
 
 workflow CREATE_INPUT_CHANNEL {
@@ -35,20 +36,24 @@ workflow CREATE_INPUT_CHANNEL {
     // TODO remove. We can't use the variable to direct channels anyway
     wrapper = new Wrapper()
     wrapper.labelling_type = ""
+    wrapper.acqusition_method = ""
 
     ch_in_design.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .branch {
+                ch_meta_config_dia: it[0].acqusition_method.contains("dia")
                 ch_meta_config_iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
                 ch_meta_config_lfq: it[0].labelling_type.contains("label free")
             }
             .set{result}
     ch_meta_config_iso = result.ch_meta_config_iso
     ch_meta_config_lfq = result.ch_meta_config_lfq
+    ch_meta_config_dia = result.ch_meta_config_dia
 
     emit:
     ch_meta_config_iso                     // [meta, [spectra_files ]]
     ch_meta_config_lfq                     // [meta, [spectra_files ]]
+    ch_meta_config_dia                     // [meta, [spectra files ]]
     ch_expdesign
     wrapper.labelling_type
 
@@ -59,7 +64,6 @@ workflow CREATE_INPUT_CHANNEL {
 def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
     def meta = [:]
     def array = []
-
 
     if (is_sdrf.toString().toLowerCase().contains("false")) {
         filestr                         = row.Spectra_Filepath.toString()
@@ -99,7 +103,17 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.fragmentmasstolerance      = params.fragment_mass_tolerance
         meta.fragmentmasstoleranceunit  = params.fragment_mass_tolerance_unit
         meta.enzyme                     = params.enzyme
+        meta.acqusition_method          = params.acqusition_method
     } else {
+        if (row["Proteomics Data Acquisition Method"].contains("Data-Dependent Acquisition")) {
+            meta.acqusition_method = "dda"
+        } else if (row["Proteomics Data Acquisition Method"].contains("Data-Independent Acquisition")){
+            meta.acqusition_method = "dia"
+        } else {
+            log.error "Currently DIA and DDA are supported for the pipeline. Check and Fix your SDRF."
+            exit 1
+        }
+        wrapper.acqusition_method       = meta.acqusition_method
         meta.labelling_type             = row.Label
         meta.dissociationmethod         = row.DissociationMethod
         meta.fixedmodifications         = row.FixedModifications
@@ -118,26 +132,28 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             exit 1
         }
     }
-
-    log.warn "Label: '${meta.labelling_type}'"
-
-    if (wrapper.labelling_type.equals("")) {
-        if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
-            wrapper.labelling_type = meta.labelling_type
-        } else {
-            log.error "Unsupported quantification type '${meta.labelling_type}'."
-            exit 1
-        }
+    if (meta.acqusition_method == "dia") {
+        log.warn "Acqusition Method: '${meta.acqusition_method}'"
     } else {
-        if (meta.labelling_type != wrapper.labelling_type) {
-            log.error "Only one label type supported: was '${wrapper.labelling_type}', now is '${meta.labelling_type}'."
-            exit 1
+        log.warn "Label: '${meta.labelling_type}'"
+        if (wrapper.labelling_type.equals("")) {
+            if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
+                wrapper.labelling_type = meta.labelling_type
+            } else {
+                log.error "Unsupported quantification type '${meta.labelling_type}'."
+                exit 1
+            }
+        } else {
+            if (meta.labelling_type != wrapper.labelling_type) {
+                log.error "Only one label type supported: was '${wrapper.labelling_type}', now is '${meta.labelling_type}'."
+                exit 1
+            }
         }
     }
 
-    if (wrapper.labelling_type.contains("label free")) {
+    if (wrapper.labelling_type.contains("label free") || meta.acqusition_method == "DIA") {
         if (filestr in files) {
-            log.error "Currently only one search engine setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
+            log.error "Currently only one search engine setting/DIA-NN setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
             exit 1
         }
         files += filestr

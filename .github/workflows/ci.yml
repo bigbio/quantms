@@ -5,8 +5,9 @@ on:
     branches:
       - dev
   pull_request:
-    branches-ignore:
-      - readthedocs
+    branches:
+      - dev
+      - master
   release:
     types: [published]
 
@@ -33,7 +34,7 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ''
             NXF_EDGE: '1'
-        test_profile: ['test', 'test_lfq']
+        test_profile: ['test', 'test_lfq', 'test_dia']
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

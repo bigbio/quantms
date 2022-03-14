@@ -35,13 +35,14 @@ ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multi
 
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
+include { DIA } from './dia'
 include { PMULTIQC as SUMMARYPIPELINE } from '../modules/local/pmultiqc/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT } from '../subworkflows/local/file_preparation'
+include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT; FILE_PREPARATION as FILE_PREPARATION_DIA } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
@@ -96,8 +97,15 @@ workflow QUANTMS {
     FILE_PREPARATION_LFQ (
         CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq
     )
+
+    FILE_PREPARATION_DIA (
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_dia
+    )
+
     ch_versions = ch_versions.mix(FILE_PREPARATION_TMT.out.version.ifEmpty(null))
     ch_versions = ch_versions.mix(FILE_PREPARATION_LFQ.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(FILE_PREPARATION_DIA.out.version.ifEmpty(null))
+
     FILE_PREPARATION_LFQ.out.results
         .map { it -> it[1] }
         .set { ch_pmultiqc_mzmls_lfq }
@@ -106,7 +114,11 @@ workflow QUANTMS {
         .map { it -> it[1] }
         .set { ch_pmultiqc_mzmls_iso }
 
-    ch_pmultiqc_mzmls = ch_pmultiqc_mzmls_lfq.mix(ch_pmultiqc_mzmls_iso)
+    FILE_PREPARATION_DIA.out.results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_mzmls_dia }
+
+    ch_pmultiqc_mzmls = ch_pmultiqc_mzmls_lfq.mix(ch_pmultiqc_mzmls_iso).mix(ch_pmultiqc_mzmls_dia)
 
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
@@ -125,6 +137,13 @@ workflow QUANTMS {
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
+
+    DIA(FILE_PREPARATION_DIA.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+
+    // ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DIA.out.ch_pmultiqc_ids)
+    // ch_pipeline_results = ch_pipeline_results.mix(DIA.out.final_result)
+    ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+
 
     //
     // MODULE: Pipeline reporting
