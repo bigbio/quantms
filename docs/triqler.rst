@@ -18,7 +18,7 @@ run           condition         charge           searchScore   intensity       p
 6             heart             2                0.9840915     3.275759e07     AAAFEQLQK         O94826
 ============  ===============   ===============  ============  ==============  ================  =========
 
-.. note:: The triqler output is stored in the `proteomicslfq` folder and is **only** available for label-free experiments.
+.. note:: The triqler output is stored in the `proteomicslfq` folder and is **only** available for label-free (:doc:`lfq`) experiments. The triqler output generation automatically activates decoy quantification which makes the pipeline a slower.
 
 Some remarks:
 
