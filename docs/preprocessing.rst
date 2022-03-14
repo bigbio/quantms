@@ -1,7 +1,7 @@
 Conversion and preprocessing
 ============================
 
-Often mass spectrometry data needs to be converted or preprocessed. Quantms checks your input files and
+Often mass spectrometry data needs to be converted or preprocessed. quantms checks your input files and
 automatically decides on necessary steps.
 
 Mass spectra processing: Raw conversion

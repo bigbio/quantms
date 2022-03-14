@@ -25,7 +25,7 @@ Installation steps
 
 .. note:: Please check `nf-core/configs <https://github.com/nf-core/configs#documentation>`_ to see if a custom config file to run nf-core pipelines already exists for your Institute. If so, you can simply use `-profile <institute>` in your command. This will enable either `docker` or `singularity` and set the appropriate execution settings for your local compute environment.
 
-By using container's environments (e.g. Docker, Singularity or Conda) the user of quantms do not needs to install any dependency, software or tool manually. In addition, by using container enviroments the quantms guaranty the reproducibility/reliability of the analysis.
+By using container's environments (e.g. Docker, Singularity or Conda) the user of quantms do not needs to install any dependency, software or tool manually. In addition, by using container environments the quantms guaranty the reproducibility/reliability of the analysis.
 
 Usage
 -------------------

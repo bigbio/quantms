@@ -1,2 +1,0 @@
-ProteomicsLFQ metatool (OpenMS)
-===============================

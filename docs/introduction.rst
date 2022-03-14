@@ -51,12 +51,12 @@ reports and different methods for automated downstream statistical post-processi
 significance analysis for differential expression which all can be emailed to you after successful completion of
 the pipeline.
 The workflow can be configured solely by an SDRF input file for easy one-command-reanalyses of PRIDE datasets
-but also offers extensive configurabilty on either a web-based or a guided command-line interface provided
+but also offers extensive configurability on either a web-based or a guided command-line interface provided
 through its integration into nf-core (TODO cite). The membership in nf-core additionally secures best practices
 of open and collaborative development of the pipeline including continuous testing after every contribution.
 The used software is strictly versioned through the exclusive usage of (bio-)conda packages (TODO cite) whose
 association with the biocontainer ecosystem (TODO cite) also
-allows us to provide a workflow profile for several containerization softwares (like docker, singularity, podman, etc.).
+allows us to provide a workflow profile for several containerization software's (like docker, singularity, podman, etc.).
 Containerization ensures an even more reproducible environment for your analyses.
 The pipeline can easily be supervised on-the-fly via nf-tower (TODO link). Failed runs can be debugged by investigating
 the rich pipeline execution reports.
@@ -68,32 +68,25 @@ the rich pipeline execution reports.
 
     - :doc:`Preprocessing and conversion <preprocessing>`
     - :doc:`Peptide identification <identification>`
-        - :doc:`Peptide search engines <searchengines>`
-            - :doc:`Comet <comet>`
-            - :doc:`MSGF+ <msgf>`
-        - :doc:`PSM rescoring <rescoring>`
+        - :doc:`Comet <comet>`
+        - :doc:`MSGF+ <msgf>`
+        - :doc:`PSM re-scoring <rescoring>`
             - :doc:`Distribution-based <idpep>`
             - :doc:`Percolator <percolator>`
-        - :doc:`ConsensusID <consensusid>`
         - :doc:`False discovery rates <fdr>`
         - :doc:`Modification localization <modlocal>`
     - :doc:`Label-free quantification <lfq>`
         - :doc:`Peptide identification <identification>`
-        - :doc:`ProteomicsLFQ metatool <proteomicslfq>`
+        - :doc:`proteomicsLFQ metatool <proteomicslfq>`
         - :doc:`Protein inference <inference>`
     - :doc:`Isobaric labelled quantification <iso>`
         - :doc:`Peptide identification <identification>`
-        - :doc:`Isobaric quantification <isobaricquantifier>`
         - :doc:`Protein inference <inference>`
     - :doc:`Data-independent acquistion <dia>`
-        - :doc:`DIAUmpire <diaumpire>`
-        - :doc:`OpenSwath <openswath>`
     - :doc:`Statistical postprocessing <statistics>`
         - :doc:`MSstats <msstats>`
         - :doc:`Triqler <triqler>`
-    - :doc:`Quality control <qc>`
-        - :doc:`pmultiqc`
-        - :doc:`PTXQC <ptxqc>`
+    - :doc:`Quality control <pmultiqc>`
 
 quantms workflow in a nutshell
 --------------------------------
@@ -103,7 +96,7 @@ Make sure to follow the links to get to know more about the implementation
 details of specific steps in the pipeline.
 
 - Peptide identification
-    Through matching of peptide fragment spectra
+    Through matching of peptide fragment spectra (:doc:`identification`)
         - with protein database and known modifications [implemented]
         - with protein database and unknown modifications [in development]
         - with spectrum database [currently unsupported]
@@ -114,14 +107,13 @@ details of specific steps in the pipeline.
         Through finding interesting features (or 3D peaks) on MS1 level, consisting
         of isotopic traces with the same elution profile (either targeted
         at locations with identifications or untargeted), aligning and
-        matching them between runs, potentially requantifiying missing features
-        and lastly integrating the intensity of the raw peaks in those features.
+        matching them between runs, potentially re-quantifiying missing features
+        and lastly integrating the intensity of the raw peaks in those features (:doc:`lfq`).
 
         - isobaric labels
         Through comparing the intensity of reporter ions arising from the
-        fragmentation of the isobaric label in the fragment spectra (either
-        in the MS2 spectrum used for identification or in separate MS3 spectra
-        (SPS) TODO link)
+        fragmentation of the isobaric label in the fragment spectra either
+        in the MS2 spectrum used for identification or in separate MS3 spectra (:doc:`iso`).
 
         - metabolic labels [currently unsupported]
         Through feature finding (as in label-free) and linking features with a mass shift depending
@@ -132,9 +124,7 @@ details of specific steps in the pipeline.
         Through creating a library of transitions to extract and compare
         based on the results from peptide search engines, aligning the extracted
         peak groups, and performing rigorous statistical
-        testing of those peak group to classify them correctly.
-
-        - with a library of transitions [currently unsupported? TODO]
+        testing of those peak group to classify them correctly (:doc:`dia`).
 
 - Protein inference and quantification
     This is done to map ambiguous peptides to the mostly likely proteins of origin
@@ -142,19 +132,19 @@ details of specific steps in the pipeline.
     Heuristics based on inference scores and groupings can then help in deciding which peptides
     to use for quantification of which protein. Aggregation of quantities
     to the protein level can be performed by several different rules (e.g., top-3)
-    or left to the downstream statistical tools.
+    or left to the downstream statistical tools (:doc:`inference`).
 
 - Downstream (statistical) data analysis
     Downstream data analysis tools like MSstats and Triqler can
-    perform more elaborate normarlization, imputation, aggregation
+    perform more elaborate normalization, imputation, aggregation
     and statistical significance testing based on the raw intensities,
-    protein associations and scores from the upstream pipeline.
+    protein associations and scores from the upstream pipeline (:doc:`statistics`).
 
 - Quality control
     Our chosen and developed quality control tools gather required
     information from the resulting mzTab file and optionally
     intermediate results to provide statistics and summary plots of
-    important quality control metrics like (TODO).
+    important quality control metrics like (:doc:`pmultiqc`).
 
 
 .. image:: images/quantms.png

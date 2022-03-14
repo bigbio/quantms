@@ -12,7 +12,7 @@ In quantms, the user can provide the protein FASTA database with the decoys alre
 attached or generate the database within the pipeline by using the following option: ``add_decoys``.
 
 .. hint:: Additionally, the user can define the prefix for the decoy proteins  (e.g. `DECOY_`) by using the parameter
-    ``decoy_string``. We STRONGLY recommend to use `DECOY_` prefix for all the decoy proteins for better compatibility
+    ``decoy_string``. We **STRONGLY** recommend to use `DECOY_` prefix for all the decoy proteins for better compatibility
     with downstream QC tools such as :doc:`pmultiqc`
 
 .. warning:: Currently, only appended decoy databases are supported, such that target and decoy sequences compete during
@@ -28,7 +28,7 @@ PSM or peptide level
 ********************
 
 The first FDR control happens after PSM re-scoring by either Percolator or a distribution-fitting approach.
-Percolator outputs its own PSM- or peptide-level FDR with correction for an estimated rate of incorrect targets (TODO cite),
+Percolator outputs its own PSM- or peptide-level FDR with correction for an estimated rate of incorrect targets,
 therefore this usually improved estimate is used when Percolator was chosen.
 
 .. warning:: Choosing peptide-level FDR with Percolator will discard all but the best PSM per peptide. Use with caution
@@ -43,14 +43,19 @@ rates for the overall analysis. Nonetheless, an option for experiment-wide re-sc
 is under consideration.
 
 .. hint:: The chosen FDR cutoff for PSMs/peptides influences the amount of PSMs available for ID-based feature
-    finding, feature linking, as well as protein inference and grouping (TODO internal links).
+    finding, feature linking, as well as protein inference and grouping (see protein :doc:`inference`).
 
 Protein level
 *************
 
 FDR control on protein (group) level uses the same formula as above, based on a ranking on the
 protein scores/probabilities after inference. On protein level, picked protein FDR can be chosen, which
-only counts the highest scoring hit for every target-decoy protein pair (TODO cite).
+only counts the highest scoring hit for every target-decoy protein pair [SAV2015]_.
 
+References
+----------------------------
 
 .. [ELIAS2010] Elias JE, Gygi SP. Target-decoy search strategy for mass spectrometry-based proteomics. Methods Mol Biol. 2010;604:55-71. doi: 10.1007/978-1-60761-444-9_5. PMID: 20013364; PMCID: PMC2922680.
+
+.. [SAV2015] Savitski MM, Wilhelm M, Hahne H, Kuster B, Bantscheff M. A Scalable Approach for Protein False Discovery Rate Estimation in Large Proteomic Data Sets. Mol Cell Proteomics. 2015 Sep;14(9):2394-404. doi: 10.1074/mcp.M114.046995. Epub 2015 May 17. PMID: 25987413; PMCID: PMC4563723.
+
