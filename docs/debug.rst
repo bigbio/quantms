@@ -42,5 +42,11 @@ How to find files in failing process/tools
 
 When running the pipeline, the quantms (and nextflow) stores the intermediate files and running scripts into a root folder called `work/step_running_hash/` (e.g. /work/94/dfdfb63d5816c9c65889ae34511b32/). When the pipeline fails it gives the absolute path of the folder where the step that has fail is stored. The user can go inside the folder and detect the error that has been thrown by the tool or the pipeline.
 
+.. toctree::
+   :maxdepth: 1
 
+   usage
+   identification
+   dda
+   dia
 
