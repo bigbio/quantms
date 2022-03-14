@@ -1,2 +1,0 @@
-Isobaric quantification with OpenMS
-===================================

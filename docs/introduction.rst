@@ -68,9 +68,8 @@ the rich pipeline execution reports.
 
     - :doc:`Preprocessing and conversion <preprocessing>`
     - :doc:`Peptide identification <identification>`
-        - :doc:`Peptide search engines <searchengines>`
-            - :doc:`Comet <comet>`
-            - :doc:`MSGF+ <msgf>`
+        - :doc:`Comet <comet>`
+        - :doc:`MSGF+ <msgf>`
         - :doc:`PSM rescoring <rescoring>`
             - :doc:`Distribution-based <idpep>`
             - :doc:`Percolator <percolator>`
@@ -83,7 +82,6 @@ the rich pipeline execution reports.
         - :doc:`Protein inference <inference>`
     - :doc:`Isobaric labelled quantification <iso>`
         - :doc:`Peptide identification <identification>`
-        - :doc:`Isobaric quantification <isobaricquantifier>`
         - :doc:`Protein inference <inference>`
     - :doc:`Data-independent acquistion <dia>`
         - :doc:`DIAUmpire <diaumpire>`
@@ -91,9 +89,7 @@ the rich pipeline execution reports.
     - :doc:`Statistical postprocessing <statistics>`
         - :doc:`MSstats <msstats>`
         - :doc:`Triqler <triqler>`
-    - :doc:`Quality control <qc>`
-        - :doc:`pmultiqc`
-        - :doc:`PTXQC <ptxqc>`
+    - :doc:`Quality control <pmultiqc>`
 
 quantms workflow in a nutshell
 --------------------------------
