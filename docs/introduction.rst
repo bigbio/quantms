@@ -96,7 +96,7 @@ Make sure to follow the links to get to know more about the implementation
 details of specific steps in the pipeline.
 
 - Peptide identification
-    Through matching of peptide fragment spectra
+    Through matching of peptide fragment spectra (:doc:`identification`)
         - with protein database and known modifications [implemented]
         - with protein database and unknown modifications [in development]
         - with spectrum database [currently unsupported]
@@ -108,13 +108,12 @@ details of specific steps in the pipeline.
         of isotopic traces with the same elution profile (either targeted
         at locations with identifications or untargeted), aligning and
         matching them between runs, potentially re-quantifiying missing features
-        and lastly integrating the intensity of the raw peaks in those features.
+        and lastly integrating the intensity of the raw peaks in those features (:doc:`lfq`).
 
         - isobaric labels
         Through comparing the intensity of reporter ions arising from the
-        fragmentation of the isobaric label in the fragment spectra (either
-        in the MS2 spectrum used for identification or in separate MS3 spectra
-        (SPS) TODO link)
+        fragmentation of the isobaric label in the fragment spectra either
+        in the MS2 spectrum used for identification or in separate MS3 spectra (:doc:`iso`).
 
         - metabolic labels [currently unsupported]
         Through feature finding (as in label-free) and linking features with a mass shift depending
@@ -125,9 +124,7 @@ details of specific steps in the pipeline.
         Through creating a library of transitions to extract and compare
         based on the results from peptide search engines, aligning the extracted
         peak groups, and performing rigorous statistical
-        testing of those peak group to classify them correctly.
-
-        - with a library of transitions [currently unsupported? TODO]
+        testing of those peak group to classify them correctly (:doc:`dia`).
 
 - Protein inference and quantification
     This is done to map ambiguous peptides to the mostly likely proteins of origin
@@ -135,19 +132,19 @@ details of specific steps in the pipeline.
     Heuristics based on inference scores and groupings can then help in deciding which peptides
     to use for quantification of which protein. Aggregation of quantities
     to the protein level can be performed by several different rules (e.g., top-3)
-    or left to the downstream statistical tools.
+    or left to the downstream statistical tools (:doc:`inference`).
 
 - Downstream (statistical) data analysis
     Downstream data analysis tools like MSstats and Triqler can
     perform more elaborate normalization, imputation, aggregation
     and statistical significance testing based on the raw intensities,
-    protein associations and scores from the upstream pipeline.
+    protein associations and scores from the upstream pipeline (:doc:`statistics`).
 
 - Quality control
     Our chosen and developed quality control tools gather required
     information from the resulting mzTab file and optionally
     intermediate results to provide statistics and summary plots of
-    important quality control metrics like (TODO).
+    important quality control metrics like (:doc:`pmultiqc`).
 
 
 .. image:: images/quantms.png
