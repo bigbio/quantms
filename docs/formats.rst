@@ -53,11 +53,11 @@ divided into two categories:
     the MSstats parameters (see the parameter documentation (TODO link) and the chapter on :doc:`MSstats <msstats>` for further
     details).
 
-.. important:: Unequal fractionations are not supported yet, please remove superfluous fractions in all samples
+.. important:: Unequal fractionation's are not supported yet, please remove superfluous fractions in all samples
     if a run failed or was discarded.
 
 .. important:: When multiple conditions are under study which cannot be reliably aligned or compared (e.g., due to
-    different instruments, chromatographies, fractionations, and/or quantification strategies), the user should create
+    different instruments, chromatographies, fractionation's, and/or quantification strategies), the user should create
     multiple SDRFs (one for each experiment).
 
 - ``characteristics[biological replicate]``:
@@ -91,7 +91,6 @@ They can also be created by translating transcripts.
 
 .. hint:: Contaminants should be appended to the database. For each contaminant protein the prefix ``CONTAMINANT_`` should be added as prefix of the protein.
 
-
 Output formats
 ---------------------------
 
@@ -101,7 +100,7 @@ If MSstats was activated, the workflow outputs two mzTab:
  - one in the msstats folder, with intensities replaced by the output from MSstats(TMT). This contains normalized and
     potentially imputed quantities.
 
-Additionally, `MSstats <https://github.com/Vitek-Lab>`_ and `Triqler <https://github.com/statisticalbiotechnology/triqler>`_  output for downstream analysis are exported. If you would like to have another output included in the pipeline please countact the developers over the discussion forum, slack or open an issue.
+Additionally, :doc:`msstats` and :doc:`triqler`  output for downstream analysis are exported. If you would like to have another output included in the pipeline please contact the developers over the discussion forum, slack or open an issue.
 
 
 Intermediate formats
