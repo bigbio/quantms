@@ -72,5 +72,4 @@ References
    :maxdepth: 1
 
    identification
-   isobaricquantifier
    inference
