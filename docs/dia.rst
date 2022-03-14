@@ -5,5 +5,4 @@ Data-independent acquisition (DIA) quantification
    :maxdepth: 1
 
    identification
-   diaumpire
    openswath

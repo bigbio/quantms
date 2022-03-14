@@ -84,7 +84,6 @@ the rich pipeline execution reports.
         - :doc:`Peptide identification <identification>`
         - :doc:`Protein inference <inference>`
     - :doc:`Data-independent acquistion <dia>`
-        - :doc:`DIAUmpire <diaumpire>`
         - :doc:`OpenSwath <openswath>`
     - :doc:`Statistical postprocessing <statistics>`
         - :doc:`MSstats <msstats>`
