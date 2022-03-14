@@ -1,4 +1,4 @@
-Percolator (SVM-based rescoring)
+Percolator (SVM-based re-scoring)
 ================================
 
 `Percolator <https://github.com/percolator/percolator>`_ rescores search engine results for improved identification rates.

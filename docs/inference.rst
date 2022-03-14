@@ -22,7 +22,7 @@ Various tools are available for this task, integrated in a larger environment li
 MaxQuant or PeptideShaker, or standalone like IDPicker.
 
 .. note:: Different software will give you different proteins from the same peptide list. In addition different
-          software's in combination with different peptide identification tools can give completly different results (read our previous benchmark in the topic [AUDA2017]_)
+          software's in combination with different peptide identification tools can give completely different results (read our previous benchmark in the topic [AUDA2017]_)
 
 In quantms provides two major methods for protein inference: **bayesian** and **aggregation** methods. Both with their corresponding parameters and configurations.
 
@@ -55,7 +55,7 @@ Both methods **bayesian** and **aggregation** shares multiple parameters to perf
 1. Top PSMs (`top_PSMs`): The algorithms by default use the top first psms to perform the protein inference. However,
 the user can use more PSMs if they want by changing the parameter: `top_PSMs 3`.
 
-2. Minimum peptides per proteins (`min_peptides_per_protein`): The minimun number of peptides for a protein to be considered
+2. Minimum peptides per proteins (`min_peptides_per_protein`): The minimum number of peptides for a protein to be considered
 for the inference. The default value is `1`, but users can use the parameter `min_peptides_per_protein` to change the value.
 
 Protein FDR

@@ -54,7 +54,7 @@ proteomicsLFQ supports **ID-based feature extraction** or a combined **ID-based 
 
 To enable MBRs, the users should enable the following parameter: `--targeted_only false`
 
-.. note:: Match between runs is performed by transfering feature identifications to coeluting, unidentified features with similar mass and RT in other runs.
+.. note:: Match between runs is performed by transferring feature identifications to coeluting, unidentified features with similar mass and RT in other runs.
    Feature extra
 
 Map alignment

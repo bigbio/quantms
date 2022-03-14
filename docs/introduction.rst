@@ -51,12 +51,12 @@ reports and different methods for automated downstream statistical post-processi
 significance analysis for differential expression which all can be emailed to you after successful completion of
 the pipeline.
 The workflow can be configured solely by an SDRF input file for easy one-command-reanalyses of PRIDE datasets
-but also offers extensive configurabilty on either a web-based or a guided command-line interface provided
+but also offers extensive configurability on either a web-based or a guided command-line interface provided
 through its integration into nf-core (TODO cite). The membership in nf-core additionally secures best practices
 of open and collaborative development of the pipeline including continuous testing after every contribution.
 The used software is strictly versioned through the exclusive usage of (bio-)conda packages (TODO cite) whose
 association with the biocontainer ecosystem (TODO cite) also
-allows us to provide a workflow profile for several containerization softwares (like docker, singularity, podman, etc.).
+allows us to provide a workflow profile for several containerization software's (like docker, singularity, podman, etc.).
 Containerization ensures an even more reproducible environment for your analyses.
 The pipeline can easily be supervised on-the-fly via nf-tower (TODO link). Failed runs can be debugged by investigating
 the rich pipeline execution reports.
@@ -70,7 +70,7 @@ the rich pipeline execution reports.
     - :doc:`Peptide identification <identification>`
         - :doc:`Comet <comet>`
         - :doc:`MSGF+ <msgf>`
-        - :doc:`PSM rescoring <rescoring>`
+        - :doc:`PSM re-scoring <rescoring>`
             - :doc:`Distribution-based <idpep>`
             - :doc:`Percolator <percolator>`
         - :doc:`ConsensusID <consensusid>`
@@ -109,7 +109,7 @@ details of specific steps in the pipeline.
         Through finding interesting features (or 3D peaks) on MS1 level, consisting
         of isotopic traces with the same elution profile (either targeted
         at locations with identifications or untargeted), aligning and
-        matching them between runs, potentially requantifiying missing features
+        matching them between runs, potentially re-quantifiying missing features
         and lastly integrating the intensity of the raw peaks in those features.
 
         - isobaric labels
@@ -141,7 +141,7 @@ details of specific steps in the pipeline.
 
 - Downstream (statistical) data analysis
     Downstream data analysis tools like MSstats and Triqler can
-    perform more elaborate normarlization, imputation, aggregation
+    perform more elaborate normalization, imputation, aggregation
     and statistical significance testing based on the raw intensities,
     protein associations and scores from the upstream pipeline.
 

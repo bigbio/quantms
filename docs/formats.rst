@@ -53,11 +53,11 @@ divided into two categories:
     the MSstats parameters (see the parameter documentation (TODO link) and the chapter on :doc:`MSstats <msstats>` for further
     details).
 
-.. important:: Unequal fractionations are not supported yet, please remove superfluous fractions in all samples
+.. important:: Unequal fractionation's are not supported yet, please remove superfluous fractions in all samples
     if a run failed or was discarded.
 
 .. important:: When multiple conditions are under study which cannot be reliably aligned or compared (e.g., due to
-    different instruments, chromatographies, fractionations, and/or quantification strategies), the user should create
+    different instruments, chromatographies, fractionation's, and/or quantification strategies), the user should create
     multiple SDRFs (one for each experiment).
 
 - ``characteristics[biological replicate]``:
