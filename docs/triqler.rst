@@ -24,15 +24,17 @@ Some remarks:
 
 - For Triqler to work, it also needs decoy PSMs, preferably resulting from a search engine search with a reversed protein sequence database concatenated to the target database. quantms exports the decoy and target proteins into the triqler output.
 - The intensities should not be log transformed, Triqler will do this transformation for you.
-- The search engine scores should be such that higher scores indicate a higher confidence in the PSM. quantms uses a transfromation of the Posterior error probability (PEP) as `1-PEP` for each PSM.
+- The search engine scores should be such that higher scores indicate a higher confidence in the PSM. quantms uses a transformation of the Posterior error probability (PEP) as `1-PEP` for each PSM.
 - Multiple proteins can be specified at the end of the line, separated by tabs. However, it should be noted that Triqler currently discards shared peptides.
 
 Running Triqler
 --------------------------
 
-.. code-block:: bash
-   python -m triqler --fold_change_eval 0.8 out_triqler.tsv
+Triqler can be run in the quantms output by using the following command:
 
+.. code-block:: bash
+
+   python -m triqler --fold_change_eval 0.8 out_triqler.tsv
 
 References
 ---------------------------
