@@ -49,16 +49,16 @@ The DIA-NN is run with the following parameters than can be changed in the comma
 MSstats
 ------------
 
-The output of DIA-NN are exported to Mststas for the downstream analysis, you can read more about MSstats in :doc:`msstats`.
+The output of DIA-NN is exported to MSstats for the downstream analysis, you can read more about MSstats in :doc:`msstats`.
 
 Important technical notes
 --------------------------
 
 By 2022, the quantms DIA workflow based on DIA-NN has the following drawbacks:
 
-- **Conda NOT supported**: The quantms pipeline can be only run using **docker**, and **singularity**. The quantms team is working hardly to support also conda, you can follow the `quantms discussions <https://github.com/bigbio/quantms/discussions>`_
+- **Conda NOT supported**: The steps of the DIA branch of the pipeline can only be run using **docker**, and **singularity**. The quantms team is working hard to also support conda. You can follow the `quantms discussions <https://github.com/bigbio/quantms/discussions>`_
 
-- **Parallelization**: The DIA-NN works similar to other tools like MaxQuant, where all the steps of the pipeline are done in one big heavy node. quantms aims is different (see :doc:`lfq`, :doc:`iso`), we aim to parallelize and distribute most of the tasks in the cluster. We are working to develop better ways to parallelize and distribute the tasks in the future.
+- **Parallelization**: The DIA-NN works similar to other tools like MaxQuant, where all the steps of the pipeline are done in one big heavy node. quantms' aims are a bit different (see :doc:`lfq`, :doc:`iso`), we aim to parallelize and distribute most of the tasks in the cluster. We are working to develop better ways to parallelize and distribute the tasks in the future.
 
 
 References
