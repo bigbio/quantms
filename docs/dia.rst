@@ -34,7 +34,7 @@ In order to analyze the DIA dataset the pipeline needs the acquisition method pr
 
    "Sample-1", "Escherichia coli K-12", "whole plant", "CT=Mixture;CN=UPS1;QY=0.1 fmol", "1", "run 1", "RD139_Narrow_UPS1_0_1fmol_inj1.raw", "1", "1", "NT=Data-Independent Acquisition;AC=NCIT:C161786", "AC=MS:1002038;NT=label free sample", "NT=Oxidation;MT=Variable;TA=M;AC=Unimod:35", "NT=Carbamidomethyl;TA=C;MT=fixed;AC=UNIMOD:4", "AC=MS:1001313;NT=Trypsin", "10 ppm", "20 mmu", "CT=Mixture;CN=UPS1;QY=0.1 fmol"
 
-The first step of the workflow, translate the SDRF parameters into DIA-NN configuration parameters, including port-translation modification, mass thresholds, etc. For the developers and bioinformaticians, the details can be found `here <https://github.com/bigbio/quantms/blob/dev/bin/prepare_diann_parameters.py>`_ .
+The first step of the workflow, translate the SDRF parameters into DIA-NN configuration parameters, including port-translation modification, mass thresholds, etc. For the developers and bioinformaticians, the details can be found in `diann to parameters <https://github.com/bigbio/quantms/blob/dev/bin/prepare_diann_parameters.py>`_ .
 
 The DIA-NN is run with the following parameters than can be changed in the commandline:
 
@@ -56,7 +56,7 @@ Important technical notes
 
 By 2022, the quantms DIA workflow based on DIA-NN has the following drawbacks:
 
-- **Conda NOT supported**: The quantms pipeline can be only run using **docker**, and **singularity**. The quantms team is working hardly to support also conda, you can follow the discussion `here <https://github.com/bigbio/quantms/discussions>`_
+- **Conda NOT supported**: The quantms pipeline can be only run using **docker**, and **singularity**. The quantms team is working hardly to support also conda, you can follow the `quantms discussions <https://github.com/bigbio/quantms/discussions>`_
 
 - **Parallelization**: The DIA-NN works similar to other tools like MaxQuant, where all the steps of the pipeline are done in one big heavy node. quantms aims is different (see :doc:`lfq`, :doc:`iso`), we aim to parallelize and distribute most of the tasks in the cluster. We are working to develop better ways to parallelize and distribute the tasks in the future.
 
