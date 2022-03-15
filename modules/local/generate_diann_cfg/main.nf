@@ -3,9 +3,9 @@ process GENERATE_DIANN_CFG {
 
 
     //TODO What images include click or use sys.args rather than click
-    conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/python:3.8.3"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.21--pyhdfd78af_0"
     } else {
         container "quay.io/biocontainers/sdrf-pipelines:0.0.21--pyhdfd78af_0"
     }
@@ -13,7 +13,6 @@ process GENERATE_DIANN_CFG {
     input:
     val(meta)
     path(mzmls)
-    path(exp_design)
 
     output:
     path("*.mzML"), includeInputs: true, emit: mzmls_for_diann

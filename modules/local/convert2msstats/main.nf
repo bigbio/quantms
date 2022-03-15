@@ -1,9 +1,9 @@
 process CONVERT2MSSTATS {
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/python:3.8.3"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.21--pyhdfd78af_0"
     } else {
         container "quay.io/biocontainers/sdrf-pipelines:0.0.21--pyhdfd78af_0"
     }

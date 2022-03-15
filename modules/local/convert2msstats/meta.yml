@@ -1,45 +1,27 @@
-name: pmultiqc
-description: A library for proteomics QC report based on MultiQC framework.
+name: convert2msstats
+description: A module to convert DIA report files to MSstats
 keywords:
-    - MultiQC
-    - QC
-    - Proteomics
+    - DIA-NN
+    - conversion
+    - MSstats
 tools:
-    - pmultiqc:
+    - custom:
         description: |
-            A library for proteomics QC report based on MultiQC framework.
-        homepage: https://github.com/bigbio/pmultiqc/
-        documentation: https://github.com/bigbio/pmultiqc/
+            A custom module for DIA-NN report file conversion.
+        homepage: https://github.com/bigbio/quantms
+        documentation: https://github.com/bigbio/quantms/tree/readthedocs
 input:
-    - expdesign:
-        type: file
-        description: experimental design file in openms style
-    - mzmls:
-        type: dir
-        description:  mzML files directory
-    - quantms_results:
-        type: dir
-        description: the directory of quantms results including out.mzTab/out_msstats.csv
-    - raw_ids:
-        type: dir
-        description: idXML files directory
-output:
     - report:
         type: file
-        description: MultiQC report file
-        pattern: "multiqc_report.html"
-    - quantmsdb:
+        description: DIA-NN main report file
+    - exp_design:
         type: file
-        description: Sqlite3 database file stored protein psm and quantificaiton information
-        pattern: "*.db"
-    - data:
-        type: dir
-        description: MultiQC data dir
-        pattern: "multiqc_data"
-    - plots:
+        description:  An experimental design file including Sample and replicates column et al.
+output:
+    - out_msstats:
         type: file
-        description: Plots created by MultiQC
-        pattern: "*_data"
+        description: MSstats input file
+        pattern: "*.csv"
     - version:
         type: file
         description: File containing software version

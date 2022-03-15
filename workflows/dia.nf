@@ -40,7 +40,7 @@ workflow DIA {
                                 }
                             .set { result }
 
-    DIANNCFG(result.meta.collect(), result.mzml.collect(), ch_expdesign)
+    DIANNCFG(result.meta.collect(), result.mzml.collect())
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
     DIANN(DIANNCFG.out.mzmls_for_diann.collect(), Channel.fromPath(params.database), DIANNCFG.out.diann_cfg)
