@@ -1,45 +1,38 @@
-name: pmultiqc
-description: A library for proteomics QC report based on MultiQC framework.
+name: diann
+description: A module for DIA library free analysis based on DIA-NN.
 keywords:
-    - MultiQC
-    - QC
-    - Proteomics
+    - DIA-NN
+    - library free
+    - DIA
 tools:
-    - pmultiqc:
+    - DIA-NN:
         description: |
-            A library for proteomics QC report based on MultiQC framework.
-        homepage: https://github.com/bigbio/pmultiqc/
-        documentation: https://github.com/bigbio/pmultiqc/
+            DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing by Demichev.
+        homepage: https://github.com/vdemichev/DiaNN
+        documentation: https://github.com/vdemichev/DiaNN
 input:
-    - expdesign:
+    - fasta:
         type: file
-        description: experimental design file in openms style
-    - mzmls:
+        description: FASTA sequence databases
+    - mzMLs:
         type: dir
         description:  mzML files directory
-    - quantms_results:
+    - cfg:
         type: dir
-        description: the directory of quantms results including out.mzTab/out_msstats.csv
-    - raw_ids:
-        type: dir
-        description: idXML files directory
+        description: specifies a file to load options/commands from.
 output:
     - report:
         type: file
-        description: MultiQC report file
-        pattern: "multiqc_report.html"
-    - quantmsdb:
+        description: Main report file,a text table containing precursor and protein IDs, as well as plenty of associated information. Most column names are self-explanatory.
+        pattern: "report.tsv"
+    - report_stat:
         type: file
-        description: Sqlite3 database file stored protein psm and quantificaiton information
-        pattern: "*.db"
-    - data:
-        type: dir
-        description: MultiQC data dir
-        pattern: "multiqc_data"
-    - plots:
+        description: Contains a number of QC metrics which can be used for data filtering, e.g. to exclude failed runs, or as a readout for method optimization.
+        pattern: "report.stats.tsv"
+    - log:
         type: file
-        description: Plots created by MultiQC
-        pattern: "*_data"
+        description: DIA-NN log file
+        pattern: "report.log.txt"
     - version:
         type: file
         description: File containing software version
