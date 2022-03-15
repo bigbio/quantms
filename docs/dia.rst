@@ -34,6 +34,22 @@ In order to analyze the DIA dataset the pipeline needs the acquisition method pr
 
    "Sample-1", "Escherichia coli K-12", "whole plant", "CT=Mixture;CN=UPS1;QY=0.1 fmol", "1", "run 1", "RD139_Narrow_UPS1_0_1fmol_inj1.raw", "1", "1", "NT=Data-Independent Acquisition;AC=NCIT:C161786", "AC=MS:1002038;NT=label free sample", "NT=Oxidation;MT=Variable;TA=M;AC=Unimod:35", "NT=Carbamidomethyl;TA=C;MT=fixed;AC=UNIMOD:4", "AC=MS:1001313;NT=Trypsin", "10 ppm", "20 mmu", "CT=Mixture;CN=UPS1;QY=0.1 fmol"
 
+The first step of the workflow, translate the SDRF parameters into DIA-NN configuration parameters, including port-translation modification, mass thresholds, etc. For the developers and bioinformaticians, the details can be found `here <https://github.com/bigbio/quantms/blob/dev/bin/prepare_diann_parameters.py>`_ .
+
+The DIA-NN is run with the following parameters than can be changed in the commandline:
+
+- `--missed-cleavages`: Number of missed-cleavages.
+- `--min-pep-len & --max-pep-len`: Minimum & Maximum length of the peptides for the search.
+- `--min-pr-charge & --max-pr-charge`: Minimum & Maximum charge states.
+- `--var-mods`: Maximum number of modifications allows for a peptide.
+- `--IL_equivalent`: This parameter is used to handle I/L in the same way or differently. If `--IL_equivalent true` the I/L are considered the same.
+
+**Match between runs (MBR)**: In MBR is allowed, peptides identified by tandem mass spectra in one run are transferred to another by inference based on m/z, charge state, retention time, and ion mobility when applicable. This options is available in the LFQ DDA workflow (:doc:`lfq`). Similarly to the LFQ DDA workflow, the LFQ DIA pipeline allows to perform match between runs by defining `--targeted_only false`.
+
+MSstats
+------------
+
+The output of DIA-NN are exported to Mststas for the downstream analysis, you can read more about MSstats in :doc:`msstats`.
 
 
 References
