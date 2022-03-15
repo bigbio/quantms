@@ -27,6 +27,13 @@ DIANN data analysis
 
 quantms, uses `DIANN <https://github.com/vdemichev/DiaNN>`_ for DIA library-free data processing. DIA-NN [DEMI2019]_ is a universal software for data-independent acquisition (DIA) proteomics data processing. In 2018, DIA-NN opened a new chapter in proteomics, introducing a number of algorithms which enabled reliable, robust and quantitatively accurate large-scale experiments using high-throughput methods.
 
+In order to analyze the DIA dataset the pipeline needs the acquisition method properly annotated in the SDRF:  `comment[proteomics data acquisition method]` with value for each sample `NT=Data-Independent Acquisition;AC=NCIT:C161786`:
+
+.. csv-table:: Example DIA SDRF annotated (only relevant columns are highlighted)
+   :header: "source name", "characteristics[organism]", "characteristics[organism part]", "characteristics[spiked compound]", "characteristics[biological replicate]", "assay name", "comment[data file]", "comment[technical replicate]", "comment[fraction identifier]", "comment[proteomics data acquisition method]", "comment[label]", "comment[modification parameters]", "comment[modification parameters]", "comment[cleavage agent details]", "comment[precursor mass tolerance]", "comment[fragment mass tolerance]", "factor value[spiked compound]"
+
+   "Sample-1", "Escherichia coli K-12", "whole plant", "CT=Mixture;CN=UPS1;QY=0.1 fmol", "1", "run 1", "RD139_Narrow_UPS1_0_1fmol_inj1.raw", "1", "1", "NT=Data-Independent Acquisition;AC=NCIT:C161786", "AC=MS:1002038;NT=label free sample", "NT=Oxidation;MT=Variable;TA=M;AC=Unimod:35", "NT=Carbamidomethyl;TA=C;MT=fixed;AC=UNIMOD:4", "AC=MS:1001313;NT=Trypsin", "10 ppm", "20 mmu", "CT=Mixture;CN=UPS1;QY=0.1 fmol"
+
 
 
 References
