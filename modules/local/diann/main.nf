@@ -7,9 +7,9 @@ process DIANN {
 
     //singularity image ?
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "biocontainers/diann:1.8.0"
+        container "biocontainers/diann:v1.8.0_cv1"
     } else {
-        container "biocontainers/diann:1.8.0"
+        container "biocontainers/diann:v1.8.0_cv1"
     }
 
     input:
