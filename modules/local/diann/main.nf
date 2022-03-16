@@ -6,11 +6,9 @@ process DIANN {
     }
 
     //singularity image ?
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "biocontainers/diann:v1.8.0_cv1"
-    } else {
-        container "biocontainers/diann:v1.8.0_cv1"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.0_cv1/diann_v1.8.0_cv1.img' :
+        'biocontainers/diann:v1.8.0_cv1' }"
 
     input:
     file 'mzMLs/*'
