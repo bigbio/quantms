@@ -8,10 +8,8 @@ class WorkflowQuantms {
     // Check and validate parameters
     //
     public static void initialise(params, log) {
-        genomeExistsError(params, log)
-
-        if (!params.fasta) {
-            log.error "Genome fasta file not specified with e.g. '--fasta genome.fa' or via a detectable config file."
+        if (!params.database) {
+            log.error "database file not specified with e.g. '--database *.fasta' or via a detectable config file."
             System.exit(1)
         }
     }
@@ -44,16 +42,16 @@ class WorkflowQuantms {
     }
 
     //
-    // Exit pipeline if incorrect --genome key provided
+    // Check class of an Object for "List" type
     //
-    private static void genomeExistsError(params, log) {
-        if (params.genomes && params.genome && !params.genomes.containsKey(params.genome)) {
-            log.error "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
-                "  Genome '${params.genome}' not found in any config files provided to the pipeline.\n" +
-                "  Currently, the available genome keys are:\n" +
-                "  ${params.genomes.keySet().join(", ")}\n" +
-                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-            System.exit(1)
+    public static boolean isCollectionOrArray(object) {
+        return  [Collection, Object[]].any { it.isAssignableFrom(object.getClass()) }
         }
+
+    //
+    // check file extension
+    //
+    public static boolean hasExtension(file, extension) {
+        return file.toString().toLowerCase().endsWith(extension.toLowerCase())
     }
 }
