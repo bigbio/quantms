@@ -1,10 +1,10 @@
 name: msstatsconverter
-description:  Converter to input for MSstats
+description: Converter to input for MSstats
 keywords:
     - MSstats
     - OpenMS
 tools:
-    - MSstatsConverter :
+    - MSstatsConverter:
         description: |
           Converter to input for MSstats
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSstatsConverter.html

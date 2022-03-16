@@ -16,7 +16,7 @@ input:
         description: DIA-NN main report file
     - exp_design:
         type: file
-        description:  An experimental design file including Sample and replicates column et al.
+        description: An experimental design file including Sample and replicates column et al.
 output:
     - out_msstats:
         type: file

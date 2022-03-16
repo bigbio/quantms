@@ -1,11 +1,11 @@
 name: proteomicslfq
-description:  ProteomicsLFQ performs label-free quantification of peptides and proteins.
+description: ProteomicsLFQ performs label-free quantification of peptides and proteins.
 keywords:
     - label-free
     - OpenMS
     - quantification
 tools:
-    - ProteomicsLFQ :
+    - ProteomicsLFQ:
         description: |
           ProteomicsLFQ performs label-free quantification of peptides and proteins.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
