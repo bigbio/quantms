@@ -7,11 +7,5 @@ report_section_order:
         order: -1000
     nf-core-quantms-summary:
         order: -1001
-    pmultiqc:
-        order: -1002
 
-thousandsSep_format: ""
 export_plots: true
-custom_logo: "./nf-core-quantms_logo_light.png"
-custom_logo_url: "https://github.com/bigbio/quantms"
-custom_logo_title: "quantms"

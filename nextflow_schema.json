@@ -1124,6 +1124,18 @@
                     "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
                     "hidden": true,
                     "fa_icon": "fas fa-bacon"
+                },
+                "singularity_pull_docker_container": {
+                    "type": "boolean",
+                    "description": "This parameter force singularity to pull the contain from docker instead of using the singularity image",
+                    "hidden": true,
+                    "fa_icon": "fas fa-bacon"
+                },
+                "hostnames": {
+                    "type": "string",
+                    "description": "Institutional configs hostname.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
                 }
             }
         }
