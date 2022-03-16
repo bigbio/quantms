@@ -44,31 +44,33 @@ def convert_mod(unimod_csv, fix_mod, var_mod):
     var_ptm = []
     fix_ptm = []
     unimod = pd.read_csv(unimod_csv, header=0, sep=",")
-    for mod in fix_mod.split(","):
-        diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
-        site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
-        if site == "Protein N-term":
-            site = "*n"
-        elif site == "N-term":
-            site = "n"
+    if fix_mod != "":
+        for mod in fix_mod.split(","):
+            diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
+            site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
+            if site == "Protein N-term":
+                site = "*n"
+            elif site == "N-term":
+                site = "n"
 
-        if "TMT" in diann_mod or "Label" in diann_mod or "iTRAQ" in diann_mod or "mTRAQ" in diann_mod:
-            fix_ptm.append(diann_mod + "," + site + "," + "label")
-        else:
-            fix_ptm.append(diann_mod + "," + site)
+            if "TMT" in diann_mod or "Label" in diann_mod or "iTRAQ" in diann_mod or "mTRAQ" in diann_mod:
+                fix_ptm.append(diann_mod + "," + site + "," + "label")
+            else:
+                fix_ptm.append(diann_mod + "," + site)
 
-    for mod in var_mod.split(","):
-        diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
-        site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
-        if site == "Protein N-term":
-            site = "*n"
-        elif site == "N-term":
-            site = "n"
+    if var_mod != "":
+        for mod in var_mod.split(","):
+            diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
+            site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
+            if site == "Protein N-term":
+                site = "*n"
+            elif site == "N-term":
+                site = "n"
 
-        if "TMT" in diann_mod or "Label" in diann_mod or "iTRAQ" in diann_mod or "mTRAQ" in diann_mod:
-            var_ptm.append(diann_mod + "," + site + "," + "label")
-        else:
-            var_ptm.append(diann_mod + "," + site)
+            if "TMT" in diann_mod or "Label" in diann_mod or "iTRAQ" in diann_mod or "mTRAQ" in diann_mod:
+                var_ptm.append(diann_mod + "," + site + "," + "label")
+            else:
+                var_ptm.append(diann_mod + "," + site)
 
     return fix_ptm, var_ptm
 
