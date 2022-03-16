@@ -5,7 +5,7 @@ keywords:
     - OpenMS
     - msgf
 tools:
-    - MSGFPlusAdapter :
+    - MSGFPlusAdapter:
         description: |
           Adapter for the MS-GF+ protein identification (database search) engine.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html

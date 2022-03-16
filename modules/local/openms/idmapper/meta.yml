@@ -1,11 +1,11 @@
 name: idmapper
-description:  Assigns protein/peptide identifications to features or consensus features.
+description: Assigns protein/peptide identifications to features or consensus features.
 keywords:
     - feature
     - identification
     - OpenMS
 tools:
-    - IDMapper :
+    - IDMapper:
         description: |
           Assigns protein/peptide identifications to features or consensus features.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html

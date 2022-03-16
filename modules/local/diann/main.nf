@@ -41,6 +41,7 @@ process DIANN {
             ${il_eq} \\
             ${mbr} \\
             --verbose $params.diann_debug \\
+            > diann.log
 
 
     cat <<-END_VERSIONS > versions.yml

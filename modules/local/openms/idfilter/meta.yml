@@ -1,11 +1,11 @@
 name: idfilter
-description:  Filters peptide/protein identification results by different criteria.
+description: Filters peptide/protein identification results by different criteria.
 keywords:
     - Filter
     - identification
     - OpenMS
 tools:
-    - IDFilter :
+    - IDFilter:
         description: |
           Tool to Filters results from protein or peptide identification engines based on different criteria.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDFilter.html

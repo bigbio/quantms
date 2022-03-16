@@ -16,7 +16,7 @@ input:
         description: FASTA sequence databases
     - mzMLs:
         type: dir
-        description:  mzML files directory
+        description: mzML files directory
     - cfg:
         type: dir
         description: specifies a file to load options/commands from.
