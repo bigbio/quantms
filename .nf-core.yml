@@ -1,8 +1,1 @@
-lint:
-  files_unchanged:
-    - .github/workflows/linting.yml
-    - lib/NfcoreTemplate.groovy
-    - assets/multiqc_config.yaml
-  files_exist:
-    - conf/igenomes.config
-  nextflow_config: False
+repository_type: pipeline
