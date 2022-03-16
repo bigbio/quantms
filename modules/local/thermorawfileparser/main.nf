@@ -8,6 +8,8 @@ process THERMORAWFILEPARSER {
         'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0' :
         'quay.io/biocontainers/thermorawfileparser:1.3.4--ha8f3691_0' }"
 
+    stageInMode {task.attempt == 1 ? 'link' : (task.attempt == 2 ? 'symlink' : 'copy')}
+
     input:
     tuple val(meta), path(rawfile)
 
