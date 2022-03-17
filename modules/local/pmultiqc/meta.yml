@@ -16,7 +16,7 @@ input:
         description: experimental design file in openms style
     - mzmls:
         type: dir
-        description:  mzML files directory
+        description: mzML files directory
     - quantms_results:
         type: dir
         description: the directory of quantms results including out.mzTab/out_msstats.csv

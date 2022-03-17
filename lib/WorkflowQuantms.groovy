@@ -46,7 +46,7 @@ class WorkflowQuantms {
     //
     public static boolean isCollectionOrArray(object) {
         return  [Collection, Object[]].any { it.isAssignableFrom(object.getClass()) }
-    }
+        }
 
     //
     // check file extension

@@ -1,0 +1,30 @@
+name: convert2msstats
+description: A module to convert DIA report files to MSstats
+keywords:
+    - DIA-NN
+    - conversion
+    - MSstats
+tools:
+    - custom:
+        description: |
+            A custom module for DIA-NN report file conversion.
+        homepage: https://github.com/bigbio/quantms
+        documentation: https://github.com/bigbio/quantms/tree/readthedocs
+input:
+    - report:
+        type: file
+        description: DIA-NN main report file
+    - exp_design:
+        type: file
+        description: An experimental design file including Sample and replicates column et al.
+output:
+    - out_msstats:
+        type: file
+        description: MSstats input file
+        pattern: "*.csv"
+    - version:
+        type: file
+        description: File containing software version
+        pattern: "*.{version.txt}"
+authors:
+    - "@Chengxin Dai"

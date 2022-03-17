@@ -2,11 +2,8 @@
 // Phospho modification site localisation and scoring.
 //
 
-params.idscoreswitcher_for_luciphor = [:]
-params.luciphor = [:]
-
-include { IDSCORESWITCHER as IDSCORESWITCHERFORLUCIPHOR } from '../../modules/local/openms/idscoreswitcher/main' addParams( options: params.idscoreswitcher_for_luciphor)
-include { LUCIPHORADAPTER } from '../../modules/local/openms/thirdparty/luciphoradapter/main' addParams( options: params.luciphor )
+include { IDSCORESWITCHER as IDSCORESWITCHERFORLUCIPHOR } from '../../modules/local/openms/idscoreswitcher/main'
+include { LUCIPHORADAPTER } from '../../modules/local/openms/thirdparty/luciphoradapter/main'
 
 workflow PHOSPHOSCORING {
     take:

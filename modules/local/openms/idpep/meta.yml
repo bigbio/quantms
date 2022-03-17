@@ -1,11 +1,11 @@
 name: idpep
-description:  Tool to estimate the probability of peptide hits to be incorrectly assigned.
+description: Tool to estimate the probability of peptide hits to be incorrectly assigned.
 keywords:
     - FDR
     - decoy
     - OpenMS
 tools:
-    - FalseDiscoveryRate :
+    - FalseDiscoveryRate:
         description: |
           Tool to estimate the probability of peptide hits to be incorrectly assigned.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDPosteriorErrorProbability.html

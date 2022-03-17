@@ -4,7 +4,7 @@ keywords:
     - peak
     - OpenMS
 tools:
-    - IsobaricAnalyzer :
+    - IsobaricAnalyzer:
         description: |
           Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html

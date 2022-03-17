@@ -1,11 +1,11 @@
 name: consensusid
-description:  Computes a consensus from results of multiple peptide identification engines.
+description: Computes a consensus from results of multiple peptide identification engines.
 keywords:
     - FDR
     - decoy
     - OpenMS
 tools:
-    - ConsensusID :
+    - ConsensusID:
         description: |
           Tool to Computes a consensus from results of multiple peptide identification engines.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ConsensusID.html

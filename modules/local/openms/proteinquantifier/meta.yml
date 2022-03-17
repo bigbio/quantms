@@ -1,10 +1,10 @@
 name: proteinquantifier
-description:  Compute peptide and protein abundances from annotated feature/consensus maps or from identification results.
+description: Compute peptide and protein abundances from annotated feature/consensus maps or from identification results.
 keywords:
     - abundances
     - OpenMS
 tools:
-    - ProteinQuantifier :
+    - ProteinQuantifier:
         description: |
           Compute peptide and protein abundances from annotated feature/consensus maps or from identification results.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html
