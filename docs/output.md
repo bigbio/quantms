@@ -43,37 +43,35 @@ Output is by default written to the $NXF_WORKSPACE/results folder. Each step of 
 - [mzML](https://www.psidev.info/mzML): The mzML format is an open, XML-based format for mass spectrometer output files, developed with the full participation of vendors and researchers in order to create a single open format that would be supported by all software.
 - [mzTab](https://www.psidev.info/mztab>): mzTab is intended as a lightweight supplement to the existing standard mzML to store and represent peptide and protein and identifications together with experimental metadata and basic quantitative information.
 
-Additional workflow file formats are:
-
-- [idXML](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1IdXMLFile.html): An xml-based file format to store PSMs, peptide, and protein evidences.
-- [consensusXML](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1ConsensusXMLFile.html): An xml-based file format that extends idXML to include quantification data across multiple runs.
-- [msstats output](https://github.com/Vitek-Lab/MSstats): The Mstats tab-delimited file format contains the peptides quantified in all type of experiments (DIA-LFQ, DDA-LFQ, DDA-ISO) for downstream analysis.
-
 The output consists of the following folders (follow the links for a more detailed description):
 
 results
 
-* ids
-    * [\*.idXML](#identifications)
-* logs (extended log files for all steps)
-    * \*.log
-* msstats
-    * [ComparisonPlot.pdf](#msstats-plots)
-    * [VolcanoPlot.pdf](#msstats-plots)
-    * [Heatmap.pdf](#msstats-plots)
-    * [msstats\_results.csv](#msstats-table)
-    * [msstats_out.mzTab](#msstats-mztab)
-* pipeline\_info (general nextflow infos)
+* spectra data:
+    * [thermorawfileparser/*.mzML](#spectra)
+* identification results:
+    * [searchenginecomet/*.idXML](#identifications)
+    * [searchenginemsgf/*.idXML](#identifications)
+* consensusID identifications:
+    * [consensusid/*.idXML](#identifications)
+* pipeline information:
     * [...](#nextflow-pipeline-info)
-* proteomics\_lfq
-    * [debug\_\*.idXML](#debug-output)
-    * [out.consensusXML](#consenusxml)
-    * [out.csv](#msstats-ready-quantity-table)
-    * [out.mzTab](#mztab)
-* ptxqc (quality control)
-    * [report\_vX.X.X\_out.yaml](#ptxqc-yaml-config)
-    * [report\_vX.X.X\_out\_${hash}.html](#ptxqc-report)
-    * [report\_vX.X.X\_out\_${hash}.pdf](#ptxqc-report)
+* DDA-LFQ quantification results:
+    * proteomicslfq/
+      * [out.consensusXML](#consenusxml)
+      * [out_msstats.csv](#msstats-ready-quantity-table)
+      * [out_triqler.tsv](#triqler)
+      * [out.mzTab](#mztab)
+* DDA-ISO quantification results:
+    * proteinquantifier/
+      * [out.mzTab](#mztab)
+      * [peptide_out.csv](#openms-formats)
+      * [protein_out.csv](#openms-formats)
+    * msstatsconverter/
+      * [out_msstats.csv](#msstats-ready-quantity-table)
+* DIA-LFQ quantification results:
+    * convert2msstats/
+      * [out_msstats.csv](#msstats-ready-quantity-table)
 
 ## Output description
 
@@ -112,6 +110,13 @@ A simple tsv file ready to be read by the OpenMStoMSstats function of the MSstat
 the same quantities as the consensusXML but rearranged in a "long" table format with additional information
 about the experimental design used by MSstats.
 
+#### OpenMS formats
+
+In addition to the consensusXML and idXML formats, OpenMS generates other formats that can help the downstream analysis of the quantms results.
+
+- peptide_out.tsv: The peptide output (peptide_out.tsv) from [ProteinQuantifier](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html) contains a peptide table with the corresponding quantification data.
+- protein_out.tsv: The protein output (protein_out.tsv) from [ProteinQuantifier](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html) contains the protein information including quantification values.
+
 #### mzTab
 
 A complete [mzTab](https://github.com/HUPO-PSI/mzTab) file ready for submission to [PRIDE](https://www.ebi.ac.uk/pride/).
@@ -129,20 +134,3 @@ The [mzTab](https://github.com/HUPO-PSI/mzTab) from the proteomics_lfq folder wi
 #### MSstats table
 
 See [MSstats vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/MSstats/inst/doc/MSstats.html).
-
-#### MSstats plots
-
-See [MSstats vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/MSstats/inst/doc/MSstats.html) for groupComparisonPlots (Heatmap, VolcanoPlot and ComparisonPlot (per protein)).
-
-### PTXQC output
-
-If activated, the `ptxqc` folder will contain the report of the [PTXQC R package](https://cran.r-project.org/web/packages/PTXQC/index.html) based on the mzTab output of proteomicsLFQ.
-
-#### PTXQC report
-
-See [PTXQC vignette](https://cran.r-project.org/web/packages/PTXQC/index.html). In the report itself the calculated and visualized QC metrics are actually quite extensively described already.
-
-#### PTXQC yaml config
-
-The default yaml config used to configure the structure of the QC report. In case you need to restructure, please edit this file and
-re-run PTXQC manually.
