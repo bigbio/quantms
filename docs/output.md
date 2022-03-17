@@ -8,23 +8,35 @@ The directories listed below will be created in the results directory after the 
 
 ## Pipeline overview
 
-The pipeline is built using [Nextflow](https://www.nextflow.io/)
-and processes data using the following steps:
+The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps for DDA-LFQ and DDA-ISO data:
 
 1. (optional) Conversion of spectra data to indexedMzML: Using ThermoRawFileParser if Thermo Raw or using OpenMS' FileConverter if just an index is missing
-1. (optional) Decoy database generation for the provided DB (fasta) with OpenMS
-1. Database search with either MSGF+ and/or Comet through OpenMS adapters
-1. Re-mapping potentially identified peptides to the input database for consistency and error-checking (using OpenMS' PeptideIndexer)
-1. PSM rescoring using PSMFeatureExtractor and Percolator or a PeptideProphet-like distribution fitting approach in OpenMS
-1. If multiple search engines were chosen, the results are combined with OpenMS' ConsensusID
-1. If multiple search engines were chosen, a combined FDR is calculated
-1. Single run PSM/Peptide-level FDR filtering
-1. If localization of modifications was requested, Luciphor2 is applied via the OpenMS adapter
-1. Protein inference and labelfree quantification based on spectral counting or MS1 feature detection, alignment and integration with OpenMS' ProteomicsLFQ. Performs an additional experiment-wide FDR filter on protein (and if requested peptide/PSM-level).
+2. (optional) Decoy database generation for the provided DB (fasta) with OpenMS
+3. Database search with either MSGF+ and/or Comet through OpenMS adapters
+4. Re-mapping potentially identified peptides to the input database for consistency and error-checking (using OpenMS' PeptideIndexer)
+5. PSM rescoring using PSMFeatureExtractor and Percolator or a PeptideProphet-like distribution fitting approach in OpenMS
+6. If multiple search engines were chosen, the results are combined with OpenMS' ConsensusID
+7. If multiple search engines were chosen, a combined FDR is calculated
+8. Single run PSM/Peptide-level FDR filtering
+9. If localization of modifications was requested, Luciphor2 is applied via the OpenMS adapter
+10. (**DDA-LFQ**) Protein inference and labelfree quantification based on spectral counting or MS1 feature detection, alignment and integration with OpenMS' ProteomicsLFQ. Performs an additional experiment-wide FDR filter on protein (and if requested peptide/PSM-level).
+11. (**DDA-ISO**) Extracts and normalizes isobaric labeling
+12. (**DDA-ISO**) Protein inference using the OpenMS ProteinInference tool. In addition, protein FDR filterting is performed in this step for Isobaric datasets (TMT, iTRAQ).
+13. (**DDA-ISO**) Protein Quantification
+14. Generation of QC reports using pMultiQC a library for QC proteomics data analysis.
+
+For DIA-LFQ experiments, the workflows is different:
+
+1. RAW data is converted to mzML using the ThermoRawFileParser
+2. DIA-NN is used to for identification, quantification of the peptides and proteins
+3. Generation of output files
+4. Generation of QC reports using pMultiQC a library for QC proteomics data analysis.
 
 A rough visualization follows:
 
-![quantms LFQ workflow](./images/quantms_lfq.svg)
+<p align="center">
+    <img src="../images/quantms.png" alt="nf-core/quantms workflow overview" width="60%">
+</p>
 
 ## Output structure
 
