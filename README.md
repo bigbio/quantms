@@ -99,8 +99,8 @@ nf-core/quantms was originally written by: Chengxin Dai ([@daichengxin](https://
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-- Timo Sachsenberg ([@timosachsenberg](https://github.com/timosachsenberg))
-- Wang Hong ([@WangHong007](https://github.com/WangHong007))
+* Timo Sachsenberg ([@timosachsenberg](https://github.com/timosachsenberg))
+* Wang Hong ([@WangHong007](https://github.com/WangHong007))
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
