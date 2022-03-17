@@ -36,9 +36,9 @@ DDA-LFQ:
 2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
 3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
 4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
-6. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
-7. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
-8. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+5. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+6. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+7. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
 DDA-ISO:
 
@@ -96,7 +96,7 @@ nf-core/quantms was originally written by: Chengxin Dai, Julianus Pfeuffer and Y
 We thank the following people for their extensive assistance in the development of this pipeline:
 
 - Timo Sachsenberg
--
+- Wang Hong
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
