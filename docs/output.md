@@ -48,26 +48,26 @@ The output consists of the following folders (follow the links for a more detail
 results
 
 - spectra data:
-  - [thermorawfileparser/*.mzML](#spectra)
+    - [thermorawfileparser/*.mzML](#spectra)
 - identification results:
-  - [searchenginecomet/*.idXML](#identifications)
-  - [searchenginemsgf/*.idXML](#identifications)
+    - [searchenginecomet/*.idXML](#identifications)
+    - [searchenginemsgf/*.idXML](#identifications)
 - consensusID identifications:
-  - [consensusid/*.idXML](#identifications)
+    - [consensusid/*.idXML](#identifications)
 - pipeline information:
-  - [pipeline_info/...](#nextflow-pipeline-info)
+    - [pipeline_info/...](#nextflow-pipeline-info)
 - DDA-LFQ quantification results:
-  - [proteomicslfq/out.consensusXML](#consenusxml)
-  - [proteomicslfq/out_msstats.csv](#msstats-ready-quantity-table)
-  - [proteomicslfq/out_triqler.tsv](#triqler)
-  - [proteomicslfq/out.mzTab](#mztab)
+    - [proteomicslfq/out.consensusXML](#consenusxml)
+    - [proteomicslfq/out_msstats.csv](#msstats-ready-quantity-table)
+    - [proteomicslfq/out_triqler.tsv](#triqler)
+    - [proteomicslfq/out.mzTab](#mztab)
 - DDA-ISO quantification results:
-  - [proteinquantifier/out.mzTab](#mztab)
-  - [proteinquantifier/peptide_out.csv](#openms-formats)
-  - [proteinquantifier/protein_out.csv](#openms-formats)
-  - [msstatsconverter/out_msstats.csv](#msstats-ready-quantity-table)
+    - [proteinquantifier/out.mzTab](#mztab)
+    - [proteinquantifier/peptide_out.csv](#openms-formats)
+    - [proteinquantifier/protein_out.csv](#openms-formats)
+    - [msstatsconverter/out_msstats.csv](#msstats-ready-quantity-table)
 - DIA-LFQ quantification results:
-  - [convert2msstats/out_msstats.csv](#msstats-ready-quantity-table)
+    - [convert2msstats/out_msstats.csv](#msstats-ready-quantity-table)
 
 ## Output description
 
