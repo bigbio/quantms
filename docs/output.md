@@ -38,7 +38,17 @@ As an example, a rough visualization of the DDA identification subworkflow can b
 
 ## Output structure
 
-Output is by default written to the $NXF_WORKSPACE/results folder.
+Output is by default written to the $NXF_WORKSPACE/results folder. Each step of the workflow export different files and reports with the specific data, peptide identifications, protein quantifications, etc. Most of the pipeline outputs are [HUPO-PSI](https://www.psidev.info/) standard file formats:
+
+- [mzML](https://www.psidev.info/mzML): The mzML format is an open, XML-based format for mass spectrometer output files, developed with the full participation of vendors and researchers in order to create a single open format that would be supported by all software.
+- [mzTab](https://www.psidev.info/mztab>): mzTab is intended as a lightweight supplement to the existing standard mzML to store and represent peptide and protein and identifications together with experimental metadata and basic quantitative information.
+
+Additional workflow file formats are:
+
+- [idXML](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1IdXMLFile.html): An xml-based file format to store PSMs, peptide, and protein evidences.
+- [consensusXML](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/classOpenMS_1_1ConsensusXMLFile.html): An xml-based file format that extends idXML to include quantification data across multiple runs.
+- [msstats output](https://github.com/Vitek-Lab/MSstats): The Mstats tab-delimited file format contains the peptides quantified in all type of experiments (DIA-LFQ, DDA-LFQ, DDA-ISO) for downstream analysis.
+
 The output consists of the following folders (follow the links for a more detailed description):
 
 results
