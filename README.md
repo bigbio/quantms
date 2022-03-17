@@ -38,17 +38,20 @@ DDA-LFQ and DDA-ISO:
 4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
 
 DDA-LFQ:
+
 5. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
 6. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
 8. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
 DDA-ISO:
+
 5. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
 6. Protein inference [`ProteinInference`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html)
 7. Protein Quantification  [`ProteinQuantifier`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html)
 8. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
 DIA-LFQ:
+
 1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
 2. DIA-NN analysis [`dia-nn`](https://github.com/vdemichev/DiaNN/)
 3. Generation of output files (msstats)
