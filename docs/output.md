@@ -117,16 +117,12 @@ In addition to the consensusXML and idXML formats, OpenMS generates other format
 
 A complete [mzTab](https://github.com/HUPO-PSI/mzTab) file ready for submission to [PRIDE](https://www.ebi.ac.uk/pride/).
 
-### MSstats output
+#### MSstats output
 
 The `msstats` folder contains [MSstats](https://github.com/MeenaChoi/MSstats)' post-processed (e.g. imputation, outlier removal) quantities and statistical
 measures of significance for different tested contrasts of the given experimental design. It also includes basic plots of these results.
 The results will only be available if there was more than one condition.
 
-#### MSstats mzTab
+#### Triqler
 
-The [mzTab](https://github.com/HUPO-PSI/mzTab) from the proteomics_lfq folder with replaced normalized and imputed quantities from MSstats. This might contain less quantities since MSstats filters proteins with too many missing values.
-
-#### MSstats table
-
-See [MSstats vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/MSstats/inst/doc/MSstats.html).
+`Triqler` is a probabilistic model that propagates error information through all steps from MS1 feature to protein level, employing distributions in favor of point estimates, most notably for missing value imputation. The triqler output would be only available for DDA-LFQ data analysis.
