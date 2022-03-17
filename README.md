@@ -17,7 +17,7 @@
 ## Introduction
 
 <!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
-**nf-core/quantms** is a bioinformatics best-practice analysis pipeline for Quantitative Mass Spectrometry  (MS) nf-core workflow. Currently, the workflow support three major MS-based analytical methods: (i) Data dependant acquisition (DDA) label-free and Isobaric quantitation (e.g. TMT, iTRAQ); (ii) Data independent acquisition (DIA) label-free (Read more in [quantms](https://quantms.readthedocs.io/en/latest/)).
+**nf-core/quantms** is a bioinformatics best-practice analysis pipeline for Quantitative Mass Spectrometry (MS). Currently, the workflow supports three major MS-based analytical methods: (i) Data dependant acquisition (DDA) label-free and Isobaric quantitation (e.g. TMT, iTRAQ); (ii) Data independent acquisition (DIA) label-free quantification (for details see our in-depth documentation on [quantms](https://quantms.readthedocs.io/en/latest/)).
 
 <p align="center">
     <img src="docs/images/quantms.png" alt="nf-core/quantms workflow overview" width="60%">
