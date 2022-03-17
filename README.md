@@ -17,19 +17,42 @@
 ## Introduction
 
 <!-- TODO nf-core: Write a 1-2 sentence summary of what data the pipeline is for and what it does -->
-**nf-core/quantms** is a bioinformatics best-practice analysis pipeline for Quantitative Mass Spectrometry nf-core workflow.
+**nf-core/quantms** is a bioinformatics best-practice analysis pipeline for Quantitative Mass Spectrometry  (MS) nf-core workflow. Currently, the workflow support three major MS-based analytical methods: (i) Data dependant acquisition (DDA) label-free and Isobaric quantitation (e.g. TMT, iTRAQ); (ii) Data independent acquisition (DIA) label-free (Read more in [quantms](https://quantms.readthedocs.io/en/latest/)).
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
 <!-- TODO nf-core: Add full-sized test dataset and amend the paragraph below if applicable -->
-On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/quantms/results).
+On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/quantms/results). The automatic in the CI/CD evaluates different workflows, including the peptide identification, quantification for LFQ, LFQ-DIA and TMT test datasets.
 
 ## Pipeline summary
 
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
-2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+The quantms allows uses to perform analysis in three main type of analytical MS-based quantitative methods: DDA-LFQ, DAA-ISO, DIA-LFQ. Each of these workflows share some processes but also includes their own steps. In summary:
+
+DDA-LFQ and DDA-ISO:
+
+1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
+3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
+4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
+
+DDA-LFQ:
+5. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+6. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+8. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+
+DDA-ISO:
+5. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
+6. Protein inference [`ProteinInference`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html)
+7. Protein Quantification  [`ProteinQuantifier`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html)
+8. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+
+DIA-LFQ:
+1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. DIA-NN analysis [`dia-nn`](https://github.com/vdemichev/DiaNN/)
+3. Generation of output files (msstats)
+4. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
 ## Quick Start
 
@@ -40,7 +63,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
     ```console
-    nextflow run nf-core/quantms -profile test,YOURPROFILE
+    nextflow run nf-core/quantms -profile test,YOURPROFILE --input project.sdrf.tsv --database protein.fasta
     ```
 
     Note that some form of configuration will be needed so that Nextflow knows how to fetch the required software. This is usually done in the form of a config profile (`YOURPROFILE` in the example command above). You can chain multiple config profiles in a comma-separated string.
@@ -60,13 +83,16 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ## Documentation
 
-The nf-core/quantms pipeline comes with documentation about the pipeline [usage](https://nf-co.re/quantms/usage), [parameters](https://nf-co.re/quantms/parameters) and [output](https://nf-co.re/quantms/output).
+The nf-core/quantms pipeline comes with documentation [full documentation](https://quantms.readthedocs.io/en/latest/) including examples, benchmarks, and detail explanation about the data analysis of proteomics data using quantms. In addition, quickstart documentation of the pipeline can be found in: [usage](https://nf-co.re/quantms/usage), [parameters](https://nf-co.re/quantms/parameters) and [output](https://nf-co.re/quantms/output).
 
 ## Credits
 
-nf-core/quantms was originally written by Yasset Perez-Riverol.
+nf-core/quantms was originally written by: Chengxin Dai, Julianus Pfeuffer and Yasset Perez-Riverol.
 
 We thank the following people for their extensive assistance in the development of this pipeline:
+
+- Timo Sachsenberg
+-
 
 <!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
@@ -74,7 +100,7 @@ We thank the following people for their extensive assistance in the development 
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
-For further information or help, don't hesitate to get in touch on the [Slack `#quantms` channel](https://nfcore.slack.com/channels/quantms) (you can join with [this invite](https://nf-co.re/join/slack)).
+For further information or help, don't hesitate to get in touch on the [Slack `#quantms` channel](https://nfcore.slack.com/channels/quantms) (you can join with [this invite](https://nf-co.re/join/slack)). In addition, users can get in touch using our [discussion forum](https://github.com/bigbio/quantms/discussions)
 
 ## Citations
 

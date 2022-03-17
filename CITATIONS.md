@@ -10,10 +10,23 @@
 
 ## Pipeline tools
 
-* [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
+* [thermorawfileparser](https://pubmed.ncbi.nlm.nih.gov/31755270/)
+    > Hulstaert N, Shofstahl J, Sachsenberg T, Walzer M, Barsnes H, Martens L, Perez-Riverol Y. ThermoRawFileParser: Modular, Scalable, and Cross-Platform RAW File Conversion. J Proteome Res. 2020 Jan 3;19(1):537-542. doi: 10.1021/acs.jproteome.9b00328. Epub 2019 Dec 6. PMID: 31755270; PMCID: PMC7116465.
 
-* [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
-    > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+* [OpenMS](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+    > Röst HL., Sachsenberg T., Aiche S., Bielow C., Weisser H., Aicheler F., Andreotti S., Ehrlich HC., Gutenbrunner P., Kenar E., Liang X., Nahnsen S., Nilse L., Pfeuffer J., Rosenberger G., Rurik M., Schmitt U., Veit J., Walzer M., Wojnar D., Wolski WE., Schilling O., Choudhary JS, Malmström L., Aebersold R., Reinert K., Kohlbacher O. (2016). OpenMS: a flexible open-source software platform for mass spectrometry data analysis. Nature methods, 13(9), 741–748. doi: 10.1038/nmeth.3959. PubMed PMID: 27575624; PubMed Central PMCID: PMC5617107.
+
+* [DIA-NN](https://pubmed.ncbi.nlm.nih.gov/31768060/)
+    > Demichev V, Messner CB, Vernardis SI, Lilley KS, Ralser M. DIA-NN: neural networks and interference correction enable deep proteome coverage in high throughput. Nat Methods. 2020 Jan;17(1):41-44. doi: 10.1038/s41592-019-0638-x. Epub 2019 Nov 25. PMID: 31768060; PMCID: PMC6949130.
+
+* [MSstats](https://www.ncbi.nlm.nih.gov/pubmed/24794931/)
+    > Choi M., Chang CY., Clough T., Broudy D., Killeen T., MacLean B., Vitek O. (2014). MSstats: an R package for statistical analysis of quantitative mass spectrometry-based proteomic experiments. Bioinformatics (Oxford, England), 30(17), 2524–2526. doi: 10.1093/bioinformatics/btu305. PubMed PMID: 24794931.
+
+* [Comet](https://www.ncbi.nlm.nih.gov/pubmed/23148064/)
+    > Eng JK., Jahan TA., Hoopmann MR. (2013). Comet: an open-source MS/MS sequence database search tool. Proteomics, 13(1), 22–24. doi: 10.1002/pmic.201200439. PubMed PMID: 23148064
+
+* [MS-GF+](https://www.ncbi.nlm.nih.gov/pubmed/25358478/)
+    > Kim S., Pevzner PA. (2014). MS-GF+ makes progress towards a universal database search tool for proteomics. Nature communications, 5, 5277. doi: 10.1038/ncomms6277. PubMed PMID: 25358478; PubMed Central PMCID: PMC5036525
 
 ## Software packaging/containerisation tools
 
