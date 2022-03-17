@@ -42,7 +42,8 @@ DDA-LFQ:
 4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
 5. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
 6. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
-7. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+7. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+8. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
 
 DDA-ISO:
 
