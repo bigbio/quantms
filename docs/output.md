@@ -32,9 +32,9 @@ For DIA-LFQ experiments, the workflows is different:
 3. Generation of output files
 4. Generation of QC reports using pMultiQC a library for QC proteomics data analysis.
 
-A rough visualization of the LFQ pipeline follows:
+As an example, a rough visualization of the DDA identification subworkflow can be seen here:
 
-![quantms LFQ workflow](./images/quantms_lfq.svg)
+![quantms LFQ workflow](./images/id-dda-pipeline.png)
 
 ## Output structure
 
