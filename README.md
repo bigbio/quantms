@@ -53,7 +53,8 @@ DDA-ISO:
 5. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
 6. Protein inference [`ProteinInference`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html)
 7. Protein Quantification  [`ProteinQuantifier`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html)
-8. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+8. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+8. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
 
 DIA-LFQ:
 
