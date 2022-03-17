@@ -116,4 +116,3 @@ The mzTab is exported for the three workflows DDA-LFQ, DDA-ISO and DIA-LFQ. A co
 Msstats output is generated for the three pipelines DDA-LFQ, DDA-ISO and DIA-LFQ. A simple tsv file ready to be read by the OpenMStoMSstats function of the MSstats R package. It should hold
 the same quantities as the consensusXML but rearranged in a "long" table format with additional information
 about the experimental design used by MSstats.
-
