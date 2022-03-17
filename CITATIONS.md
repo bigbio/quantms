@@ -31,6 +31,16 @@
 * [MS-GF+](https://www.ncbi.nlm.nih.gov/pubmed/25358478/)
     > Kim S., Pevzner PA. (2014). MS-GF+ makes progress towards a universal database search tool for proteomics. Nature communications, 5, 5277. doi: 10.1038/ncomms6277. PubMed PMID: 25358478; PubMed Central PMCID: PMC5036525
 
+* [Epifany](https://pubmed.ncbi.nlm.nih.gov/31975601/)
+    > Pfeuffer J, Sachsenberg T, Dijkstra TMH, Serang O, Reinert K, Kohlbacher O. EPIFANY: A Method for Efficient High-Confidence Protein Inference. J Proteome Res. 2020 Mar 6;19(3):1060-1072. doi: 10.1021/acs.jproteome.9b00566. Epub 2020 Feb 13. PMID: 31975601; PMCID: PMC7583457.
+
+* [Triqler](https://pubmed.ncbi.nlm.nih.gov/30482846/)
+    > The M, Käll L. Integrated Identification and Quantification Error Probabilities for Shotgun Proteomics. Mol Cell Proteomics. 2019 Mar;18(3):561-570. doi: 10.1074/mcp.RA118.001018. Epub 2018 Nov 27. PMID: 30482846; PMCID: PMC6398204.
+
+* [luciphor](https://pubmed.ncbi.nlm.nih.gov/23918812/)
+    > Fermin D, Walmsley SJ, Gingras AC, Choi H, Nesvizhskii AI. LuciPHOr: algorithm for phosphorylation site localization with false localization rate estimation using modified target-decoy approach. Mol Cell Proteomics. 2013 Nov;12(11):3409-19. doi: 10.1074/mcp.M113.028928. Epub 2013 Aug 5. PMID: 23918812; PMCID: PMC3820951.
+
+
 ## Software packaging/containerisation tools
 
 * [Anaconda](https://anaconda.com)
