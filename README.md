@@ -30,21 +30,22 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 The quantms allows uses to perform analysis in three main type of analytical MS-based quantitative methods: DDA-LFQ, DAA-ISO, DIA-LFQ. Each of these workflows share some processes but also includes their own steps. In summary:
 
-DDA-LFQ and DDA-ISO:
+DDA-LFQ:
 
 1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
 2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
 3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
 4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
-
-DDA-LFQ:
-
-5. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
-6. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+6. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+7. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
 8. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
 DDA-ISO:
 
+1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
+3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
+4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
 5. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
 6. Protein inference [`ProteinInference`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html)
 7. Protein Quantification  [`ProteinQuantifier`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html)
