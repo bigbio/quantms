@@ -91,7 +91,7 @@ DIA-LFQ:
 
 ## Documentation
 
-The nf-core/quantms pipeline comes with documentation [full documentation](https://quantms.readthedocs.io/en/latest/) including examples, benchmarks, and detail explanation about the data analysis of proteomics data using quantms. In addition, quickstart documentation of the pipeline can be found in: [usage](https://nf-co.re/quantms/usage), [parameters](https://nf-co.re/quantms/parameters) and [output](https://nf-co.re/quantms/output).
+The nf-core/quantms pipeline comes with a stand-alone [full documentation](https://quantms.readthedocs.io/en/latest/) including examples, benchmarks, and detailed explanation about the data analysis of proteomics data using quantms. In addition, quickstart documentation of the pipeline can be found in: [usage](https://nf-co.re/quantms/usage), [parameters](https://nf-co.re/quantms/parameters) and [output](https://nf-co.re/quantms/output).
 
 ## Credits
 
