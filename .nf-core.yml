@@ -4,4 +4,3 @@ lint:
     - assets/multiqc_config.yaml
   files_exist:
     - conf/igenomes.config
-
