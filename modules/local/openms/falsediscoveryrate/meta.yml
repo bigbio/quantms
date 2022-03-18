@@ -1,11 +1,11 @@
 name: falsediscoveryrate
-description:  Estimates the false discovery rate on peptide and protein level using decoy searches.
+description: Estimates the false discovery rate on peptide and protein level using decoy searches.
 keywords:
     - FDR
     - decoy
     - OpenMS
 tools:
-    - FalseDiscoveryRate :
+    - FalseDiscoveryRate:
         description: |
           Tool to estimate the false discovery rate on peptide and protein level.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html

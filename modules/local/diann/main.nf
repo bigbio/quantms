@@ -6,11 +6,9 @@ process DIANN {
     }
 
     //singularity image ?
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "ypriverol/diann:1.8.0"
-    } else {
-        container "ypriverol/diann:1.8.0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.0_cv1/diann_v1.8.0_cv1.img' :
+        'biocontainers/diann:v1.8.0_cv1' }"
 
     input:
     file 'mzMLs/*'
@@ -43,6 +41,7 @@ process DIANN {
             ${il_eq} \\
             ${mbr} \\
             --verbose $params.diann_debug \\
+            > diann.log
 
 
     cat <<-END_VERSIONS > versions.yml

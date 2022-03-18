@@ -5,9 +5,6 @@ on:
     branches:
       - dev
   pull_request:
-    branches:
-      - dev
-      - master
   release:
     types: [published]
 
@@ -17,13 +14,10 @@ env:
 
 jobs:
   test:
-    name: Run workflow tests
+    name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/quantms') }}
     runs-on: ubuntu-latest
-    env:
-      NXF_VER: ${{ matrix.nxf_ver }}
-      NXF_ANSI_LOG: false
     strategy:
       matrix:
         # Nextflow versions

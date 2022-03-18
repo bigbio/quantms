@@ -1,5 +1,5 @@
 name: extracpsmfeature
-description:  Computes extra features for each input PSM.
+description: Computes extra features for each input PSM.
 keywords:
     - PSM
     - feature

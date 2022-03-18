@@ -10,7 +10,7 @@
    height="412.96832mm"
    viewBox="0 0 1027.559 1463.2735"
    sodipodi:docname="quantms.svg"
-   inkscape:export-filename="sarek_workflow.png"
+   inkscape:export-filename="/Users/yperez/IdeaProjects/github-repo/BDP/quantms/docs/images/quantms.png"
    inkscape:export-xdpi="90.019539"
    inkscape:export-ydpi="90.019539"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -2147,7 +2147,7 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="0.5"
-     inkscape:cx="-231"
+     inkscape:cx="-602"
      inkscape:cy="743"
      inkscape:window-x="1280"
      inkscape:window-y="23"
@@ -3017,7 +3017,7 @@
    inkscape:connector-curvature="0"
    sodipodi:nodetypes="cc" /><path
    style="display:inline;fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.93517;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-   d="M 2082.1495,1901.0969 V 1833.408"
+   d="M 2095.6495,1899.5969 V 1831.908"
    id="path4994-0"
    inkscape:connector-type="polyline"
    inkscape:connector-curvature="0"
@@ -3461,15 +3461,15 @@
      y="-1867.1141">MS-GF+, Comet, Percolator, ConsesusID</tspan></text><text
    xml:space="preserve"
    style="font-weight:bold;font-size:22px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.75"
-   x="2164.2141"
-   y="-1646.244"
+   x="2203.2141"
+   y="-1643.244"
    id="text100969-2"
    transform="scale(1,-1)"><tspan
      sodipodi:role="line"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.75"
-     x="2164.2141"
-     y="-1646.244"
-     id="tspan119622">OpenSwath</tspan></text><text
+     x="2203.2141"
+     y="-1643.244"
+     id="tspan119622">DIA-NN</tspan></text><text
    xml:space="preserve"
    style="font-weight:bold;font-size:22px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.75"
    x="1591.7714"
@@ -3509,15 +3509,15 @@
      id="tspan119622-2">inference,mbr,quantification</tspan></text><text
    xml:space="preserve"
    style="font-weight:bold;font-size:22px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';stroke-width:0.75"
-   x="2155.2141"
-   y="-1866.744"
+   x="2200.2141"
+   y="-1863.744"
    id="text100969-0"
    transform="scale(1,-1)"><tspan
      sodipodi:role="line"
      id="tspan100967-3"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:sans-serif;-inkscape-font-specification:sans-serif;stroke-width:0.75"
-     x="2155.2141"
-     y="-1866.744">DIA-Umpire</tspan></text></g><style
+     x="2200.2141"
+     y="-1863.744">DIA-NN</tspan></text></g><style
      id="style4691"
      type="text/css">
 	.st0{fill:#E01E5A;}

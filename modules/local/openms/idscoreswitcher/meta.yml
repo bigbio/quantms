@@ -1,11 +1,11 @@
 name: idscoreswitcher
-description:  Switches between different scores of peptide hits (PSMs) or protein hits in identification data.
+description: Switches between different scores of peptide hits (PSMs) or protein hits in identification data.
 keywords:
     - Switches
     - Score
     - OpenMS
 tools:
-    - IDScoreSwitcher :
+    - IDScoreSwitcher:
         description: |
           Switches between different scores of peptide or protein hits in identification data.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html

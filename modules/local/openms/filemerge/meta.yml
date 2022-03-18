@@ -1,11 +1,11 @@
 name: filemerge
-description:  Merges several MS files into one file.
+description: Merges several MS files into one file.
 keywords:
     - merge
     - MS
     - OpenMS
 tools:
-    - FileMerger :
+    - FileMerger:
         description: |
           Merges several MS files into one file.
         homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FileMerger.html
