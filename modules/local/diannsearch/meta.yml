@@ -1,4 +1,4 @@
-name: diann
+name: diannsearch
 description: A module for DIA library free analysis based on DIA-NN.
 keywords:
     - DIA-NN
@@ -11,9 +11,9 @@ tools:
         homepage: https://github.com/vdemichev/DiaNN
         documentation: https://github.com/vdemichev/DiaNN
 input:
-    - fasta:
+    - lib:
         type: file
-        description: FASTA sequence databases
+        description: spectra library file
     - mzMLs:
         type: dir
         description: mzML files directory

@@ -39,6 +39,9 @@ def generate_cfg(ctx, unimod_csv, enzyme, fix_mod, var_mod, precursor_tolerence,
         f.write("--dir ./mzMLs --cut " + cut + diann_fix_ptm + diann_var_ptm + mass_acc + mass_acc_ms1 +
                 " --fasta-search --matrices --report-lib-info")
 
+    with open("library_config.cfg", "w") as f:
+        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
+
 def convert_mod(unimod_csv, fix_mod, var_mod):
     pattern = re.compile("\((.*?)\)")
     var_ptm = []

@@ -16,7 +16,8 @@ process GENERATE_DIANN_CFG {
 
     output:
     path("*.mzML"), includeInputs: true, emit: mzmls_for_diann
-    path "*.cfg", emit: diann_cfg
+    path "diann_config.cfg", emit: search_cfg
+    path "library_config.cfg", emit: library_config
     path "versions.yml", emit: version
 
 
