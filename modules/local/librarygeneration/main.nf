@@ -23,7 +23,7 @@ process LIBRARYGENERATION {
     def args = task.ext.args ?: ''
 
     min_pr_mz = params.min_pr_mz ? "--min-pr-mz $params.min_pr_mz":""
-    max_pr_mz = params.min_pr_mz ? "--min-pr-mz $params.min_pr_mz":""
+    max_pr_mz = params.max_pr_mz ? "--max-pr-mz $params.max_pr_mz":""
     min_fr_mz = params.min_fr_mz ? "--min_fr_mz $params.min_fr_mz":""
     max_fr_mz = params.max_fr_mz ? "--max_fr_mz $params.max_fr_mz":""
 
