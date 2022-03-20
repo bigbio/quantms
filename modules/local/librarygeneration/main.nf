@@ -11,22 +11,33 @@ process LIBRARYGENERATION {
         'biocontainers/diann:v1.8.0_cv1' }"
 
     input:
-    file(fasta)
+    tuple file(mzml), file(fasta)
     file(library_config)
 
     output:
-    path "lib.predicted.speclib", emit: lib_splib
+    path "*_lib.tsv", emit: lib_splib
     path "versions.yml", emit: version
     file "*"
 
     script:
     def args = task.ext.args ?: ''
 
+    min_pr_mz = params.min_pr_mz ? "--min-pr-mz $params.min_pr_mz":""
+    max_pr_mz = params.min_pr_mz ? "--min-pr-mz $params.min_pr_mz":""
+    min_fr_mz = params.min_fr_mz ? "--min_fr_mz $params.min_fr_mz":""
+    max_fr_mz = params.max_fr_mz ? "--max_fr_mz $params.max_fr_mz":""
+
     """
     diann   `cat library_config.cfg` \\
             --fasta ${fasta} \\
             --fasta-search \\
+            --f ${mzml} \\
+            --out-lib ${mzml.baseName}_lib.tsv \\
             --gen-spec-lib \\
+            ${min_pr_mz} \\
+            ${max_pr_mz} \\
+            ${min_fr_mz} \\
+            ${max_fr_mz} \\
             --missed-cleavages $params.allowed_missed_cleavages \\
             --min-pep-len $params.min_peptide_length \\
             --max-pep-len $params.max_peptide_length \\

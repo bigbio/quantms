@@ -17,6 +17,9 @@ input:
     - mzMLs:
         type: dir
         description: mzML files directory
+    - searchdb:
+        type: file
+        description: fasta sequence file
     - cfg:
         type: dir
         description: specifies a file to load options/commands from.

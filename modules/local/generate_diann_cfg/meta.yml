@@ -16,17 +16,15 @@ input:
     - mzmls:
         type: dir
         description: mzML files directory
-    - exp_design:
-        type: file
-        description: An experimental design file including Sample and replicates column et al.
 output:
-    - mzmls_for_diann:
-        type: dir
-        description: mzML files directory
-    - diann_cfg:
+    - library_config:
         type: file
-        description: DIA-NN configure file
-        pattern: "*.cfg"
+        description: DIA-NN configure file for library generation
+        pattern: "library_config.cfg"
+    - search_cfg:
+        type: file
+        description: DIA-NN configure file for search and quantification
+        pattern: "diann_config.cfg"
     - version:
         type: file
         description: File containing software version

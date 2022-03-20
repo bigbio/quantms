@@ -11,6 +11,9 @@ tools:
         homepage: https://github.com/vdemichev/DiaNN
         documentation: https://github.com/vdemichev/DiaNN
 input:
+    - mzml:
+        type: file
+        description: mzML file for spectra
     - fasta:
         type: file
         description: FASTA sequence databases
@@ -21,7 +24,7 @@ output:
     - lib_splib:
         type: file
         description: spectra library.
-        pattern: "report.tsv"
+        pattern: "*_lib.tsv"
     - log:
         type: file
         description: DIA-NN log file

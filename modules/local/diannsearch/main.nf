@@ -13,6 +13,7 @@ process DIANNSEARCH {
     input:
     file 'mzMLs/*'
     file(lib_tsv)
+    file(searchdb)
     file(diann_config)
 
     output:
@@ -26,9 +27,20 @@ process DIANNSEARCH {
     def args = task.ext.args ?: ''
     mbr = params.targeted_only ? "" : "--reanalyse"
 
+    min_pr_mz = params.min_pr_mz ? "--min-pr-mz params.min_pr_mz":""
+    max_pr_mz = params.min_pr_mz ? "--min-pr-mz params.min_pr_mz":""
+    min_fr_mz = params.min_fr_mz ? "--min_fr_mz params.min_fr_mz":""
+    max_fr_mz = params.max_fr_mz ? "--max_fr_mz params.max_fr_mz":""
+
     """
     diann   `cat diann_config.cfg` \\
-            --lib ${lib_tsv} \\
+            --lib ${(lib_tsv as List).join('--lib ')} \\
+            --relaxed-prot-inf \\
+            --fasta ${searchdb} \\
+            ${min_pr_mz} \\
+            ${max_pr_mz} \\
+            ${min_fr_mz} \\
+            ${max_fr_mz} \\
             --threads ${task.cpus} \\
             --missed-cleavages $params.allowed_missed_cleavages \\
             --min-pep-len $params.min_peptide_length \\
@@ -38,6 +50,7 @@ process DIANNSEARCH {
             --var-mods $params.max_mods \\
             --matrix-spec-q $params.matrix_spec_q \\
             ${mbr} \\
+            --reannotate \\
             --verbose $params.diann_debug \\
             > diann.log
 

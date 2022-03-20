@@ -15,7 +15,6 @@ process GENERATE_DIANN_CFG {
     path(mzmls)
 
     output:
-    path("*.mzML"), includeInputs: true, emit: mzmls_for_diann
     path "diann_config.cfg", emit: search_cfg
     path "library_config.cfg", emit: library_config
     path "versions.yml", emit: version
@@ -26,14 +25,13 @@ process GENERATE_DIANN_CFG {
 
     """
     prepare_diann_parameters.py generate \\
-        --unimod_csv ${projectDir}/assets/unimod.csv \\
-        --enzyme "${meta[0].enzyme}" \\
-        --fix_mod "${meta[0].fixedmodifications}" \\
-        --var_mod "${meta[0].variablemodifications}" \\
-        --precursor_tolerence ${meta[0].precursormasstolerance} \\
-        --precursor_tolerence_unit ${meta[0].precursormasstoleranceunit} \\
-        --fragment_tolerence ${meta[0].fragmentmasstolerance} \\
-        --fragment_tolerence_unit ${meta[0].fragmentmasstoleranceunit} \\
+        --enzyme "${meta.enzyme}" \\
+        --fix_mod "${meta.fixedmodifications}" \\
+        --var_mod "${meta.variablemodifications}" \\
+        --precursor_tolerence ${meta.precursormasstolerance} \\
+        --precursor_tolerence_unit ${meta.precursormasstoleranceunit} \\
+        --fragment_tolerence ${meta.fragmentmasstolerance} \\
+        --fragment_tolerence_unit ${meta.fragmentmasstoleranceunit} \\
         > GENERATE_DIANN_CFG.log
 
     cat <<-END_VERSIONS > versions.yml
