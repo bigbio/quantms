@@ -1,5 +1,5 @@
-name: diann
-description: A module for DIA library free analysis based on DIA-NN.
+name: librarygeneration
+description: A module for library generation based on DIA-NN.
 keywords:
     - DIA-NN
     - library free
@@ -11,24 +11,20 @@ tools:
         homepage: https://github.com/vdemichev/DiaNN
         documentation: https://github.com/vdemichev/DiaNN
 input:
+    - mzml:
+        type: file
+        description: mzML file for spectra
     - fasta:
         type: file
         description: FASTA sequence databases
-    - mzMLs:
-        type: dir
-        description: mzML files directory
     - cfg:
-        type: dir
+        type: file
         description: specifies a file to load options/commands from.
 output:
-    - report:
+    - lib_splib:
         type: file
-        description: Main report file,a text table containing precursor and protein IDs, as well as plenty of associated information. Most column names are self-explanatory.
-        pattern: "report.tsv"
-    - report_stat:
-        type: file
-        description: Contains a number of QC metrics which can be used for data filtering, e.g. to exclude failed runs, or as a readout for method optimization.
-        pattern: "report.stats.tsv"
+        description: spectra library.
+        pattern: "*_lib.tsv"
     - log:
         type: file
         description: DIA-NN log file

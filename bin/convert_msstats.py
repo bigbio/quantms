@@ -4,6 +4,7 @@ import pandas as pd
 import click
 import os
 import re
+from sdrf_pipelines.openms.unimod import UnimodDatabase
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -13,11 +14,10 @@ def cli():
 @click.command('convert_msstats')
 @click.option("--diann_report", "-r",)
 @click.option("--exp_design", "-e")
-@click.option("--unimod_csv", "-u")
 @click.pass_context
-def convert_msstats(ctx, diann_report, exp_design, unimod_csv):
+def convert_msstats(ctx, diann_report, exp_design):
     report = pd.read_csv(diann_report, sep = "\t", header = 0, dtype = 'str')
-    unimod_data = pd.read_csv(unimod_csv, sep = ",", header = 0, dtype = 'str')
+    unimod_data = UnimodDatabase()
     with open(exp_design, 'r') as f:
         data = f.readlines()
         empty_row = data.index('\n')
@@ -59,7 +59,7 @@ def convert_modification(peptide, unimod_data):
     pattern = re.compile(r"\((.*?)\)")
     origianl_mods = re.findall(pattern, peptide)
     for mod in set(origianl_mods):
-        name = unimod_data[unimod_data["id"] == mod]["name"].values[0]
+        name = unimod_data.get_by_accession(mod.upper()).get_name()
         peptide = peptide.replace(mod, name)
     if peptide.startswith("("):
         peptide = peptide + "."
