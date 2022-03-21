@@ -24,7 +24,6 @@ process CONVERT2MSSTATS {
     convert_msstats.py convert_msstats \\
         --diann_report ${report} \\
         --exp_design ${exp_design} \\
-        --unimod_csv ${projectDir}/assets/unimod.csv \\
         > trans_to_msstats.log
 
     cat <<-END_VERSIONS > versions.yml

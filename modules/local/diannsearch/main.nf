@@ -1,4 +1,4 @@
-process DIANN {
+process DIANNSEARCH {
     label 'process_high'
 
     if (params.enable_conda) {
@@ -12,7 +12,8 @@ process DIANN {
 
     input:
     file 'mzMLs/*'
-    file(fasta)
+    file(lib_tsv)
+    file(searchdb)
     file(diann_config)
 
     output:
@@ -24,12 +25,23 @@ process DIANN {
 
     script:
     def args = task.ext.args ?: ''
-    il_eq = params.IL_equivalent ? "--il-eq" : ""
     mbr = params.targeted_only ? "" : "--reanalyse"
+    normalize = params.diann_normalize ? "" : "--no-norm"
+
+    min_pr_mz = params.min_pr_mz ? "--min-pr-mz params.min_pr_mz":""
+    max_pr_mz = params.max_pr_mz ? "--max-pr-mz params.max_pr_mz":""
+    min_fr_mz = params.min_fr_mz ? "--min_fr_mz params.min_fr_mz":""
+    max_fr_mz = params.max_fr_mz ? "--max_fr_mz params.max_fr_mz":""
 
     """
     diann   `cat diann_config.cfg` \\
-            --fasta ${fasta} \\
+            --lib ${(lib_tsv as List).join('--lib ')} \\
+            --relaxed-prot-inf \\
+            --fasta ${searchdb} \\
+            ${min_pr_mz} \\
+            ${max_pr_mz} \\
+            ${min_fr_mz} \\
+            ${max_fr_mz} \\
             --threads ${task.cpus} \\
             --missed-cleavages $params.allowed_missed_cleavages \\
             --min-pep-len $params.min_peptide_length \\
@@ -38,8 +50,9 @@ process DIANN {
             --max-pr-charge $params.max_precursor_charge \\
             --var-mods $params.max_mods \\
             --matrix-spec-q $params.matrix_spec_q \\
-            ${il_eq} \\
             ${mbr} \\
+            --reannotate \\
+            ${normalize} \\
             --verbose $params.diann_debug \\
             > diann.log
 

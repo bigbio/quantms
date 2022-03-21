@@ -7,9 +7,10 @@
 //
 // MODULES: Local to the pipeline
 //
-include { DIANN } from '../modules/local/diann/main'
+include { DIANNSEARCH } from '../modules/local/diannsearch/main'
 include { GENERATE_DIANN_CFG  as DIANNCFG } from '../modules/local/generate_diann_cfg/main'
 include { CONVERT2MSSTATS } from '../modules/local/convert2msstats/main'
+include { LIBRARYGENERATION } from '../modules/local/librarygeneration/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -33,6 +34,7 @@ workflow DIA {
     main:
 
     ch_software_versions = Channel.empty()
+    Channel.fromPath(params.database).set{ searchdb }
 
     file_preparation_results.multiMap {
                                 meta: it[0]
@@ -40,13 +42,15 @@ workflow DIA {
                                 }
                             .set { result }
 
-    DIANNCFG(result.meta.collect(), result.mzml.collect())
+    DIANNCFG(result.meta, result.mzml)
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
-    DIANN(DIANNCFG.out.mzmls_for_diann.collect(), Channel.fromPath(params.database), DIANNCFG.out.diann_cfg)
-    ch_software_versions = ch_software_versions.mix(DIANN.out.version.ifEmpty(null))
+    LIBRARYGENERATION(result.mzml.combine(searchdb), DIANNCFG.out.library_config)
 
-    CONVERT2MSSTATS(DIANN.out.report, ch_expdesign)
+    DIANNSEARCH(result.mzml.collect(), LIBRARYGENERATION.out.lib_splib.collect(), searchdb, DIANNCFG.out.search_cfg.distinct())
+    ch_software_versions = ch_software_versions.mix(DIANNSEARCH.out.version.ifEmpty(null))
+
+    CONVERT2MSSTATS(DIANNSEARCH.out.report, ch_expdesign)
     versions        = ch_software_versions
 
     emit:

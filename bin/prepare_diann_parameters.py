@@ -2,7 +2,7 @@
 
 import re
 import click
-import pandas as pd
+from sdrf_pipelines.openms.unimod import UnimodDatabase
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 @click.group(context_settings=CONTEXT_SETTINGS)
@@ -10,7 +10,6 @@ def cli():
     pass
 
 @click.command('generate')
-@click.option("--unimod_csv", "-u",help="")
 @click.option("--enzyme", "-e", help="")
 @click.option("--fix_mod", "-f", help="")
 @click.option("--var_mod", "-v", help="")
@@ -19,9 +18,10 @@ def cli():
 @click.option("--fragment_tolerence", "-fr", help="")
 @click.option("--fragment_tolerence_unit", "-fu", help="")
 @click.pass_context
-def generate_cfg(ctx, unimod_csv, enzyme, fix_mod, var_mod, precursor_tolerence, precursor_tolerence_unit, fragment_tolerence, fragment_tolerence_unit):
+def generate_cfg(ctx, enzyme, fix_mod, var_mod, precursor_tolerence, precursor_tolerence_unit, fragment_tolerence, fragment_tolerence_unit):
     cut = enzyme_cut(enzyme)
-    fix_ptm, var_ptm = convert_mod(unimod_csv, fix_mod, var_mod)
+    unimod_database = UnimodDatabase()
+    fix_ptm, var_ptm = convert_mod(unimod_database, fix_mod, var_mod)
     mass_acc, mass_acc_ms1 = mass_tolerence(precursor_tolerence, precursor_tolerence_unit, fragment_tolerence, fragment_tolerence_unit)
     mass_acc = " --mass-acc " + str(mass_acc)
     mass_acc_ms1 = " --mass-acc-ms1 " + str(mass_acc_ms1)
@@ -37,16 +37,27 @@ def generate_cfg(ctx, unimod_csv, enzyme, fix_mod, var_mod, precursor_tolerence,
 
     with open("diann_config.cfg", "w") as f:
         f.write("--dir ./mzMLs --cut " + cut + diann_fix_ptm + diann_var_ptm + mass_acc + mass_acc_ms1 +
-                " --fasta-search --matrices --report-lib-info")
+                " --matrices --report-lib-info")
 
-def convert_mod(unimod_csv, fix_mod, var_mod):
+    with open("library_config.cfg", "w") as f:
+        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
+
+def convert_mod(unimod_database, fix_mod, var_mod):
     pattern = re.compile("\((.*?)\)")
     var_ptm = []
     fix_ptm = []
-    unimod = pd.read_csv(unimod_csv, header=0, sep=",")
+
     if fix_mod != "":
         for mod in fix_mod.split(","):
-            diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
+            tag = 0
+            for m in unimod_database.modifications:
+                if m.get_name() == mod.split(" ")[0]:
+                    diann_mod = m.get_name() + "," + str(m._delta_mono_mass)
+                    tag = 1
+                    break
+            if tag == 0:
+                print("Warning: Currently only supported unimod modifications for DIA pipeline. Skipped: " + mod)
+                continue
             site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
             if site == "Protein N-term":
                 site = "*n"
@@ -60,7 +71,15 @@ def convert_mod(unimod_csv, fix_mod, var_mod):
 
     if var_mod != "":
         for mod in var_mod.split(","):
-            diann_mod = unimod[unimod['name'] == mod.split(" ")[0]]["params"].values[0]
+            tag = 0
+            for m in unimod_database.modifications:
+                if m.get_name() == mod.split(" ")[0]:
+                    diann_mod = m.get_name() + "," + str(m._delta_mono_mass)
+                    tag = 1
+                    break
+            if tag == 0:
+                print("Warning: Currently only supported unimod modifications for DIA pipeline. Skipped: " + mod)
+                continue
             site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
             if site == "Protein N-term":
                 site = "*n"

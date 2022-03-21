@@ -886,6 +886,26 @@
                     "default": 0.01,
                     "fa_icon": "fas fa-filter"
                 },
+                "min_pr_mz": {
+                    "type": "number",
+                    "description": "The minimum precursor m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
+                "max_pr_mz": {
+                    "type": "number",
+                    "description": "The maximum precursor m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
+                "min_fr_mz": {
+                    "type": "number",
+                    "description": "The minimum fragment m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
+                "max_fr_mz": {
+                    "type": "number",
+                    "description": "The maximum fragment m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
                 "diann_debug": {
                     "type": "integer",
                     "description": "Debug level",
@@ -894,6 +914,12 @@
                     "enum": [
                         0, 1, 2, 3, 4
                     ]
+                },
+                "diann_normalize": {
+                    "type": "boolean",
+                    "description": "Enable cross-run normalisation between runs by diann.",
+                    "default": true,
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fas fa-braille"
