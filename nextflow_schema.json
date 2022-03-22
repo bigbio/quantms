@@ -914,6 +914,12 @@
                     "enum": [
                         0, 1, 2, 3, 4
                     ]
+                },
+                "diann_normalize": {
+                    "type": "boolean",
+                    "description": "Enable cross-run normalisation between runs by diann.",
+                    "default": true,
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fas fa-braille"
