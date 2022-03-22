@@ -11,19 +11,19 @@ tools:
         homepage: https://github.com/vdemichev/DiaNN
         documentation: https://github.com/vdemichev/DiaNN
 input:
-    - mzml:
+    - spectra:
         type: file
-        description: mzML file for spectra
+        description: Spectra file
     - fasta:
         type: file
         description: FASTA sequence databases
     - cfg:
         type: file
-        description: specifies a file to load options/commands from.
+        description: specifies a configuration file to load options/commands from.
 output:
     - lib_splib:
         type: file
-        description: spectra library.
+        description: Spectra library file.
         pattern: "*_lib.tsv"
     - log:
         type: file

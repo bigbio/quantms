@@ -16,7 +16,6 @@ process CONVERT2MSSTATS {
     path "*.csv", emit: out_msstats
     path "versions.yml", emit: version
 
-
     script:
     def args = task.ext.args ?: ''
 
@@ -28,7 +27,7 @@ process CONVERT2MSSTATS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: "3.8.3"
+        sdrf-pipelines: \$(echo "0.0.21")
     END_VERSIONS
     """
 }

@@ -42,7 +42,7 @@ workflow DIA {
                                 }
                             .set { result }
 
-    DIANNCFG(result.meta, result.mzml)
+    DIANNCFG(result.meta)
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
     LIBRARYGENERATION(result.mzml.combine(searchdb), DIANNCFG.out.library_config)
