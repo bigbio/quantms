@@ -59,7 +59,7 @@ process DIANNSEARCH {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        diann: "1.8.0"
+        DIA-NN: 1.8.0
     END_VERSIONS
     """
 }

@@ -873,10 +873,10 @@
                 "acqusition_method": {
                     "type": "string",
                     "description": "Proteomics data acquistion method",
-                    "default": "DDA",
+                    "default": "dda",
                     "enum": [
-                        "DDA",
-                        "DIA"
+                        "dda",
+                        "dia"
                     ],
                     "fa_icon": "far fa-list-ol"
                 },

@@ -40,7 +40,7 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod, precursor_tolerence, precursor_t
                 " --matrices --report-lib-info")
 
     with open("library_config.cfg", "w") as f:
-        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
+        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm + " --gen-spec-lib --smart-profiling")
 
 def convert_mod(unimod_database, fix_mod, var_mod):
     pattern = re.compile("\((.*?)\)")

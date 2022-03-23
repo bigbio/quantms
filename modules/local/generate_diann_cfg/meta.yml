@@ -1,21 +1,18 @@
 name: generate_diann_cfg
-description: A module to generate DIA-NN configure file.
+description: A module to generate DIA-NN configuration files, based on input files and params.
 keywords:
     - configure
     - DIA-NN
 tools:
     - custom:
         description: |
-            A custom module for DIA-NN configure file.
+            A custom module to generate DIA-NN configuration files from input files and params.
         homepage: https://github.com/bigbio/quantms
         documentation: https://github.com/bigbio/quantms/tree/readthedocs
 input:
     - meta:
         type: map
         description: Groovy Map containing sample information
-    - mzmls:
-        type: dir
-        description: mzML files directory
 output:
     - library_config:
         type: file
@@ -29,5 +26,9 @@ output:
         type: file
         description: File containing software version
         pattern: "*.{version.txt}"
+    - log:
+        type: file
+        description: log file
+        pattern: "*.log"
 authors:
     - "@Chengxin Dai"

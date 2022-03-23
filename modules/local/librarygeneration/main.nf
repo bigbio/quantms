@@ -17,7 +17,9 @@ process LIBRARYGENERATION {
     output:
     path "*_lib.tsv", emit: lib_splib
     path "versions.yml", emit: version
-    file "*"
+    path "report.log.txt", emit: log
+    path "*.tsv.speclib", emit: speclib
+    path "*.predicted.speclib", emit: predict_speclib
 
     script:
     def args = task.ext.args ?: ''
@@ -33,7 +35,6 @@ process LIBRARYGENERATION {
             --fasta-search \\
             --f ${mzml} \\
             --out-lib ${mzml.baseName}_lib.tsv \\
-            --gen-spec-lib \\
             ${min_pr_mz} \\
             ${max_pr_mz} \\
             ${min_fr_mz} \\
@@ -45,7 +46,6 @@ process LIBRARYGENERATION {
             --max-pr-charge $params.max_precursor_charge \\
             --var-mods $params.max_mods \\
             --threads ${task.cpus} \\
-            --smart-profiling \\
             --predictor \\
             --verbose $params.diann_debug \\
             > diann.log
@@ -53,7 +53,7 @@ process LIBRARYGENERATION {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        diann: "1.8.0"
+        DIA-NN: 1.8.0
     END_VERSIONS
     """
 }

@@ -13,20 +13,20 @@ tools:
 input:
     - lib:
         type: file
-        description: spectra library file
-    - mzMLs:
+        description: Spectra library file
+    - spectra:
         type: dir
-        description: mzML files directory
+        description: The directory for spectra files
     - searchdb:
         type: file
-        description: fasta sequence file
+        description: Fasta sequence file
     - cfg:
         type: dir
-        description: specifies a file to load options/commands from.
+        description: Specifies a file to load options/commands from.
 output:
     - report:
         type: file
-        description: Main report file,a text table containing precursor and protein IDs, as well as plenty of associated information. Most column names are self-explanatory.
+        description: Main report file. A text table containing precursor and protein IDs, as well as plenty of associated information. Most column names are self-explanatory.
         pattern: "report.tsv"
     - report_stat:
         type: file

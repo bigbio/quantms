@@ -1,8 +1,6 @@
 process GENERATE_DIANN_CFG {
     label 'process_low'
 
-
-    //TODO What images include click or use sys.args rather than click
     conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.21--pyhdfd78af_0"
@@ -12,13 +10,12 @@ process GENERATE_DIANN_CFG {
 
     input:
     val(meta)
-    path(mzmls)
 
     output:
     path "diann_config.cfg", emit: search_cfg
     path "library_config.cfg", emit: library_config
     path "versions.yml", emit: version
-
+    path "*.log"
 
     script:
     def args = task.ext.args ?: ''
@@ -36,7 +33,7 @@ process GENERATE_DIANN_CFG {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: "3.8.3"
+        sdrf-pipelines: \$(echo "0.0.21")
     END_VERSIONS
     """
 }
