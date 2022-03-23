@@ -25,7 +25,7 @@ process IDFILTER {
         -out ${id_file.baseName}_filter$suffix \\
         -threads $task.cpus \\
         $args \\
-        -debug 10 \\
+        -debug $params.db_debug \\
         > ${id_file.baseName}_idfilter.log
 
     cat <<-END_VERSIONS > versions.yml

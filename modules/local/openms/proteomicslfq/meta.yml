@@ -17,6 +17,7 @@ input:
         pattern: "*.mzML"
     - id_files:
         type: file
+        pattern: "*.idXML"
         description: Identifications in idXML or mzIdentML format with posterior error probabilities as score type.
     - expdes:
         type: file
@@ -35,6 +36,7 @@ output:
         pattern: "*.consensusXML"
     - out_msstats:
         type: file
+        pattern: "*.tsv"
         description: MSstats file with analysis results for statistical downstream analysis in MSstats.
     - log:
         type: file

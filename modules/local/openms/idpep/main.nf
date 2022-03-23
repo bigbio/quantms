@@ -24,7 +24,7 @@ process IDPEP {
         -out ${id_file.baseName}_idpep.idXML \\
         -fit_algorithm:outlier_handling $params.outlier_handling \\
         -threads ${task.cpus} \\
-        -debug 100 \\
+        -debug $params.db_debug \\
         $args \\
         > ${id_file.baseName}_idpep.log
 

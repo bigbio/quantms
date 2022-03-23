@@ -21,7 +21,7 @@ process IDCONFLICTRESOLVER {
     IDConflictResolver \\
         -in ${consus_file} \\
         -threads $task.cpus \\
-        -debug 100 \\
+        -debug $params.db_debug \\
         -resolve_between_features $params.res_between_fet \\
         -out ${consus_file.baseName}_resconf.consensusXML \\
         > ${consus_file.baseName}_resconf.log

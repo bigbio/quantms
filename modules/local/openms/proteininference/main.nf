@@ -25,7 +25,7 @@ process PROTEININFERENCE {
         -picked_decoy_string $params.decoy_string \\
         -protein_fdr true \\
         -Algorithm:score_aggregation_method $params.protein_score \\
-        -debug 100 \\
+        -debug $params.db_debug \\
         -Algorithm:min_peptides_per_protein $params.min_peptides_per_protein \\
         -out ${consus_file.baseName}_epi.consensusXML \\
         > ${consus_file.baseName}_inference.log

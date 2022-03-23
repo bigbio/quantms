@@ -23,12 +23,13 @@ jobs:
       matrix:
         # Nextflow versions
         include:
-          # Test latest edge release of Nextflow
+          # Test pipeline minimum Nextflow version
           - NXF_VER: '21.10.3'
+            NXF_EDGE: ''
+          # Test latest edge release of Nextflow
+          - NXF_VER: ''
             NXF_EDGE: '1'
         test_profile: ['test', 'test_lfq', 'test_dia']
-          - NXF_VER: "21.10.3"
-            NXF_EDGE: "1"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

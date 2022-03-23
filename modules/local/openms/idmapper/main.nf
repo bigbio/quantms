@@ -27,7 +27,7 @@ process IDMAPPER {
         -rt_tolerance $params.rt_tolerance \\
         -mz_tolerance $params.mz_tolerance \\
         -mz_measure $params.mz_measure \\
-        -debug 100 \\
+        -debug $params.db_debug \\
         -out ${id_file.baseName}_map.consensusXML \\
         > ${id_file.baseName}_map.log
 
