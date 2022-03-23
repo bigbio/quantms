@@ -26,6 +26,7 @@ process DIANNSEARCH {
     script:
     def args = task.ext.args ?: ''
     mbr = params.targeted_only ? "" : "--reanalyse"
+    normalize = params.diann_normalize ? "" : "--no-norm"
 
     min_pr_mz = params.min_pr_mz ? "--min-pr-mz params.min_pr_mz":""
     max_pr_mz = params.max_pr_mz ? "--max-pr-mz params.max_pr_mz":""

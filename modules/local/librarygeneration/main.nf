@@ -18,7 +18,8 @@ process LIBRARYGENERATION {
     path "*_lib.tsv", emit: lib_splib
     path "versions.yml", emit: version
     path "report.log.txt", emit: log
-    path "*.speclib"
+    path "*.tsv.speclib", emit: speclib
+    path "*.predicted.speclib", emit: predict_speclib
 
     script:
     def args = task.ext.args ?: ''

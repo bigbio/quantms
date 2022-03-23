@@ -25,6 +25,14 @@ output:
         type: file
         description: Spectra library file.
         pattern: "*_lib.tsv"
+    - speclib:
+        type: file
+        description: Spectral library file based on speclib format
+        pattern: "*.tsv.speclib"
+    - predict_speclib:
+        type: file
+        description: Silico-predicted spectral library by deep leaning predictor in DIA-NN
+        pattern: "*.predicted.speclib"
     - log:
         type: file
         description: DIA-NN log file

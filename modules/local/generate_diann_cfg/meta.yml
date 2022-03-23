@@ -1,12 +1,12 @@
 name: generate_diann_cfg
-description: A module to generate a DIA-NN configuration files, based on input files and params.
+description: A module to generate DIA-NN configuration files, based on input files and params.
 keywords:
     - configure
     - DIA-NN
 tools:
     - custom:
         description: |
-            A custom module to generate a DIA-NN configuration files from input files and params.
+            A custom module to generate DIA-NN configuration files from input files and params.
         homepage: https://github.com/bigbio/quantms
         documentation: https://github.com/bigbio/quantms/tree/readthedocs
 input:
