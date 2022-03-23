@@ -89,7 +89,7 @@ process SEARCHENGINECOMET {
         -precursor_error_units $meta.precursormasstoleranceunit \\
         -fragment_mass_tolerance ${bin_tol} \\
         -fragment_bin_offset ${bin_offset} \\
-        -debug $params.db_debug \\
+        -debug $params.debug \\
         -force \\
         $args \\
         > ${mzml_file.baseName}_comet.log

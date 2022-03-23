@@ -24,7 +24,7 @@ process FILEMERGE {
         -in_type consensusXML \\
         -annotate_file_origin \\
         -append_method 'append_cols' \\
-        -debug 10 \\
+        -debug $params.debug \\
         -threads $task.cpus \\
         -out ID_mapper_merge.consensusXML \\
         > ID_mapper_merge.log

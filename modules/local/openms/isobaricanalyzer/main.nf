@@ -38,7 +38,7 @@ process ISOBARICANALYZER {
         -extraction:precursor_isotope_deviation $params.precursor_isotope_deviation \\
         ${iso_normalization} \\
         -${meta.labelling_type}:reference_channel $params.reference_channel \\
-        -debug $params.iso_debug \\
+        -debug $params.debug \\
         $args \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
         > ${mzml_file.baseName}_isob.log

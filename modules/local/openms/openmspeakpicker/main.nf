@@ -27,7 +27,7 @@ process OPENMSPEAKPICKER {
         -in ${mzml_file} \\
         -out ${mzml_file.baseName}.mzML \\
         -threads $task.cpus \\
-        -debug $params.pp_debug \\
+        -debug $params.debug \\
         -processOption ${in_mem} \\
         ${lvls} \\
         $args \\

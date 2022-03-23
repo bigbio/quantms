@@ -221,11 +221,6 @@
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "The reference channel",
                     "default": 126
-                },
-                "iso_debug": {
-                    "type": "integer",
-                    "description": "set the debug level",
-                    "fa_icon": "fas fa-bug"
                 }
             },
             "fa_icon": "far fa-chart-bar"
@@ -377,11 +372,6 @@
                     "description": "Maximum number of modifications per peptide. If this value is large, the search may take very long.",
                     "default": 3,
                     "fa_icon": "fas fa-sliders-h"
-                },
-                "db_debug": {
-                    "type": "integer",
-                    "description": "Debug level when running the database search. Logs become more verbose and at '>5' temporary files are kept.",
-                    "fa_icon": "fas fa-bug"
                 }
             },
             "fa_icon": "fas fa-search"
@@ -421,12 +411,6 @@
                     "description": "List of neutral losses to consider for mod. localization from an internally generated decoy sequence.",
                     "fa_icon": "fas fa-font",
                     "help_text": "For handling the neutral loss from a decoy sequence. The syntax for this is identical to that of the normal neutral losses given above except that the residue is always 'X'. Syntax: DECOY_NL = X -<NEUTRAL_LOSS_MOLECULAR_FORMULA> <MASS_LOST> (default: '[X -H3PO4 -97.97690]')",
-                    "hidden": true
-                },
-                "luciphor_debug": {
-                    "type": "integer",
-                    "fa_icon": "fas fa-bug",
-                    "description": "Debug level for Luciphor step. Increase for verbose logging and keeping temp files.",
                     "hidden": true
                 }
             },
@@ -482,11 +466,6 @@
                     "description": "FDR cutoff on PSM level (or potential peptide level; see Percolator options) before going into feature finding, map alignment and inference.",
                     "default": 0.01,
                     "fa_icon": "fas fa-filter"
-                },
-                "pp_debug": {
-                    "type": "integer",
-                    "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
-                    "fa_icon": "fas fa-bug"
                 }
             },
             "fa_icon": "fas fa-star-half-alt"
@@ -855,11 +834,6 @@
                     "description": "Also quantify decoys? (Usually only needed for Triqler post-processing output with `--add_triqler_output`, where it is auto-enabled)",
                     "default": false,
                     "fa_icon": "far fa-check-square"
-                },
-                "inf_quant_debug": {
-                    "type": "integer",
-                    "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
-                    "fa_icon": "fas fa-bug"
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -1162,6 +1136,11 @@
                     "description": "Institutional configs hostname.",
                     "hidden": true,
                     "fa_icon": "fas fa-users-cog"
+                },
+                "debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the pipeline. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
+                    "fa_icon": "fas fa-bug"
                 }
             }
         }

@@ -38,7 +38,7 @@ process PROTEINQUANTIFIER {
         -ratios \\
         -threads $task.cpus \\
         ${normalize} \\
-        -debug 100 \\
+        -debug $params.debug \\
         > pro_quant.log
 
     cat <<-END_VERSIONS > versions.yml

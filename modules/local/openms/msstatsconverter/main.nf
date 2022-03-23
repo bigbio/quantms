@@ -25,7 +25,7 @@ process MSSTATSCONVERTER {
         -in_design ${exp_file} \\
         -method ${quant_method} \\
         -out out_msstats.csv \\
-        -debug 100 \\
+        -debug $params.debug \\
         > MSstatsConverter.log
 
     cat <<-END_VERSIONS > versions.yml

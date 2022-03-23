@@ -38,7 +38,7 @@ process LUCIPHORADAPTER {
         ${dec_losses} \\
         -max_charge_state $params.max_precursor_charge \\
         -max_peptide_length $params.max_peptide_length \\
-        -debug $params.luciphor_debug \\
+        -debug $params.debug \\
         $args \\
         > ${id_file.baseName}_luciphor.log
 

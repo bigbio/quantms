@@ -68,7 +68,7 @@ process SEARCHENGINEMSGF {
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
         -variable_modifications ${meta.variablemodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
         -max_mods $params.max_mods \\
-        -debug $params.db_debug \\
+        -debug $params.debug \\
         $args \\
         > ${mzml_file.baseName}_msgf.log
 
