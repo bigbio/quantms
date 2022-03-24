@@ -867,7 +867,7 @@
         "DIA-NN": {
             "title": "DIA-NN",
             "type": "object",
-            "description": "DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
+            "description": "Settings for DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
             "default": "",
             "properties": {
                 "acqusition_method": {
