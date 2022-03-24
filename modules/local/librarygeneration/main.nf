@@ -1,5 +1,5 @@
 process LIBRARYGENERATION {
-    label 'process_high'
+    label 'process_low'
 
     if (params.enable_conda) {
         exit 1, "Conda environments cannot be used when using the DIA-NN tool. Please use docker or singularity containers"

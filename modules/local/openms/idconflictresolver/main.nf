@@ -1,5 +1,5 @@
 process IDCONFLICTRESOLVER {
-    label 'process_medium'
+    label 'process_low'
 
     conda (params.enable_conda ? "openms::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -21,8 +21,7 @@ process IDCONFLICTRESOLVER {
     IDConflictResolver \\
         -in ${consus_file} \\
         -threads $task.cpus \\
-        -debug 100 \\
-        -resolve_between_features $params.res_between_fet \\
+        -debug $params.conflict_resolver_debug \\
         -out ${consus_file.baseName}_resconf.consensusXML \\
         > ${consus_file.baseName}_resconf.log
 

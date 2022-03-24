@@ -18,12 +18,15 @@ input:
   - id_files:
       type: file
       description: Identifications in idXML or mzIdentML format with posterior error probabilities as score type.
+      pattern: "*.idXML"
   - expdes:
       type: file
       description: An experimental design file
+      pattern: "*.tsv"
   - fasta:
       type: file
       description: A protein database in with appended decoy sequences in FASTA format.
+      pattern: "*.{fasta,fa}"
 output:
   - out_mztab:
       type: file

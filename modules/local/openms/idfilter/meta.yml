@@ -16,8 +16,8 @@ input:
       description: Groovy Map containing sample information
   - id_file:
       type: file
-      description: |
-        Identifications from searching a target-decoy database.
+      description: Peptide-spectrum matches.
+      pattern: "*.{idXML,consensusXML}"
 output:
   - meta:
       type: map
@@ -25,6 +25,7 @@ output:
   - id_files_idx_ForIDPEP_FDR:
       type: file
       description: Output file
+      pattern: "*.{idXML,consensusXML}"
   - log:
       type: file
       description: log file

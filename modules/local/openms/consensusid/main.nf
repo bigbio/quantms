@@ -29,7 +29,7 @@ process CONSENSUSID {
         -algorithm $params.consensusid_algorithm \\
         -filter:min_support $params.min_consensus_support \\
         -filter:considered_hits $params.consensusid_considered_top_hits \\
-        -debug 100 \\
+        -debug $params.consensusid_debug \\
         $args \\
         > ${meta.id}_consensusID.log
 

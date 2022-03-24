@@ -18,6 +18,7 @@ input:
   - exp_file:
       type: file
       description: Experimental Design file
+      pattern: "*.tsv"
 output:
   - out_msstats:
       type: file

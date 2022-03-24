@@ -138,6 +138,7 @@ workflow QUANTMS {
     ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
+    // TODO pmulitqc supports DIA
     DIA(FILE_PREPARATION_DIA.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
 
     // ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DIA.out.ch_pmultiqc_ids)

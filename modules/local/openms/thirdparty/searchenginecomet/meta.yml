@@ -17,9 +17,11 @@ input:
   - mzml_file:
       type: file
       description: Input profile data file.
+      pattern: "*.mzML"
   - database:
       type: file
       description: fasta file
+      pattern: "*.fasta"
 output:
   - meta:
       type: map

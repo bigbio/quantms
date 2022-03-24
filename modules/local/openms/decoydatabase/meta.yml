@@ -15,11 +15,13 @@ input:
       type: file
       description: |
         Input standard FASTA databases to create decoy.
+      pattern: "*.{fasta, fa}"
 output:
   - db_decoy:
       type: file
       description: |
-        decoy peptide database
+        Protein database in FASTA format with appended decoys.
+      pattern: "*.{fasta, fa}"
   - log:
       type: file
       description: log file

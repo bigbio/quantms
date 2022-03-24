@@ -15,7 +15,7 @@ input:
       description: Groovy Map containing sample information
   - mzml_file:
       type: file
-      description: Input profile data file.
+      description: input mzML file with MS2 or MS3 spectra containing reporter ions.
       pattern: "*.mzML"
 output:
   - meta:

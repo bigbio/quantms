@@ -17,7 +17,8 @@ input:
   - id_file:
       type: file
       description: |
-        Identifications from searching a target-decoy database.
+        Peptide-spectrum matches annotated with target-decoy information.
+      pattern: "*.idXML"
 output:
   - meta:
       type: map
@@ -26,6 +27,7 @@ output:
       type: file
       description: |
         Identifications with annotated FDR.
+      pattern: "*.idXML"
   - log:
       type: file
       description: log file

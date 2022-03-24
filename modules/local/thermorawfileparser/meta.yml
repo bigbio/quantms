@@ -19,6 +19,7 @@ input:
       type: file
       description: |
         thermo RAW file
+      pattern: "*.raw"
 output:
   - meta:
       type: map

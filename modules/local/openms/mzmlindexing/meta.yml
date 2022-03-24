@@ -1,5 +1,5 @@
 name: mzmlindexing
-description: Converts between different MS file formats
+description: Converts mzML to indexed mzML
 keywords:
   - raw
   - mzML
@@ -19,6 +19,7 @@ input:
       type: file
       description: |
         Input file to convert.
+      pattern: "*.mzML"
 output:
   - meta:
       type: map

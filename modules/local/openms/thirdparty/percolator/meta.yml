@@ -1,5 +1,5 @@
 name: percolator
-description: PercolatorAdapter facilitates the input to, the call of and output integration of Percolator.
+description: PercolatorAdapter facilitates the input to, the call of and output integration of Percolator for other OpenMS tools
 keywords:
   - identification
   - OpenMS
@@ -17,6 +17,7 @@ input:
       type: file
       description: |
         Input idXML file containing the identifications.
+      pattern: "*.idXML"
 output:
   - meta:
       type: map

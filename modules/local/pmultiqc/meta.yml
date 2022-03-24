@@ -14,6 +14,7 @@ input:
   - expdesign:
       type: file
       description: experimental design file in openms style
+      pattern: "*.tsv"
   - mzmls:
       type: dir
       description: mzML files directory
@@ -45,4 +46,4 @@ output:
       description: File containing software version
       pattern: "*.{version.txt}"
 authors:
-  - "@Chengxin Dai"
+  - "@daichengxin"
