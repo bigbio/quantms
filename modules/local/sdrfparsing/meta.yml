@@ -37,4 +37,4 @@ output:
       description: File containing software version
       pattern: "*.{version.txt}"
 authors:
-  - "@Chengxin Dai"
+  - "@daichengxin"

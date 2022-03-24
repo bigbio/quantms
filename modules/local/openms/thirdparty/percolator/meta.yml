@@ -1,5 +1,5 @@
 name: percolator
-description: PercolatorAdapter facilitates the input to, the call of and output integration of Percolator.
+description: PercolatorAdapter facilitates the input to, the call of and output integration of Percolator for other OpenMS tools.
 keywords:
   - identification
   - OpenMS
