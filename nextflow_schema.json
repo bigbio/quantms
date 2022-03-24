@@ -10,9 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": [
-                "input"
-            ],
+            "required": ["input"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -98,10 +96,7 @@
                     "description": "Choose the method to produce decoys from input target database.",
                     "default": "reverse",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": [
-                        "reverse",
-                        "shuffle"
-                    ]
+                    "enum": ["reverse", "shuffle"]
                 },
                 "shuffle_max_attempts": {
                     "type": "integer",
@@ -117,9 +112,7 @@
                 }
             },
             "fa_icon": "fas fa-database",
-            "required": [
-                "database"
-            ]
+            "required": ["database"]
         },
         "spectrum_preprocessing": {
             "title": "Spectrum preprocessing",
@@ -159,7 +152,15 @@
                     "description": "label method",
                     "fa_icon": "fas fa-font",
                     "help_text": "Isobaric Quantification method used in the experiment",
-                    "enum": ["label free sample","itraq4plex", "itraq8plex", "tmt6plex", "tmt10plex", "tmt11plex", "tmt16plex"]
+                    "enum": [
+                        "label free sample",
+                        "itraq4plex",
+                        "itraq8plex",
+                        "tmt6plex",
+                        "tmt10plex",
+                        "tmt11plex",
+                        "tmt16plex"
+                    ]
                 },
                 "select_activation": {
                     "type": "string",
@@ -255,11 +256,7 @@
                     "description": "Specify the amount of termini matching the enzyme cutting rules for a peptide to be considered. Valid values are `fully` (default), `semi`, or `none`",
                     "default": "fully",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": [
-                        "fully",
-                        "semi",
-                        "none"
-                    ]
+                    "enum": ["fully", "semi", "none"]
                 },
                 "allowed_missed_cleavages": {
                     "type": "integer",
@@ -278,10 +275,7 @@
                     "description": "Precursor mass tolerance unit used for database search. Possible values are 'ppm' (default) and 'Da'.",
                     "default": "ppm",
                     "fa_icon": "fas fa-sliders-h",
-                    "enum": [
-                        "Da",
-                        "ppm"
-                    ]
+                    "enum": ["Da", "ppm"]
                 },
                 "fragment_mass_tolerance": {
                     "type": "number",
@@ -296,10 +290,7 @@
                     "default": "Da",
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Caution: for Comet we are estimating the `fragment_bin_tolerance` parameter based on this automatically.",
-                    "enum": [
-                        "Da",
-                        "ppm"
-                    ]
+                    "enum": ["Da", "ppm"]
                 },
                 "fixed_mods": {
                     "type": "string",
@@ -443,20 +434,14 @@
                     "description": "Do not fail if there are some unmatched peptides. Only activate as last resort, if you know that the rest of your settings are fine!",
                     "default": false,
                     "fa_icon": "far fa-check-square",
-                    "enum": [
-                        false,
-                        true
-                    ]
+                    "enum": [false, true]
                 },
                 "IL_equivalent": {
                     "type": "boolean",
                     "description": "Should isoleucine and leucine be treated interchangeably when mapping search engine hits to the database? Default: true",
                     "default": true,
                     "fa_icon": "far fa-check-square",
-                    "enum": [
-                        true,
-                        false
-                    ]
+                    "enum": [true, false]
                 }
             },
             "fa_icon": "fas fa-project-diagram"
@@ -472,10 +457,7 @@
                     "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)",
                     "fa_icon": "fas fa-list-ol",
                     "default": "percolator",
-                    "enum": [
-                        "percolator",
-                        "fit_distributions"
-                    ]
+                    "enum": ["percolator", "fit_distributions"]
                 },
                 "psm_pep_fdr_cutoff": {
                     "type": "number",
@@ -502,10 +484,7 @@
                     "description": "Calculate FDR on PSM ('psm-level-fdrs') or peptide level ('peptide-level-fdrs')?",
                     "default": "peptide-level-fdrs",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": [
-                        "peptide-level-fdrs",
-                        "psm-level-fdrs"
-                    ]
+                    "enum": ["peptide-level-fdrs", "psm-level-fdrs"]
                 },
                 "train_FDR": {
                     "type": "number",
@@ -551,12 +530,7 @@
                     "description": "How to handle outliers during fitting:\n\n* ignore_iqr_outliers (default): ignore outliers outside of `3*IQR` from Q1/Q3 for fitting\n* set_iqr_to_closest_valid: set IQR-based outliers to the last valid value for fitting\n* ignore_extreme_percentiles: ignore everything outside 99th and 1st percentile (also removes equal values like potential censored max values in XTandem)\n* none: do nothing",
                     "default": "none",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": [
-                        "none",
-                        "ignore_iqr_outliers",
-                        "set_iqr_to_closest_valid",
-                        "ignore_extreme_percentiles"
-                    ]
+                    "enum": ["none", "ignore_iqr_outliers", "set_iqr_to_closest_valid", "ignore_extreme_percentiles"]
                 }
             },
             "fa_icon": "far fa-star-half"
@@ -573,11 +547,7 @@
                     "default": "best",
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Specifies how search engine results are combined: ConsensusID offers several algorithms that can aggregate results from multiple peptide identification engines ('search engines') into consensus identifications - typically one per MS2 spectrum. This works especially well for search engines that provide more than one peptide hit per spectrum, i.e. that report not just the best hit, but also a list of runner-up candidates with corresponding scores.\n\nThe available algorithms are:\n\n* PEPMatrix: Scoring based on posterior error probabilities (PEPs) and peptide sequence similarities. This algorithm uses a substitution matrix to score the similarity of sequences not listed by all search engines. It requires PEPs as the scores for all peptide hits.\n* PEPIons: Scoring based on posterior error probabilities (PEPs) and fragment ion similarities ('shared peak count'). This algorithm, too, requires PEPs as scores.\n* best: For each peptide ID, this uses the best score of any search engine as the consensus score.\n* worst: For each peptide ID, this uses the worst score of any search engine as the consensus score.\n* average: For each peptide ID, this uses the average score of all search engines as the consensus score.\n* ranks: Calculates a consensus score based on the ranks of peptide IDs in the results of different search engines. The final score is in the range (0, 1], with 1 being the best score.\n\nTo make scores comparable, for best, worst and average, PEPs are used as well. Peptide IDs are only considered the same if they map to exactly the same sequence (including modifications and their localization). Also isobaric aminoacids are (for now) only considered equal with the PEPMatrix/PEPIons algorithms.",
-                    "enum": [
-                        "best",
-                        "PEPMatrix",
-                        "PEPIons"
-                    ]
+                    "enum": ["best", "PEPMatrix", "PEPIons"]
                 },
                 "consensusid_considered_top_hits": {
                     "type": "integer",
@@ -616,20 +586,14 @@
                     "type": "string",
                     "description": "Unit of 'mz_tolerance'",
                     "default": "ppm",
-                    "enum": [
-                        "ppm",
-                        "Da"
-                    ],
+                    "enum": ["ppm", "Da"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "mz_reference": {
                     "type": "string",
                     "description": "Source of m/z values for peptide identifications.",
                     "default": "peptide",
-                    "enum": [
-                        "peptide",
-                        "precursor"
-                    ],
+                    "enum": ["peptide", "precursor"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "annotate_file_origin": {
@@ -643,10 +607,7 @@
                     "type": "string",
                     "description": "A map may contain multiple features with both identical (possibly modified i.e. not stripped) sequence and charge state. The feature with the 'highest intensity' is very likely the most reliable one. When switched on, the filter removes the sequence annotation from the lower intensity features, thereby resolving the multiplicity. Only the most reliable features for each (possibly modified i.e. not stripped) sequence maintain annotated with this peptide sequence.",
                     "default": "off",
-                    "enum": [
-                        "off",
-                        "highest_intensity"
-                    ],
+                    "enum": ["off", "highest_intensity"],
                     "fa_icon": "fas fa-list-ol"
                 }
             },
@@ -682,12 +643,7 @@
                     "type": "string",
                     "description": "How to aggregate scores of peptides matching to the same protein",
                     "default": "best",
-                    "enum": [
-                        "best",
-                        "product",
-                        "sum",
-                        "maximum"
-                    ],
+                    "enum": ["best", "product", "sum", "maximum"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "min_peptides_per_protein": {
@@ -706,20 +662,16 @@
                     "type": "string",
                     "description": "Post-process inference output with greedy resolution of shared peptides based on the parent protein probabilities. Also adds the resolved ambiguity groups to output.",
                     "default": "none",
-                    "enum": [
-                        "none",
-                        "remove_associations_only",
-                        "remove_proteins_wo_evidence"
-                    ]
+                    "enum": ["none", "remove_associations_only", "remove_proteins_wo_evidence"]
                 },
                 "keep_best_PSM_only": {
-                    "type":"boolean",
+                    "type": "boolean",
                     "description": "Epifany uses the best PSM per peptide for inference. Discard the rest (true) or keepe.g. for quantification/reporting?",
                     "default": true,
                     "fa_icon": "fas fa-list-ol"
                 },
                 "update_PSM_probabilities": {
-                    "type":"boolean",
+                    "type": "boolean",
                     "description": "(Experimental:) Update PSM probabilities with their posteriors under consideration of the protein probabilities.",
                     "default": true,
                     "fa_icon": "fas fa-list-ol"
@@ -737,10 +689,7 @@
                     "default": "aggregation",
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Infer proteins through:\n\n* 'aggregation'  =  aggregates all peptide scores across a protein (by calculating the maximum) (default)\n* 'bayesian'        =  compute a posterior probability for every protein based on a Bayesian network (i.e. using Epifany)\n* ('percolator' not yet supported)\n\n**Note:** If protein grouping is performed also depends on the `protein_quant` parameter (i.e. if peptides have to be unique or unique to a group only)",
-                    "enum": [
-                        "aggregation",
-                        "bayesian"
-                    ]
+                    "enum": ["aggregation", "bayesian"]
                 }
             },
             "fa_icon": "fab fa-hubspot"
@@ -761,12 +710,7 @@
                     "type": "string",
                     "description": "Averaging method used to compute protein abundances from peptide abundances.",
                     "default": "median",
-                    "enum": [
-                        "median",
-                        "mean",
-                        "weighted_mean",
-                        "sum"
-                    ],
+                    "enum": ["median", "mean", "weighted_mean", "sum"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "best_charge_and_fraction": {
@@ -802,21 +746,14 @@
                     "type": "string",
                     "description": "Quantify proteins based on:\n\n* 'unique_peptides' = use peptides mapping to single proteins or a group of indistinguishable proteins (according to the set of experimentally identified peptides)\n* 'strictly_unique_peptides' = use peptides mapping to a unique single protein only\n* 'shared_peptides' = use shared peptides, too, but only greedily for its best group (by inference score)",
                     "default": "unique_peptides",
-                    "enum": [
-                        "unique_peptides",
-                        "strictly_unique_peptides",
-                        "shared_peptides"
-                    ],
+                    "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "quantification_method": {
                     "type": "string",
                     "description": "Choose between feature-based quantification based on integrated MS1 signals ('feature_intensity'; default) or spectral counting of PSMs ('spectral_counting'). **WARNING:** 'spectral_counting' is not compatible with our MSstats step yet. MSstats will therefore be disabled automatically with that choice.",
                     "default": "feature_intensity",
-                    "enum": [
-                        "feature_intensity",
-                        "spectral_counting"
-                    ],
+                    "enum": ["feature_intensity", "spectral_counting"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "mass_recalibration": {
@@ -828,10 +765,7 @@
                     "type": "string",
                     "description": "Tries a targeted requantification in files where an ID is missing, based on aggregate properties (i.e. RT) of the features in other aligned files (e.g. 'mean' of RT). (**WARNING:** increased memory consumption and runtime). 'false' turns this feature off. (default: 'false')",
                     "default": "false",
-                    "enum": [
-                        "false",
-                        "mean"
-                    ],
+                    "enum": ["false", "mean"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "targeted_only": {
@@ -844,10 +778,7 @@
                     "type": "string",
                     "description": "The order in which maps are aligned. Star = all vs. the reference with most IDs (default). TreeGuided = an alignment tree is calculated first based on similarity measures of the IDs in the maps.",
                     "default": "star",
-                    "enum": [
-                        "star",
-                        "treeguided"
-                    ],
+                    "enum": ["star", "treeguided"],
                     "fa_icon": "far fa-list-ol"
                 },
                 "quantify_decoys": {
@@ -874,10 +805,7 @@
                     "type": "string",
                     "description": "Proteomics data acquistion method",
                     "default": "dda",
-                    "enum": [
-                        "dda",
-                        "dia"
-                    ],
+                    "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
                 },
                 "matrix_spec_q": {
@@ -911,9 +839,7 @@
                     "description": "Debug level",
                     "default": 3,
                     "fa_icon": "fas fa-bug",
-                    "enum": [
-                        0, 1, 2, 3, 4
-                    ]
+                    "enum": [0, 1, 2, 3, 4]
                 },
                 "diann_normalize": {
                     "type": "boolean",
@@ -1080,14 +1006,7 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": [
-                        "symlink",
-                        "rellink",
-                        "link",
-                        "copy",
-                        "copyNoFollow",
-                        "move"
-                    ],
+                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
                     "hidden": true
                 },
                 "email_on_fail": {

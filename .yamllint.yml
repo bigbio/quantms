@@ -1,8 +1,8 @@
 extends: default
 
 rules:
-    document-start: disable
-    line-length: disable
-    truthy: disable
-    indentation: disable
-    empty-lines: disable
+  document-start: disable
+  line-length: disable
+  truthy: disable
+  indentation: disable
+  empty-lines: disable
