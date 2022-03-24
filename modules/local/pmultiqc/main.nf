@@ -30,7 +30,7 @@ process PMULTIQC {
         --exp_design ${expdesign} \\
         --mzMLs ./mzMLs \\
         --raw_ids ./raw_ids \\
-        ./quantms_results \\
+        ./results \\
         -o .
 
     cat <<-END_VERSIONS > versions.yml
