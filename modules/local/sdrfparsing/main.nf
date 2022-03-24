@@ -28,7 +28,7 @@ process SDRFPARSING {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(echo "0.0.20")
+        sdrf-pipelines: \$(echo "0.0.21")
     END_VERSIONS
     """
 }

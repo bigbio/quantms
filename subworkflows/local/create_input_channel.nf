@@ -151,7 +151,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         }
     }
 
-    if (wrapper.labelling_type.contains("label free") || meta.acqusition_method == "DIA") {
+    if (wrapper.labelling_type.contains("label free") || meta.acqusition_method == "dia") {
         if (filestr in files) {
             log.error "Currently only one search engine setting/DIA-NN setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
             exit 1

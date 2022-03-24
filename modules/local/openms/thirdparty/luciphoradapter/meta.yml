@@ -1,41 +1,41 @@
 name: luciphoradapter
 description: Modification site localisation using LuciPHOr2.
 keywords:
-    - LuciPHOr2
-    - modification
-    - OpenMS
+  - LuciPHOr2
+  - modification
+  - OpenMS
 tools:
-    - LuciphorAdapter:
-        description: |
-          Calculates scores for the localization of variable modifications.
-        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
-        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
+  - LuciphorAdapter:
+      description: |
+        Calculates scores for the localization of variable modifications.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
 input:
-    - meta:
-        type: map
-        description: Groovy Map containing sample information
-    - mzml_file:
-        type: file
-        description: Input spectrum file.
-        pattern: "*.mzML"
-    - id_file:
-        type: file
-        description: Protein/peptide identifications file
-        pattern: "*.idXML"
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - mzml_file:
+      type: file
+      description: Input spectrum file.
+      pattern: "*.mzML"
+  - id_file:
+      type: file
+      description: Protein/peptide identifications file
+      pattern: "*.idXML"
 output:
-    - meta:
-        type: map
-        description: Groovy Map containing sample information
-    - ptm_in_id_luciphor:
-        type: file
-        description: Output file
-    - log:
-        type: file
-        description: log file
-        pattern: "*.log"
-    - version:
-        type: file
-        description: File containing software version
-        pattern: "*.{version.txt}"
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - ptm_in_id_luciphor:
+      type: file
+      description: Output file
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "*.{version.txt}"
 authors:
-    - "@daichengxin"
+  - "@daichengxin"

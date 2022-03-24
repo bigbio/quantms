@@ -30,7 +30,6 @@ process PMULTIQC {
         --exp_design ${expdesign} \\
         --mzMLs ./mzMLs \\
         --raw_ids ./raw_ids \\
-        --config ./results/multiqc_config.yaml \\
         ./results \\
         -o .
 
