@@ -648,7 +648,7 @@
                 },
                 "min_peptides_per_protein": {
                     "type": "integer",
-                    "description": [Ignored in Bayesian] Minimum number of peptides needed for a protein identification",
+                    "description": "[Ignored in Bayesian] Minimum number of peptides needed for a protein identification",
                     "default": 1,
                     "fa_icon": "fas fa-filter"
                 },

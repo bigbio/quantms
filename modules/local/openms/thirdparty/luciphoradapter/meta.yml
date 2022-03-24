@@ -5,11 +5,11 @@ keywords:
   - modification
   - OpenMS
 tools:
-    - LuciphorAdapter:
-        description: |
-          Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
-        homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
-        documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
+  - LuciphorAdapter:
+      description: |
+        Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_LuciphorAdapter.html
 input:
   - meta:
       type: map
