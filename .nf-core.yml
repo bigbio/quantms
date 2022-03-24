@@ -1,6 +1,4 @@
 repository_type: pipeline
 lint:
-  #files_unchanged:
   files_exist:
     - conf/igenomes.config
-    - .markdownlint.yml
