@@ -1,7 +1,6 @@
 repository_type: pipeline
 lint:
-  files_unchanged:
-    - assets/multiqc_config.yml
+  #files_unchanged:
   files_exist:
     - conf/igenomes.config
     - .markdownlint.yml
