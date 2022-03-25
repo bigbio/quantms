@@ -20,7 +20,7 @@ output:
   - id_merge:
       type: file
       description: Output Merged file
-      pattern: "*.consensusXML"
+      pattern: "*.{mzML,idXML,consensusXML}"
   - log:
       type: file
       description: log file
