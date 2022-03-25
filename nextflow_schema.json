@@ -648,7 +648,7 @@
                 },
                 "min_peptides_per_protein": {
                     "type": "integer",
-                    "description": "Minimum number of peptides needed for a protein identification",
+                    "description": "[Ignored in Bayesian] Minimum number of peptides needed for a protein identification",
                     "default": 1,
                     "fa_icon": "fas fa-filter"
                 },
@@ -798,7 +798,7 @@
         "DIA-NN": {
             "title": "DIA-NN",
             "type": "object",
-            "description": "DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
+            "description": "Settings for DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
             "default": "",
             "properties": {
                 "acqusition_method": {
