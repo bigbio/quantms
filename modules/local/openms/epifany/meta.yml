@@ -15,13 +15,13 @@ input:
       type: file
       description: |
         identification results.
-      pattern: "*.consensusXML"
+      pattern: "*.{idXML,consensusXML}"
 output:
   - epi_inference:
       type: file
       description: |
         identification results with scored/grouped proteins.
-      pattern: "*.consensusXML"
+      pattern: "*.{idXML,consensusXML}"
   - log:
       type: file
       description: log file

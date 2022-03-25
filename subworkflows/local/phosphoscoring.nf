@@ -13,7 +13,7 @@ workflow PHOSPHOSCORING {
     main:
     ch_version = Channel.empty()
 
-    IDSCORESWITCHERFORLUCIPHOR(id_files.combine(Channel.value("\"Posterior Error Probability\"")))
+    IDSCORESWITCHERFORLUCIPHOR(id_files.combine(Channel.value("\"Posterior Error Probability_score\"")))
     ch_version = ch_version.mix(IDSCORESWITCHERFORLUCIPHOR.out.version)
 
     LUCIPHORADAPTER(mzml_files.join(IDSCORESWITCHERFORLUCIPHOR.out.id_score_switcher))

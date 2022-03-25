@@ -17,21 +17,27 @@ process LUCIPHORADAPTER {
     path "*.log", emit: log
 
     script:
+    luciphor_jar = ''
+    if (workflow.containerEngine) {
+        luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
+    }
+
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
-    def losses = params.luciphor_neutral_losses ? '-neutral_losses "${params.luciphor_neutral_losses}"' : ''
-    def dec_mass = params.luciphor_decoy_mass ? '-decoy_mass "${params.luciphor_decoy_mass}"' : ''
-    def dec_losses = params.luciphor_decoy_neutral_losses ? '-decoy_neutral_losses "${params.luciphor_decoy_neutral_losses}"' : ''
+    def losses = params.luciphor_neutral_losses ? "-neutral_losses ${params.luciphor_neutral_losses}" : ""
+    def dec_mass = params.luciphor_decoy_mass ? "-decoy_mass ${params.luciphor_decoy_mass}" : ""
+    def dec_losses = params.luciphor_decoy_neutral_losses ? "-decoy_neutral_losses ${params.luciphor_decoy_neutral_losses}" : ""
 
     """
     LuciphorAdapter \\
         -id ${id_file} \\
         -in ${mzml_file} \\
+        ${luciphor_jar} \\
         -out ${id_file.baseName}_luciphor.idXML \\
         -threads $task.cpus \\
         -num_threads $task.cpus \\
-        -target_modifications $params.mod_localization \\
+        -target_modifications ${params.mod_localization.tokenize(',').collect { "'${it}'" }.join(" ") } \\
         -fragment_method $meta.dissociationmethod \\
         ${losses} \\
         ${dec_mass} \\
@@ -44,6 +50,7 @@ process LUCIPHORADAPTER {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         LuciphorAdapter: \$(LuciphorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        Luciphor: \$(luciphor2 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """
 }

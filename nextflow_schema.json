@@ -114,7 +114,8 @@
                     "type": "integer",
                     "description": "Debug level for DecoyDatabase step. Increase for verbose logging.",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-database",
@@ -232,7 +233,9 @@
                 "iso_debug": {
                     "type": "integer",
                     "description": "set the debug level",
-                    "fa_icon": "fas fa-bug"
+                    "fa_icon": "fas fa-bug",
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "far fa-chart-bar"
@@ -378,7 +381,9 @@
                 "db_debug": {
                     "type": "integer",
                     "description": "Debug level when running the database search. Logs become more verbose and at '>5' temporary files are kept.",
-                    "fa_icon": "fas fa-bug"
+                    "fa_icon": "fas fa-bug",
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-search"
@@ -474,18 +479,23 @@
                 "idfilter_debug": {
                     "type": "integer",
                     "description": "Debug level when running the IDFilter step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug"
+                    "fa_icon": "fas fa-bug",
+                    "hidden": true,
+                    "default": 0
                 },
                 "pp_debug": {
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
-                    "fa_icon": "fas fa-bug"
+                    "fa_icon": "fas fa-bug",
+                    "default": 0,
+                    "hidden": true
                 },
                 "idscoreswitcher_debug": {
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-star-half-alt"
@@ -537,7 +547,8 @@
                     "type": "integer",
                     "description": "Debug level for Percolator step. Increase for verbose logging",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-star-half"
@@ -555,7 +566,7 @@
                     "fa_icon": "fas fa-list-ol",
                     "enum": ["none", "ignore_iqr_outliers", "set_iqr_to_closest_valid", "ignore_extreme_percentiles"]
                 },
-                "protein_fdr": {
+                "protein": {
                     "type": "boolean",
                     "description": "Perform FDR calculation on protein level",
                     "default": false,
@@ -565,7 +576,8 @@
                     "type": "integer",
                     "description": "Debug level for IDPEP step. Increase for verbose logging",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "far fa-star-half"
@@ -599,12 +611,14 @@
                 "consensusid_debug": {
                     "type": "integer",
                     "description": "Debug level for ConsensusID. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug"
+                    "fa_icon": "fas fa-bug",
+                    "hidden": true,
+                    "default": 0
                 }
             },
             "fa_icon": "fas fa-code-branch"
         },
-        "feature_mapper":{
+        "feature_mapper": {
             "title": "Feature Mapper",
             "type": "object",
             "description": "Assigns protein/peptide identifications to features or consensus features. Here, features generated from isobaric reporter intensities of fragment spectra.",
@@ -614,7 +628,8 @@
                     "type": "integer",
                     "description": "Debug level for IDMapper step. Increase for verbose logging",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             }
         },
@@ -628,7 +643,8 @@
                     "type": "integer",
                     "description": "Debug level for FileMerger step. Increase for verbose logging",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             }
         },
@@ -704,17 +720,12 @@
                     "help_text": "Infer proteins through:\n\n* 'aggregation'  =  aggregates all peptide scores across a protein (by calculating the maximum) (default)\n* 'bayesian'        =  compute a posterior probability for every protein based on a Bayesian network (i.e. using Epifany)\n* ('percolator' not yet supported)\n\n**Note:** If protein grouping is performed also depends on the `protein_quant` parameter (i.e. if peptides have to be unique or unique to a group only)",
                     "enum": ["aggregation", "bayesian"]
                 },
-                "epifany_debug": {
-                    "type": "integer",
-                    "description": "Debug level for Epifany step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0
-                },
                 "protein_inference_debug": {
                     "type": "integer",
                     "description": "Debug level for ProteinInferencer step. Increase for verbose logging",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fab fa-hubspot"
@@ -729,7 +740,8 @@
                     "type": "integer",
                     "description": "Debug level for IDConflictResolver step. Increase for verbose logging",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 },
                 "top": {
                     "type": "integer",
@@ -821,18 +833,23 @@
                 "inf_quant_debug": {
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
-                    "fa_icon": "fas fa-bug"
+                    "fa_icon": "fas fa-bug",
+                    "hidden": true,
+                    "default": 0
                 },
                 "proteinquant_debug": {
                     "type": "integer",
                     "description": "Debug level when running ProteinQuantifier.",
-                    "fa_icon": "fas fa-bug"
+                    "fa_icon": "fas fa-bug",
+                    "default": 0,
+                    "hidden": true
                 },
                 "msstatsconverter_debug": {
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
                     "fa_icon": "fas fa-bug",
-                    "default": 0
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -881,7 +898,8 @@
                     "description": "Debug level",
                     "default": 3,
                     "fa_icon": "fas fa-bug",
-                    "enum": [0, 1, 2, 3, 4]
+                    "enum": [0, 1, 2, 3, 4],
+                    "hidden": true
                 },
                 "diann_normalize": {
                     "type": "boolean",
