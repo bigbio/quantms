@@ -15,7 +15,7 @@ input:
       type: file
       description: |
         Input files separated by blank.
-      pattern: "*.consensusXML"
+      pattern: "*.{mzML,idXML,consensusXML}"
 output:
   - id_merge:
       type: file
