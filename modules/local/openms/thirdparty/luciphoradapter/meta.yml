@@ -28,7 +28,7 @@ output:
       description: Groovy Map containing sample information
   - out_id_ptmscores
       type: file
-      description: Protein/peptide identifications file. Scores potential phosphorylation sites
+      description: Protein/peptide identifications file. With scored potential modification sites
       pattern: "*.idXML"
   - log:
       type: file
