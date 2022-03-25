@@ -607,7 +607,7 @@
         "feature_mapper":{
             "title": "Feature Mapper",
             "type": "object",
-            "description": "Assigns protein/peptide identifications to features or consensus features.",
+            "description": "Assigns protein/peptide identifications to features or consensus features. Here, features generated from isobaric reporter intensities of fragment spectra.",
             "default": "",
             "properties": {
                 "idmapper_debug": {
