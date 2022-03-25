@@ -15,11 +15,11 @@ process SAMPLESHEET_CHECK {
     path "versions.yml", emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
-    // TODO validate experimental design file  check_samplesheet.py $args "${input_file}" ${is_sdrf} > input_check.log
+    // TODO validate experimental design file
     def args = task.ext.args ?: ''
 
     """
-    echo 1111 > input_check.log
+    check_samplesheet.py "${input_file}" ${is_sdrf} --CHECK_MS > input_check.log
 
     cat <<-END_VERSIONS > versions.yml
     ${task.process.tokenize(':').last()}:

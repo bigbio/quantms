@@ -109,6 +109,12 @@
                     "description": "Target-decoy amino acid sequence identity threshold for the shuffle algorithm. if the sequence identity is above this threshold, shuffling is repeated. In case of repeated failure, individual amino acids are 'mutated' to produce a difference amino acid sequence.",
                     "default": 0.5,
                     "fa_icon": "fas fa-sliders-h"
+                },
+                "decoydatabase_debug": {
+                    "type": "integer",
+                    "description": "Debug level for DecoyDatabase step. Increase for verbose logging.",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
                 }
             },
             "fa_icon": "fas fa-database",
@@ -465,10 +471,21 @@
                     "default": 0.01,
                     "fa_icon": "fas fa-filter"
                 },
+                "idfilter_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the IDFilter step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug"
+                },
                 "pp_debug": {
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
                     "fa_icon": "fas fa-bug"
+                },
+                "idscoreswitcher_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
                 }
             },
             "fa_icon": "fas fa-star-half-alt"
@@ -515,6 +532,12 @@
                     "description": "Use additional features whose values are learnt by correct entries. See help text. Default: 0 = none",
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Percolator provides the possibility to use so called description of correct features, i.e. features for which desirable values are learnt from the previously identified target PSMs. The absolute value of the difference between desired value and observed value is then used as predictive features.\n\n1 -> iso-electric point\n\n2 -> mass calibration\n\n4 -> retention time\n\n8 -> `delta_retention_time * delta_mass_calibration`"
+                },
+                "percolator_debug": {
+                    "type": "integer",
+                    "description": "Debug level for Percolator step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
                 }
             },
             "fa_icon": "fas fa-star-half"
@@ -531,6 +554,18 @@
                     "default": "none",
                     "fa_icon": "fas fa-list-ol",
                     "enum": ["none", "ignore_iqr_outliers", "set_iqr_to_closest_valid", "ignore_extreme_percentiles"]
+                },
+                "protein_fdr": {
+                    "type": "boolean",
+                    "description": "Perform FDR calculation on protein level",
+                    "default": false,
+                    "fa_icon": "fas fa-ban"
+                },
+                "idpep_debug": {
+                    "type": "integer",
+                    "description": "Debug level for IDPEP step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
                 }
             },
             "fa_icon": "far fa-star-half"
@@ -560,58 +595,42 @@
                     "description": "A threshold for the ratio of occurence/similarity scores of a peptide in other runs, to be reported. See help.",
                     "fa_icon": "fas fa-filter",
                     "help_text": "This allows filtering of peptide hits based on agreement between search engines. Every peptide sequence in the analysis has been identified by at least one search run. This parameter defines which fraction (between 0 and 1) of the remaining search runs must 'support' a peptide identification that should be kept. The meaning of 'support' differs slightly between algorithms: For best, worst, average and rank, each search run supports peptides that it has also identified among its top `consensusid_considered_top_hits` candidates. So `min_consensus_support` simply gives the fraction of additional search engines that must have identified a peptide. (For example, if there are three search runs, and only peptides identified by at least two of them should be kept, set `min_support` to 0.5.) For the similarity-based algorithms PEPMatrix and PEPIons, the 'support' for a peptide is the average similarity of the most-similar peptide from each (other) search run. (In the context of the JPR publication, this is the average of the similarity scores used in the consensus score calculation for a peptide.) Note: For most of the subsequent algorithms, only the best identification per spectrum is used."
+                },
+                "consensusid_debug": {
+                    "type": "integer",
+                    "description": "Debug level for ConsensusID. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug"
                 }
             },
             "fa_icon": "fas fa-code-branch"
         },
-        "consensus_process": {
-            "title": "Consensus process",
+        "feature_mapper":{
+            "title": "Feature Mapper",
             "type": "object",
-            "description": "Processing consensus files",
+            "description": "Assigns protein/peptide identifications to features or consensus features.",
             "default": "",
             "properties": {
-                "rt_tolerance": {
-                    "type": "number",
-                    "description": "RT tolerance (in seconds) for the matching of peptide identifications and (consensus) features.",
-                    "default": 5.0,
-                    "fa_icon": "fas fa-sliders-h"
-                },
-                "mz_tolerance": {
-                    "type": "number",
-                    "description": "RT tolerance (in seconds) for the matching of peptide identifications and (consensus) features.",
-                    "default": 20.0,
-                    "fa_icon": "fas fa-sliders-h"
-                },
-                "mz_measure": {
-                    "type": "string",
-                    "description": "Unit of 'mz_tolerance'",
-                    "default": "ppm",
-                    "enum": ["ppm", "Da"],
-                    "fa_icon": "fas fa-list-ol"
-                },
-                "mz_reference": {
-                    "type": "string",
-                    "description": "Source of m/z values for peptide identifications.",
-                    "default": "peptide",
-                    "enum": ["peptide", "precursor"],
-                    "fa_icon": "fas fa-list-ol"
-                },
-                "annotate_file_origin": {
-                    "type": "boolean",
-                    "description": " Store the original filename in each feature using meta value file_origin (for featureXML and consensusXML only).",
-                    "default": true,
-                    "fa_icon": "fas fa-list-ol",
-                    "hidden": true
-                },
-                "res_between_fet": {
-                    "type": "string",
-                    "description": "A map may contain multiple features with both identical (possibly modified i.e. not stripped) sequence and charge state. The feature with the 'highest intensity' is very likely the most reliable one. When switched on, the filter removes the sequence annotation from the lower intensity features, thereby resolving the multiplicity. Only the most reliable features for each (possibly modified i.e. not stripped) sequence maintain annotated with this peptide sequence.",
-                    "default": "off",
-                    "enum": ["off", "highest_intensity"],
-                    "fa_icon": "fas fa-list-ol"
+                "idmapper_debug": {
+                    "type": "integer",
+                    "description": "Debug level for IDMapper step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
                 }
-            },
-            "fa_icon": "fab fa-hubspot"
+            }
+        },
+        "file_merge": {
+            "title": "File Merge",
+            "type": "object",
+            "description": "Merge multiple files",
+            "default": "",
+            "properties": {
+                "filemerge_debug": {
+                    "type": "integer",
+                    "description": "Debug level for FileMerger step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
+                }
+            }
         },
         "protein_inference": {
             "title": "Protein inference",
@@ -625,12 +644,6 @@
                     "default": false,
                     "fa_icon": "fas fa-list-ol",
                     "hidden": true
-                },
-                "protein_fdr": {
-                    "type": "boolean",
-                    "description": "Additionally calculate the target-decoy FDR on protein-level based on the posteriors",
-                    "default": true,
-                    "fa_icon": "fas fa-list-ol"
                 },
                 "picked_fdr": {
                     "type": "boolean",
@@ -690,6 +703,18 @@
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Infer proteins through:\n\n* 'aggregation'  =  aggregates all peptide scores across a protein (by calculating the maximum) (default)\n* 'bayesian'        =  compute a posterior probability for every protein based on a Bayesian network (i.e. using Epifany)\n* ('percolator' not yet supported)\n\n**Note:** If protein grouping is performed also depends on the `protein_quant` parameter (i.e. if peptides have to be unique or unique to a group only)",
                     "enum": ["aggregation", "bayesian"]
+                },
+                "epifany_debug": {
+                    "type": "integer",
+                    "description": "Debug level for Epifany step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
+                },
+                "protein_inference_debug": {
+                    "type": "integer",
+                    "description": "Debug level for ProteinInferencer step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
                 }
             },
             "fa_icon": "fab fa-hubspot"
@@ -700,6 +725,12 @@
             "description": "",
             "default": "",
             "properties": {
+                "conflict_resolver_debug": {
+                    "type": "integer",
+                    "description": "Debug level for IDConflictResolver step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
+                },
                 "top": {
                     "type": "integer",
                     "description": "Calculate protein abundance from this number of proteotypic peptides (most abundant first; '0' for all, Default 3)",
@@ -791,6 +822,17 @@
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
                     "fa_icon": "fas fa-bug"
+                },
+                "proteinquant_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running ProteinQuantifier.",
+                    "fa_icon": "fas fa-bug"
+                },
+                "msstatsconverter_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -1123,7 +1165,10 @@
             "$ref": "#/definitions/consensus_id"
         },
         {
-            "$ref": "#/definitions/consensus_process"
+            "$ref": "#/definitions/feature_mapper"
+        },
+        {
+            "$ref": "#/definitions/file_merge"
         },
         {
             "$ref": "#/definitions/protein_inference"

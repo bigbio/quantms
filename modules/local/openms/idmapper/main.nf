@@ -8,7 +8,7 @@ process IDMAPPER {
         'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
 
     input:
-    tuple val(meta), path(id_file), path(consensusXML)
+    tuple val(meta), path(id_file), path(map_file)
 
     output:
     path "${id_file.baseName}_map.consensusXML", emit: id_map
@@ -22,12 +22,9 @@ process IDMAPPER {
     """
     IDMapper \\
         -id ${id_file} \\
-        -in ${consensusXML} \\
+        -in ${map_file} \\
         -threads $task.cpus \\
-        -rt_tolerance $params.rt_tolerance \\
-        -mz_tolerance $params.mz_tolerance \\
-        -mz_measure $params.mz_measure \\
-        -debug 100 \\
+        $args \\
         -out ${id_file.baseName}_map.consensusXML \\
         > ${id_file.baseName}_map.log
 

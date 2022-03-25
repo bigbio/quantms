@@ -23,7 +23,7 @@ process EPIFANY {
         -in ${consus_file} \\
         -protein_fdr true \\
         -threads $task.cpus \\
-        -debug 100 \\
+        $args \\
         -algorithm:keep_best_PSM_only $params.keep_best_PSM_only \\
         -algorithm:update_PSM_probabilities $params.update_PSM_probabilities \\
         -greedy_group_resolution $params.greedy_group_resolution \\

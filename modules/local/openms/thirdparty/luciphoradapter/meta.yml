@@ -28,7 +28,8 @@ output:
       description: Groovy Map containing sample information
   - ptm_in_id_luciphor:
       type: file
-      description: Output file
+      description: Protein/peptide identifications file. Scores potential phosphorylation sites
+      pattern: "*.idXML"
   - log:
       type: file
       description: log file

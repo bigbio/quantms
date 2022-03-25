@@ -14,9 +14,11 @@ input:
   - report:
       type: file
       description: DIA-NN main report file
+      pattern: "*.tsv"
   - exp_design:
       type: file
       description: An experimental design file including Sample and replicates column et al.
+      pattern: "*.tsv"
 output:
   - out_msstats:
       type: file
@@ -27,4 +29,4 @@ output:
       description: File containing software version
       pattern: "*.{version.txt}"
 authors:
-  - "@Chengxin Dai"
+  - "@daichengxin"

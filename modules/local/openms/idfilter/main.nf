@@ -1,5 +1,5 @@
 process IDFILTER {
-    label 'process_vrey_low'
+    label 'process_very_low'
     label 'process_single_thread'
 
     conda (params.enable_conda ? "openms::openms=2.8.0" : null)
@@ -25,7 +25,7 @@ process IDFILTER {
         -out ${id_file.baseName}_filter$suffix \\
         -threads $task.cpus \\
         $args \\
-        -debug 10 \\
+        -debug $params.idfilter_debug \\
         > ${id_file.baseName}_idfilter.log
 
     cat <<-END_VERSIONS > versions.yml

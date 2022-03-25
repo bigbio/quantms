@@ -8,15 +8,14 @@ import sys
 import errno
 import argparse
 from sdrf_pipelines.sdrf.sdrf import SdrfDataFrame
-from sdrf_pipelines.sdrf.sdrf_schema import MASS_SPECTROMETRY
+from sdrf_pipelines.sdrf.sdrf_schema import MASS_SPECTROMETRY, DEFAULT_TEMPLATE
 import pandas as pd
 
 def parse_args(args=None):
     Description = "Reformat nf-core/quantms sdrf file and check its contents."
-    Epilog = "Example usage: python validate_sdrf.py <template> <sdrf> <check_ms>"
+    Epilog = "Example usage: python validate_sdrf.py <sdrf> <check_ms>"
 
     parser = argparse.ArgumentParser(description=Description, epilog=Epilog)
-    parser.add_argument("TEMPLATE", help="Input sdrf file.")
     parser.add_argument("SDRF", help="SDRF/Expdesign file to be validated")
     parser.add_argument("ISSDRF", help="SDRF file or Expdesign file")
     parser.add_argument("--CHECK_MS", help="check mass spectrometry fields in SDRF.", action="store_true")
@@ -43,9 +42,9 @@ def print_error(error, context="Line", context_str=""):
     print(error_str)
     sys.exit(1)
 
-def check_sdrf(template, check_ms, sdrf):
+def check_sdrf(check_ms, sdrf):
     df = SdrfDataFrame.parse(sdrf)
-    errors = df.validate(template)
+    errors = df.validate(DEFAULT_TEMPLATE)
     if check_ms:
         errors = errors + df.validate(MASS_SPECTROMETRY)
     print(errors)
@@ -107,7 +106,7 @@ def main(args=None):
     args = parse_args(args)
 
     if args.ISSDRF == "true" :
-        check_sdrf(args.TEMPLATE, args.CHECK_MS, args.SDRF)
+        check_sdrf(args.CHECK_MS, args.SDRF)
     else:
         check_expdesign(args.SDRF)
 

@@ -14,12 +14,15 @@ input:
   - spectra:
       type: file
       description: Spectra file
+      pattern: "*.mzML"
   - fasta:
       type: file
       description: FASTA sequence databases
+      pattern: "*.{fasta,fa}"
   - cfg:
       type: file
       description: specifies a configuration file to load options/commands from.
+      pattern: "*.cfg"
 output:
   - lib_splib:
       type: file
