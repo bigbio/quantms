@@ -26,9 +26,10 @@ output:
   - meta:
       type: map
       description: Groovy Map containing sample information
-  - ptm_in_id_luciphor:
+  - out_id_ptmscores:
       type: file
-      description: Output file
+      description: Protein/peptide identifications file. With scored potential modification sites
+      pattern: "*.idXML"
   - log:
       type: file
       description: log file

@@ -15,10 +15,12 @@ input:
       type: file
       description: |
         Input files separated by blank.
+      pattern: "*.{mzML,idXML,consensusXML}"
 output:
   - id_merge:
       type: file
-      description: Output file
+      description: Output Merged file
+      pattern: "*.{mzML,idXML,consensusXML}"
   - log:
       type: file
       description: log file

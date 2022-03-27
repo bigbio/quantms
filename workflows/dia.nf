@@ -55,6 +55,8 @@ workflow DIA {
 
     emit:
     versions    = versions
+    diann_report = DIANNSEARCH.out.report
+    out_msstats = CONVERT2MSSTATS.out.out_msstats
 }
 
 /*

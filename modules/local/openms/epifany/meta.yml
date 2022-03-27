@@ -21,6 +21,7 @@ output:
       type: file
       description: |
         identification results with scored/grouped proteins.
+      pattern: "*.{idXML,consensusXML}"
   - log:
       type: file
       description: log file

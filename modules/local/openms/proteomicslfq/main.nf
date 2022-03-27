@@ -53,7 +53,6 @@ process PROTEOMICSLFQ {
         ${decoys_present} \\
         -out_cxml out.consensusXML \\
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
-        -debug ${params.inf_quant_debug} \\
         $args \\
         > proteomicslfq.log
 

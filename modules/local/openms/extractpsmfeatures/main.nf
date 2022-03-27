@@ -1,4 +1,4 @@
-process EXTRACTPSMFEATURE {
+process EXTRACTPSMFEATURES {
     label 'process_very_low'
     label 'process_single_thread'
 
@@ -11,7 +11,7 @@ process EXTRACTPSMFEATURE {
     tuple val(meta), path(id_file)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_feat.idXML"), emit: id_files_idx_feat
+    tuple val(meta), path("${id_file.baseName}_feat.idXML"), emit: id_files_feat
     path "versions.yml", emit: version
     path "*.log", emit: log
 

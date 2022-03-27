@@ -31,4 +31,4 @@ output:
       description: log file
       pattern: "*.log"
 authors:
-  - "@Chengxin Dai"
+  - "@daichengxin"
