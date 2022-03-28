@@ -18,10 +18,12 @@ input:
       type: file
       description: |
         Input idXML file containing the identifications.
+      pattern: "*.idXML"
   - database:
       type: file
       description: |
         Input sequence database in FASTA format.
+      pattern: "*.{fasta,fa}"
 output:
   - meta:
       type: map
@@ -30,6 +32,7 @@ output:
       type: file
       description: |
         Output idXML file.
+      pattern: "*.idXML"
   - log:
       type: file
       description: log file

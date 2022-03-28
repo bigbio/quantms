@@ -25,7 +25,7 @@ process DECOYDATABASE {
         -method $params.decoy_method \\
         -shuffle_max_attempts $params.shuffle_max_attempts \\
         -shuffle_sequence_identity_threshold $params.shuffle_sequence_identity_threshold \\
-        -debug 100 \\
+        -debug $params.decoydatabase_debug \\
         $args \\
         > ${db_for_decoy.baseName}_decoy_database.log
 

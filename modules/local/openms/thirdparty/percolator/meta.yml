@@ -17,6 +17,7 @@ input:
       type: file
       description: |
         Input idXML file containing the identifications.
+      pattern: "*.idXML"
 output:
   - meta:
       type: map

@@ -27,6 +27,7 @@ output:
   - out_mztab:
       type: file
       description: Output file (mzTab)
+      pattern: "*.mzTab"
   - log:
       type: file
       description: log file

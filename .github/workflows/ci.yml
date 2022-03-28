@@ -29,7 +29,7 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ""
             NXF_EDGE: "1"
-        test_profile: ["test", "test_lfq", "test_dia"]
+        test_profile: ["test", "test_lfq", "test_dia", "test_localize"]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2

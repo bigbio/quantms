@@ -18,6 +18,7 @@ input:
       type: file
       description: |
         Identifications from searching a target-decoy database.
+      pattern: "*.idXML"
 output:
   - meta:
       type: map
@@ -26,6 +27,7 @@ output:
       type: file
       description: |
         Identifications with annotated FDR.
+      pattern: "*.idXML"
   - log:
       type: file
       description: log file

@@ -69,7 +69,7 @@ workflow ID {
     // SUBWORKFLOW：PHOSPHOSCORING
     //
     if (params.enable_mod_localization) {
-        PHOSPHOSCORING(FILE_PREPARATION.out.results.join(PSMFDRCONTROL.out.id_filtered))
+        PHOSPHOSCORING(file_preparation_results, PSMFDRCONTROL.out.id_filtered)
         ch_software_versions = ch_software_versions.mix(PHOSPHOSCORING.out.version.ifEmpty(null))
         id_results = PHOSPHOSCORING.out.id_luciphor
     } else {

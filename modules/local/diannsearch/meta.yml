@@ -14,15 +14,18 @@ input:
   - lib:
       type: file
       description: Spectra library file
+      pattern: "*.tsv"
   - spectra:
       type: dir
       description: The directory for spectra files
   - searchdb:
       type: file
       description: Fasta sequence file
+      pattern: "*.{fasta,fa}"
   - cfg:
       type: dir
       description: Specifies a file to load options/commands from.
+      pattern: "*.cfg"
 output:
   - report:
       type: file
@@ -41,4 +44,4 @@ output:
       description: File containing software version
       pattern: "*.{version.txt}"
 authors:
-  - "@Chengxin Dai"
+  - "@daichengxin"

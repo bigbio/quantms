@@ -19,7 +19,7 @@ input:
       description: |
         Identifications file
       pattern: "*.{idXML, mzid}"
-  - consensusXML:
+  - map_file:
       type: file
       description: Feature map/consensus map file
       pattern: "*.{featureXML, consensusXML, mzq}"
@@ -27,6 +27,7 @@ output:
   - id_map:
       type: file
       description: Output file
+      pattern: "*.{featureXML, consensusXML, mzq}"
   - log:
       type: file
       description: log file
