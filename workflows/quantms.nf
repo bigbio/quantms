@@ -42,7 +42,7 @@ include { PMULTIQC as SUMMARYPIPELINE } from '../modules/local/pmultiqc/main'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { FILE_PREPARATION as FILE_PREPARATION_LFQ; FILE_PREPARATION as FILE_PREPARATION_TMT; FILE_PREPARATION as FILE_PREPARATION_DIA } from '../subworkflows/local/file_preparation'
+include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 
 /*
@@ -91,54 +91,42 @@ workflow QUANTMS {
     //
     // SUBWORKFLOW: File preparation
     //
-    FILE_PREPARATION_TMT (
-        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso
-    )
-    FILE_PREPARATION_LFQ (
-        CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq
+    FILE_PREPARATION (
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
     )
 
-    FILE_PREPARATION_DIA (
-        CREATE_INPUT_CHANNEL.out.ch_meta_config_dia
-    )
+    ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 
-    ch_versions = ch_versions.mix(FILE_PREPARATION_TMT.out.version.ifEmpty(null))
-    ch_versions = ch_versions.mix(FILE_PREPARATION_LFQ.out.version.ifEmpty(null))
-    ch_versions = ch_versions.mix(FILE_PREPARATION_DIA.out.version.ifEmpty(null))
-
-    FILE_PREPARATION_LFQ.out.results
+    FILE_PREPARATION.out.results
         .map { it -> it[1] }
-        .set { ch_pmultiqc_mzmls_lfq }
+        .set { ch_pmultiqc_mzmls }
 
-    FILE_PREPARATION_TMT.out.results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_mzmls_iso }
+    FILE_PREPARATION.out.results
+            .branch {
+                dia: it[0].acquisition_method.contains("dia")
+                iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
+                lfq: it[0].labelling_type.contains("label free")
+            }
+            .set{ch_fileprep_result}
 
-    FILE_PREPARATION_DIA.out.results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_mzmls_dia }
-
-    ch_pmultiqc_mzmls = ch_pmultiqc_mzmls_lfq.mix(ch_pmultiqc_mzmls_iso).mix(ch_pmultiqc_mzmls_dia)
 
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
-    // TODO if we ever allow mixed labelling types, we need to split the files according to meta.labelling_type which contains
-    // labelling_type per file
     ch_pipeline_results = Channel.empty()
     ch_ids_pmultiqc = Channel.empty()
 
-    TMT(FILE_PREPARATION_TMT.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
     ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-    LFQ(FILE_PREPARATION_LFQ.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
-    DIA(FILE_PREPARATION_DIA.out.results, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign)
 
     // ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DIA.out.ch_pmultiqc_ids)
     // ch_pipeline_results = ch_pipeline_results.mix(DIA.out.final_result)

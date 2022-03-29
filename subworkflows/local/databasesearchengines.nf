@@ -4,7 +4,6 @@
 
 include { SEARCHENGINEMSGF } from '../../modules/local/openms/thirdparty/searchenginemsgf/main'
 include { SEARCHENGINECOMET} from '../../modules/local/openms/thirdparty/searchenginecomet/main'
-include { INDEXPEPTIDES } from '../../modules/local/openms/indexpeptides/main'
 
 workflow DATABASESEARCHENGINES {
     take:
@@ -26,11 +25,8 @@ workflow DATABASESEARCHENGINES {
         ch_id_comet = ch_id_comet.mix(SEARCHENGINECOMET.out.id_files_comet)
     }
 
-    INDEXPEPTIDES(ch_id_msgf.mix(ch_id_comet).combine(searchengine_in_db))
-    ch_versions = ch_versions.mix(INDEXPEPTIDES.out.version)
-
     emit:
-    ch_id_files_idx = INDEXPEPTIDES.out.id_files_idx
+    ch_id_files_idx = ch_id_msgf.mix(ch_id_comet)
 
     versions        = ch_versions
 }

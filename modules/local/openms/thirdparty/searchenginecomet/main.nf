@@ -2,7 +2,7 @@ process SEARCHENGINECOMET {
     tag "$meta.id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::bumbershoot bioconda::comet-ms bioconda::crux-toolkit=3.2 bioconda::fido=1.0 conda-forge::gnuplot bioconda::luciphor2=2020_04_03 bioconda::msgf_plus=2021.03.22 bioconda::openms=2.8.0 bioconda::pepnovo=20101117 bioconda::percolator=3.5 bioconda::sirius-csifingerid=4.0.1 bioconda::thermorawfileparser=1.3.4 bioconda::xtandem=15.12.15.2 bioconda::openms-thirdparty=2.8.0" : null)
+    conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
         'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
@@ -67,6 +67,18 @@ process SEARCHENGINECOMET {
         else if (meta.enzyme == "Lys-C") enzyme = "Lys-C/P"
     }
 
+    num_enzyme_termini = ""
+    if (meta.enzyme == "unspecific cleavage")
+    {
+        num_enzyme_termini = "none"
+    }
+    else if (params.num_enzyme_termini == "fully")
+    {
+        num_enzyme_termini = "full"
+    }
+
+    il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
+
     """
     CometAdapter \\
         -in ${mzml_file} \\
@@ -89,6 +101,8 @@ process SEARCHENGINECOMET {
         -precursor_error_units $meta.precursormasstoleranceunit \\
         -fragment_mass_tolerance ${bin_tol} \\
         -fragment_bin_offset ${bin_offset} \\
+        ${il_equiv} \\
+        -PeptideIndexing:unmatched_action ${params.unmatched_action} \\
         -debug $params.db_debug \\
         -force \\
         $args \\

@@ -14,8 +14,8 @@
             "properties": {
                 "input": {
                     "type": "string",
-                    "description": "URI/path to an [SDRF](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) file **OR** globbing pattern for URIs/paths of mzML or Thermo RAW files",
-                    "help_text": "The input to the pipeline can be specified in two **mutually exclusive** ways:\n  - using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and\nannotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\nAn OpenMS-style experimental design will be generated based on the factor columns of the SDRF. The settings for the\nfollowing parameters will currently be overwritten by the ones specified in the SDRF:\n\n    * `fixed_mods`,\n    * `variable_mods`,\n    * `precursor_mass_tolerance`,\n    * `precursor_mass_tolerance_unit`,\n    * `fragment_mass_tolerance`,\n    * `fragment_mass_tolerance_unit`,\n    * `fragment_method`,\n    * `enzyme`\n  - by specifying globbing patterns to the input spectrum files in Thermo RAW or mzML format (e.g. `/data/experiment{1,2,3}_rep*.mzML`). An experimental design should be provided with the `expdesign` parameter.",
+                    "description": "URI/path to an [SDRF](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) file (.sdrf.tsv) **OR** [OpenMS-style experimental design](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) with paths to spectra files (.tsv)",
+                    "help_text": "Input is specified by using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and\nannotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\nAn OpenMS-style experimental design will be generated based on the factor columns of the SDRF. The settings for the\nfollowing parameters will currently be overwritten by the ones specified in the SDRF:\n\n    * `fixed_mods`,\n    * `variable_mods`,\n    * `precursor_mass_tolerance`,\n    * `precursor_mass_tolerance_unit`,\n    * `fragment_mass_tolerance`,\n    * `fragment_mass_tolerance_unit`,\n    * `fragment_method`,\n    * `enzyme`\n  You can also specify an [OpenMS-style experimental design](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) directly (.tsv ending). In this case, the aforementioned parameters have to be specified or defaults will be used.",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -35,29 +35,20 @@
                     "type": "string",
                     "description": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "fa_icon": "fas fa-file-signature"
-                }
-            }
-        },
-        "main_parameters_sdrf": {
-            "title": "Main parameters (SDRF)",
-            "type": "object",
-            "description": "In case your input was an SDRF files, the following optional parameters can be set.",
-            "default": "",
-            "properties": {
+                },
                 "root_folder": {
                     "type": "string",
-                    "description": "Root folder in which the spectrum files specified in the SDRF are searched",
+                    "description": "Root folder in which the spectrum files specified in the SDRF/design are searched",
                     "fa_icon": "fas fa-folder",
-                    "help_text": "This optional parameter can be used to specify a root folder in which the spectrum files specified in the SDRF are searched.\nIt is usually used if you have a local version of the experiment already. Note that this option does not support recursive\nsearching yet."
+                    "help_text": "This optional parameter can be used to specify a root folder in which the spectrum files specified in the SDRF/design are searched.\nIt is usually used if you have a local version of the experiment already. Note that this option does not support recursive\nsearching yet."
                 },
                 "local_input_type": {
                     "type": "string",
-                    "description": "Overwrite the file type/extension of the filename as specified in the SDRF",
+                    "description": "Overwrite the file type/extension of the filename as specified in the SDRF/design",
                     "fa_icon": "fas fa-file-invoice",
-                    "help_text": "If the above [`--root_folder`](#params_root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML' or 'raw' (the letter cases should match your files exactly)."
+                    "help_text": "If the above [`--root_folder`](#params_root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF/design. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML' or 'raw' (the letter cases should match your files exactly)."
                 }
-            },
-            "fa_icon": "far fa-chart-bar"
+            }
         },
         "protein_database": {
             "title": "Protein database",
@@ -144,98 +135,6 @@
                     "description": "Which MS levels to pick as comma separated list. Leave empty for auto-detection.",
                     "fa_icon": "fas fa-font",
                     "help_text": "Which MS levels to pick as comma separated list, e.g. `--peakpicking_ms_levels 1,2`. Leave empty for auto-detection."
-                }
-            },
-            "fa_icon": "far fa-chart-bar"
-        },
-        "isobaric_analyzer": {
-            "title": "Isobaric analyzer",
-            "type": "object",
-            "description": "Extracts and normalizes labeling information",
-            "default": "",
-            "properties": {
-                "labelling_type": {
-                    "type": "string",
-                    "description": "label method",
-                    "fa_icon": "fas fa-font",
-                    "help_text": "Isobaric Quantification method used in the experiment",
-                    "enum": [
-                        "label free sample",
-                        "itraq4plex",
-                        "itraq8plex",
-                        "tmt6plex",
-                        "tmt10plex",
-                        "tmt11plex",
-                        "tmt16plex"
-                    ]
-                },
-                "select_activation": {
-                    "type": "string",
-                    "description": "Operate only on MSn scans where any of its precursors features a certain activation method.",
-                    "fa_icon": "fas fa-font",
-                    "help_text": "Operate only on MSn scans where any of its precursors features a certain activation method. Set to empty to disable",
-                    "enum": ["HCD", "CID", "ETD", "ECD"]
-                },
-                "reporter_mass_shift": {
-                    "type": "number",
-                    "description": "Allowed shift (left to right) in Th from the expected position",
-                    "default": 0.002,
-                    "fa_icon": "fas fa-sliders-h",
-                    "help_text": "Allowed shift (left to right) in Th from the expected position."
-                },
-                "min_precursor_intensity": {
-                    "type": "number",
-                    "description": "Minimum intensity of the precursor to be extracted",
-                    "default": 1.0,
-                    "fa_icon": "fas fa-sliders-h"
-                },
-                "min_precursor_purity": {
-                    "type": "number",
-                    "description": "Minimum fraction of the total intensity. 0.0:1.0",
-                    "default": 0.0,
-                    "fa_icon": "fas fa-sliders-h",
-                    "help_text": "Minimum fraction of the total intensity in the isolation window of the precursor spectrum"
-                },
-                "min_reporter_intensity": {
-                    "type": "number",
-                    "description": "Minimum intensity of the individual reporter ions to be extracted.",
-                    "default": 0.0,
-                    "fa_icon": "fas fa-sliders-h",
-                    "help_text": "Minimum intensity of the individual reporter ions to be extracted."
-                },
-                "precursor_isotope_deviation": {
-                    "type": "number",
-                    "description": "Maximum allowed deviation (in ppm) betweed theoretical and observed isotopic peaks of the precursor peak",
-                    "default": 10.0,
-                    "fa_icon": "fas fa-sliders-h",
-                    "help_text": "Maximum allowed deviation (in ppm) betweed theoretical and observed isotopic peaks of the precursor peak."
-                },
-                "isotope_correction": {
-                    "type": "boolean",
-                    "description": "Enable isotope correction (highly recommended)",
-                    "default": true,
-                    "fa_icon": "fas fa-toggle-on"
-                },
-                "iso_normalization": {
-                    "type": "boolean",
-                    "description": "Enable normalization of the channel intensities",
-                    "default": false,
-                    "fa_icon": "fas fa-toggle-on",
-                    "help_text": "The normalization is done by using the Median of Rations.Also the ratios the medians is provided as control measure."
-                },
-                "reference_channel": {
-                    "type": "integer",
-                    "description": "The reference channel",
-                    "fa_icon": "fas fa-list-ol",
-                    "help_text": "The reference channel",
-                    "default": 126
-                },
-                "iso_debug": {
-                    "type": "integer",
-                    "description": "set the debug level",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
                 }
             },
             "fa_icon": "far fa-chart-bar"
@@ -440,19 +339,18 @@
             "description": "",
             "default": "",
             "properties": {
-                "allow_unmatched": {
-                    "type": "boolean",
-                    "description": "Do not fail if there are some unmatched peptides. Only activate as last resort, if you know that the rest of your settings are fine!",
-                    "default": false,
+                "unmatched_action": {
+                    "type": "string",
+                    "description": "What to do when peptides are found that do not follow a unified set of rules (since search engines sometimes differ in their interpretation of them). ",
+                    "default": "warn",
                     "fa_icon": "far fa-check-square",
-                    "enum": [false, true]
+                    "enum": ["warn", "error", "remove"]
                 },
                 "IL_equivalent": {
                     "type": "boolean",
                     "description": "Should isoleucine and leucine be treated interchangeably when mapping search engine hits to the database? Default: true",
                     "default": true,
-                    "fa_icon": "far fa-check-square",
-                    "enum": [true, false]
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fas fa-project-diagram"
@@ -654,12 +552,20 @@
             "description": "To group proteins, calculate scores on the protein (group) level and to potentially modify associations from peptides to proteins.",
             "default": "",
             "properties": {
-                "protein_inference_bayesian": {
-                    "type": "boolean",
-                    "description": "Beyesian is used if protein inference is done with Epifany",
-                    "default": false,
+                "protein_inference_method": {
+                    "type": "string",
+                    "description": "The inference method to use. 'aggregation' (default) or 'bayesian'.",
+                    "default": "aggregation",
                     "fa_icon": "fas fa-list-ol",
-                    "hidden": true
+                    "help_text": "Infer proteins through:\n\n* 'aggregation'  =  aggregates all peptide scores across a protein (by calculating the maximum) (default)\n* 'bayesian'        =  compute a posterior probability for every protein based on a Bayesian network (i.e. using Epifany)\n* ('percolator' not yet supported)\n\n**Note:** If protein grouping is performed also depends on the `protein_quant` parameter (i.e. if peptides have to be unique or unique to a group only)",
+                    "enum": ["aggregation", "bayesian"]
+                },
+                "protein_level_fdr_cutoff": {
+                    "type": "number",
+                    "description": "The experiment-wide protein (group)-level FDR cutoff. Default: 0.05",
+                    "default": 0.01,
+                    "fa_icon": "fas fa-filter",
+                    "help_text": "This can be protein level if 'strictly_unique_peptides' are used for protein quantification. See [`--protein_quant`](#params_protein_quant)"
                 },
                 "picked_fdr": {
                     "type": "boolean",
@@ -670,9 +576,9 @@
                 },
                 "protein_score": {
                     "type": "string",
-                    "description": "How to aggregate scores of peptides matching to the same protein",
+                    "description": "[Ignored in Bayesian] How to aggregate scores of peptides matching to the same protein",
                     "default": "best",
-                    "enum": ["best", "product", "sum", "maximum"],
+                    "enum": ["best", "product", "sum"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "min_peptides_per_protein": {
@@ -683,46 +589,20 @@
                 },
                 "top_PSMs": {
                     "type": "integer",
-                    "description": "Consider only top X PSMs per spectrum. 0 considers all.(Default 1).",
+                    "description": "Consider only the top X PSMs per spectrum to find the best PSM per peptide. 0 considers all.",
                     "default": 1,
                     "fa_icon": "fas fa-filter"
                 },
-                "greedy_group_resolution": {
-                    "type": "string",
-                    "description": "Post-process inference output with greedy resolution of shared peptides based on the parent protein probabilities. Also adds the resolved ambiguity groups to output.",
-                    "default": "none",
-                    "enum": ["none", "remove_associations_only", "remove_proteins_wo_evidence"]
-                },
-                "keep_best_PSM_only": {
-                    "type": "boolean",
-                    "description": "Epifany uses the best PSM per peptide for inference. Discard the rest (true) or keepe.g. for quantification/reporting?",
-                    "default": true,
-                    "fa_icon": "fas fa-list-ol"
-                },
                 "update_PSM_probabilities": {
                     "type": "boolean",
-                    "description": "(Experimental:) Update PSM probabilities with their posteriors under consideration of the protein probabilities.",
-                    "default": true,
-                    "fa_icon": "fas fa-list-ol"
-                },
-                "protein_level_fdr_cutoff": {
-                    "type": "number",
-                    "description": "The experiment-wide protein (group)-level FDR cutoff. Default: 0.05",
-                    "default": 0.01,
-                    "fa_icon": "fas fa-filter",
-                    "help_text": "This can be protein level if 'strictly_unique_peptides' are used for protein quantification. See [`--protein_quant`](#params_protein_quant)"
-                },
-                "protein_inference_method": {
-                    "type": "string",
-                    "description": "The inference method to use. 'aggregation' (default) or 'bayesian'.",
-                    "default": "aggregation",
+                    "description": "[Bayesian-only; Experimental] Update PSM probabilities with their posteriors under consideration of the protein probabilities.",
+                    "default": false,
                     "fa_icon": "fas fa-list-ol",
-                    "help_text": "Infer proteins through:\n\n* 'aggregation'  =  aggregates all peptide scores across a protein (by calculating the maximum) (default)\n* 'bayesian'        =  compute a posterior probability for every protein based on a Bayesian network (i.e. using Epifany)\n* ('percolator' not yet supported)\n\n**Note:** If protein grouping is performed also depends on the `protein_quant` parameter (i.e. if peptides have to be unique or unique to a group only)",
-                    "enum": ["aggregation", "bayesian"]
+                    "hidden": true
                 },
                 "protein_inference_debug": {
                     "type": "integer",
-                    "description": "Debug level for ProteinInferencer step. Increase for verbose logging",
+                    "description": "Debug level for the protein inference step. Increase for verbose logging",
                     "fa_icon": "fas fa-bug",
                     "default": 0,
                     "hidden": true
@@ -730,19 +610,70 @@
             },
             "fa_icon": "fab fa-hubspot"
         },
-        "protein_quantification": {
-            "title": "Protein Quantification",
+        "protein_quantification_dda": {
+            "title": "Protein Quantification (DDA)",
+            "type": "object",
+            "description": "General protein quantification settings for both LFQ and Isobaric labelling.",
+            "default": "",
+            "properties": {
+                "top": {
+                    "type": "integer",
+                    "description": "Calculate protein abundance from this number of proteotypic peptides (most abundant first; '0' for all, Default 3)",
+                    "default": 3,
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "average": {
+                    "type": "string",
+                    "description": "Averaging method used to compute protein abundances from peptide abundances.",
+                    "default": "median",
+                    "enum": ["median", "mean", "weighted_mean", "sum"],
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "best_charge_and_fraction": {
+                    "type": "boolean",
+                    "description": "Distinguish between fraction and charge states of a peptide. (default: 'false')",
+                    "fa_icon": "far fa-check-square"
+                },
+                "ratios": {
+                    "type": "boolean",
+                    "description": "Add the log2 ratios of the abundance values to the output.",
+                    "default": "false",
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "normalize": {
+                    "type": "boolean",
+                    "description": "Scale peptide abundances so that medians of all samples are equal.(Default false)",
+                    "default": "false",
+                    "fa_icon": "far fa-check-square"
+                },
+                "fix_peptides": {
+                    "type": "boolean",
+                    "description": "Use the same peptides for protein quantification across all samples.(Default false)",
+                    "default": "false",
+                    "fa_icon": "fas fa-bug"
+                },
+                "include_all": {
+                    "type": "boolean",
+                    "description": "Include results for proteins with fewer proteotypic peptide than indicated by top.",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square"
+                },
+                "protein_quant": {
+                    "type": "string",
+                    "description": "Quantify proteins based on:\n\n* 'unique_peptides' = use peptides mapping to single proteins or a group of indistinguishable proteins (according to the set of experimentally identified peptides)\n* 'strictly_unique_peptides' (only LFQ) = use peptides mapping to a unique single protein only\n* 'shared_peptides' = use shared peptides, too, but only greedily for its best group (by inference score and nr. of peptides)",
+                    "default": "unique_peptides",
+                    "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
+                    "fa_icon": "fas fa-list-ol"
+                }
+            },
+            "fa_icon": "fas fa-braille"
+        },
+        "protein_quantification_lfq": {
+            "title": "Protein Quantification (LFQ)",
             "type": "object",
             "description": "",
             "default": "",
             "properties": {
-                "conflict_resolver_debug": {
-                    "type": "integer",
-                    "description": "Debug level for IDConflictResolver step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
-                },
                 "top": {
                     "type": "integer",
                     "description": "Calculate protein abundance from this number of proteotypic peptides (most abundant first; '0' for all, Default 3)",
@@ -830,29 +761,101 @@
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
-                "inf_quant_debug": {
+                "plfq_debug": {
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
                     "fa_icon": "fas fa-bug",
                     "hidden": true,
                     "default": 0
+                }
+            },
+            "fa_icon": "fas fa-braille"
+        },
+        "isobaric_analyzer": {
+            "title": "Isobaric analyzer",
+            "type": "object",
+            "description": "Extracts and normalizes labeling information",
+            "default": "",
+            "properties": {
+                "labelling_type": {
+                    "type": "string",
+                    "description": "Isobaric labelling method. Will be ignored if SDRF was given.",
+                    "fa_icon": "fas fa-font",
+                    "help_text": "Isobaric Quantification method used in the experiment.",
+                    "enum": [
+                        "itraq4plex",
+                        "itraq8plex",
+                        "tmt6plex",
+                        "tmt10plex",
+                        "tmt11plex",
+                        "tmt16plex"
+                    ]
                 },
-                "proteinquant_debug": {
-                    "type": "integer",
-                    "description": "Debug level when running ProteinQuantifier.",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
+                "select_activation": {
+                    "type": "string",
+                    "description": "Operate only on MSn scans where any of its precursors features a certain activation method. Set to empty to disable.",
+                    "fa_icon": "fas fa-font",
+                    "enum": ["HCD", "CID", "ETD", "ECD"]
                 },
-                "msstatsconverter_debug": {
+                "reporter_mass_shift": {
+                    "type": "number",
+                    "description": "Allowed shift (left to right) in Th from the expected position",
+                    "default": 0.002,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "min_precursor_intensity": {
+                    "type": "number",
+                    "description": "Minimum intensity of the precursor to be extracted",
+                    "default": 1.0,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "min_precursor_purity": {
+                    "type": "number",
+                    "description": "Minimum fraction of the total intensity. 0.0:1.0",
+                    "default": 0.0,
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "Minimum fraction of the total intensity in the isolation window of the precursor spectrum"
+                },
+                "min_reporter_intensity": {
+                    "type": "number",
+                    "description": "Minimum intensity of the individual reporter ions to be extracted.",
+                    "default": 0.0,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "precursor_isotope_deviation": {
+                    "type": "number",
+                    "description": "Maximum allowed deviation (in ppm) between theoretical and observed isotopic peaks of the precursor peak",
+                    "default": 10.0,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "isotope_correction": {
+                    "type": "boolean",
+                    "description": "Enable isotope correction (highly recommended)",
+                    "default": true,
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "iso_normalization": {
+                    "type": "boolean",
+                    "description": "Enable normalization of the channel intensities",
+                    "default": false,
+                    "fa_icon": "fas fa-toggle-on",
+                    "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
+                },
+                "reference_channel": {
                     "type": "integer",
-                    "description": "Debug level when running the re-scoring. Logs become more verbose and at '>666' potentially very large temporary files are kept.",
+                    "description": "The reference channel, e.g. for calculating ratios.",
+                    "fa_icon": "fas fa-list-ol",
+                    "default": 126
+                },
+                "iso_debug": {
+                    "type": "integer",
+                    "description": "Set the debug level",
                     "fa_icon": "fas fa-bug",
                     "default": 0,
                     "hidden": true
                 }
             },
-            "fa_icon": "fas fa-braille"
+            "fa_icon": "far fa-chart-bar"
         },
         "DIA-NN": {
             "title": "DIA-NN",
@@ -860,9 +863,9 @@
             "description": "Settings for DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
             "default": "",
             "properties": {
-                "acqusition_method": {
+                "acquisition_method": {
                     "type": "string",
-                    "description": "Proteomics data acquistion method",
+                    "description": "Proteomics data acquisition method",
                     "default": "dda",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
@@ -903,7 +906,7 @@
                 },
                 "diann_normalize": {
                     "type": "boolean",
-                    "description": "Enable cross-run normalisation between runs by diann.",
+                    "description": "Enable cross-run normalization between runs by diann.",
                     "default": true,
                     "fa_icon": "far fa-check-square"
                 }
@@ -1150,16 +1153,10 @@
             "$ref": "#/definitions/input_output_options"
         },
         {
-            "$ref": "#/definitions/main_parameters_sdrf"
-        },
-        {
             "$ref": "#/definitions/protein_database"
         },
         {
             "$ref": "#/definitions/spectrum_preprocessing"
-        },
-        {
-            "$ref": "#/definitions/isobaric_analyzer"
         },
         {
             "$ref": "#/definitions/database_search"
@@ -1192,7 +1189,13 @@
             "$ref": "#/definitions/protein_inference"
         },
         {
-            "$ref": "#/definitions/protein_quantification"
+            "$ref": "#/definitions/protein_quantification_dda"
+        },
+        {
+            "$ref": "#/definitions/protein_quantification_lfq"
+        },
+        {
+            "$ref": "#/definitions/isobaric_analyzer"
         },
         {
             "$ref": "#/definitions/DIA-NN"
