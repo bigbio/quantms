@@ -783,7 +783,7 @@
                     "fa_icon": "fas fa-font",
                     "help_text": "Isobaric Quantification method used in the experiment.",
                     "enum": [
-                        "label free sample"
+                        "label free sample",
                         "itraq4plex",
                         "itraq8plex",
                         "tmt6plex",
