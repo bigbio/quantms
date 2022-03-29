@@ -16,6 +16,8 @@ process PROTEININFERENCE {
 
     script:
     def args = task.ext.args ?: ''
+    gg = params.protein_quant == 'shared_peptides' ? '-Algorithm:greedy_group_resolution' : ''
+    groups = params.protein_quant == 'strictly_unique_peptides' ? 'false' : 'true'
 
     """
     ProteinInference \\
@@ -24,6 +26,9 @@ process PROTEININFERENCE {
         -picked_fdr $params.picked_fdr \\
         -picked_decoy_string $params.decoy_string \\
         -protein_fdr true \\
+        -Algorithm:use_shared_peptides $params.use_shared_peptides \\
+        -Algorithm:annotate_indistinguishable_groups $groups \\
+        $gg \\
         -Algorithm:score_aggregation_method $params.protein_score \\
         -Algorithm:min_peptides_per_protein $params.min_peptides_per_protein \\
         -out ${consus_file.baseName}_epi.consensusXML \\
