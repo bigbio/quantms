@@ -4,8 +4,8 @@ process FILEMERGE {
 
     conda (params.enable_conda ? "openms::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
+        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
 
     input:
     file(id_map)
@@ -24,9 +24,9 @@ process FILEMERGE {
         -in_type consensusXML \\
         -annotate_file_origin \\
         -append_method 'append_cols' \\
-        -debug $params.filemerge_debug \\
         -threads $task.cpus \\
         -out ID_mapper_merge.consensusXML \\
+        $args \\
         > ID_mapper_merge.log
 
     cat <<-END_VERSIONS > versions.yml

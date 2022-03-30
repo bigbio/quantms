@@ -6,7 +6,7 @@ include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign'
 
 class Wrapper {
     def labelling_type = ""
-    def acqusition_method = ""
+    def acquisition_method = ""
 }
 
 workflow CREATE_INPUT_CHANNEL {
@@ -36,12 +36,12 @@ workflow CREATE_INPUT_CHANNEL {
     // TODO remove. We can't use the variable to direct channels anyway
     wrapper = new Wrapper()
     wrapper.labelling_type = ""
-    wrapper.acqusition_method = ""
+    wrapper.acquisition_method = ""
 
     ch_in_design.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .branch {
-                ch_meta_config_dia: it[0].acqusition_method.contains("dia")
+                ch_meta_config_dia: it[0].acquisition_method.contains("dia")
                 ch_meta_config_iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
                 ch_meta_config_lfq: it[0].labelling_type.contains("label free")
             }
@@ -55,7 +55,6 @@ workflow CREATE_INPUT_CHANNEL {
     ch_meta_config_lfq                     // [meta, [spectra_files ]]
     ch_meta_config_dia                     // [meta, [spectra files ]]
     ch_expdesign
-    wrapper.labelling_type
 
     version         = ch_versions
 }
@@ -103,17 +102,17 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.fragmentmasstolerance      = params.fragment_mass_tolerance
         meta.fragmentmasstoleranceunit  = params.fragment_mass_tolerance_unit
         meta.enzyme                     = params.enzyme
-        meta.acqusition_method          = params.acqusition_method
+        meta.acquisition_method          = params.acquisition_method
     } else {
         if (row["Proteomics Data Acquisition Method"].contains("Data-Dependent Acquisition")) {
-            meta.acqusition_method = "dda"
+            meta.acquisition_method = "dda"
         } else if (row["Proteomics Data Acquisition Method"].contains("Data-Independent Acquisition")){
-            meta.acqusition_method = "dia"
+            meta.acquisition_method = "dia"
         } else {
             log.error "Currently DIA and DDA are supported for the pipeline. Check and Fix your SDRF."
             exit 1
         }
-        wrapper.acqusition_method       = meta.acqusition_method
+        wrapper.acquisition_method       = meta.acquisition_method
         meta.labelling_type             = row.Label
         meta.dissociationmethod         = row.DissociationMethod
         meta.fixedmodifications         = row.FixedModifications
@@ -132,8 +131,8 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             exit 1
         }
     }
-    if (meta.acqusition_method == "dia") {
-        log.warn "Acqusition Method: '${meta.acqusition_method}'"
+    if (meta.acquisition_method == "dia") {
+        log.warn "Acquisition Method: '${meta.acquisition_method}'"
     } else {
         log.warn "Label: '${meta.labelling_type}'"
         if (wrapper.labelling_type.equals("")) {
@@ -151,7 +150,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         }
     }
 
-    if (wrapper.labelling_type.contains("label free") || meta.acqusition_method == "dia") {
+    if (wrapper.labelling_type.contains("label free") || meta.acquisition_method == "dia") {
         if (filestr in files) {
             log.error "Currently only one search engine setting/DIA-NN setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments."
             exit 1
