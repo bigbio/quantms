@@ -674,55 +674,6 @@
             "description": "",
             "default": "",
             "properties": {
-                "top": {
-                    "type": "integer",
-                    "description": "Calculate protein abundance from this number of proteotypic peptides (most abundant first; '0' for all, Default 3)",
-                    "default": 3,
-                    "fa_icon": "fas fa-list-ol"
-                },
-                "average": {
-                    "type": "string",
-                    "description": "Averaging method used to compute protein abundances from peptide abundances.",
-                    "default": "median",
-                    "enum": ["median", "mean", "weighted_mean", "sum"],
-                    "fa_icon": "fas fa-list-ol"
-                },
-                "best_charge_and_fraction": {
-                    "type": "boolean",
-                    "description": "Distinguish between fraction and charge states of a peptide. (default: 'false')",
-                    "fa_icon": "far fa-check-square"
-                },
-                "ratios": {
-                    "type": "boolean",
-                    "description": "Add the log2 ratios of the abundance values to the output.",
-                    "default": "false",
-                    "fa_icon": "fas fa-list-ol"
-                },
-                "normalize": {
-                    "type": "boolean",
-                    "description": "Scale peptide abundances so that medians of all samples are equal.(Default false)",
-                    "default": "false",
-                    "fa_icon": "far fa-check-square"
-                },
-                "fix_peptides": {
-                    "type": "boolean",
-                    "description": "Use the same peptides for protein quantification across all samples.(Default false)",
-                    "default": "false",
-                    "fa_icon": "fas fa-bug"
-                },
-                "include_all": {
-                    "type": "boolean",
-                    "description": "Include results for proteins with fewer proteotypic peptide than indicated by top.",
-                    "default": true,
-                    "fa_icon": "fas fa-check-square"
-                },
-                "protein_quant": {
-                    "type": "string",
-                    "description": "Quantify proteins based on:\n\n* 'unique_peptides' = use peptides mapping to single proteins or a group of indistinguishable proteins (according to the set of experimentally identified peptides)\n* 'strictly_unique_peptides' = use peptides mapping to a unique single protein only\n* 'shared_peptides' = use shared peptides, too, but only greedily for its best group (by inference score)",
-                    "default": "unique_peptides",
-                    "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
-                    "fa_icon": "fas fa-list-ol"
-                },
                 "quantification_method": {
                     "type": "string",
                     "description": "Choose between feature-based quantification based on integrated MS1 signals ('feature_intensity'; default) or spectral counting of PSMs ('spectral_counting'). **WARNING:** 'spectral_counting' is not compatible with our MSstats step yet. MSstats will therefore be disabled automatically with that choice.",
