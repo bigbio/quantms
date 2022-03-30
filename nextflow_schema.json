@@ -1125,9 +1125,6 @@
             "$ref": "#/definitions/feature_mapper"
         },
         {
-            "$ref": "#/definitions/file_merge"
-        },
-        {
             "$ref": "#/definitions/protein_inference"
         },
         {
