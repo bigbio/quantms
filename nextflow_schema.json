@@ -531,21 +531,6 @@
                 }
             }
         },
-        "file_merge": {
-            "title": "File Merge",
-            "type": "object",
-            "description": "Merge multiple files",
-            "default": "",
-            "properties": {
-                "filemerge_debug": {
-                    "type": "integer",
-                    "description": "Debug level for FileMerger step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
-                }
-            }
-        },
         "protein_inference": {
             "title": "Protein inference",
             "type": "object",
@@ -571,8 +556,7 @@
                     "type": "boolean",
                     "description": "Use picked protein FDRs",
                     "default": true,
-                    "fa_icon": "fas fa-list-ol",
-                    "hidden": true
+                    "fa_icon": "fas fa-list-ol"
                 },
                 "protein_score": {
                     "type": "string",
@@ -580,6 +564,12 @@
                     "default": "best",
                     "enum": ["best", "product", "sum"],
                     "fa_icon": "fas fa-list-ol"
+                },
+                "use_shared_peptides": {
+                    "type": "boolean",
+                    "description": "[Ignored in Bayesian] Also use shared peptides during score aggregation to protein level",
+                    "default": true,
+                    "fa_icon": "fas fa-filter"
                 },
                 "min_peptides_per_protein": {
                     "type": "integer",
