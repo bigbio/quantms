@@ -4,8 +4,8 @@ process IDFILTER {
 
     conda (params.enable_conda ? "openms::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
+        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
 
     input:
     tuple val(meta), path(id_file)
@@ -25,7 +25,6 @@ process IDFILTER {
         -out ${id_file.baseName}_filter$suffix \\
         -threads $task.cpus \\
         $args \\
-        -debug $params.idfilter_debug \\
         > ${id_file.baseName}_idfilter.log
 
     cat <<-END_VERSIONS > versions.yml
