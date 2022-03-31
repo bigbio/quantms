@@ -15,7 +15,7 @@ process PROTEOMICSLFQ {
     output:
     path "out.mzTab", emit: out_mztab
     path "out.consensusXML", emit: out_consensusXML
-    path "out_msstats.csv", emit: out_msstats
+    path "out_msstats.csv", emit: out_msstats optional true
     path "out_triqler.tsv", emit: out_triqler optional true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs optional true
     path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference optional true

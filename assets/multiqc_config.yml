@@ -3,12 +3,12 @@ report_comment: >
   analysis pipeline. For information about how to interpret these results, please see the
   <a href="https://nf-co.re/quantms" target="_blank">documentation</a>.
 report_section_order:
-  pmultiqc:
-    order: 1
   software_versions:
     order: -1001
   "nf-core-quantms-summary":
     order: -1002
+  pmultiqc:
+    order: -1003
 
 thousandsSep_format: ""
 export_plots: true
