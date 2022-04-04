@@ -1,6 +1,8 @@
 process EPIFANY {
     label 'process_medium'
-    publishDir "${params.outdir}",
+    label 'openms'
+
+    publishDir "${params.outdir}"
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
