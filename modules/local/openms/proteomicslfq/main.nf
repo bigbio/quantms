@@ -3,8 +3,8 @@ process PROTEOMICSLFQ {
 
     conda (params.enable_conda ? "openms::openms=2.8.0.dev" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
+        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
 
     input:
     path(mzmls)
@@ -15,7 +15,7 @@ process PROTEOMICSLFQ {
     output:
     path "out.mzTab", emit: out_mztab
     path "out.consensusXML", emit: out_consensusXML
-    path "out_msstats.csv", emit: out_msstats
+    path "out_msstats.csv", emit: out_msstats optional true
     path "out_triqler.tsv", emit: out_triqler optional true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs optional true
     path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference optional true

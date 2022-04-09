@@ -51,7 +51,7 @@ process LIBRARYGENERATION {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DIA-NN: 1.8.0
+        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "(\\d*\\.\\d+\\.\\d+)|(\\d*\\.\\d+)")
     END_VERSIONS
     """
 }

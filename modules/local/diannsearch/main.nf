@@ -12,9 +12,9 @@ process DIANNSEARCH {
     file(diann_config)
 
     output:
-    path "report.tsv", emit: report
-    path "report.stats.tsv", emit: report_stat
-    path "report.log.txt", emit: log
+    path "diann_report.tsv", emit: report
+    path "diann_report.stats.tsv", emit: report_stat
+    path "diann_report.log.txt", emit: log
     path "versions.yml", emit: version
     path "*.tsv"
 
@@ -51,13 +51,14 @@ process DIANNSEARCH {
             ${mbr} \\
             --reannotate \\
             ${normalize} \\
+            --out diann_report.tsv \\
             --verbose $params.diann_debug \\
             > diann.log
 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DIA-NN: 1.8.0
+        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "(\\d*\\.\\d+\\.\\d+)|(\\d*\\.\\d+)")
     END_VERSIONS
     """
 }
