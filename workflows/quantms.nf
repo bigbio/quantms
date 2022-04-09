@@ -127,9 +127,7 @@ workflow QUANTMS {
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
     DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-
-    // ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DIA.out.ch_pmultiqc_ids)
-    // ch_pipeline_results = ch_pipeline_results.mix(DIA.out.final_result)
+    ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
     ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
 
 
@@ -154,10 +152,10 @@ workflow QUANTMS {
     ch_multiqc_quantms_logo = file("$projectDir/assets/nf-core-quantms_logo_light.png")
 
     SUMMARYPIPELINE (
-        CREATE_INPUT_CHANNEL.out.ch_expdesign,
-        ch_pmultiqc_mzmls.collect(),
-        ch_pipeline_results.combine(ch_multiqc_files.collect()),
-        ch_ids_pmultiqc.collect(),
+        CREATE_INPUT_CHANNEL.out.ch_expdesign
+            .combine(ch_pipeline_results.combine(ch_multiqc_files.collect())
+            .combine(ch_pmultiqc_mzmls.collect())
+            .combine(ch_ids_pmultiqc.collect().ifEmpty([]))),
         ch_multiqc_quantms_logo
     )
     multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()

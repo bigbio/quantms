@@ -1,5 +1,4 @@
 process IDFILTER {
-    tag "$meta.id"
 
     label 'process_very_low'
     label 'process_single_thread'
