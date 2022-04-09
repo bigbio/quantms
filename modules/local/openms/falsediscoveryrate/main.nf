@@ -1,6 +1,7 @@
 process FALSEDISCOVERYRATE {
-    label 'process_very_low'
+    label 'process_low'
     label 'process_single_thread'
+    label 'openms'
 
     conda (params.enable_conda ? "openms::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
