@@ -1,9 +1,10 @@
-name: convert2msstats
+name: DIANNCONVERT
 description: A module to convert DIA report files to MSstats
 keywords:
   - DIA-NN
   - conversion
   - MSstats
+  - Triqler
 tools:
   - custom:
       description: |
@@ -23,7 +24,11 @@ output:
   - out_msstats:
       type: file
       description: MSstats input file
-      pattern: "*.csv"
+      pattern: "out_msstats.csv"
+  - out_triqler:
+      type: file
+      description: Triqler input file
+      pattern: "out_triqler.tsv"
   - version:
       type: file
       description: File containing software version

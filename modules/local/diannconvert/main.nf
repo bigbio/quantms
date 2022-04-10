@@ -1,4 +1,4 @@
-process CONVERT2MSSTATS {
+process DIANNCONVERT {
     label 'process_low'
 
     conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
@@ -13,14 +13,15 @@ process CONVERT2MSSTATS {
     path(exp_design)
 
     output:
-    path "*.csv", emit: out_msstats
+    path "out_msstats.csv", emit: out_msstats
+    path "out_triqler.tsv", emit: out_triqler
     path "versions.yml", emit: version
 
     script:
     def args = task.ext.args ?: ''
 
     """
-    convert_msstats.py convert_msstats \\
+    diann_convert.py convert \\
         --diann_report ${report} \\
         --exp_design ${exp_design} \\
         > trans_to_msstats.log

@@ -9,7 +9,7 @@
 //
 include { DIANNSEARCH } from '../modules/local/diannsearch/main'
 include { GENERATE_DIANN_CFG  as DIANNCFG } from '../modules/local/generate_diann_cfg/main'
-include { CONVERT2MSSTATS } from '../modules/local/convert2msstats/main'
+include { DIANNCONVERT } from '../modules/local/diannconvert/main'
 include { LIBRARYGENERATION } from '../modules/local/librarygeneration/main'
 
 //
@@ -50,13 +50,14 @@ workflow DIA {
     DIANNSEARCH(result.mzml.collect(), LIBRARYGENERATION.out.lib_splib.collect(), searchdb, DIANNCFG.out.search_cfg.distinct())
     ch_software_versions = ch_software_versions.mix(DIANNSEARCH.out.version.ifEmpty(null))
 
-    CONVERT2MSSTATS(DIANNSEARCH.out.report, ch_expdesign)
+    DIANNCONVERT(DIANNSEARCH.out.report, ch_expdesign)
     versions        = ch_software_versions
 
     emit:
-    versions    = versions
-    diann_report = DIANNSEARCH.out.report
-    out_msstats = CONVERT2MSSTATS.out.out_msstats
+    versions        = versions
+    diann_report    = DIANNSEARCH.out.report
+    out_msstats     = DIANNCONVERT.out.out_msstats
+    out_triqler     = DIANNCONVERT.out.out_triqler
 }
 
 /*
