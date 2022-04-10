@@ -25,7 +25,6 @@ def convert(ctx, diann_report, exp_design):
         f_table = [i.replace("\n", '').split("\t") for i in data[1:empty_row]]
         f_header = data[0].replace("\n", "").split("\t")
         f_table = pd.DataFrame(f_table, columns=f_header)
-        print(f_table)
         f_table.loc[:,"run"] = f_table.apply(lambda x: os.path.basename(x["Spectra_Filepath"]), axis=1)
 
         s_table = [i.replace("\n", '').split("\t") for i in data[empty_row + 1:]][1:]
