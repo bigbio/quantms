@@ -76,7 +76,6 @@ A graphical overview of suggested routes through the pipeline depending on conte
     <img src="docs/images/quantms_metro.png" alt="nf-core/quantms metro map" width="70%">
 </p>
 
-
 ## Quick Start
 
 1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
