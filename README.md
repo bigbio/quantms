@@ -68,6 +68,15 @@ DIA-LFQ:
 3. Generation of output files (msstats)
 4. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
+## Functionality overview
+
+A graphical overview of suggested routes through the pipeline depending on context can be seen below.
+
+<p align="center">
+    <img src="docs/images/quantms_metro.png" alt="nf-core/quantms metro map" width="70%">
+</p>
+
+
 ## Quick Start
 
 1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
