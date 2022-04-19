@@ -19,9 +19,9 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 7. If multiple search engines were chosen, a combined FDR is calculated
 8. Single run PSM/Peptide-level FDR filtering
 9. If localization of modifications was requested, Luciphor2 is applied via the OpenMS adapter
-10. (**DDA-LFQ**) Protein inference and labelfree quantification based on spectral counting or MS1 feature detection, alignment and integration with OpenMS' ProteomicsLFQ. Performs an additional experiment-wide FDR filter on protein (and if requested peptide/PSM-level).
+10. (**DDA-LFQ**) Protein inference and label-free quantification based on spectral counting or MS1 feature detection, alignment and integration with OpenMS' ProteomicsLFQ. Performs an additional experiment-wide FDR filter on protein (and if requested peptide/PSM-level).
 11. (**DDA-ISO**) Extracts and normalizes isobaric labeling
-12. (**DDA-ISO**) Protein inference using the OpenMS ProteinInference tool. In addition, protein FDR filterting is performed in this step for Isobaric datasets (TMT, iTRAQ).
+12. (**DDA-ISO**) Protein inference using the OpenMS ProteinInference tool. In addition, protein FDR filtering is performed in this step for Isobaric datasets (TMT, iTRAQ).
 13. (**DDA-ISO**) Protein Quantification
 14. Generation of QC reports using pMultiQC a library for QC proteomics data analysis.
 
@@ -88,7 +88,7 @@ results
 
 #### Spectra
 
-Quantms main format for spectra is the open [mzML](https://www.psidev.info/mzML) format. However it also supports Thermo raw files through conversion with 
+Quantms main format for spectra is the open [mzML](https://www.psidev.info/mzML) format. However it also supports Thermo raw files through conversion with
 ThermoRawFileParser. Mixed inputs should be possible but are untested. Conversion results can be cached if run locally or outputted to results.
 Mismatches between file extensions in the design and on disk can be corrected through parameters.
 
@@ -104,7 +104,7 @@ internal [idXML](https://github.com/OpenMS/OpenMS/blob/develop/share/OpenMS/SCHE
 
 #### Quantities
 
-Depending on the mode quantms reports its outputs in different folders, see [Output structure](#output-structure).
+Depending on the mode, quantms reports its outputs for quantities in different folders and formats, see [Output structure](#output-structure).
 
 ##### ConsensusXML
 
