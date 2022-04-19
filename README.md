@@ -34,7 +34,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
-The quantms allows uses to perform analysis in three main type of analytical MS-based quantitative methods: DDA-LFQ, DAA-ISO, DIA-LFQ. Each of these workflows share some processes but also includes their own steps. In summary:
+The quantms allows uses to perform analysis in three main type of analytical MS-based quantitative methods: DDA-LFQ, DDA-ISO, DIA-LFQ. Each of these workflows share some processes but also includes their own steps. In summary:
 
 DDA-LFQ:
 
