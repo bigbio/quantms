@@ -57,17 +57,17 @@ results
 - pipeline information:
   - [pipeline_info/...](#nextflow-pipeline-info)
 - DDA-LFQ quantification results:
-  - [proteomicslfq/out.consensusXML](#consenusxml)
-  - [proteomicslfq/out_msstats.csv](#msstats-ready-quantity-table)
+  - [proteomicslfq/out.consensusXML](#consensusxml)
+  - [proteomicslfq/out_msstats.csv](#msstats-ready-quantity-tables)
   - [proteomicslfq/out_triqler.tsv](#triqler)
   - [proteomicslfq/out.mzTab](#mztab)
 - DDA-ISO quantification results:
   - [proteinquantifier/out.mzTab](#mztab)
   - [proteinquantifier/peptide_out.csv](#tab-based-openms-formats)
   - [proteinquantifier/protein_out.csv](#tab-based-openms-formats)
-  - [msstatsconverter/out_msstats.csv](#msstats-ready-quantity-table)
+  - [msstatsconverter/out_msstats.csv](#msstats-ready-quantity-tables)
 - DIA-LFQ quantification results:
-  - [convert2msstats/out_msstats.csv](#msstats-ready-quantity-table)
+  - [convert2msstats/out_msstats.csv](#msstats-ready-quantity-tables)
 - MSstats-processed results
   - [msstats/out_msstats.mzTab](#msstats-processed-mztab)
 
@@ -85,6 +85,17 @@ results
 </details>
 
 ### File types
+
+#### Spectra
+
+Quantms main format for spectra is the open [mzML](https://www.psidev.info/mzML) format. However it also supports Thermo raw files through conversion with 
+ThermoRawFileParser. Mixed inputs should be possible but are untested. Conversion results can be cached if run locally or outputted to results.
+Mismatches between file extensions in the design and on disk can be corrected through parameters.
+
+#### Protein database
+
+The input protein database needs to be in standard fasta format. We recommend removing stop codons `*` in a way that is suitable to your analysis to avoid
+different handling between peptide search engines.
 
 #### Identifications
 
@@ -112,6 +123,11 @@ In addition to the consensusXML and idXML formats, OpenMS generates other format
 MSstats output is generated for all three pipelines DDA-LFQ, DDA-ISO and DIA-LFQ. A simple tsv file ready to be read by the
 OpenMStoMSstats function of the MSstats R package. It should hold the same quantities as the consensusXML but rearranged in a "long" table format with additional
 information about the experimental design used by MSstats.
+
+##### Triqler
+
+Output to be used as input in Triqler has similar information in a tsv format as the output for MSstats. Additionally, it contains quantities for
+decoy identifications and search engine scores.
 
 #### mzTab
 
