@@ -92,7 +92,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
 
     // for sdrf read from config file, without it, read from params
     if (is_sdrf.toString().toLowerCase().contains("false")) {
-        log.warn " NO SDRF!!!"
+        log.info "No SDRF given. Using parameters to determine tolerance, enzyme, mod. and labelling settings"
         meta.labelling_type             = params.labelling_type
         meta.dissociationmethod         = params.fragment_method
         meta.fixedmodifications         = params.fixed_mods
@@ -131,10 +131,8 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             exit 1
         }
     }
-    if (meta.acquisition_method == "dia") {
-        log.warn "Acquisition Method: '${meta.acquisition_method}'"
-    } else {
-        log.warn "Label: '${meta.labelling_type}'"
+    // Nothing to determing for dia. Only LFQ allowed there.
+    if (!meta.acquisition_method.equals("dia")) { 
         if (wrapper.labelling_type.equals("")) {
             if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
                 wrapper.labelling_type = meta.labelling_type
@@ -144,7 +142,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             }
         } else {
             if (meta.labelling_type != wrapper.labelling_type) {
-                log.error "Only one label type supported: was '${wrapper.labelling_type}', now is '${meta.labelling_type}'."
+                log.error "Currently, only one label type per design is supported: was '${wrapper.labelling_type}', now is '${meta.labelling_type}'."
                 exit 1
             }
         }
