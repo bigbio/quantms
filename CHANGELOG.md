@@ -32,6 +32,7 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `percolator`     | 3.5        |
 | `pmultiqc`       | 0.0.10     |
 | `luciphor`       | 2020_04_03 |
-| `dia-nn`         | 1.8        |
+| `dia-nn`         | 1.8.1      |
+| `msstats`        | 4.2.0      |
 
 ### `Deprecated`
