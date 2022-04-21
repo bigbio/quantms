@@ -1,0 +1,37 @@
+name: isobaricanalyzer
+description: Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
+keywords:
+  - peak
+  - OpenMS
+tools:
+  - IsobaricAnalyzer:
+      description: |
+        Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - mzml_file:
+      type: file
+      description: Input profile data file.
+      pattern: "*.mzML"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - iso_consensusXML:
+      type: file
+      description: Output consensusXML file with quantitative information
+      pattern: "*.consensusXML"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

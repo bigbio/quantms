@@ -1,0 +1,45 @@
+name: indexpeptides
+description: Refreshes the protein references for all peptide hits from an idXML file and adds target/decoy information.
+keywords:
+  - decoy
+  - PeptideIndexer
+  - OpenMS
+tools:
+  - PeptideIndexer:
+      description: |
+        Refreshes the protein references for all peptide hits.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeptideIndexer.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeptideIndexer.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_file:
+      type: file
+      description: |
+        Input idXML file containing the identifications.
+      pattern: "*.idXML"
+  - database:
+      type: file
+      description: |
+        Input sequence database in FASTA format.
+      pattern: "*.{fasta,fa}"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_idx:
+      type: file
+      description: |
+        Output idXML file.
+      pattern: "*.idXML"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

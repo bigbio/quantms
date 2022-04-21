@@ -1,0 +1,38 @@
+name: idfilter
+description: Filters peptide/protein identification results by different criteria.
+keywords:
+  - Filter
+  - identification
+  - OpenMS
+tools:
+  - IDFilter:
+      description: |
+        Tool to Filters results from protein or peptide identification engines based on different criteria.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDFilter.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDFilter.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_file:
+      type: file
+      description: Peptide-spectrum matches.
+      pattern: "*.{idXML,consensusXML}"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_idx_ForIDPEP_FDR:
+      type: file
+      description: Output file
+      pattern: "*.{idXML,consensusXML}"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

@@ -1,0 +1,40 @@
+name: proteinquantifier
+description: Compute peptide and protein abundances from annotated feature/consensus maps or from identification results.
+keywords:
+  - abundances
+  - OpenMS
+tools:
+  - ProteinQuantifier:
+      description: |
+        Compute peptide and protein abundances from annotated feature/consensus maps or from identification results.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html
+input:
+  - epi_filt_resolve:
+      type: file
+      description: |
+        Input file (data annotated with identifications)
+      pattern: "*.{featureXML,consensusXML,idXML}"
+output:
+  - protein_out:
+      type: file
+      description: Output file for protein abundances
+      pattern: "*.csv"
+  - peptide_out:
+      type: file
+      description: Output file for peptide abundances
+      pattern: "*.csv"
+  - out_mztab:
+      type: file
+      description: Output file (mzTab)
+      pattern: "*.mzTab"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

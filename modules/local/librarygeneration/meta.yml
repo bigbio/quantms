@@ -1,0 +1,48 @@
+name: librarygeneration
+description: A module for library generation based on DIA-NN.
+keywords:
+  - DIA-NN
+  - library free
+  - DIA
+tools:
+  - DIA-NN:
+      description: |
+        DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing by Demichev.
+      homepage: https://github.com/vdemichev/DiaNN
+      documentation: https://github.com/vdemichev/DiaNN
+input:
+  - spectra:
+      type: file
+      description: Spectra file
+      pattern: "*.mzML"
+  - fasta:
+      type: file
+      description: FASTA sequence databases
+      pattern: "*.{fasta,fa}"
+  - cfg:
+      type: file
+      description: specifies a configuration file to load options/commands from.
+      pattern: "*.cfg"
+output:
+  - lib_splib:
+      type: file
+      description: Spectra library file.
+      pattern: "*_lib.tsv"
+  - speclib:
+      type: file
+      description: Spectral library file based on speclib format
+      pattern: "*.tsv.speclib"
+  - predict_speclib:
+      type: file
+      description: Silico-predicted spectral library by deep leaning predictor in DIA-NN
+      pattern: "*.predicted.speclib"
+  - log:
+      type: file
+      description: DIA-NN log file
+      pattern: "report.log.txt"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
