@@ -13,14 +13,6 @@ nextflow.enable.dsl = 2
 
 /*
 ========================================================================================
-    GENOME PARAMETER VALUES
-========================================================================================
-*/
-
-params.fasta = WorkflowMain.getGenomeAttribute(params, 'fasta')
-
-/*
-========================================================================================
     VALIDATE & PRINT PARAMETER SUMMARY
 ========================================================================================
 */
@@ -35,9 +27,11 @@ WorkflowMain.initialise(workflow, params, log)
 
 include { QUANTMS } from './workflows/quantms'
 
+
 //
 // WORKFLOW: Run main nf-core/quantms analysis pipeline
 //
+
 workflow NFCORE_QUANTMS {
     QUANTMS ()
 }

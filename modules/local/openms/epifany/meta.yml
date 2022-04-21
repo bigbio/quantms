@@ -1,0 +1,34 @@
+name: epifany
+description: Runs a Bayesian protein inference.
+keywords:
+  - Bayesian
+  - inference
+  - OpenMS
+tools:
+  - Epifany:
+      description: |
+        It is a protein inference engine based on a Bayesian network.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html
+input:
+  - consus_file:
+      type: file
+      description: |
+        identification results.
+      pattern: "*.{idXML,consensusXML}"
+output:
+  - epi_inference:
+      type: file
+      description: |
+        identification results with scored/grouped proteins.
+      pattern: "*.{idXML,consensusXML}"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

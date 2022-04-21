@@ -1,0 +1,40 @@
+name: extracpsmfeatures
+description: Computes extra features for each input PSM.
+keywords:
+  - PSM
+  - feature
+  - OpenMS
+tools:
+  - PSMFeatureExtractor:
+      description: |
+        Computes extra features for each input PSM.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_PSMFeatureExtractor.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_PSMFeatureExtractor.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_file:
+      type: file
+      description: |
+        Input idXML file containing the identifications.
+      pattern: "*.idXML"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_feat:
+      type: file
+      description: |
+        Output file in idXML format
+      pattern: "*.idXML"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

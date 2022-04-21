@@ -1,0 +1,39 @@
+name: idscoreswitcher
+description: Switches between different scores of peptide hits (PSMs) or protein hits in identification data.
+keywords:
+  - Switches
+  - Score
+  - OpenMS
+tools:
+  - IDScoreSwitcher:
+      description: |
+        Switches between different scores of peptide or protein hits in identification data.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_file:
+      type: file
+      description: |
+        Identifications from searching a target-decoy database.
+      pattern: "*.idXML"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_score_switcher:
+      type: file
+      description: |
+        Identifications file
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

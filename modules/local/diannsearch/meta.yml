@@ -1,0 +1,47 @@
+name: diannsearch
+description: A module for DIA library free analysis based on DIA-NN.
+keywords:
+  - DIA-NN
+  - library free
+  - DIA
+tools:
+  - DIA-NN:
+      description: |
+        DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing by Demichev.
+      homepage: https://github.com/vdemichev/DiaNN
+      documentation: https://github.com/vdemichev/DiaNN
+input:
+  - lib:
+      type: file
+      description: Spectra library file
+      pattern: "*.tsv"
+  - spectra:
+      type: dir
+      description: The directory for spectra files
+  - searchdb:
+      type: file
+      description: Fasta sequence file
+      pattern: "*.{fasta,fa}"
+  - cfg:
+      type: dir
+      description: Specifies a file to load options/commands from.
+      pattern: "*.cfg"
+output:
+  - report:
+      type: file
+      description: Main report file. A text table containing precursor and protein IDs, as well as plenty of associated information. Most column names are self-explanatory.
+      pattern: "diann_report.tsv"
+  - report_stat:
+      type: file
+      description: Contains a number of QC metrics which can be used for data filtering, e.g. to exclude failed runs, or as a readout for method optimization.
+      pattern: "diann_report.stats.tsv"
+  - log:
+      type: file
+      description: DIA-NN log file
+      pattern: "diann_report.log.txt"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

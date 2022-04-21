@@ -1,21 +1,26 @@
 #!/usr/bin/env python
 
-# TODO nf-core: Update the script to check the samplesheet
+# nf-core: Update the script to check the sdrf
 # This script is based on the example at: https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
 import os
 import sys
 import errno
 import argparse
-
+from sdrf_pipelines.sdrf.sdrf import SdrfDataFrame
+from sdrf_pipelines.sdrf.sdrf_schema import MASS_SPECTROMETRY, DEFAULT_TEMPLATE
+import pandas as pd
 
 def parse_args(args=None):
-    Description = "Reformat nf-core/quantms samplesheet file and check its contents."
-    Epilog = "Example usage: python check_samplesheet.py <FILE_IN> <FILE_OUT>"
+    Description = "Reformat nf-core/quantms sdrf file and check its contents."
+    Epilog = "Example usage: python validate_sdrf.py <sdrf> <check_ms>"
 
     parser = argparse.ArgumentParser(description=Description, epilog=Epilog)
-    parser.add_argument("FILE_IN", help="Input samplesheet file.")
-    parser.add_argument("FILE_OUT", help="Output file.")
+    parser.add_argument("SDRF", help="SDRF/Expdesign file to be validated")
+    parser.add_argument("ISSDRF", help="SDRF file or Expdesign file")
+    parser.add_argument("--CHECK_MS", help="check mass spectrometry fields in SDRF.", action="store_true")
+
+
     return parser.parse_args(args)
 
 
@@ -37,110 +42,73 @@ def print_error(error, context="Line", context_str=""):
     print(error_str)
     sys.exit(1)
 
+def check_sdrf(check_ms, sdrf):
+    df = SdrfDataFrame.parse(sdrf)
+    errors = df.validate(DEFAULT_TEMPLATE)
+    if check_ms:
+        errors = errors + df.validate(MASS_SPECTROMETRY)
+    print(errors)
 
-# TODO nf-core: Update the check_samplesheet function
-def check_samplesheet(file_in, file_out):
-    """
-    This function checks that the samplesheet follows the following structure:
+def check_expdesign(expdesign):
+    data = pd.read_csv(expdesign, sep='\t', header=0, dtype=str)
+    data = data.dropna()
+    schema_file = ['Fraction_Group', 'Fraction', 'Spectra_Filepath', 'Label', 'Sample']
+    schema_sample = ['Sample', 'MSstats_Condition', 'MSstats_BioReplicate']
 
-    sample,fastq_1,fastq_2
-    SAMPLE_PE,SAMPLE_PE_RUN1_1.fastq.gz,SAMPLE_PE_RUN1_2.fastq.gz
-    SAMPLE_PE,SAMPLE_PE_RUN2_1.fastq.gz,SAMPLE_PE_RUN2_2.fastq.gz
-    SAMPLE_SE,SAMPLE_SE_RUN1_1.fastq.gz,
-
-    For an example see:
-    https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
-    """
-
-    sample_mapping_dict = {}
-    with open(file_in, "r") as fin:
-
-        ## Check header
-        MIN_COLS = 2
-        # TODO nf-core: Update the column names for the input samplesheet
-        HEADER = ["sample", "fastq_1", "fastq_2"]
-        header = [x.strip('"') for x in fin.readline().strip().split(",")]
-        if header[: len(HEADER)] != HEADER:
-            print("ERROR: Please check samplesheet header -> {} != {}".format(",".join(header), ",".join(HEADER)))
+    # check table format: two table
+    with open(expdesign, 'r') as f:
+        lines = f.readlines()
+        try:
+            empty_row = lines.index('\n')
+        except ValueError as e:
+            print("the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf")
+            sys.exit(1)
+        if lines.index('\n') >= len(lines):
+            print("the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf")
             sys.exit(1)
 
-        ## Check sample entries
-        for line in fin:
-            lspl = [x.strip().strip('"') for x in line.strip().split(",")]
+        s_table = [i.replace('\n', '').split('\t') for i in lines[empty_row + 1:]][1:]
+        s_header = lines[empty_row + 1].replace('\n', '').split('\t')
+        s_DataFrame = pd.DataFrame(s_table, columns=s_header)
 
-            # Check valid number of columns per row
-            if len(lspl) < len(HEADER):
-                print_error(
-                    "Invalid number of columns (minimum = {})!".format(len(HEADER)),
-                    "Line",
-                    line,
-                )
-            num_cols = len([x for x in lspl if x])
-            if num_cols < MIN_COLS:
-                print_error(
-                    "Invalid number of populated columns (minimum = {})!".format(MIN_COLS),
-                    "Line",
-                    line,
-                )
+    # check missed mandatory column
+    missed_columns = set(schema_file) - set(data.columns)
+    if len(missed_columns) != 0:
+        print("{0} column missed".format(" ".join(missed_columns)))
+        sys.exit(1)
 
-            ## Check sample name entries
-            sample, fastq_1, fastq_2 = lspl[: len(HEADER)]
-            sample = sample.replace(" ", "_")
-            if not sample:
-                print_error("Sample entry has not been specified!", "Line", line)
+    missed_columns = set(schema_sample)- set(s_DataFrame.columns)
+    if len(missed_columns) != 0:
+        print("{0} column missed".format(" ".join(missed_columns)))
+        sys.exit(1)
 
-            ## Check FastQ file extension
-            for fastq in [fastq_1, fastq_2]:
-                if fastq:
-                    if fastq.find(" ") != -1:
-                        print_error("FastQ file contains spaces!", "Line", line)
-                    if not fastq.endswith(".fastq.gz") and not fastq.endswith(".fq.gz"):
-                        print_error(
-                            "FastQ file does not have extension '.fastq.gz' or '.fq.gz'!",
-                            "Line",
-                            line,
-                        )
+    if len(set(data.Label)) != 1 and 'MSstats_Mixture' not in s_DataFrame.columns:
+        print("MSstats_Mixture column missed in ISO experiments")
+        sys.exit(1)
 
-            ## Auto-detect paired-end/single-end
-            sample_info = []  ## [single_end, fastq_1, fastq_2]
-            if sample and fastq_1 and fastq_2:  ## Paired-end short reads
-                sample_info = ["0", fastq_1, fastq_2]
-            elif sample and fastq_1 and not fastq_2:  ## Single-end short reads
-                sample_info = ["1", fastq_1, fastq_2]
-            else:
-                print_error("Invalid combination of columns provided!", "Line", line)
+    # check logical problem: may be improved
+    check_expdesign_logic(data, s_DataFrame)
 
-            ## Create sample mapping dictionary = { sample: [ single_end, fastq_1, fastq_2 ] }
-            if sample not in sample_mapping_dict:
-                sample_mapping_dict[sample] = [sample_info]
-            else:
-                if sample_info in sample_mapping_dict[sample]:
-                    print_error("Samplesheet contains duplicate rows!", "Line", line)
-                else:
-                    sample_mapping_dict[sample].append(sample_info)
-
-    ## Write validated samplesheet with appropriate columns
-    if len(sample_mapping_dict) > 0:
-        out_dir = os.path.dirname(file_out)
-        make_dir(out_dir)
-        with open(file_out, "w") as fout:
-            fout.write(",".join(["sample", "single_end", "fastq_1", "fastq_2"]) + "\n")
-            for sample in sorted(sample_mapping_dict.keys()):
-
-                ## Check that multiple runs of the same sample are of the same datatype
-                if not all(x[0] == sample_mapping_dict[sample][0][0] for x in sample_mapping_dict[sample]):
-                    print_error("Multiple runs of a sample must be of the same datatype!", "Sample: {}".format(sample))
-
-                for idx, val in enumerate(sample_mapping_dict[sample]):
-                    fout.write(",".join(["{}_T{}".format(sample, idx + 1)] + val) + "\n")
-    else:
-        print_error("No entries to process!", "Samplesheet: {}".format(file_in))
-
+def check_expdesign_logic(fTable, sTable):
+    if int(max(fTable.Fraction_Group)) > len(set(fTable.Fraction_Group)):
+        print("Fraction_Group discontinuous!")
+        sys.exit(1)
+    fTable_D = fTable.drop_duplicates(['Fraction_Group', 'Fraction', 'Label', 'Sample'])
+    if fTable_D.shape[0] < fTable.shape[0]:
+        print("Existing duplicate entries in Fraction_Group, Fraction, Label and Sample")
+        sys.exit(1)
+    if len(set(sTable.Sample)) < sTable.shape[0]:
+        print("Existing duplicate Sample in sample table!")
+        sys.exit(1)
 
 def main(args=None):
+    # TODO validate expdesign file
     args = parse_args(args)
-    check_samplesheet(args.FILE_IN, args.FILE_OUT)
 
+    if args.ISSDRF == "true" :
+        check_sdrf(args.CHECK_MS, args.SDRF)
+    else:
+        check_expdesign(args.SDRF)
 
 if __name__ == "__main__":
     sys.exit(main())

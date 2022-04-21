@@ -1,0 +1,36 @@
+name: openmspeakpicker
+description: Finds mass spectrometric peaks in profile mass spectra. I.e., converts spectra in profile mode to centroided.
+keywords:
+  - peak
+  - OpenMS
+tools:
+  - PeakPickerHiRes:
+      description: |
+        A tool for peak detection in profile data. Executes the peak picking with high_res algorithm.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerHiRes.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerHiRes.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - mzml_file:
+      type: file
+      description: Input profile data file.
+      pattern: "*.mzML"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - mzmls_picked:
+      type: file
+      description: Output peak file
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

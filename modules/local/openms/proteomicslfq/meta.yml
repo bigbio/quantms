@@ -1,0 +1,51 @@
+name: proteomicslfq
+description: ProteomicsLFQ performs label-free quantification of peptides and proteins.
+keywords:
+  - label-free
+  - OpenMS
+  - quantification
+tools:
+  - ProteomicsLFQ:
+      description: |
+        ProteomicsLFQ performs label-free quantification of peptides and proteins.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
+input:
+  - mzmls:
+      type: file
+      description: Input Spectra in mzML format
+      pattern: "*.mzML"
+  - id_files:
+      type: file
+      description: Identifications in idXML or mzIdentML format with posterior error probabilities as score type.
+      pattern: "*.idXML"
+  - expdes:
+      type: file
+      description: An experimental design file
+      pattern: "*.tsv"
+  - fasta:
+      type: file
+      description: A protein database in with appended decoy sequences in FASTA format.
+      pattern: "*.{fasta,fa}"
+output:
+  - out_mztab:
+      type: file
+      description: mzTab file with analysis results
+      pattern: "*.mzTab"
+  - out_consensusXML:
+      type: file
+      description: ConsensusXML file for visualization and further processing in OpenMS.
+      pattern: "*.consensusXML"
+  - out_msstats:
+      type: file
+      description: MSstats file with analysis results for statistical downstream analysis in MSstats.
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
