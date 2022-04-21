@@ -10,7 +10,7 @@
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
-            "required": ["input"],
+            "required": ["input", "outdir"],
             "properties": {
                 "input": {
                     "type": "string",
@@ -603,9 +603,24 @@
         "protein_quantification_dda": {
             "title": "Protein Quantification (DDA)",
             "type": "object",
-            "description": "General protein quantification settings for both LFQ and Isobaric labelling.",
+            "description": "General protein quantification settings for both LFQ and isobaric labelling.",
             "default": "",
             "properties": {
+                "labelling_type": {
+                    "type": "string",
+                    "description": "Specify the labelling method that was used. Will be ignored if SDRF was given but is mandatory otherwise",
+                    "fa_icon": "fas fa-font",
+                    "help_text": "Quantification method used in the experiment.",
+                    "enum": [
+                        "label free sample",
+                        "itraq4plex",
+                        "itraq8plex",
+                        "tmt6plex",
+                        "tmt10plex",
+                        "tmt11plex",
+                        "tmt16plex"
+                    ]
+                },
                 "top": {
                     "type": "integer",
                     "description": "Calculate protein abundance from this number of proteotypic peptides (most abundant first; '0' for all, Default 3)",
@@ -718,21 +733,6 @@
             "description": "Extracts and normalizes labeling information",
             "default": "",
             "properties": {
-                "labelling_type": {
-                    "type": "string",
-                    "description": "Isobaric labelling method. Will be ignored if SDRF was given.",
-                    "fa_icon": "fas fa-font",
-                    "help_text": "Isobaric Quantification method used in the experiment.",
-                    "enum": [
-                        "label free sample",
-                        "itraq4plex",
-                        "itraq8plex",
-                        "tmt6plex",
-                        "tmt10plex",
-                        "tmt11plex",
-                        "tmt16plex"
-                    ]
-                },
                 "select_activation": {
                     "type": "string",
                     "description": "Operate only on MSn scans where any of its precursors features a certain activation method. Set to empty to disable.",
