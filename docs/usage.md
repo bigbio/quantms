@@ -11,7 +11,7 @@
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run nf-core/quantms --input '/url/path/to/your/experimentX_design.tsv' --database '/url/path/to/your/proteindatabase.fasta' -profile docker
+nextflow run nf-core/quantms --input '/url/path/to/your/experimentX_design.tsv' --database '/url/path/to/your/proteindatabase.fasta' --outdir './results' -profile docker
 ```
 
 where the experimental design file has to be one of:
