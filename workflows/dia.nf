@@ -11,6 +11,7 @@ include { DIANNSEARCH } from '../modules/local/diannsearch/main'
 include { GENERATE_DIANN_CFG  as DIANNCFG } from '../modules/local/generate_diann_cfg/main'
 include { DIANNCONVERT } from '../modules/local/diannconvert/main'
 include { LIBRARYGENERATION } from '../modules/local/librarygeneration/main'
+include { MSSTATS } from '../modules/local/msstats/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -53,11 +54,22 @@ workflow DIA {
     DIANNCONVERT(DIANNSEARCH.out.report, ch_expdesign)
     versions        = ch_software_versions
 
+    //
+    // MODULE: MSSTATS
+    ch_msstats_out = Channel.empty()
+    if(!params.skip_post_msstats){
+        MSSTATS(DIANNCONVERT.out.out_msstats)
+        ch_msstats_out = MSSTATS.out.msstats_csv
+        ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
+    }
+
     emit:
     versions        = versions
     diann_report    = DIANNSEARCH.out.report
-    out_msstats     = DIANNCONVERT.out.out_msstats
+    msstats_csv     = DIANNCONVERT.out.out_msstats
     out_triqler     = DIANNCONVERT.out.out_triqler
+    msstats_out     = ch_msstats_out
+
 }
 
 /*

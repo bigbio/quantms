@@ -55,9 +55,12 @@ workflow LFQ {
             )
     ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.version.ifEmpty(null))
 
+    //
+    // MODULE: MSSTATS
+    //
     ch_msstats_out = Channel.empty()
     if(!params.skip_post_msstats && params.quantification_method == "feature_intensity"){
-        MSSTATS(PROTEOMICSLFQ.out.out_msstats, PROTEOMICSLFQ.out.out_mztab)
+        MSSTATS(PROTEOMICSLFQ.out.out_msstats)
         ch_msstats_out = MSSTATS.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
     }

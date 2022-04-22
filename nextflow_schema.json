@@ -881,6 +881,95 @@
                     "description": "Also create an output in Triqler's format for an alternative manual post-processing with that tool",
                     "default": false,
                     "fa_icon": "far fa-check-square"
+                },
+                "msstats_feature_subset_protein": {
+                    "type": "string",
+                    "description": "Which features to use for quantification per protein: 'top3' or 'highQuality' which removes outliers only",
+                    "fa_icon": "far fa-list-ol",
+                    "default": "top3",
+                    "enum": [
+                        "top3",
+                        "highQuality"
+                    ]
+                },
+                "msstats_quant_summary_method": {
+                    "type": "string",
+                    "description": "which summary method to use: 'TMP' (Tukey's median polish) or 'linear' (linear mixed model)",
+                    "fa_icon": "far fa-list-ol",
+                    "default": "TMP",
+                    "enum": [
+                        "TMP",
+                        "linear"
+                    ]
+                },
+                "msstats_tmt_remove_one_feat_prot": {
+                    "type": "boolean",
+                    "description": "Omit proteins with only one quantified feature?",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
+                },
+                "msstats_keep_feats_with_few_measurements": {
+                    "type": "boolean",
+                    "description": "Keep features with only one or two measurements across runs?",
+                    "fa_icon": "far fa-check-square",
+                    "default": false
+                },
+                "skip_post_msstatstmt": {
+                    "type": "boolean",
+                    "description": "Skip MSstatsTMT for statistical post-processing?",
+                    "fa_icon": "fas fa-forward"
+                },
+                "msstatstmt_useunique_peptide": {
+                    "type": "boolean",
+                    "description": "Use unique peptide for each protein",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
+                },
+                "msstatstmt_rmpsm_withfewmea_withinrun": {
+                    "type": "boolean",
+                    "description": "Remove the features that have 1 or 2 measurements within each run",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
+                },
+                "msstatstmt_summaryformultiple_psm": {
+                    "type": "string",
+                    "description": "select the feature with the largest summmation or maximal value",
+                    "fa_icon": "far fa-list-ol",
+                    "default": "sum",
+                    "enum": [
+                        "sum",
+                        "max"
+                    ]
+                },
+                "msstatstmt_summarization_method": {
+                    "type": "string",
+                    "description": "summarization methods to protein-level can be perfomed",
+                    "fa_icon": "far fa-list-ol",
+                    "default": "msstats",
+                    "enum": [
+                        "msstats",
+                        "MedianPolish",
+                        "Median",
+                        "LogSum"
+                    ]
+                },
+                "msstatstmt_global_norm": {
+                    "type": "boolean",
+                    "description": "Reference channel based normalization between MS runs on protein level data?",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
+                },
+                "msstatstmt_remove_norm_channel": {
+                    "type": "boolean",
+                    "description": "Remove 'Norm' channels from protein level data",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
+                },
+                "msstatstmt_reference_normalization": {
+                    "type": "boolean",
+                    "description": "Reference channel based normalization between MS runs on protein level data",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
                 }
             },
             "fa_icon": "fab fa-r-project"
