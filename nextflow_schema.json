@@ -906,7 +906,7 @@
                     "type": "boolean",
                     "description": "Keep features with only one or two measurements across runs?",
                     "fa_icon": "far fa-check-square",
-                    "default": false
+                    "default": true
                 },
                 "msstatsiso_useunique_peptide": {
                     "type": "boolean",
