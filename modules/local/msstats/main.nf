@@ -21,7 +21,6 @@ process MSSTATS {
 
     script:
     def args = task.ext.args ?: ''
-    keep_feats_with_few_measurements = params.msstats_keep_feats_with_few_measurements ? "keep" : "remove"
     ref_con = params.ref_condition ?: ""
 
     """
@@ -29,10 +28,10 @@ process MSSTATS {
         ${out_msstats} \\
         ${params.contrasts} \\
         "${ref_con}" \\
-        ${params.msstats_tmt_remove_one_feat_prot} \\
-        ${keep_feats_with_few_measurements} \\
-        ${params.msstats_feature_subset_protein} \\
-        ${params.msstats_quant_summary_method} \\
+        ${params.msstats_remove_one_feat_prot} \\
+        ${params.msstatslfq_removeFewMeasurements} \\
+        ${params.msstatslfq_feature_subset_protein} \\
+        ${params.msstatslfq_quant_summary_method} \\
         $args \\
         > msstats.log \\
         || echo "Optional MSstats step failed. Please check logs and re-run or do a manual statistical analysis."

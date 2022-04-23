@@ -28,14 +28,14 @@ process MSSTATSTMT {
         ${out_msstats_tmt} \\
         ${params.contrasts} \\
         "${ref_con}" \\
-        ${params.msstats_tmt_remove_one_feat_prot} \\
-        ${params.msstatstmt_useunique_peptide} \\
-        ${params.msstatstmt_rmpsm_withfewmea_withinrun} \\
-        ${params.msstatstmt_summaryformultiple_psm} \\
-        ${params.msstatstmt_summarization_method} \\
-        ${params.msstatstmt_global_norm} \\
-        ${params.msstatstmt_remove_norm_channel} \\
-        ${params.msstatstmt_reference_normalization} \\
+        ${params.msstats_remove_one_feat_prot} \\
+        ${params.msstatsiso_useunique_peptide} \\
+        ${params.msstatsiso_rmpsm_withfewmea_withinrun} \\
+        ${params.msstatsiso_summaryformultiple_psm} \\
+        ${params.msstatsiso_summarization_method} \\
+        ${params.msstatsiso_global_norm} \\
+        ${params.msstatsiso_remove_norm_channel} \\
+        ${params.msstatsiso_reference_normalization} \\
         $args \\
         > msstats_tmt.log \\
         || echo "Optional MSstatsTMT step failed. Please check logs and re-run or do a manual statistical analysis."

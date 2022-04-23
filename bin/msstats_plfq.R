@@ -29,9 +29,9 @@ if (length(args)<5) {
     # keeps features with only one or two measurements across runs
     args[5] = TRUE
 }
-fewMeasurements = args[5]
-if(typeof(fewMeasurements) == 'character'){
-    fewMeasurements = char_to_boolean[fewMeasurements]
+removeFewMeasurements = args[5]
+if(typeof(removeFewMeasurements) == 'character'){
+    removeFewMeasurements = char_to_boolean[removeFewMeasurements]
 }
 
 if (length(args)<6) {
@@ -99,7 +99,7 @@ make_contrasts <- function(contrasts, levels)
 
 # read dataframe into MSstats
 data <- read.csv(csv_input)
-quant <- OpenMStoMSstatsFormat(data, removeProtein_with1Feature = removeOneFeatProts, fewMeasurements=fewMeasurements)
+quant <- OpenMStoMSstatsFormat(data, removeProtein_with1Feature = removeOneFeatProts, removeFewMeasurements=removeFewMeasurements)
 
 # process data
 processed.quant <- dataProcess(quant, censoredInt = 'NA', featureSubset = args[6], summaryMethod = args[7])

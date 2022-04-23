@@ -153,7 +153,7 @@ if (l == 1)
     test.MSstatsTMT <- groupComparisonTMT(contrast.matrix=contrast_mat, data=processed.quant)
 
     #TODO allow manual input (e.g. proteins of interest)
-    write.table(test.MSstatsTMT$ComparisonResult, file=paste0("msstatstmt_results.csv"), quote=FALSE, sep='\t', row.names = FALSE)
+    write.table(test.MSstatsTMT$ComparisonResult, file=paste0("msstatsiso_results.csv"), quote=FALSE, sep='\t', row.names = FALSE)
 
     #write comparison to CSV (one CSV per contrast)
     # writeComparisonToCSV <- function(DF)

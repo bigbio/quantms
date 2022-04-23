@@ -863,7 +863,7 @@
             "properties": {
                 "skip_post_msstats": {
                     "type": "boolean",
-                    "description": "Skip MSstats for statistical post-processing?",
+                    "description": "Skip MSstats/MSstatsTMT for statistical post-processing?",
                     "fa_icon": "fas fa-forward"
                 },
                 "ref_condition": {
@@ -896,62 +896,57 @@
                     "default": "TMP",
                     "enum": ["TMP", "linear"]
                 },
-                "msstats_tmt_remove_one_feat_prot": {
+                "msstats_remove_one_feat_prot": {
                     "type": "boolean",
                     "description": "Omit proteins with only one quantified feature?",
                     "fa_icon": "far fa-check-square",
                     "default": true
                 },
-                "msstats_keep_feats_with_few_measurements": {
+                "msstatslfq_removeFewMeasurements": {
                     "type": "boolean",
                     "description": "Keep features with only one or two measurements across runs?",
                     "fa_icon": "far fa-check-square",
                     "default": false
                 },
-                "skip_post_msstatstmt": {
-                    "type": "boolean",
-                    "description": "Skip MSstatsTMT for statistical post-processing?",
-                    "fa_icon": "fas fa-forward"
-                },
-                "msstatstmt_useunique_peptide": {
+                "msstatsiso_useunique_peptide": {
                     "type": "boolean",
                     "description": "Use unique peptide for each protein",
                     "fa_icon": "far fa-check-square",
                     "default": true
                 },
-                "msstatstmt_rmpsm_withfewmea_withinrun": {
+                "msstatsiso_rmpsm_withfewmea_withinrun": {
                     "type": "boolean",
                     "description": "Remove the features that have 1 or 2 measurements within each run",
                     "fa_icon": "far fa-check-square",
                     "default": true
                 },
-                "msstatstmt_summaryformultiple_psm": {
+                "msstatsiso_summaryformultiple_psm": {
                     "type": "string",
                     "description": "select the feature with the largest summmation or maximal value",
                     "fa_icon": "far fa-list-ol",
                     "default": "sum",
                     "enum": ["sum", "max"]
                 },
-                "msstatstmt_summarization_method": {
+                "msstatsiso_summarization_method": {
                     "type": "string",
                     "description": "summarization methods to protein-level can be perfomed",
                     "fa_icon": "far fa-list-ol",
                     "default": "msstats",
                     "enum": ["msstats", "MedianPolish", "Median", "LogSum"]
                 },
-                "msstatstmt_global_norm": {
+                "msstatsiso_global_norm": {
                     "type": "boolean",
                     "description": "Reference channel based normalization between MS runs on protein level data?",
                     "fa_icon": "far fa-check-square",
                     "default": true
                 },
-                "msstatstmt_remove_norm_channel": {
+                "msstatsiso_remove_norm_channel": {
                     "type": "boolean",
                     "description": "Remove 'Norm' channels from protein level data",
                     "fa_icon": "far fa-check-square",
                     "default": true
                 },
-                "msstatstmt_reference_normalization": {
+                "msstatsiso_reference_normalization": {
                     "type": "boolean",
                     "description": "Reference channel based normalization between MS runs on protein level data",
                     "fa_icon": "far fa-check-square",

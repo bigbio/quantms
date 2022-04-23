@@ -67,7 +67,7 @@ workflow TMT {
     // MODULE: MSSTATSTMT
     //
     ch_msstats_out = Channel.empty()
-    if(!params.skip_post_msstatstmt){
+    if(!params.skip_post_msstats){
         MSSTATSTMT(PROTEINQUANT.out.msstats_csv)
         ch_msstats_out = MSSTATSTMT.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(MSSTATSTMT.out.version.ifEmpty(null))
