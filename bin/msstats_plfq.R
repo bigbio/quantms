@@ -6,7 +6,7 @@ usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [de
 #TODO rewrite mzTab in next version
 if (length(args)<1) {
     print(usage)
-    stop("At least the first one argument must be supplied (input csv).n", call.=FALSE)
+    stop("At least the first argument must be supplied (input csv).n", call.=FALSE)
 }
 if (length(args)<2) {
     # contrasts
