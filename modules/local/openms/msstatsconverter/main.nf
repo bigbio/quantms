@@ -26,7 +26,7 @@ process MSSTATSCONVERTER {
         -method ${quant_method} \\
         -out out_msstats.csv \\
         $args \\
-        > MSstatsConverter.log
+        |& tee MSstatsConverter.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

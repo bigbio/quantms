@@ -32,7 +32,7 @@ process EPIFANY {
         -algorithm:top_PSMs $params.top_PSMs \\
         -out ${consus_file.baseName}_epi.consensusXML \\
         $args \\
-        > ${consus_file.baseName}_inference.log
+        |& tee ${consus_file.baseName}_inference.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

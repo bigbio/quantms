@@ -29,7 +29,7 @@ process FALSEDISCOVERYRATE {
         -algorithm:add_decoy_peptides \\
         -algorithm:add_decoy_proteins \\
         $args \\
-        > ${id_file.baseName}_fdr.log
+        |& tee ${id_file.baseName}_fdr.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
