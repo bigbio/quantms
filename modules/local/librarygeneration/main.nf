@@ -46,7 +46,7 @@ process LIBRARYGENERATION {
             --threads ${task.cpus} \\
             --predictor \\
             --verbose $params.diann_debug \\
-            > diann.log
+            |& tee diann.log
 
 
     cat <<-END_VERSIONS > versions.yml

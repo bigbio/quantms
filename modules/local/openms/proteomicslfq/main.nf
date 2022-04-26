@@ -54,7 +54,7 @@ process PROTEOMICSLFQ {
         -out_cxml out.consensusXML \\
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         $args \\
-        > proteomicslfq.log
+        |& tee proteomicslfq.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

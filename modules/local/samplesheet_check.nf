@@ -19,7 +19,7 @@ process SAMPLESHEET_CHECK {
     def args = task.ext.args ?: ''
 
     """
-    check_samplesheet.py "${input_file}" ${is_sdrf} --CHECK_MS > input_check.log
+    check_samplesheet.py "${input_file}" ${is_sdrf} --CHECK_MS |& tee input_check.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

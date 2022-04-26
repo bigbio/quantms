@@ -26,7 +26,7 @@ process EXTRACTPSMFEATURES {
         -out ${id_file.baseName}_feat.idXML \\
         -threads $task.cpus \\
         $args \\
-        > ${id_file.baseName}_extract_psm_feature.log
+        |& tee ${id_file.baseName}_extract_psm_feature.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

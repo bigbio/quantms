@@ -24,7 +24,7 @@ process IDCONFLICTRESOLVER {
         -threads $task.cpus \\
         -out ${consus_file.baseName}_resconf.consensusXML \\
         $args \\
-        > ${consus_file.baseName}_resconf.log
+        |& tee ${consus_file.baseName}_resconf.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

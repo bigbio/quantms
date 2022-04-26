@@ -106,7 +106,7 @@ process SEARCHENGINECOMET {
         -debug $params.db_debug \\
         -force \\
         $args \\
-        > ${mzml_file.baseName}_comet.log
+        |& tee ${mzml_file.baseName}_comet.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
