@@ -23,7 +23,7 @@ process THERMORAWFILEPARSER {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    ThermoRawFileParser.sh -i=${rawfile} -f=2 -o=./ > ${rawfile.baseName}_conversion.log
+    ThermoRawFileParser.sh -i=${rawfile} -f=2 -o=./ |& tee ${rawfile.baseName}_conversion.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

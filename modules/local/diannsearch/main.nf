@@ -53,7 +53,7 @@ process DIANNSEARCH {
             ${normalize} \\
             --out diann_report.tsv \\
             --verbose $params.diann_debug \\
-            > diann.log
+            |& tee diann.log
 
 
     cat <<-END_VERSIONS > versions.yml

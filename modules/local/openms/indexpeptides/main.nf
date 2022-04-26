@@ -52,7 +52,7 @@ process INDEXPEPTIDES {
         ${il} \\
         ${allow_um} \\
         $args \\
-        > ${id_file.baseName}_index_peptides.log
+        |& tee ${id_file.baseName}_index_peptides.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

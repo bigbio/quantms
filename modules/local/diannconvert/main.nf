@@ -24,7 +24,7 @@ process DIANNCONVERT {
     diann_convert.py convert \\
         --diann_report ${report} \\
         --exp_design ${exp_design} \\
-        > trans_to_msstats.log
+        |& tee trans_to_msstats.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
