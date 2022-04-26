@@ -29,7 +29,7 @@ process GENERATE_DIANN_CFG {
         --precursor_tolerence_unit ${meta.precursormasstoleranceunit} \\
         --fragment_tolerence ${meta.fragmentmasstolerance} \\
         --fragment_tolerence_unit ${meta.fragmentmasstoleranceunit} \\
-        > GENERATE_DIANN_CFG.log
+        |& tee GENERATE_DIANN_CFG.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

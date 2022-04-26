@@ -31,7 +31,7 @@ process OPENMSPEAKPICKER {
         -processOption ${in_mem} \\
         ${lvls} \\
         $args \\
-        > ${mzml_file.baseName}_pp.log
+        |& tee ${mzml_file.baseName}_pp.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
