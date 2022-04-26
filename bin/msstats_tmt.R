@@ -5,7 +5,7 @@ char_to_boolean = c("true"=TRUE, "false"=FALSE)
 usage <- "Rscript msstats_tmt.R input.csv [list of contrasts or 'pairwise'] [default control condition or '']... [normalization based reference channel]"
 if (length(args)<1) {
     print(usage)
-    stop("At least the first one argument must be supplied (input csv).n", call.=FALSE)
+    stop("At least the first argument must be supplied (input csv).n", call.=FALSE)
 }
 if (length(args)<2) {
     # contrasts
