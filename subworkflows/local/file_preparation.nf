@@ -42,7 +42,6 @@ workflow FILE_PREPARATION {
     }
     .set {branched_input_mzMLs}
     ch_results = ch_results.mix(branched_input_mzMLs.inputIndexedMzML)
-    ch_results.view()
 
     THERMORAWFILEPARSER( branched_input.raw )
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
