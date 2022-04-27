@@ -29,8 +29,16 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ""
             NXF_EDGE: "1"
-        test_profile: ["test,docker", "test_lfq,docker", "test_dia,docker", "test_localize,docker",
-                        "test,conda", "test_lfq,conda", "test_localize,conda"]
+        test_profile:
+          [
+            "test,docker",
+            "test_lfq,docker",
+            "test_dia,docker",
+            "test_localize,docker",
+            "test,conda",
+            "test_lfq,conda",
+            "test_localize,conda",
+          ]
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
