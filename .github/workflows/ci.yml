@@ -82,8 +82,8 @@ jobs:
         if: always()
         name: Upload results
         with:
-          name: ${{ env.TEST_PROFILE }}_results
-          path: ${{ env.TEST_PROFILE }}_results
+          name: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
+          path: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
       - uses: actions/upload-artifact@v1
         if: always()
         name: Upload log
