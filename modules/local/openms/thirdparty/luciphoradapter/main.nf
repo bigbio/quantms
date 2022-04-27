@@ -18,9 +18,10 @@ process LUCIPHORADAPTER {
 
     script:
     luciphor_jar = ''
-    if (workflow.containerEngine) {
+    if (workflow.containerEngine || (process.executor == "awsbatch")) {
         luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
     }
+    //TODO for conda this probably has to be different
 
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"

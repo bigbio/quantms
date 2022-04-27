@@ -18,9 +18,10 @@ process SEARCHENGINEMSGF {
     script:
     // find a way to add MSGFPlus.jar dependence
     msgf_jar = ''
-    if (workflow.containerEngine) {
+    if (workflow.containerEngine || (process.executor == "awsbatch")) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
+    //TODO for conda this probably has to be different
 
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
