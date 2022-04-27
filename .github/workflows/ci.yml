@@ -14,6 +14,7 @@ jobs:
       NXF_ANSI_LOG: false
       CAPSULE_LOG: none
       TEST_PROFILE: ${{ matrix.test_profile }}
+      EXEC_PROFILE: ${{ matrix.exec_profile }}
 
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
@@ -29,7 +30,13 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ""
             NXF_EDGE: "1"
-        test_profile: ["test,docker", "test_lfq,docker", "test_dia,docker", "test_localize,docker", "test_lfq,conda", "test_dia,conda"]
+        test_profile: ["test", "test_lfq", "test_dia", "test_localize"]
+        exec_profile: ["docker","conda"]
+        exclude:
+          - test_profile: test_dia
+            exec_profile: conda
+          - test_profile: test_localize
+            exec_profile: conda
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -45,6 +52,7 @@ jobs:
           sudo mv nextflow /usr/local/bin/
 
       - name: Install mamba
+        if: ${{ matrix.exec_profile }} == "conda"
         uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: 3.9
@@ -56,13 +64,13 @@ jobs:
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE --outdir ${TEST_PROFILE}_results
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Gather failed logs
         if: failure() || cancelled()
         run: |
           mkdir failed_logs
-          failed=$(grep "FAILED" ${TEST_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
+          failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
       - uses: actions/upload-artifact@v1
         if: failure() || cancelled()
