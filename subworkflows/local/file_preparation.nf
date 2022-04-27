@@ -42,6 +42,7 @@ workflow FILE_PREPARATION {
     }
     .set {branched_input_mzMLs}
     ch_results = ch_results.mix(branched_input_mzMLs.inputIndexedMzML)
+    ch_results.view()
 
     THERMORAWFILEPARSER( branched_input.raw )
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
@@ -63,6 +64,5 @@ workflow FILE_PREPARATION {
 
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml]
-
     version         = ch_versions       // channel: [ *.version.txt ]
 }
