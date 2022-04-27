@@ -60,7 +60,6 @@ process SEARCHENGINEMSGF {
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
     """
-    ls -la \$CONDA_PREFIX
     MSGFPlusAdapter \\
         -protocol $params.protocol \\
         -in ${mzml_file} \\
