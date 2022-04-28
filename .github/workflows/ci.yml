@@ -70,8 +70,9 @@ jobs:
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
+        shell: bash
         run: |
-          ./bin/mamba shell init -s bash -p ~/mamba
+          ./bin/mamba shell init -s bash -p ./mamba
           source ~/.bashrc
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
