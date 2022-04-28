@@ -65,7 +65,8 @@ jobs:
         run: |
           wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
           mv bin/micromamba bin/mamba
-          echo "export PATH=$(pwd)/bin:$(pwd)/mamba/bin:\$PATH" >> $GITHUB_PATH
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+          echo "$(pwd)/mamba/bin" >> $GITHUB_PATH
           mamba shell init -s bash -p ./mamba
 
       - name: Run pipeline with test data
