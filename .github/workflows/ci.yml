@@ -66,7 +66,7 @@ jobs:
           wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
           mv bin/micromamba bin/mamba
           echo "export PATH=$(pwd)/bin:\$PATH" >> ~/.bashrc
-          mamba shell init -s bash -p ./mamba
+          ./bin/mamba shell init -s bash -p ./mamba
 
       - name: Run pipeline with test data
         # TODO nf-core: You can customise CI pipeline run tests as required
