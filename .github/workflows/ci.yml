@@ -67,7 +67,7 @@ jobs:
           mv bin/micromamba bin/mamba
           echo "$(pwd)/bin" >> $GITHUB_PATH
           echo "$(pwd)/mamba/bin" >> $GITHUB_PATH
-          echo $GITHUB_PATH
+          cat $GITHUB_PATH
           mamba shell init -s bash -p ./mamba
 
       - name: Run pipeline with test data
