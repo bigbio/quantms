@@ -31,7 +31,7 @@ jobs:
           - NXF_VER: ""
             NXF_EDGE: "1"
         test_profile: ["test", "test_lfq", "test_dia", "test_localize"]
-        exec_profile: ["docker","conda"]
+        exec_profile: ["docker", "conda"]
         exclude:
           - test_profile: test_dia
             exec_profile: conda
