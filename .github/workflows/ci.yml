@@ -65,6 +65,8 @@ jobs:
         run: |
           wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
           mv bin/micromamba bin/mamba
+          echo "export PATH=$(pwd)/bin:\$PATH" >> ~/.bashrc
+          mamba shell init -s bash -p ./mamba
 
       - name: Run pipeline with test data
         # TODO nf-core: You can customise CI pipeline run tests as required
@@ -72,7 +74,6 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         shell: bash
         run: |
-          ./bin/mamba shell init -s bash -p ./mamba
           source ~/.bashrc
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
