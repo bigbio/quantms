@@ -76,6 +76,8 @@ jobs:
         shell: bash
         run: |
           source ~/.bashrc
+          echo $PATH
+          mamba -v
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Gather failed logs
