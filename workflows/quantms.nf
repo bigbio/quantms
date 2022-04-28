@@ -37,6 +37,7 @@ include { TMT } from './tmt'
 include { LFQ } from './lfq'
 include { DIA } from './dia'
 include { PMULTIQC as SUMMARYPIPELINE } from '../modules/local/pmultiqc/main'
+include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -116,12 +117,33 @@ workflow QUANTMS {
     ch_pipeline_results = Channel.empty()
     ch_ids_pmultiqc = Channel.empty()
 
-    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    //
+    // MODULE: Generate decoy database
+    //
+    if (params.database) { ch_db_for_decoy_creation = Channel.from(file(params.database, checkIfExists: true)) } else { exit 1, 'No protein database provided' }
+
+
+    CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).first()         // Only run if iso or lfq have at least one file
+    | combine( ch_db_for_decoy_creation )    // Combine it so now the channel has elements like [potential_trigger_channel_element, actual_db], [potential_trigger_channel_element, actual_db2], etc (there should only be one DB though)
+    | map { it[-1] }         // Remove the "trigger" part
+    | set {ch_db_for_decoy_creation_or_null}
+
+    searchengine_in_db = params.add_decoys ? Channel.empty() : Channel.fromPath(params.database)
+    if (params.add_decoys) {
+        DECOYDATABASE(
+            ch_db_for_decoy_creation_or_null
+        )
+        searchengine_in_db = DECOYDATABASE.out.db_decoy
+        ch_versions = ch_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
+    }
+
+
+    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, searchengine_in_db)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
     ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, searchengine_in_db)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))

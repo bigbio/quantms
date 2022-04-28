@@ -16,10 +16,12 @@ process SEARCHENGINEMSGF {
     path "*.log",   emit: log
 
     script:
-    // find a way to add MSGFPlus.jar dependence
+    // The OpenMS adapters need the actuall jar file, not the executable/shell wrapper that (bio)conda creates
     msgf_jar = ''
-    if (workflow.containerEngine) {
+    if (workflow.containerEngine || (task.executor == "awsbatch")) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
+    } else if (params.enable_conda) {
+        msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 
     def args = task.ext.args ?: ''
