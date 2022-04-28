@@ -28,6 +28,7 @@ workflow LFQ {
     take:
     file_preparation_results
     ch_expdesign
+    ch_database_wdecoy
 
     main:
 
@@ -36,7 +37,7 @@ workflow LFQ {
     //
     // SUBWORKFLOWS: ID
     //
-    ID(file_preparation_results)
+    ID(file_preparation_results, ch_database_wdecoy)
     ch_software_versions = ch_software_versions.mix(ID.out.version.ifEmpty(null))
 
     //
@@ -51,7 +52,7 @@ workflow LFQ {
     PROTEOMICSLFQ(ch_plfq.mzmls.collect(),
                 ch_plfq.ids.collect(),
                 ch_expdesign,
-                ID.out.searchengine_in_db
+                ch_database_wdecoy
             )
     ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.version.ifEmpty(null))
 

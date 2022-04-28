@@ -10,3 +10,4 @@ testing*
 .idea/*
 *.log
 /build/
+results*/

@@ -3,7 +3,7 @@ process FILEMERGE {
     label 'process_single_thread'
     label 'openms'
 
-    conda (params.enable_conda ? "openms::openms=2.8.0" : null)
+    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
         'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"

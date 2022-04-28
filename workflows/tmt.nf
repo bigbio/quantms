@@ -27,15 +27,17 @@ workflow TMT {
     take:
     file_preparation_results
     ch_expdesign
+    ch_database_wdecoy
 
     main:
 
     ch_software_versions = Channel.empty()
+    ch_database_wdecoy.view()
 
     //
     // SUBWORKFLOWS: ID
     //
-    ID(file_preparation_results)
+    ID(file_preparation_results, ch_database_wdecoy)
     ch_software_versions = ch_software_versions.mix(ID.out.version.ifEmpty(null))
 
     //
