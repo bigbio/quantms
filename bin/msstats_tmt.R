@@ -5,70 +5,70 @@ source("./msstats_utils.R")
 
 
 usage <- "Rscript msstats_tmt.R input.csv [list of contrasts or 'pairwise'] [default control condition or '']... [normalization based reference channel]"
-char_to_boolean = c("true"=TRUE, "false"=FALSE)
+char_to_boolean <- c("true"=TRUE, "false"=FALSE)
 
-args = initialize_msstats(usage = usage)
+args <- initialize_msstats(usage = usage)
 
-rmProtein_with1Feature = args[4]
+rmProtein_with1Feature <- args[4]
 if(typeof(rmProtein_with1Feature) == 'character'){
-    rmProtein_with1Feature = char_to_boolean[rmProtein_with1Feature]
+    rmProtein_with1Feature <- char_to_boolean[rmProtein_with1Feature]
 }
 
 if (length(args)<5) {
     # use unique peptide
-    args[5] = TRUE
+    args[5] <- TRUE
 }
-useUniquePeptide = args[5]
+useUniquePeptide <- args[5]
 if(typeof(useUniquePeptide) == 'character'){
-    useUniquePeptide = char_to_boolean[useUniquePeptide]
+    useUniquePeptide <- char_to_boolean[useUniquePeptide]
 }
 
 if (length(args)<6) {
     # remove the features that have 1 or 2 measurements within each Run.
-    args[6] = TRUE
+    args[6] <- TRUE
 }
 
-rmPSM_withfewMea_withinRun = args[6]
+rmPSM_withfewMea_withinRun <- args[6]
 if(typeof(rmPSM_withfewMea_withinRun) == 'character'){
-    rmPSM_withfewMea_withinRun = char_to_boolean[rmPSM_withfewMea_withinRun]
+    rmPSM_withfewMea_withinRun <- char_to_boolean[rmPSM_withfewMea_withinRun]
 }
 
 if (length(args)<7) {
     # sum or max - when there are multiple measurements for certain feature in certain Run.
-    args[7] = 'sum'
+    args[7] <- 'sum'
 }
 
 if (length(args)<8) {
     # summarization methods to protein-level can be performed: "msstats(default)"
-    args[8] = "msstats"
+    args[8] <- "msstats"
 }
 
 if (length(args)<9) {
     # Global median normalization on peptide level data
-    args[9] = TRUE
+    args[9] <- TRUE
 }
-global_norm = args[9]
+global_norm <- args[9]
 if(typeof(global_norm) == 'character'){
-    global_norm = char_to_boolean[global_norm]
+    global_norm <- char_to_boolean[global_norm]
 }
 
 if (length(args)<10) {
     # Remove norm channel
-    args[10] = TRUE
+    args[10] <- TRUE
 }
-remove_norm_channel = args[10]
+remove_norm_channel <- args[10]
 if(typeof(remove_norm_channel) == 'character'){
-    remove_norm_channel = char_to_boolean[remove_norm_channel]
+    remove_norm_channel <- char_to_boolean[remove_norm_channel]
 }
 
 if (length(args)<11) {
     # default Reference channel based normalization between MS runs on protein level data.
     # Reference Channel annotated by 'Norm' in Condition.
-    args[11] = TRUE
+    args[11] <- TRUE
 }
-reference_norm = args[11]
+reference_norm <- args[11]
 if(typeof(reference_norm) == 'character'){
-    reference_norm = char_to_boolean[reference_norm]
+    reference_norm <- char_to_boolean[reference_norm]
 }
 
 csv_input <- args[1]

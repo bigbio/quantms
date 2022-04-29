@@ -4,39 +4,38 @@ require(MSstats)
 require(tibble)
 require(data.table)
 
-setwd(dirname(getwd()))
-source("./msstats_utils.R")
+source(here::here('msstats_utils.R'))
 
 usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [default control condition or ''] ..."
-char_to_boolean = c("true"=TRUE, "false"=FALSE)
+char_to_boolean <- c("true"=TRUE, "false"=FALSE)
 
-args = initialize_msstats(usage = usage)
+args <- initialize_msstats(usage = usage)
 
-removeOneFeatProts = args[4]
+removeOneFeatProts <- args[4]
 if(typeof(removeOneFeatProts) == 'character'){
-    removeOneFeatProts = char_to_boolean[removeOneFeatProts]
+    removeOneFeatProts <- char_to_boolean[removeOneFeatProts]
 }
 
 if (length(args)<5) {
     # keeps features with only one or two measurements across runs
-    args[5] = TRUE
+    args[5] <- TRUE
 }
-removeFewMeasurements = args[5]
+removeFewMeasurements <- args[5]
 if(typeof(removeFewMeasurements) == 'character'){
-    removeFewMeasurements = char_to_boolean[removeFewMeasurements]
+    removeFewMeasurements <- char_to_boolean[removeFewMeasurements]
 }
 
 if (length(args)<6) {
     # which features to use for quantification per protein: 'top3' or 'highQuality' which removes outliers only"
-    args[6] = 'top3'
+    args[6] <- 'top3'
 }
 if (length(args)<7) {
     # which summary method to use: 'TMP' (Tukey's median polish) or 'linear' (linear mixed model)
-    args[7] = 'TMP'
+    args[7] <- 'TMP'
 }
 if (length(args)<8) {
     # outputPrefix
-    args[8] = './msstats'
+    args[8] <- './msstats'
 }
 
 csv_input <- args[1]
@@ -207,7 +206,7 @@ if (l == 1)
     groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot",
                         width=12, height=12,dot.size = 2)
 
-    test.MSstats$Volcano = test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue),]
+    test.MSstats$Volcano <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue),]
     groupComparisonPlots(data=test.MSstats$Volcano, type="VolcanoPlot",
                         width=12, height=12,dot.size = 2)
 
