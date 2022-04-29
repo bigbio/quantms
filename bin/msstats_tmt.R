@@ -1,25 +1,14 @@
 #!/usr/bin/env Rscript
-args = commandArgs(trailingOnly=TRUE)
-char_to_boolean = c("true"=TRUE, "false"=FALSE)
+
+require(MSstatsTMT)
+include(msstats_utils.R)
+
 
 usage <- "Rscript msstats_tmt.R input.csv [list of contrasts or 'pairwise'] [default control condition or '']... [normalization based reference channel]"
-if (length(args)<1) {
-    print(usage)
-    stop("At least the first argument must be supplied (input csv).n", call.=FALSE)
-}
-if (length(args)<2) {
-    # contrasts
-    args[2] = "pairwise"
-}
-if (length(args)<3) {
-    # default control condition
-    args[3] = ""
-}
+char_to_boolean = c("true"=TRUE, "false"=FALSE)
 
-if (length(args)<4) {
-    # removeOneFeatProts
-    args[4] = FALSE
-}
+args = initialize_msstats(usage = usage)
+
 rmProtein_with1Feature = args[4]
 if(typeof(rmProtein_with1Feature) == 'character'){
     rmProtein_with1Feature = char_to_boolean[rmProtein_with1Feature]
@@ -38,6 +27,7 @@ if (length(args)<6) {
     # remove the features that have 1 or 2 measurements within each Run.
     args[6] = TRUE
 }
+
 rmPSM_withfewMea_withinRun = args[6]
 if(typeof(rmPSM_withfewMea_withinRun) == 'character'){
     rmPSM_withfewMea_withinRun = char_to_boolean[rmPSM_withfewMea_withinRun]
@@ -85,7 +75,6 @@ csv_input <- args[1]
 contrast_str <- args[2]
 control_str <- args[3]
 
-require(MSstatsTMT)
 # read dataframe into MSstatsTMT
 data <- read.csv(csv_input)
 quant <- OpenMStoMSstatsTMTFormat(data, useUniquePeptide=useUniquePeptide, rmPSM_withfewMea_withinRun=rmPSM_withfewMea_withinRun,

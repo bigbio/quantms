@@ -1,25 +1,15 @@
 #!/usr/bin/env Rscript
-args = commandArgs(trailingOnly=TRUE)
-char_to_boolean = c("true"=TRUE, "false"=FALSE)
-usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [default control condition or ''] ..."
 
-#TODO rewrite mzTab in next version
-if (length(args)<1) {
-    print(usage)
-    stop("At least the first argument must be supplied (input csv).n", call.=FALSE)
-}
-if (length(args)<2) {
-    # contrasts
-    args[2] = "pairwise"
-}
-if (length(args)<3) {
-    # default control condition
-    args[3] = ""
-}
-if (length(args)<4) {
-    # removeOneFeatProts
-    args[4] = FALSE
-}
+require(MSstats)
+require(tibble)
+require(data.table)
+include(msstats_utils.R)
+
+usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [default control condition or ''] ..."
+char_to_boolean = c("true"=TRUE, "false"=FALSE)
+
+args = initialize_msstats(usage = usage)
+
 removeOneFeatProts = args[4]
 if(typeof(removeOneFeatProts) == 'character'){
     removeOneFeatProts = char_to_boolean[removeOneFeatProts]
@@ -50,11 +40,6 @@ if (length(args)<8) {
 csv_input <- args[1]
 contrast_str <- args[2]
 control_str <- args[3]
-
-# load the MSstats library
-require(MSstats)
-require(tibble)
-require(data.table)
 
 # helper functions
 make_contrasts <- function(contrasts, levels)
