@@ -5,7 +5,7 @@ require(tibble)
 require(data.table)
 require(here)
 
-source(here::here('msstats_utils.R'))
+source(here::here('bin/msstats_utils.R'))
 
 usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [default control condition or ''] ..."
 char_to_boolean <- c("true"=TRUE, "false"=FALSE)
