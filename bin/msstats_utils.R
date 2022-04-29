@@ -7,7 +7,7 @@ initialize_msstats <- function (usage){
         stop("At least the first argument must be supplied (input csv).n", call.=FALSE)
     }
     if (length(args)<2) {
-         args[2] = "pairwise"
+        args[2] = "pairwise"
     }
 
     if (length(args)<3) {
@@ -17,11 +17,10 @@ initialize_msstats <- function (usage){
 
     if (length(args)<4) {
         # removeOneFeatProts
-       args[4] = FALSE
+        args[4] = FALSE
     }
 
     return(args)
-
 }
 
 
