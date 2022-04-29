@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 require(MSstatsTMT)
-source("./msstats_utils.R")
+source("./bin/msstats_utils.R")
 
 
 usage <- "Rscript msstats_tmt.R input.csv [list of contrasts or 'pairwise'] [default control condition or '']... [normalization based reference channel]"
