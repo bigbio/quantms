@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 require(MSstatsTMT)
-source(msstats_utils.R)
+source("msstats_utils.R")
 
 
 usage <- "Rscript msstats_tmt.R input.csv [list of contrasts or 'pairwise'] [default control condition or '']... [normalization based reference channel]"
@@ -136,6 +136,7 @@ if (l == 1)
         contrast_lst <- unlist(strsplit(contrast_str,";"))
         contrast_mat <- make_contrasts(contrast_lst, lvls)
     }
+
     print ("Contrasts to be tested:")
     print (contrast_mat)
     #TODO allow for user specified contrasts
