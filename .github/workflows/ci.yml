@@ -31,7 +31,7 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ""
             NXF_EDGE: "1"
-        test_profile: ["test", "test_lfq", "test_dia", "test_localize"]
+        test_profile: ["test", "test_lfq", "test_dia", "test_localize", "test_tmt"]
         exec_profile: ["docker", "conda"]
         exclude:
           - test_profile: test_dia
