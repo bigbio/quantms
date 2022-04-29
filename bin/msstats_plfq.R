@@ -3,6 +3,8 @@
 require(MSstats)
 require(tibble)
 require(data.table)
+
+setwd(dirname(getwd()))
 source("./msstats_utils.R")
 
 usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [default control condition or ''] ..."
