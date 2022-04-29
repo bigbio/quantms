@@ -1,4 +1,9 @@
 
+#' Inizialize the TMT and LFQ parameters
+#'
+#' @param usage message to exit the script analysis
+#'
+#' @return
 
 initialize_msstats <- function (usage){
     args <- commandArgs(trailingOnly=TRUE)
