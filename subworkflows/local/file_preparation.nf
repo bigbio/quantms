@@ -63,6 +63,5 @@ workflow FILE_PREPARATION {
 
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml]
-
     version         = ch_versions       // channel: [ *.version.txt ]
 }
