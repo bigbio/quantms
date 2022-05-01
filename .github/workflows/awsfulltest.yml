@@ -1,7 +1,7 @@
 name: nf-core AWS full size tests
 # This workflow is triggered on published releases.
 # It can be additionally triggered manually with GitHub actions workflow dispatch button.
-# It runs the -profile 'test_full' on AWS batch
+# It runs the -profile 'test_lfq' on AWS batch
 
 on:
   release:
@@ -17,7 +17,7 @@ jobs:
         uses: nf-core/tower-action@v3
         # TODO nf-core: You can customise AWS full pipeline tests as required
         # Add full size test data (but still relatively small datasets for few samples)
-        # on the `test_full.config` test runs with only one set of parameters
+        # on the `test_lfq.config` test runs with only one set of parameters
 
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
@@ -28,7 +28,7 @@ jobs:
             {
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/quantms/results-${{ github.sha }}"
             }
-          profiles: test_full,aws_tower
+          profiles: test_lfq,aws_tower
           nextflow_config: |
             process.errorStrategy = 'retry'
             process.maxRetries = 3
