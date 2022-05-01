@@ -2,3 +2,4 @@ repository_type: pipeline
 lint:
   files_exist:
     - conf/igenomes.config
+    - conf/test_full.config
