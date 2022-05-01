@@ -203,7 +203,6 @@ if (l == 1) {
     contrast_mat <- parse_contrasts(l = l, contrast_str = contrast_str, lvls = lvls)
     print ("Contrasts to be tested:")
     print (contrast_mat)
-    #TODO allow for user specified contrasts
     test.MSstats <- groupComparison(contrast.matrix=contrast_mat, data=processed.quant)
 
     mic <- get_missing_in_condition(processed.quant$ProteinLevelData)
