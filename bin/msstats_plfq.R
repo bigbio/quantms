@@ -15,7 +15,6 @@ require(data.table)
 #' @param usage message to exit the script analysis
 #'
 #' @return
-
 initialize_msstats <- function(usage) {
     args <- commandArgs(trailingOnly = TRUE)
     if (length(args) < 1) {
@@ -44,7 +43,7 @@ initialize_msstats <- function(usage) {
 #' @param l
 #' @param contrast_str
 #' @param lvls number of doncitions
-
+#'
 #' @return
 #'
 parse_contrasts <- function(l, contrast_str, lvls) {

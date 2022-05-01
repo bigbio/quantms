@@ -1,9 +1,10 @@
+### Begining Functions section
+
 #' Inizialize the TMT and LFQ parameters
 #'
 #' @param usage message to exit the script analysis
 #'
 #' @return
-
 initialize_msstats <- function(usage) {
     args <- commandArgs(trailingOnly = TRUE)
     if (length(args) < 1) {
@@ -32,7 +33,7 @@ initialize_msstats <- function(usage) {
 #' @param l
 #' @param contrast_str
 #' @param lvls number of doncitions
-
+#'
 #' @return
 #'
 parse_contrasts <- function(l, contrast_str, lvls) {
@@ -74,6 +75,70 @@ parse_contrasts <- function(l, contrast_str, lvls) {
     print(contrast_mat)
     return(contrast_mat)
 }
+
+#' This functions hels to define the contrasts that will be compare.
+#'
+#' @param contrasts
+#' @param levels
+#'
+#' @return
+make_contrasts <- function(contrasts, levels) {
+    #helper function
+    indicatorRow <- function(pos,len){
+        row <- rep(0,len)
+        row[pos] <- 1
+        return(row)
+    }
+
+    if (is.factor(levels)) levels <- levels(levels)
+    if (!is.character(levels)) levels <- colnames(levels)
+
+    l <- length(levels)
+    if (l < 1){
+        stop("No levels given")
+    }
+
+    ncontr <- length(contrasts)
+    if (ncontr < 1){
+        stop("No contrasts given")
+    }
+
+    levelsenv <- new.env()
+    for (i in 1:l) {
+        assign(levels[i], indicatorRow(i,l), pos=levelsenv)
+    }
+
+    contrastmat <- matrix(0, l, ncontr, dimnames=list(Levels=levels,Contrasts=contrasts))
+    for (j in 1:ncontr) {
+        contrastsj <- parse(text=contrasts[j])
+        contrastmat[,j] <- eval(contrastsj, envir=levelsenv)
+    }
+    return(t(contrastmat))
+}
+
+#' Get missing samples by condition
+#'
+#' @param processedData
+#'
+#' @return
+get_missing_in_condition <- function(processedData) {
+        p <- processedData
+        n_samples <- aggregate(p$SUBJECT, by = list(p$GROUP), FUN = function(x) {return(length(unique(as.numeric(x))))})
+        colnames(n_samples) <- c("GROUP", "n_samples")
+        p <- p[complete.cases(p["LogIntensities"]),][,c("Protein", "GROUP", "SUBJECT")]
+        p_dup <- p[!duplicated(p),]
+        p_dup_agg <- aggregate(p_dup$SUBJECT, by = list(p_dup$Protein, p_dup$GROUP), length)
+        colnames(p_dup_agg) <- c("Protein", "GROUP", "non_na")
+        agg_join <- merge(p_dup_agg, n_samples, by = "GROUP")
+        agg_join$missingInCondition <- 1 - agg_join$non_na / agg_join$n_samples
+
+        p <- dcast(setDT(agg_join), Protein~GROUP, value.var = "missingInCondition")
+        return(p)
+    }
+
+### End Function Sections
+
+
 
 
 
