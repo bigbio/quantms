@@ -1,9 +1,5 @@
 #!/usr/bin/env Rscript
-
-# load the MSstats library
-require(MSstats)
-require(tibble)
-require(data.table)
+require(MSstatsTMT)
 
 # TODO: Functions shared between msstats_plfq and msstats_tmt should be merge in msstats_utils.R
 # Please functions syncronized between the three scripts until the code can be merged.
@@ -149,51 +145,90 @@ get_missing_in_condition <- function(processedData) {
 ### End Function Sections
 
 char_to_boolean <- c("true"=TRUE, "false"=FALSE)
-usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [default control condition or ''] ..."
+usage <- "Rscript msstats_tmt.R input.csv [list of contrasts or 'pairwise'] [default control condition or '']... [normalization based reference channel]"
 
-#TODO rewrite mzTab in next version
 args <- initialize_msstats(usage = usage)
 
-removeOneFeatProts <- args[4]
-if(typeof(removeOneFeatProts) == 'character'){
-    removeOneFeatProts <- char_to_boolean[removeOneFeatProts]
+rmProtein_with1Feature <- args[4]
+if(typeof(rmProtein_with1Feature) == 'character'){
+    rmProtein_with1Feature <- char_to_boolean[rmProtein_with1Feature]
 }
 
 if (length(args)<5) {
-    # keeps features with only one or two measurements across runs
+    # use unique peptide
     args[5] <- TRUE
 }
-removeFewMeasurements <- args[5]
-
-if(typeof(removeFewMeasurements) == 'character'){
-    removeFewMeasurements <- char_to_boolean[removeFewMeasurements]
+useUniquePeptide <- args[5]
+if(typeof(useUniquePeptide) == 'character'){
+    useUniquePeptide <- char_to_boolean[useUniquePeptide]
 }
 
 if (length(args)<6) {
-    # which features to use for quantification per protein: 'top3' or 'highQuality' which removes outliers only"
-    args[6] <- 'top3'
+    # remove the features that have 1 or 2 measurements within each Run.
+    args[6] <- TRUE
 }
+rmPSM_withfewMea_withinRun <- args[6]
+if(typeof(rmPSM_withfewMea_withinRun) == 'character'){
+    rmPSM_withfewMea_withinRun <- char_to_boolean[rmPSM_withfewMea_withinRun]
+}
+
 if (length(args)<7) {
-    # which summary method to use: 'TMP' (Tukey's median polish) or 'linear' (linear mixed model)
-    args[7] <- 'TMP'
+    # sum or max - when there are multiple measurements for certain feature in certain Run.
+    args[7] <- 'sum'
 }
+
 if (length(args)<8) {
-    # outputPrefix
-    args[8] <- './msstats'
+    # summarization methods to protein-level can be performed: "msstats(default)"
+    args[8] <- "msstats"
+}
+
+if (length(args)<9) {
+    # Global median normalization on peptide level data
+    args[9] <- TRUE
+}
+global_norm <- args[9]
+if(typeof(global_norm) == 'character'){
+    global_norm <- char_to_boolean[global_norm]
+}
+
+if (length(args)<10) {
+    # Remove norm channel
+    args[10] <- TRUE
+}
+remove_norm_channel <- args[10]
+if(typeof(remove_norm_channel) == 'character'){
+    remove_norm_channel <- char_to_boolean[remove_norm_channel]
+}
+
+if (length(args)<11) {
+    # default Reference channel based normalization between MS runs on protein level data.
+    # Reference Channel annotated by 'Norm' in Condition.
+    args[11] <- TRUE
+}
+reference_norm <- args[11]
+if(typeof(reference_norm) == 'character'){
+    reference_norm <- char_to_boolean[reference_norm]
 }
 
 csv_input <- args[1]
 contrast_str <- args[2]
 control_str <- args[3]
 
-# read dataframe into MSstats
+# read dataframe into MSstatsTMT
 data <- read.csv(csv_input)
-quant <- OpenMStoMSstatsFormat(data, removeProtein_with1Feature = removeOneFeatProts, removeFewMeasurements=removeFewMeasurements)
+quant <- OpenMStoMSstatsTMTFormat(data, useUniquePeptide=useUniquePeptide, rmPSM_withfewMea_withinRun=rmPSM_withfewMea_withinRun,
+    rmProtein_with1Feature=rmProtein_with1Feature
+)
 
-# process data
-processed.quant <- dataProcess(quant, censoredInt = 'NA', featureSubset = args[6], summaryMethod = args[7])
+# protein summarization
+processed.quant <- proteinSummarization(quant, method=args[8],remove_empty_channel=TRUE, global_norm=global_norm,
+    reference_norm=reference_norm, remove_norm_channel=remove_norm_channel
+)
 
-lvls <- levels(as.factor(data$Condition))
+dataProcessPlotsTMT(processed.quant, "ProfilePlot", width=12, height=12, which.Protein="all")
+dataProcessPlotsTMT(processed.quant, "QCPlot", width=12, height=12, which.Protein="allonly")
+
+lvls <- levels(as.factor(processed.quant$ProteinLevelData$Condition))
 l <- length(lvls)
 
 if (l == 1) {
@@ -202,26 +237,9 @@ if (l == 1) {
     contrast_mat <- parse_contrasts(l = l, contrast_str = contrast_str, lvls = lvls)
     print ("Contrasts to be tested:")
     print (contrast_mat)
-    test.MSstats <- groupComparison(contrast.matrix=contrast_mat, data=processed.quant)
+    #TODO allow for user specified contrasts
+    test.MSstatsTMT <- groupComparisonTMT(contrast.matrix=contrast_mat, data=processed.quant)
 
-    mic <- get_missing_in_condition(processed.quant$ProteinLevelData)
-    test.MSstats$ComparisonResult <- merge(x=test.MSstats$ComparisonResult, y=mic, by="Protein")
-    commoncols <- intersect(colnames(mic), colnames(test.MSstats$ComparisonResult))
-    test.MSstats$ComparisonResult[, commoncols] <- apply(test.MSstats$Comparison[, commoncols], 2, function(x) {x[is.na(x)] <- 1; return(x)})
-
-    #write all comparisons into one CSV file
-    write.table(test.MSstats$ComparisonResult, file=paste0(args[8],"_comparisons.csv"), quote=FALSE, sep='\t', row.names = FALSE)
-
-    groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot",
-                        width=12, height=12,dot.size = 2)
-
-    test.MSstats$Volcano <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue),]
-    groupComparisonPlots(data=test.MSstats$Volcano, type="VolcanoPlot",
-                        width=12, height=12,dot.size = 2)
-
-    # Otherwise it fails since the behaviour is undefined
-    if (nrow(contrast_mat) > 1) {
-        groupComparisonPlots(data=test.MSstats$ComparisonResult, type="Heatmap",
-                            width=12, height=12,dot.size = 2)
-    }
+    #TODO allow manual input (e.g. proteins of interest)
+    write.table(test.MSstatsTMT$ComparisonResult, file=paste0("msstatsiso_results.csv"), quote=FALSE, sep='\t', row.names = FALSE)
 }
