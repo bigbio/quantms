@@ -3,6 +3,19 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1] nfcore/quantms - [TBD] - Berlin
+
+### `Added`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Deprecated`
+
+### `Parameters`
+
+
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
 
 Initial release of nf-core/quantms, created with the [nf-core](https://nf-co.re/) template.
