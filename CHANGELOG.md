@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Parameters`
 
-
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
 
 Initial release of nf-core/quantms, created with the [nf-core](https://nf-co.re/) template.
