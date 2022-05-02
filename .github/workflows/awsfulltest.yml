@@ -13,7 +13,7 @@ jobs:
     name: Run AWS full tests
     if: github.repository == 'nf-core/quantms'
     runs-on: ubuntu-latest
-    # Do a full-scale run with data from each sequencing platform
+    # Do a full-scale run with data from each acquisition/quantification mode
     strategy:
       matrix:
         mode: ["lfq", "tmt", "dia"]
@@ -25,8 +25,6 @@ jobs:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
-          pipeline: ${{ github.repository }}
-          revision: ${{ github.sha }}
           workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/quantms/work-${{ github.sha }}
           parameters: |
             {
