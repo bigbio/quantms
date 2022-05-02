@@ -10,25 +10,29 @@ process MSSTATS {
 
     input:
     path out_msstats
-    path out_mztab_msstats
 
     output:
     // The generation of the PDFs from MSstats are very unstable, especially with auto-contrasts.
     // And users can easily fix anything based on the csv and the included script -> make optional
     path "*.pdf" optional true
-    path "*.mzTab", optional: true, emit: msstats_mztab
     path "*.csv", emit: msstats_csv
     path "*.log", emit: log
     path "versions.yml" , emit: version
 
     script:
     def args = task.ext.args ?: ''
+    ref_con = params.ref_condition ?: ""
 
     """
     msstats_plfq.R \\
         ${out_msstats} \\
-        ${out_mztab_msstats} \\
-        ${args} \\
+        ${params.contrasts} \\
+        "${ref_con}" \\
+        ${params.msstats_remove_one_feat_prot} \\
+        ${params.msstatslfq_removeFewMeasurements} \\
+        ${params.msstatslfq_feature_subset_protein} \\
+        ${params.msstatslfq_quant_summary_method} \\
+        $args \\
         > msstats.log \\
         || echo "Optional MSstats step failed. Please check logs and re-run or do a manual statistical analysis."
 

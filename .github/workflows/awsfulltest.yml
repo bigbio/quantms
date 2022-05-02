@@ -1,34 +1,38 @@
 name: nf-core AWS full size tests
 # This workflow is triggered on published releases.
 # It can be additionally triggered manually with GitHub actions workflow dispatch button.
-# It runs the -profile 'test_full' on AWS batch
+# It runs the -profiles 'test_lfq' 'test_tmt' and 'test_dia' on AWS batch
 
 on:
   release:
     types: [published]
   workflow_dispatch:
+
 jobs:
   run-tower:
     name: Run AWS full tests
     if: github.repository == 'nf-core/quantms'
     runs-on: ubuntu-latest
+    # Do a full-scale run with data from each sequencing platform
+    strategy:
+      matrix:
+        mode: ["lfq", "tmt", "dia"]
     steps:
       - name: Launch workflow via tower
         uses: nf-core/tower-action@v3
-        # TODO nf-core: You can customise AWS full pipeline tests as required
-        # Add full size test data (but still relatively small datasets for few samples)
-        # on the `test_full.config` test runs with only one set of parameters
 
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
           compute_env: ${{ secrets.TOWER_COMPUTE_ENV }}
+          pipeline: ${{ github.repository }}
+          revision: ${{ github.sha }}
           workdir: s3://${{ secrets.AWS_S3_BUCKET }}/work/quantms/work-${{ github.sha }}
           parameters: |
             {
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/quantms/results-${{ github.sha }}"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/quantms/results-${{ github.sha }}/mode_${{ matrix.mode }}"
             }
-          profiles: test_full,aws_tower
+          profiles: test_${{ matrix.mode }},aws_tower
           nextflow_config: |
             process.errorStrategy = 'retry'
             process.maxRetries = 3
