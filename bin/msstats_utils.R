@@ -1,13 +1,3 @@
-#!/usr/bin/env Rscript
-
-# load the MSstats library
-require(MSstats)
-require(tibble)
-require(data.table)
-
-# TODO: Functions shared between msstats_plfq and msstats_tmt should be merge in msstats_utils.R
-# Please functions syncronized between the three scripts until the code can be merged.
-
 ### Begining Functions section
 
 #' Inizialize the TMT and LFQ parameters
@@ -148,80 +138,10 @@ get_missing_in_condition <- function(processedData) {
 
 ### End Function Sections
 
-char_to_boolean <- c("true"=TRUE, "false"=FALSE)
-usage <- "Rscript msstats_plfq.R input.csv [list of contrasts or 'pairwise'] [default control condition or ''] ..."
 
-#TODO rewrite mzTab in next version
-args <- initialize_msstats(usage = usage)
 
-removeOneFeatProts <- args[4]
-if(typeof(removeOneFeatProts) == 'character'){
-    removeOneFeatProts <- char_to_boolean[removeOneFeatProts]
-}
 
-if (length(args)<5) {
-    # keeps features with only one or two measurements across runs
-    args[5] <- TRUE
-}
-removeFewMeasurements <- args[5]
 
-if(typeof(removeFewMeasurements) == 'character'){
-    removeFewMeasurements <- char_to_boolean[removeFewMeasurements]
-}
 
-if (length(args)<6) {
-    # which features to use for quantification per protein: 'top3' or 'highQuality' which removes outliers only"
-    args[6] <- 'top3'
-}
-if (length(args)<7) {
-    # which summary method to use: 'TMP' (Tukey's median polish) or 'linear' (linear mixed model)
-    args[7] <- 'TMP'
-}
-if (length(args)<8) {
-    # outputPrefix
-    args[8] <- './msstats'
-}
 
-csv_input <- args[1]
-contrast_str <- args[2]
-control_str <- args[3]
 
-# read dataframe into MSstats
-data <- read.csv(csv_input)
-quant <- OpenMStoMSstatsFormat(data, removeProtein_with1Feature = removeOneFeatProts, removeFewMeasurements=removeFewMeasurements)
-
-# process data
-processed.quant <- dataProcess(quant, censoredInt = 'NA', featureSubset = args[6], summaryMethod = args[7])
-
-lvls <- levels(as.factor(data$Condition))
-l <- length(lvls)
-
-if (l == 1) {
-    print("Only one condition found. No contrasts to be tested. If this is not the case, please check your experimental design.")
-} else {
-    contrast_mat <- parse_contrasts(l = l, contrast_str = contrast_str, lvls = lvls)
-    print ("Contrasts to be tested:")
-    print (contrast_mat)
-    test.MSstats <- groupComparison(contrast.matrix=contrast_mat, data=processed.quant)
-
-    mic <- get_missing_in_condition(processed.quant$ProteinLevelData)
-    test.MSstats$ComparisonResult <- merge(x=test.MSstats$ComparisonResult, y=mic, by="Protein")
-    commoncols <- intersect(colnames(mic), colnames(test.MSstats$ComparisonResult))
-    test.MSstats$ComparisonResult[, commoncols] <- apply(test.MSstats$Comparison[, commoncols], 2, function(x) {x[is.na(x)] <- 1; return(x)})
-
-    #write all comparisons into one CSV file
-    write.table(test.MSstats$ComparisonResult, file=paste0(args[8],"_comparisons.csv"), quote=FALSE, sep='\t', row.names = FALSE)
-
-    groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot",
-                        width=12, height=12,dot.size = 2)
-
-    test.MSstats$Volcano <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue),]
-    groupComparisonPlots(data=test.MSstats$Volcano, type="VolcanoPlot",
-                        width=12, height=12,dot.size = 2)
-
-    # Otherwise it fails since the behaviour is undefined
-    if (nrow(contrast_mat) > 1) {
-        groupComparisonPlots(data=test.MSstats$ComparisonResult, type="Heatmap",
-                            width=12, height=12,dot.size = 2)
-    }
-}
