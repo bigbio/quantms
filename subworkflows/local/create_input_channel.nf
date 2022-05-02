@@ -20,14 +20,14 @@ workflow CREATE_INPUT_CHANNEL {
     if (is_sdrf.toString().toLowerCase().contains("true")) {
         SDRFPARSING ( ch_sdrf_or_design )
         ch_versions = ch_versions.mix(SDRFPARSING.out.version)
-        ch_in_design = SDRFPARSING.out.ch_sdrf_config_file
+        ch_config = SDRFPARSING.out.ch_sdrf_config_file
 
         ch_expdesign    = SDRFPARSING.out.ch_expdesign
     } else {
         PREPROCESS_EXPDESIGN( ch_sdrf_or_design )
-        ch_in_design = PREPROCESS_EXPDESIGN.out.process_ch_expdesign
+        ch_config = PREPROCESS_EXPDESIGN.out.ch_config
 
-        ch_expdesign    = PREPROCESS_EXPDESIGN.out.ch_expdesign
+        ch_expdesign = PREPROCESS_EXPDESIGN.out.ch_expdesign
     }
 
     Set enzymes = []
@@ -38,7 +38,7 @@ workflow CREATE_INPUT_CHANNEL {
     wrapper.labelling_type = ""
     wrapper.acquisition_method = ""
 
-    ch_in_design.splitCsv(header: true, sep: '\t')
+    ch_config.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .branch {
                 ch_meta_config_dia: it[0].acquisition_method.contains("dia")
