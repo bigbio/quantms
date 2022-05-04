@@ -1,4 +1,5 @@
 process FALSEDISCOVERYRATE {
+    tag "$meta.id"
     label 'process_low'
     label 'process_single_thread'
     label 'openms'

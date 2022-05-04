@@ -1,4 +1,5 @@
 process PROTEOMICSLFQ {
+    tag "$expdes.Name"
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)

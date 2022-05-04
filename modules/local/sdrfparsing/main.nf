@@ -1,4 +1,5 @@
 process SDRFPARSING {
+    tag "$sdrf.Name"
     label 'process_low'
 
     conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)

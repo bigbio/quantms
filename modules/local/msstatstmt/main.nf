@@ -1,4 +1,5 @@
 process MSSTATSTMT {
+    tag "$out_msstats_tmt.Name"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::bioconductor-msstatstmt=2.2.0" : null)

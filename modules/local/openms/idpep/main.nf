@@ -1,4 +1,5 @@
 process IDPEP {
+    tag "$meta.id"
     label 'process_very_low'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
