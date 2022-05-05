@@ -1,5 +1,5 @@
 process PROTEOMICSLFQ {
-    tag "$expdes.Name"
+    tag "${expdes.baseName - ~/_design$/}"
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
@@ -14,8 +14,8 @@ process PROTEOMICSLFQ {
     path(fasta)
 
     output:
-    path "${expdes.baseName}.mzTab", emit: out_mztab
-    path "${expdes.baseName}.consensusXML", emit: out_consensusXML
+    path "${expdes.baseName - ~/_design$/}.mzTab", emit: out_mztab
+    path "${expdes.baseName - ~/_design$/}.consensusXML", emit: out_consensusXML
     path "*out_msstats.csv", emit: out_msstats optional true
     path "*out_triqler.tsv", emit: out_triqler optional true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs optional true
@@ -29,8 +29,8 @@ process PROTEOMICSLFQ {
 
     script:
     def args = task.ext.args ?: ''
-    def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
-    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
+    def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName - ~/_design$/}_msstats_in.csv" : ""
+    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName - ~/_design$/}_triqler_in.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
 
     """
@@ -47,12 +47,12 @@ process PROTEOMICSLFQ {
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
         -picked_proteinFDR true \\
-        -out ${expdes.baseName}.mzTab \\
+        -out ${expdes.baseName - ~/_design$/}.mzTab \\
         -threads ${task.cpus} \\
         ${msstats_present} \\
         ${triqler_present} \\
         ${decoys_present} \\
-        -out_cxml out.consensusXML \\
+        -out_cxml ${expdes.baseName - ~/_design$/}.consensusXML \\
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         $args \\
         |& tee proteomicslfq.log
