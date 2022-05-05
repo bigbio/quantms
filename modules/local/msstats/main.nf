@@ -33,6 +33,7 @@ process MSSTATS {
         ${params.msstatslfq_removeFewMeasurements} \\
         ${params.msstatslfq_feature_subset_protein} \\
         ${params.msstatslfq_quant_summary_method} \\
+        ${out_msstats.baseName} \\
         $args \\
         > msstats.log \\
         || echo "Optional MSstats step failed. Please check logs and re-run or do a manual statistical analysis."

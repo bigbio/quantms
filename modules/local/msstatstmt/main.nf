@@ -37,6 +37,7 @@ process MSSTATSTMT {
         ${params.msstatsiso_global_norm} \\
         ${params.msstatsiso_remove_norm_channel} \\
         ${params.msstatsiso_reference_normalization} \\
+        ${out_msstats_tmt.baseName} \\
         $args \\
         > msstats_tmt.log \\
         || echo "Optional MSstatsTMT step failed. Please check logs and re-run or do a manual statistical analysis."

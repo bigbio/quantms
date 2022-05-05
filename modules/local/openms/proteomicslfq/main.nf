@@ -14,10 +14,10 @@ process PROTEOMICSLFQ {
     path(fasta)
 
     output:
-    path "out.mzTab", emit: out_mztab
+    path "*.mzTab", emit: out_mztab
     path "out.consensusXML", emit: out_consensusXML
-    path "out_msstats.csv", emit: out_msstats optional true
-    path "out_triqler.tsv", emit: out_triqler optional true
+    path "*out_msstats.csv", emit: out_msstats optional true
+    path "*out_triqler.tsv", emit: out_triqler optional true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs optional true
     path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference optional true
     path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved optional true
@@ -29,8 +29,8 @@ process PROTEOMICSLFQ {
 
     script:
     def args = task.ext.args ?: ''
-    def msstats_present = params.quantification_method == "feature_intensity" ? '-out_msstats out_msstats.csv' : ''
-    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? '-out_triqler out_triqler.tsv' : ''
+    def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_out_msstats.csv" : ""
+    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_out_triqler.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
 
     """
@@ -47,7 +47,7 @@ process PROTEOMICSLFQ {
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
         -picked_proteinFDR true \\
-        -out out.mzTab \\
+        -out ${expdes.baseName}.mzTab \\
         -threads ${task.cpus} \\
         ${msstats_present} \\
         ${triqler_present} \\
