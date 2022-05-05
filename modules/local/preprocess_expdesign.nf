@@ -9,7 +9,7 @@ process PREPROCESS_EXPDESIGN {
     container "frolvlad/alpine-bash"
 
     input:
-    path design
+    path design, stageAs: '${design.baseName}_raw.tsv'
 
     output:
     path "experimental_design.tsv", emit: ch_expdesign
@@ -20,9 +20,9 @@ process PREPROCESS_EXPDESIGN {
     """
     # since we know that we will need to convert from raw to mzML for all tools that need the design (i.e., OpenMS tools)
     # we edit the design here and change the endings.
-    sed 's/.raw\\t/.mzML\\t/I' $design > experimental_design.tsv
+    sed 's/.raw\\t/.mzML\\t/I' ${design.baseName}_raw.tsv > ${design.baseName}.tsv
 
     # here we extract the filenames and fake an empty config (since the config values will be deduced from the workflow params)
-    a=\$(grep -n '^\$' $design | head -n1| awk -F":" '{print \$1}'); sed -e ''"\${a}"',\$d' $design > config.tsv
+    a=\$(grep -n '^\$' ${design.baseName}_raw.tsv | head -n1| awk -F":" '{print \$1}'); sed -e ''"\${a}"',\$d' ${design.baseName}_raw.tsv > ${design.baseName}_config.tsv
     """
 }
