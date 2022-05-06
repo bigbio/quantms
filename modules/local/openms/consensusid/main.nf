@@ -1,4 +1,5 @@
 process CONSENSUSID {
+    tag "$meta.id"
     label 'process_medium'
     // TODO could be easily parallelized
     label 'process_single_thread'
