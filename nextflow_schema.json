@@ -818,6 +818,38 @@
                     "default": 0.01,
                     "fa_icon": "fas fa-filter"
                 },
+                "quick_mass_acc": {
+                    "type": "boolean",
+                    "description": "Choosing the MS2 mass accuracy setting automatically",
+                    "default": false,
+                    "fa_icon": "fas fa-toggle-on",
+                    "help_text": "(experimental) when choosing the MS2 mass accuracy setting automatically, DIA-NN will use a fast heuristical algorithm instead of IDs number optimisation"
+                },
+                "scan_window": {
+                    "type": "integer",
+                    "description": "Set the scan window radius to a specific value",
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
+                    "default": 7
+                },
+                "min_corr": {
+                    "type": "number",
+                    "description": "Only peaks with correlation sum exceeding min_corr will be considered",
+                    "fa_icon": "fas fa-filter",
+                    "default": 2.0
+                },
+                "corr_diff": {
+                    "type": "number",
+                    "description": "Peaks with correlation sum below corr_diff from maximum will not be considered",
+                    "fa_icon": "fas fa-filter",
+                    "default": 1.0
+                },
+                "time_corr_only": {
+                    "type": "boolean",
+                    "description": "A single score will be used until RT alignment to save memory",
+                    "fa_icon": "fas fa-filter",
+                    "default": true
+                },
                 "min_pr_mz": {
                     "type": "number",
                     "description": "The minimum precursor m/z for the in silico library generation or library-free search",
