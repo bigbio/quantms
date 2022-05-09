@@ -210,6 +210,11 @@ if(typeof(reference_norm) == 'character'){
     reference_norm <- char_to_boolean[reference_norm]
 }
 
+if (length(args)<12) {
+    # outputPrefix
+    args[12] <- './msstatsiso'
+}
+
 csv_input <- args[1]
 contrast_str <- args[2]
 control_str <- args[3]
@@ -241,5 +246,5 @@ if (l == 1) {
     test.MSstatsTMT <- groupComparisonTMT(contrast.matrix=contrast_mat, data=processed.quant)
 
     #TODO allow manual input (e.g. proteins of interest)
-    write.table(test.MSstatsTMT$ComparisonResult, file=paste0("msstatsiso_results.csv"), quote=FALSE, sep='\t', row.names = FALSE)
+    write.table(test.MSstatsTMT$ComparisonResult, file=paste0(args[12],"_comparisons.csv"), quote=FALSE, sep='\t', row.names = FALSE)
 }

@@ -14,14 +14,14 @@ process PMULTIQC {
 
     output:
     path "*.html", emit: ch_pmultiqc_report
-    path "*.db", optional:true, emit: ch_pmultiqc_db
+    path "*.db", optional: true, emit: ch_pmultiqc_db
     path "versions.yml", emit: versions
     path "*_data", emit: data
-    path "*_plots", optional:true, emit: plots
+    path "*_plots", optional: true, emit: plots
 
     script:
     def args = task.ext.args ?: ''
-    def disable_pmultqic = params.enable_pmultiqc ? "": "--disable_plugin"
+    def disable_pmultqic = params.enable_pmultiqc ? "" : "--disable_plugin"
 
     """
     multiqc \\

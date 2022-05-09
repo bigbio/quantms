@@ -1,4 +1,5 @@
 process PROTEOMICSLFQ {
+    tag "${expdes.baseName - ~/_design$/}"
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
@@ -13,10 +14,10 @@ process PROTEOMICSLFQ {
     path(fasta)
 
     output:
-    path "out.mzTab", emit: out_mztab
-    path "out.consensusXML", emit: out_consensusXML
-    path "out_msstats.csv", emit: out_msstats optional true
-    path "out_triqler.tsv", emit: out_triqler optional true
+    path "${expdes.baseName - ~/_design$/}.mzTab", emit: out_mztab
+    path "${expdes.baseName - ~/_design$/}.consensusXML", emit: out_consensusXML
+    path "*out_msstats.csv", emit: out_msstats optional true
+    path "*out_triqler.tsv", emit: out_triqler optional true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs optional true
     path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference optional true
     path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved optional true
@@ -28,8 +29,8 @@ process PROTEOMICSLFQ {
 
     script:
     def args = task.ext.args ?: ''
-    def msstats_present = params.quantification_method == "feature_intensity" ? '-out_msstats out_msstats.csv' : ''
-    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? '-out_triqler out_triqler.tsv' : ''
+    def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName - ~/_design$/}_msstats_in.csv" : ""
+    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName - ~/_design$/}_triqler_in.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
 
     """
@@ -46,12 +47,12 @@ process PROTEOMICSLFQ {
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
         -picked_proteinFDR true \\
-        -out out.mzTab \\
+        -out ${expdes.baseName - ~/_design$/}.mzTab \\
         -threads ${task.cpus} \\
         ${msstats_present} \\
         ${triqler_present} \\
         ${decoys_present} \\
-        -out_cxml out.consensusXML \\
+        -out_cxml ${expdes.baseName - ~/_design$/}.consensusXML \\
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         $args \\
         |& tee proteomicslfq.log

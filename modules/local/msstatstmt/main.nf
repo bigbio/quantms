@@ -1,4 +1,5 @@
 process MSSTATSTMT {
+    tag "$msstatstmt_csv_input.Name"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::bioconductor-msstatstmt=2.2.0" : null)
@@ -9,7 +10,7 @@ process MSSTATSTMT {
     }
 
     input:
-    path out_msstats_tmt
+    path msstatstmt_csv_input
 
     output:
     // The generation of the PDFs from MSstatsTMT are very unstable, especially with auto-contrasts.
@@ -25,7 +26,7 @@ process MSSTATSTMT {
 
     """
     msstats_tmt.R \\
-        ${out_msstats_tmt} \\
+        ${msstatstmt_csv_input} \\
         ${params.contrasts} \\
         "${ref_con}" \\
         ${params.msstats_remove_one_feat_prot} \\
@@ -36,6 +37,7 @@ process MSSTATSTMT {
         ${params.msstatsiso_global_norm} \\
         ${params.msstatsiso_remove_norm_channel} \\
         ${params.msstatsiso_reference_normalization} \\
+        ${msstatstmt_csv_input.baseName} \\
         $args \\
         > msstats_tmt.log \\
         || echo "Optional MSstatsTMT step failed. Please check logs and re-run or do a manual statistical analysis."
