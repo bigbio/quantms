@@ -36,11 +36,10 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod, precursor_tolerence, precursor_t
         diann_var_ptm += (var_ptm_str + mod)
 
     with open("diann_config.cfg", "w") as f:
-        f.write("--dir ./mzMLs --cut " + cut + diann_fix_ptm + diann_var_ptm + mass_acc + mass_acc_ms1 +
-                " --matrices --report-lib-info")
+        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm + mass_acc + mass_acc_ms1)
 
     with open("library_config.cfg", "w") as f:
-        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm + " --gen-spec-lib --smart-profiling")
+        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
 
 def convert_mod(unimod_database, fix_mod, var_mod):
     pattern = re.compile("\((.*?)\)")

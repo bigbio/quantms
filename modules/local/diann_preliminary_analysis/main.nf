@@ -52,7 +52,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
             ${quick_mass_acc} \\
             ${time_corr_only} \\
             $args \\
-            |& tee diann.log
+            |& tee ${mzML.baseName}_diann.log
 
 
     cat <<-END_VERSIONS > versions.yml
