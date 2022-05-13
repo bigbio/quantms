@@ -818,17 +818,34 @@
                     "default": 0.01,
                     "fa_icon": "fas fa-filter"
                 },
-                "quick_mass_acc": {
+                "mass_acc_automatic": {
                     "type": "boolean",
+                    "default": true,
                     "description": "Choosing the MS2 mass accuracy setting automatically",
-                    "default": false,
-                    "fa_icon": "fas fa-toggle-on",
-                    "help_text": "(experimental) when choosing the MS2 mass accuracy setting automatically, DIA-NN will use a fast heuristical algorithm instead of IDs number optimisation"
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "mass_acc_ms2": {
+                    "type": "integer",
+                    "description": "Sets the MS2 mass accuracy to N ppm",
+                    "default": 11,
+                    "fa_icon": "fas fa-filter"
+                },
+                "mass_acc_ms1": {
+                    "type": "integer",
+                    "description": "Sets the MS1 mass accuracy to N ppm",
+                    "default": 15,
+                    "fa_icon": "fas fa-filter"
+                },
+                "scan_window_automatic": {
+                    "type": "boolean",
+                    "description": "Choosing scan_window setting automatically",
+                    "default": true,
+                    "fa_icon": "fas fa-toggle-on"
                 },
                 "scan_window": {
                     "type": "integer",
                     "description": "Set the scan window radius to a specific value",
-                    "fa_icon": "fas fa-sliders-h",
+                    "fa_icon": "fas fa-filter",
                     "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
                     "default": 7
                 },

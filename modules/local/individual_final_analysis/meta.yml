@@ -1,5 +1,5 @@
-name: diann_preliminary_analysis
-description: A module for preliminary analysis of individual raw files based on DIA-NN.
+name: INDIVIDUAL_FINAL_ANALYSIS
+description: A module for final analysis of individual raw files based on DIA-NN.
 keywords:
   - DIA-NN
   - DIA
@@ -13,7 +13,11 @@ input:
   - meta:
       type: map
       description: Groovy Map containing sample information
-  - predict_tsv:
+  - diann_log:
+      type: file
+      description: DIA-NN log file
+      pattern: "*.log"
+  - library:
       type: file
       description: Silico-predicted spectral library by deep leaning predictor in DIA-NN
       pattern: "*.tsv"
@@ -21,7 +25,7 @@ input:
       type: file
       description: Spectra file in mzML format
       pattern: "*.mzML"
-  - cfg:
+  - diann_config:
       type: dir
       description: Specifies a file to load options/commands from.
       pattern: "*.cfg"
@@ -30,6 +34,10 @@ output:
       type: file
       description: Quantification file from DIA-NN
       pattern: "*.quant"
+  - lib:
+      type: file
+      description: Spectral library file
+      pattern: "*.tsv"
   - log:
       type: file
       description: DIA-NN log file

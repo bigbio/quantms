@@ -14,11 +14,7 @@ input:
       type: map
       description: Groovy Map containing sample information
 output:
-  - library_config:
-      type: file
-      description: DIA-NN configure file for library generation
-      pattern: "library_config.cfg"
-  - search_cfg:
+  - diann_cfg:
       type: file
       description: DIA-NN configure file for search and quantification
       pattern: "diann_config.cfg"

@@ -48,7 +48,6 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             --temp ./quant/ \\
             --use-quant \\
             --gen-spec-lib \\
-            --predictor \\
             |& tee assemble_empirical_library.log
 
 

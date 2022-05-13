@@ -1,4 +1,4 @@
-process DIANN_PRELIMINARY_ANALYSIS {
+process INDIVIDUAL_FINAL_ANALYSIS {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -6,11 +6,11 @@ process DIANN_PRELIMINARY_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), file(mzML), file(predict_tsv), file(diann_config)
+    tuple val(meta), file(mzML), file(diann_log), file(library), file(diann_config)
 
     output:
     path "*.quant", emit: diann_quant
-    tuple val(meta), path("*_diann.log"), emit: log
+    path "*_final_diann.log", emit: log
     path "versions.yml", emit: version
 
     when:
@@ -23,13 +23,20 @@ process DIANN_PRELIMINARY_ANALYSIS {
     min_fr_mz = params.min_fr_mz ? "--min-fr-mz $params.min_fr_mz" : ""
     max_fr_mz = params.max_fr_mz ? "--max-fr-mz $params.max_fr_mz" : ""
 
-    mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $params.mass_acc_ms2 --mass-acc-ms1 $params.mass_acc_ms1"
-    scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
+    mass_acc = params.mass_acc_ms2
+    scan_window = params.scan_window
+    ms1_accuracy = params.mass_acc_ms1
     time_corr_only = params.time_corr_only ? "--time-corr-only" : ""
 
+    if (params.mass_acc_automatic | params.scan_window_automatic){
+        mass_acc = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 11 | tr -cd \"[0-9]\")"
+        scan_window = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 19 | tr -cd \"[0-9]\")"
+        ms1_accuracy = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 15 | tr -cd \"[0-9]\")"
+    }
+
     """
-    diann   `cat diann_config.cfg` \\
-            --lib ${predict_tsv} \\
+    diann   "echo \$(cat ${diann_config})" \\
+            --lib ${library} \\
             --f ${mzML} \\
             ${min_pr_mz} \\
             ${max_pr_mz} \\
@@ -43,15 +50,15 @@ process DIANN_PRELIMINARY_ANALYSIS {
             --max-pr-charge $params.max_precursor_charge \\
             --var-mods $params.max_mods \\
             --verbose $params.diann_debug \\
-            ${scan_window} \\
             --temp ./ \\
             --min-corr $params.min_corr \\
             --corr-diff $params.corr_diff \\
-            ${mass_acc} \\
+            --mass-acc \$(echo ${mass_acc}) \\
+            --mass-acc-ms1 \$(echo ${ms1_accuracy}) \\
+            --window \$(echo ${scan_window}) \\
             ${time_corr_only} \\
             $args \\
-            |& tee ${mzML.baseName}_diann.log
-
+            |& tee ${mzML.baseName}_final_diann.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

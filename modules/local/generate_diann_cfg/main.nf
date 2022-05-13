@@ -12,8 +12,7 @@ process GENERATE_DIANN_CFG {
     val(meta)
 
     output:
-    path "diann_config.cfg", emit: search_cfg
-    path "library_config.cfg", emit: library_config
+    path "diann_config.cfg", emit: diann_cfg
     path "versions.yml", emit: version
     path "*.log"
 

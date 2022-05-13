@@ -13,6 +13,7 @@ include { MSSTATS } from '../modules/local/msstats/main'
 include { DIANN_PRELIMINARY_ANALYSIS } from '../modules/local/diann_preliminary_analysis/main'
 include { ASSEMBLE_EMPIRICAL_LIBRARY } from '../modules/local/assemble_empirical_library/main'
 include { SILICOLIBRARYGENERATION } from '../modules/local/silicolibrarygeneration/main'
+include { INDIVIDUAL_FINAL_ANALYSIS } from '../modules/local/individual_final_analysis/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -50,12 +51,12 @@ workflow DIA {
     //
     // MODULE: SILICOLIBRARYGENERATION
     //
-    SILICOLIBRARYGENERATION(searchdb, DIANNCFG.out.library_config)
+    SILICOLIBRARYGENERATION(searchdb, DIANNCFG.out.diann_cfg)
 
     //
     // MODULE: DIANN_PRELIMINARY_ANALYSIS
     //
-    DIANN_PRELIMINARY_ANALYSIS(result.mzml.combine(SILICOLIBRARYGENERATION.out.predict_speclib).combine(DIANNCFG.out.search_cfg))
+    DIANN_PRELIMINARY_ANALYSIS(file_preparation_results.combine(SILICOLIBRARYGENERATION.out.predict_speclib).combine(DIANNCFG.out.diann_cfg))
     ch_software_versions = ch_software_versions.mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
 
     //
@@ -64,10 +65,15 @@ workflow DIA {
     ASSEMBLE_EMPIRICAL_LIBRARY(result.mzml.collect(),
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
                                 SILICOLIBRARYGENERATION.out.predict_speclib,
-                                DIANNCFG.out.library_config
+                                DIANNCFG.out.diann_cfg
                             )
 
     versions        = ch_software_versions
+
+    //
+    // MODULE: INDIVIDUAL_FINAL_ANALYSIS
+    //
+    INDIVIDUAL_FINAL_ANALYSIS(file_preparation_results.join(DIANN_PRELIMINARY_ANALYSIS.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library).combine(DIANNCFG.out.diann_cfg))
 
     //
     // MODULE: MSSTATS
