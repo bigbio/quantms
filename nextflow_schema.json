@@ -885,7 +885,7 @@
                     "type": "number",
                     "description": "Controls the protein inference mode",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": [0 , 1, 2],
+                    "enum": [0, 1, 2],
                     "default": 2
                 },
                 "species_genes": {
