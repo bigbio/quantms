@@ -812,12 +812,6 @@
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
                 },
-                "matrix_spec_q": {
-                    "type": "number",
-                    "description": "run-specific protein q-value filtering will be used, in addition to the global q-value filtering, when saving protein matrices. The ability to filter based on run-specific protein q-values, which allows to generate highly reliable data, is one of the advantages of DIA-NN",
-                    "default": 0.01,
-                    "fa_icon": "fas fa-filter"
-                },
                 "mass_acc_automatic": {
                     "type": "boolean",
                     "default": true,
@@ -886,6 +880,19 @@
                     "type": "number",
                     "description": "The maximum fragment m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter"
+                },
+                "pg_level": {
+                    "type": "number",
+                    "description": "Controls the protein inference mode",
+                    "fa_icon": "fas fa-list-ol",
+                    "enum": [0 , 1, 2],
+                    "default": 2
+                },
+                "species_genes": {
+                    "type": "boolean",
+                    "description": "Instructs DIA-NN to add the organism identifier to the gene names",
+                    "fa_icon": "far fa-check-square",
+                    "default": false
                 },
                 "diann_debug": {
                     "type": "integer",

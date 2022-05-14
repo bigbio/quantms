@@ -14,6 +14,7 @@ include { DIANN_PRELIMINARY_ANALYSIS } from '../modules/local/diann_preliminary_
 include { ASSEMBLE_EMPIRICAL_LIBRARY } from '../modules/local/assemble_empirical_library/main'
 include { SILICOLIBRARYGENERATION } from '../modules/local/silicolibrarygeneration/main'
 include { INDIVIDUAL_FINAL_ANALYSIS } from '../modules/local/individual_final_analysis/main'
+include { DIANNSUMMARY } from '../modules/local/diannsummary/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -73,23 +74,35 @@ workflow DIA {
     //
     // MODULE: INDIVIDUAL_FINAL_ANALYSIS
     //
-    INDIVIDUAL_FINAL_ANALYSIS(file_preparation_results.join(DIANN_PRELIMINARY_ANALYSIS.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library).combine(DIANNCFG.out.diann_cfg))
+    INDIVIDUAL_FINAL_ANALYSIS(result.mzml.combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library).combine(DIANNCFG.out.diann_cfg))
+
+    //
+    // MODULE: DIANNSUMMARY
+    //
+    DIANNSUMMARY(result.mzml.collect(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
+                    INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(),
+                    searchdb, DIANNCFG.out.diann_cfg)
+
+    //
+    // MODULE: DIANNCONVERT
+    //
+    DIANNCONVERT(DIANNSUMMARY.out.report, ch_expdesign)
 
     //
     // MODULE: MSSTATS
-    // ch_msstats_out = Channel.empty()
-    // if(!params.skip_post_msstats){
-    //     MSSTATS(DIANNCONVERT.out.out_msstats)
-    //     ch_msstats_out = MSSTATS.out.msstats_csv
-    //     ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
-    // }
+    ch_msstats_out = Channel.empty()
+    if(!params.skip_post_msstats){
+        MSSTATS(DIANNCONVERT.out.out_msstats)
+        ch_msstats_out = MSSTATS.out.msstats_csv
+        ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
+    }
 
     emit:
     versions        = versions
-    diann_report    = DIANN_PRELIMINARY_ANALYSIS.out.diann_quant
-    // msstats_csv     = DIANNCONVERT.out.out_msstats
-    // out_triqler     = DIANNCONVERT.out.out_triqler
-    // msstats_out     = ch_msstats_out
+    diann_report    = DIANNSUMMARY.out.report
+    msstats_csv     = DIANNCONVERT.out.out_msstats
+    out_triqler     = DIANNCONVERT.out.out_triqler
+    msstats_out     = ch_msstats_out
 
 }
 

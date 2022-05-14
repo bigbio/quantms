@@ -6,7 +6,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), file(mzML), file(diann_log), file(library), file(diann_config)
+    tuple file(mzML), file(diann_log), file(library), file(diann_config)
 
     output:
     path "*.quant", emit: diann_quant
@@ -56,6 +56,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --mass-acc \$(echo ${mass_acc}) \\
             --mass-acc-ms1 \$(echo ${ms1_accuracy}) \\
             --window \$(echo ${scan_window}) \\
+            --no-ifs-removal \\
             ${time_corr_only} \\
             $args \\
             |& tee ${mzML.baseName}_final_diann.log

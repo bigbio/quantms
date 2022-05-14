@@ -1,4 +1,4 @@
-process DIANN_PRELIMINARY_ANALYSIS {
+process DIANNSUMMARY {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -6,11 +6,15 @@ process DIANN_PRELIMINARY_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), file(mzML), file(predict_tsv), file(diann_config)
+    file(mzMLs)
+    file(empirical_library)
+    file("quant/")
+    file(fasta)
+    file(diann_config)
 
     output:
-    path "*.quant", emit: diann_quant
-    tuple val(meta), path("*_diann.log"), emit: log
+    path "diann_report.tsv", emit: report
+    path "diannsummary.log", emit: log
     path "versions.yml", emit: version
 
     when:
@@ -29,8 +33,9 @@ process DIANN_PRELIMINARY_ANALYSIS {
 
     """
     diann   "echo \$(cat ${diann_config})" \\
-            --lib ${predict_tsv} \\
-            --f ${mzML} \\
+            --lib ${empirical_library} \\
+            --fasta ${fasta} \\
+            --f ${(mzMLs as List).join(' --f ')} \\
             ${min_pr_mz} \\
             ${max_pr_mz} \\
             ${min_fr_mz} \\
@@ -44,13 +49,18 @@ process DIANN_PRELIMINARY_ANALYSIS {
             --var-mods $params.max_mods \\
             --verbose $params.diann_debug \\
             ${scan_window} \\
-            --temp ./ \\
             --min-corr $params.min_corr \\
             --corr-diff $params.corr_diff \\
             ${mass_acc} \\
             ${time_corr_only} \\
+            --temp ./quant/ \\
+            --relaxed-prot-inf \\
+            --pg-level $params.pg_level \\
+            --species_genes \\
+            --use-quant \\
+            --out diann_report.tsv \\
             $args \\
-            |& tee ${mzML.baseName}_diann.log
+            |& tee diannsummary.log
 
 
     cat <<-END_VERSIONS > versions.yml

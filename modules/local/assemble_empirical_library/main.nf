@@ -27,8 +27,11 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     min_fr_mz = params.min_fr_mz ? "--min-fr-mz $params.min_fr_mz":""
     max_fr_mz = params.max_fr_mz ? "--max-fr-mz $params.max_fr_mz":""
 
+    mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $params.mass_acc_ms2 --mass-acc-ms1 $params.mass_acc_ms1"
+    scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
+
     """
-    diann   `cat library_config.cfg` \\
+    diann   "echo \$(cat ${diann_config})" \\
             --f ${(mzMLs as List).join(' --f ')} \\
             --lib ${lib} \\
             ${min_pr_mz} \\
@@ -47,6 +50,8 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             --rt-profiling \\
             --temp ./quant/ \\
             --use-quant \\
+            ${mass_acc} \\
+            ${scan_window} \\
             --gen-spec-lib \\
             |& tee assemble_empirical_library.log
 
