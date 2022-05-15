@@ -7,7 +7,7 @@ process SILICOLIBRARYGENERATION {
 
     input:
     file(fasta)
-    file(library_config)
+    file(diann_config)
 
     output:
     path "versions.yml", emit: version
@@ -26,7 +26,7 @@ process SILICOLIBRARYGENERATION {
     max_fr_mz = params.max_fr_mz ? "--max-fr-mz $params.max_fr_mz":""
 
     """
-    diann   `cat library_config.cfg` \\
+    diann   `cat diann_config.cfg` \\
             --fasta ${fasta} \\
             --fasta-search \\
             ${min_pr_mz} \\
