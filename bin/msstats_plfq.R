@@ -214,7 +214,7 @@ if (l == 1) {
 
     valid_comp_data <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue), ]
     if (nrow(valid_comp_data[!duplicated(valid_comp_data$Protein),]) < 2) {
-        warning("Warning: No valid Protein Comparison, Skip groupComparisonPlots step!")
+        warning("Warning: Not enough proteins with valid p-values for comparison. Skipping groupComparisonPlots step!")
     } else {
         groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot",
                         width=12, height=12,dot.size = 2)
