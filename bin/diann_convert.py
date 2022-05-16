@@ -50,9 +50,9 @@ def convert(ctx, diann_report, exp_design):
     out_triqler.loc[:, "searchScore"] = 1 - report['PEP']
 
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
-    out_msstats.to_csv(os.path.basename(exp_design) + '_out_msstats.csv', sep=',', index=False)
+    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_msstats.csv', sep=',', index=False)
     out_triqler = out_triqler[out_triqler["intensity"] != 0]
-    out_triqler.to_csv(os.path.basename(exp_design) + '_out_triqler.tsv', sep='\t', index=False)
+    out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_triqler.tsv', sep='\t', index=False)
 
 def query_expdesign_value(reference, f_table, s_table):
     query_reference = f_table[f_table["run"] == reference]

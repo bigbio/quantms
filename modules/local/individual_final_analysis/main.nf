@@ -40,6 +40,8 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --mass-acc-ms1 \$(echo ${ms1_accuracy}) \\
             --window \$(echo ${scan_window}) \\
             --no-ifs-removal \\
+            --no-main-report \\
+            --no-prot-inf \\
             $args \\
             |& tee ${mzML.baseName}_final_diann.log
 
