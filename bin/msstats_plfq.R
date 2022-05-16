@@ -212,16 +212,21 @@ if (l == 1) {
     #write all comparisons into one CSV file
     write.table(test.MSstats$ComparisonResult, file=paste0(args[8],"_comparisons.csv"), quote=FALSE, sep='\t', row.names = FALSE)
 
-    groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot",
+    valid_comp_data <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue), ]
+    if (nrow(valid_comp_data[!duplicated(valid_comp_data$Protein),]) < 2) {
+        warning("Warning: No valid Protein Comparison, Skip groupComparisonPlots step!")
+    } else {
+        groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot",
                         width=12, height=12,dot.size = 2)
 
-    test.MSstats$Volcano <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue),]
-    groupComparisonPlots(data=test.MSstats$Volcano, type="VolcanoPlot",
-                        width=12, height=12,dot.size = 2)
-
-    # Otherwise it fails since the behaviour is undefined
-    if (nrow(contrast_mat) > 1) {
-        groupComparisonPlots(data=test.MSstats$ComparisonResult, type="Heatmap",
+        groupComparisonPlots(data=valid_comp_data, type="VolcanoPlot",
                             width=12, height=12,dot.size = 2)
+
+        # Otherwise it fails since the behaviour is undefined
+        if (nrow(contrast_mat) > 1) {
+            groupComparisonPlots(data=test.MSstats$ComparisonResult, type="Heatmap",
+                                width=12, height=12,dot.size = 2)
+        }
     }
+
 }

@@ -53,6 +53,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             ${mass_acc} \\
             ${scan_window} \\
             --gen-spec-lib \\
+            $args \\
             |& tee assemble_empirical_library.log
 
 

@@ -30,6 +30,7 @@ process DIANNSUMMARY {
     mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $params.mass_acc_ms2 --mass-acc-ms1 $params.mass_acc_ms1"
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     time_corr_only = params.time_corr_only ? "--time-corr-only" : ""
+    species_genes = params.species_genes ? "--species-genes": ""
 
     """
     diann   "echo \$(cat ${diann_config})" \\
@@ -56,7 +57,7 @@ process DIANNSUMMARY {
             --temp ./quant/ \\
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
-            --species_genes \\
+            ${species_genes} \\
             --use-quant \\
             --out diann_report.tsv \\
             $args \\
