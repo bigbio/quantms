@@ -1,4 +1,5 @@
 process INDIVIDUAL_FINAL_ANALYSIS {
+    tag "$mzML.baseName"
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

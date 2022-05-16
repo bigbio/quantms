@@ -1,4 +1,5 @@
 process DIANNCONVERT {
+    tag "$exp_design.Name"
     label 'process_low'
 
     conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
@@ -13,8 +14,8 @@ process DIANNCONVERT {
     path(exp_design)
 
     output:
-    path "out_msstats.csv", emit: out_msstats
-    path "out_triqler.tsv", emit: out_triqler
+    path "*out_msstats.csv", emit: out_msstats
+    path "*out_triqler.tsv", emit: out_triqler
     path "versions.yml", emit: version
 
     script:
