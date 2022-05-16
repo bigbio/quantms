@@ -246,7 +246,7 @@ if (l == 1) {
     valid_comp_data <- test.MSstatsTMT$ComparisonResult[!is.na(test.MSstatsTMT$ComparisonResult$pvalue), ]
 
     if (nrow(valid_comp_data[!duplicated(valid_comp_data$Protein),]) < 2) {
-        warning("Warning: No enough valid Protein Comparison, Skip groupComparisonPlots step!")
+        warning("Warning: Not enough proteins with valid p-values for comparison. Skipping groupComparisonPlots step!")
     } else {
         require(MSstats)
         # BUG groupComparisonPlots function: re-run OpenMStoMSstatsTMTFormat
