@@ -74,14 +74,13 @@ workflow DIA {
     //
     // MODULE: INDIVIDUAL_FINAL_ANALYSIS
     //
-    INDIVIDUAL_FINAL_ANALYSIS(result.mzml.combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library).combine(DIANNCFG.out.diann_cfg))
+    INDIVIDUAL_FINAL_ANALYSIS(result.mzml.combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library))
 
     //
     // MODULE: DIANNSUMMARY
     //
     DIANNSUMMARY(result.mzml.collect(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
-                    INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(),
-                    searchdb, DIANNCFG.out.diann_cfg)
+                    INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), searchdb)
 
     //
     // MODULE: DIANNCONVERT

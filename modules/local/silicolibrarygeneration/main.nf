@@ -1,4 +1,5 @@
 process SILICOLIBRARYGENERATION {
+    tag "$fasta.Name"
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
