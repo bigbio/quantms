@@ -1,5 +1,5 @@
 name: diannsummary
-description: A module for summarization the info from DIA-NN analysis.
+description: A module for summarization of results from DIA-NN analysis.
 keywords:
   - DIA-NN
   - DIA
