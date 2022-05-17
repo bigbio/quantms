@@ -16,7 +16,7 @@ input:
       pattern: "*.mzML"
   - quant:
       type: file
-      description: The .quant files containing IDs and quantification information
+      description: The .quant files from DIA-NN preliminary analysis, containing IDs and quantification information.
   - lib:
       type: file
       description: Spectra library file
