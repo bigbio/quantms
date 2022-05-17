@@ -1,4 +1,5 @@
 process MSSTATSCONVERTER {
+    tag "$exp_file.Name"
     label 'process_low'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
@@ -24,7 +25,7 @@ process MSSTATSCONVERTER {
         -in ${consensusXML} \\
         -in_design ${exp_file} \\
         -method ${quant_method} \\
-        -out out_msstats.csv \\
+        -out ${exp_file.baseName}_out_msstats.csv \\
         $args \\
         |& tee MSstatsConverter.log
 
