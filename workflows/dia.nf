@@ -68,24 +68,26 @@ workflow DIA {
                                 SILICOLIBRARYGENERATION.out.predict_speclib,
                                 DIANNCFG.out.diann_cfg
                             )
-
-    versions        = ch_software_versions
+    ch_software_versions = ch_software_versions.mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.version.ifEmpty(null))
 
     //
     // MODULE: INDIVIDUAL_FINAL_ANALYSIS
     //
     INDIVIDUAL_FINAL_ANALYSIS(result.mzml.combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library))
+    ch_software_versions = ch_software_versions.mix(INDIVIDUAL_FINAL_ANALYSIS.out.version.ifEmpty(null))
 
     //
     // MODULE: DIANNSUMMARY
     //
     DIANNSUMMARY(result.mzml.collect(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
                     INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), searchdb)
+    ch_software_versions = ch_software_versions.mix(DIANNSUMMARY.out.version.ifEmpty(null))
 
     //
     // MODULE: DIANNCONVERT
     //
     DIANNCONVERT(DIANNSUMMARY.out.report, ch_expdesign)
+    ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 
     //
     // MODULE: MSSTATS
@@ -95,6 +97,8 @@ workflow DIA {
         ch_msstats_out = MSSTATS.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
     }
+
+    versions        = ch_software_versions
 
     emit:
     versions        = versions
