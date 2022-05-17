@@ -1,5 +1,5 @@
 name: assemble_empirical_library
-description: A module for assemble empirical library analysis based on DIA-NN.
+description: A module for assembling an empirical library based on a preliminary analysis of the in-silico library with DIA-NN.
 keywords:
   - DIA-NN
   - DIA
