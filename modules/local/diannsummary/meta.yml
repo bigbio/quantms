@@ -25,7 +25,7 @@ input:
   - quant:
       type: file
       description: Identification and Quantification file from DIA-NN.
-      pattern: "*.{fasta,fa}"
+      pattern: "*.quant"
   - cfg:
       type: dir
       description: Specifies a file to load options/commands.
