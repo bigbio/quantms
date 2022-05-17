@@ -242,4 +242,27 @@ if (l == 1) {
 
     #TODO allow manual input (e.g. proteins of interest)
     write.table(test.MSstatsTMT$ComparisonResult, file=paste0("msstatsiso_results.csv"), quote=FALSE, sep='\t', row.names = FALSE)
+
+    valid_comp_data <- test.MSstatsTMT$ComparisonResult[!is.na(test.MSstatsTMT$ComparisonResult$pvalue), ]
+
+    if (nrow(valid_comp_data[!duplicated(valid_comp_data$Protein),]) < 2) {
+        warning("Warning: Not enough proteins with valid p-values for comparison. Skipping groupComparisonPlots step!")
+    } else {
+        require(MSstats)
+        # BUG groupComparisonPlots function: re-run OpenMStoMSstatsTMTFormat
+        quant <- OpenMStoMSstatsTMTFormat(data, useUniquePeptide=useUniquePeptide, rmPSM_withfewMea_withinRun=rmPSM_withfewMea_withinRun,
+            rmProtein_with1Feature=rmProtein_with1Feature
+        )
+        groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="ComparisonPlot", width=12, height=12, dot.size = 2)
+
+        groupComparisonPlots(data=valid_comp_data, type="VolcanoPlot",
+                            width=12, height=12, dot.size = 2)
+
+        # Otherwise it fails since the behavior is undefined
+        if (nrow(contrast_mat) > 1) {
+            groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="Heatmap",
+                                width=12, height=12, dot.size = 2)
+        }
+    }
+
 }

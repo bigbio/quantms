@@ -33,8 +33,7 @@ process MSSTATS {
         ${params.msstatslfq_feature_subset_protein} \\
         ${params.msstatslfq_quant_summary_method} \\
         $args \\
-        > msstats.log \\
-        || echo "Optional MSstats step failed. Please check logs and re-run or do a manual statistical analysis."
+        |& tee msstats.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,5 +1,4 @@
-process DIANN_PRELIMINARY_ANALYSIS {
-    tag "$meta.id"
+process DIANNSUMMARY {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,11 +6,14 @@ process DIANN_PRELIMINARY_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), file(mzML), file(predict_tsv), file(diann_config)
+    file(mzMLs)
+    file(empirical_library)
+    file("quant/")
+    file(fasta)
 
     output:
-    path "*.quant", emit: diann_quant
-    tuple val(meta), path("*_diann.log"), emit: log
+    path "diann_report.tsv", emit: report
+    path "diannsummary.log", emit: log
     path "versions.yml", emit: version
 
     when:
@@ -22,21 +24,25 @@ process DIANN_PRELIMINARY_ANALYSIS {
 
     mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $params.mass_acc_ms2 --mass-acc-ms1 $params.mass_acc_ms1"
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
-    time_corr_only = params.time_corr_only ? "--time-corr-only" : ""
+    species_genes = params.species_genes ? "--species-genes": ""
 
     """
-    diann   --lib ${predict_tsv} \\
-            --f ${mzML} \\
+    diann   --lib ${empirical_library} \\
+            --fasta ${fasta} \\
+            --f ${(mzMLs as List).join(' --f ')} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
             ${scan_window} \\
-            --temp ./ \\
-            --min-corr $params.min_corr \\
-            --corr-diff $params.corr_diff \\
             ${mass_acc} \\
-            ${time_corr_only} \\
+            --temp ./quant/ \\
+            --relaxed-prot-inf \\
+            --pg-level $params.pg_level \\
+            ${species_genes} \\
+            --use-quant \\
+            --matrices \\
+            --out diann_report.tsv \\
             $args \\
-            |& tee ${mzML.baseName}_diann.log
+            |& tee diannsummary.log
 
 
     cat <<-END_VERSIONS > versions.yml

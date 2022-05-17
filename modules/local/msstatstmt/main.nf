@@ -37,13 +37,13 @@ process MSSTATSTMT {
         ${params.msstatsiso_remove_norm_channel} \\
         ${params.msstatsiso_reference_normalization} \\
         $args \\
-        > msstats_tmt.log \\
-        || echo "Optional MSstatsTMT step failed. Please check logs and re-run or do a manual statistical analysis."
+        |& tee msstats_tmt.log
 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MSstatsTMT: \$(echo "2.2.0")
+        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
+        bioconductor-msstatstmt: \$(Rscript -e "library(MSstatsTMT); cat(as.character(packageVersion('MSstatsTMT')))")
     END_VERSIONS
     """
 }

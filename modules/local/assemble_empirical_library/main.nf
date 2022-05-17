@@ -1,17 +1,19 @@
-process DIANN_PRELIMINARY_ANALYSIS {
-    tag "$meta.id"
-    label 'process_high'
+process ASSEMBLE_EMPIRICAL_LIBRARY {
+    label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), file(mzML), file(predict_tsv), file(diann_config)
+    path(mzMLs)
+    path("quant/*")
+    path(lib)
+    path(diann_config)
 
     output:
-    path "*.quant", emit: diann_quant
-    tuple val(meta), path("*_diann.log"), emit: log
+    path "empirical_library.tsv", emit: empirical_library
+    path "assemble_empirical_library.log", emit: log
     path "versions.yml", emit: version
 
     when:
@@ -22,21 +24,21 @@ process DIANN_PRELIMINARY_ANALYSIS {
 
     mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $params.mass_acc_ms2 --mass-acc-ms1 $params.mass_acc_ms1"
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
-    time_corr_only = params.time_corr_only ? "--time-corr-only" : ""
 
     """
-    diann   --lib ${predict_tsv} \\
-            --f ${mzML} \\
+    diann   --f ${(mzMLs as List).join(' --f ')} \\
+            --lib ${lib} \\
             --threads ${task.cpus} \\
+            --out-lib empirical_library.tsv \\
             --verbose $params.diann_debug \\
-            ${scan_window} \\
-            --temp ./ \\
-            --min-corr $params.min_corr \\
-            --corr-diff $params.corr_diff \\
+            --rt-profiling \\
+            --temp ./quant/ \\
+            --use-quant \\
             ${mass_acc} \\
-            ${time_corr_only} \\
+            ${scan_window} \\
+            --gen-spec-lib \\
             $args \\
-            |& tee ${mzML.baseName}_diann.log
+            |& tee assemble_empirical_library.log
 
 
     cat <<-END_VERSIONS > versions.yml
