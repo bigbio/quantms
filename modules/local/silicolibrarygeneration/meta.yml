@@ -1,5 +1,5 @@
 name: silicolibrarygeneration
-description: A module for silico library generation based on DIA-NN.
+description: A module for in silico predicted library generation based on DIA-NN.
 keywords:
   - DIA-NN
   - library free
