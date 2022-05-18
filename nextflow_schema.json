@@ -812,11 +812,54 @@
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
                 },
-                "matrix_spec_q": {
-                    "type": "number",
-                    "description": "run-specific protein q-value filtering will be used, in addition to the global q-value filtering, when saving protein matrices. The ability to filter based on run-specific protein q-values, which allows to generate highly reliable data, is one of the advantages of DIA-NN",
-                    "default": 0.01,
+                "mass_acc_automatic": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Choosing the MS2 mass accuracy setting automatically",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "mass_acc_ms2": {
+                    "type": "integer",
+                    "description": "Sets the MS2 mass accuracy to N ppm",
+                    "default": 11,
                     "fa_icon": "fas fa-filter"
+                },
+                "mass_acc_ms1": {
+                    "type": "integer",
+                    "description": "Sets the MS1 mass accuracy to N ppm",
+                    "default": 15,
+                    "fa_icon": "fas fa-filter"
+                },
+                "scan_window_automatic": {
+                    "type": "boolean",
+                    "description": "Choosing scan_window setting automatically",
+                    "default": true,
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "scan_window": {
+                    "type": "integer",
+                    "description": "Set the scan window radius to a specific value",
+                    "fa_icon": "fas fa-filter",
+                    "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
+                    "default": 7
+                },
+                "min_corr": {
+                    "type": "number",
+                    "description": "Only peaks with correlation sum exceeding min_corr will be considered",
+                    "fa_icon": "fas fa-filter",
+                    "default": 2.0
+                },
+                "corr_diff": {
+                    "type": "number",
+                    "description": "Peaks with correlation sum below corr_diff from maximum will not be considered",
+                    "fa_icon": "fas fa-filter",
+                    "default": 1.0
+                },
+                "time_corr_only": {
+                    "type": "boolean",
+                    "description": "A single score will be used until RT alignment to save memory",
+                    "fa_icon": "fas fa-filter",
+                    "default": true
                 },
                 "min_pr_mz": {
                     "type": "number",
@@ -837,6 +880,19 @@
                     "type": "number",
                     "description": "The maximum fragment m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter"
+                },
+                "pg_level": {
+                    "type": "number",
+                    "description": "Controls the protein inference mode",
+                    "fa_icon": "fas fa-list-ol",
+                    "enum": [0, 1, 2],
+                    "default": 2
+                },
+                "species_genes": {
+                    "type": "boolean",
+                    "description": "Instructs DIA-NN to add the organism identifier to the gene names",
+                    "fa_icon": "far fa-check-square",
+                    "default": false
                 },
                 "diann_debug": {
                     "type": "integer",

@@ -22,9 +22,6 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod, precursor_tolerence, precursor_t
     cut = enzyme_cut(enzyme)
     unimod_database = UnimodDatabase()
     fix_ptm, var_ptm = convert_mod(unimod_database, fix_mod, var_mod)
-    mass_acc, mass_acc_ms1 = mass_tolerence(precursor_tolerence, precursor_tolerence_unit, fragment_tolerence, fragment_tolerence_unit)
-    mass_acc = " --mass-acc " + str(mass_acc)
-    mass_acc_ms1 = " --mass-acc-ms1 " + str(mass_acc_ms1)
 
     var_ptm_str = " --var-mod "
     fix_ptm_str = " --fixed-mod "
@@ -36,11 +33,7 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod, precursor_tolerence, precursor_t
         diann_var_ptm += (var_ptm_str + mod)
 
     with open("diann_config.cfg", "w") as f:
-        f.write("--dir ./mzMLs --cut " + cut + diann_fix_ptm + diann_var_ptm + mass_acc + mass_acc_ms1 +
-                " --matrices --report-lib-info")
-
-    with open("library_config.cfg", "w") as f:
-        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm + " --gen-spec-lib --smart-profiling")
+        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
 
 def convert_mod(unimod_database, fix_mod, var_mod):
     pattern = re.compile("\((.*?)\)")
@@ -109,23 +102,6 @@ def enzyme_cut(enzyme):
     else:
         cut = "--cut"
     return cut
-
-def mass_tolerence(prec, precursor_tolerence_unit, frag, fragment_tolerence_unit):
-    if precursor_tolerence_unit == "ppm":
-        ms1_tolerence = prec
-    else:
-        # Default 10 ppm
-        print("Warning: " + precursor_tolerence_unit + " unit not supported for DIA-NN. Default 10 ppm")
-        ms1_tolerence = 10
-
-    if fragment_tolerence_unit == "ppm":
-        ms2_tolerence = frag
-    else:
-        # Default 20 ppm
-        ms2_tolerence = 20
-        print("Warning: " + fragment_tolerence_unit + " unit not supported for DIA-NN. Default 20 ppm")
-
-    return ms1_tolerence, ms2_tolerence
 
 cli.add_command(generate_cfg)
 
