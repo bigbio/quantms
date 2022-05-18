@@ -10,9 +10,6 @@ tools:
       homepage: https://github.com/vdemichev/DiaNN
       documentation: https://github.com/vdemichev/DiaNN
 input:
-  - meta:
-      type: map
-      description: Groovy Map containing sample information
   - diann_log:
       type: file
       description: DIA-NN log file
@@ -25,10 +22,6 @@ input:
       type: file
       description: Spectra file in mzML format
       pattern: "*.mzML"
-  - diann_config:
-      type: dir
-      description: Specifies a file to load options/commands from.
-      pattern: "*.cfg"
 output:
   - diann_quant:
       type: file

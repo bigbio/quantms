@@ -27,7 +27,7 @@ process MSSTATS {
     """
     msstats_plfq.R \\
         ${msstats_csv_input} \\
-        ${params.contrasts} \\
+        "${params.contrasts}" \\
         "${ref_con}" \\
         ${params.msstats_remove_one_feat_prot} \\
         ${params.msstatslfq_removeFewMeasurements} \\
