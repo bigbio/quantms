@@ -657,7 +657,7 @@ getSelectedProteins = function(chosen_proteins, all_proteins) {
                         logFC == Inf, newlogFC := (x.lim - 0.2)]
         single_label[!is.na(issue) &
                         issue == "oneConditionMissing" &
-                         logFC == (-Inf), newlogFC := (x.lim - 0.2) * (-1)]
+                        logFC == (-Inf), newlogFC := (x.lim - 0.2) * (-1)]
         plot = .makeVolcano(single_label, label_name, log_base_FC, log_base_pval, x.lim, ProteinName, dot.size,
                             y.limdown, y.limup, text.size, FCcutoff, sig, x.axis.size, y.axis.size,
                             legend.size, log_adjp)
