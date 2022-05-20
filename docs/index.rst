@@ -25,6 +25,7 @@ Contents
    benchmarks
    debug
    faq
+   presentations
    dev
    contact
 
