@@ -464,12 +464,6 @@
                     "fa_icon": "fas fa-list-ol",
                     "enum": ["none", "ignore_iqr_outliers", "set_iqr_to_closest_valid", "ignore_extreme_percentiles"]
                 },
-                "protein": {
-                    "type": "boolean",
-                    "description": "Perform FDR calculation on protein level",
-                    "default": false,
-                    "fa_icon": "fas fa-ban"
-                },
                 "idpep_debug": {
                     "type": "integer",
                     "description": "Debug level for IDPEP step. Increase for verbose logging",
