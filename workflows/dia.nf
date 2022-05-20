@@ -32,38 +32,38 @@ def multiqc_report = []
 
 workflow DIA {
     take:
-    file_preparation_results
+    ch_file_preparation_results
     ch_expdesign
 
     main:
 
     ch_software_versions = Channel.empty()
-    Channel.fromPath(params.database).set{ searchdb }
+    Channel.fromPath(params.database).set{ ch_searchdb }
 
-    file_preparation_results.multiMap {
+    ch_file_preparation_results.multiMap {
                                 meta: it[0]
                                 mzml: it[1]
                                 }
-                            .set { result }
+                            .set { ch_result }
 
-    DIANNCFG(result.meta.first())
+    DIANNCFG(ch_result.meta.first())
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
     //
     // MODULE: SILICOLIBRARYGENERATION
     //
-    SILICOLIBRARYGENERATION(searchdb, DIANNCFG.out.diann_cfg)
+    SILICOLIBRARYGENERATION(ch_searchdb, DIANNCFG.out.diann_cfg)
 
     //
     // MODULE: DIANN_PRELIMINARY_ANALYSIS
     //
-    DIANN_PRELIMINARY_ANALYSIS(file_preparation_results.combine(SILICOLIBRARYGENERATION.out.predict_speclib))
+    DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(SILICOLIBRARYGENERATION.out.predict_speclib))
     ch_software_versions = ch_software_versions.mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
 
     //
     // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
     //
-    ASSEMBLE_EMPIRICAL_LIBRARY(result.mzml.collect(),
+    ASSEMBLE_EMPIRICAL_LIBRARY(ch_result.mzml.collect(),
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
                                 SILICOLIBRARYGENERATION.out.predict_speclib
                             )
@@ -72,14 +72,14 @@ workflow DIA {
     //
     // MODULE: INDIVIDUAL_FINAL_ANALYSIS
     //
-    INDIVIDUAL_FINAL_ANALYSIS(result.mzml.combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library))
+    INDIVIDUAL_FINAL_ANALYSIS(ch_result.mzml.combine(ch_searchdb).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library))
     ch_software_versions = ch_software_versions.mix(INDIVIDUAL_FINAL_ANALYSIS.out.version.ifEmpty(null))
 
     //
     // MODULE: DIANNSUMMARY
     //
-    DIANNSUMMARY(result.mzml.collect(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
-                    INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), searchdb)
+    DIANNSUMMARY(ch_result.mzml.collect(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
+                    INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), ch_searchdb)
     ch_software_versions = ch_software_versions.mix(DIANNSUMMARY.out.version.ifEmpty(null))
 
     //
@@ -97,10 +97,8 @@ workflow DIA {
         ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
     }
 
-    versions        = ch_software_versions
-
     emit:
-    versions        = versions
+    versions        = ch_software_versions
     diann_report    = DIANNSUMMARY.out.report
     msstats_csv     = DIANNCONVERT.out.out_msstats
     out_triqler     = DIANNCONVERT.out.out_triqler

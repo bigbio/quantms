@@ -7,7 +7,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple file(mzML), file(diann_log), file(library)
+    tuple file(mzML), file(fasta), file(diann_log), file(library)
 
     output:
     path "*.quant", emit: diann_quant
@@ -33,6 +33,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
     """
     diann   --lib ${library} \\
             --f ${mzML} \\
+            --fasta ${fasta} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
             --temp ./ \\
@@ -41,7 +42,8 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --window \$(echo ${scan_window}) \\
             --no-ifs-removal \\
             --no-main-report \\
-            --no-prot-inf \\
+            --relaxed-prot-inf \\
+            --pg-level $params.pg_level \\
             $args \\
             |& tee ${mzML.baseName}_final_diann.log
 
