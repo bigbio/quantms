@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#176](https://github.com/bigbio/quantms/pull/176) - Add name of each ID step
+
+### `Changed`
+
+- [#169](https://github.com/bigbio/quantms/pull/169) - Restruct DIA-NN step1 : Generate an in silico predicted spectral library
+- [#178](https://github.com/bigbio/quantms/pull/178) - Restruct DIA-NN step2 : Preliminary analysis of individual raw files
+- [#179](https://github.com/bigbio/quantms/pull/179) - Restruct DIA-NN steps 3-5 to be as parallel as possible
+
 ### `Fixed`
 
 ### `Dependencies`

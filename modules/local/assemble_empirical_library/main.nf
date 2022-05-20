@@ -9,7 +9,6 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     path(mzMLs)
     path("quant/*")
     path(lib)
-    path(diann_config)
 
     output:
     path "empirical_library.tsv", emit: empirical_library

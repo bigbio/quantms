@@ -13,7 +13,7 @@ process SILICOLIBRARYGENERATION {
     output:
     path "versions.yml", emit: version
     path "*.predicted.speclib", emit: predict_speclib
-    path "diann.log", emit: log
+    path "silicolibrarygeneration.log", emit: log
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,7 +44,7 @@ process SILICOLIBRARYGENERATION {
             --predictor \\
             --verbose $params.diann_debug \\
             --gen-spec-lib \\
-            |& tee diann.log
+            |& tee silicolibrarygeneration.log
 
 
     cat <<-END_VERSIONS > versions.yml

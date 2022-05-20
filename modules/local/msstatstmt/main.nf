@@ -27,7 +27,7 @@ process MSSTATSTMT {
     """
     msstats_tmt.R \\
         ${msstatstmt_csv_input} \\
-        ${params.contrasts} \\
+        "${params.contrasts}" \\
         "${ref_con}" \\
         ${params.msstats_remove_one_feat_prot} \\
         ${params.msstatsiso_useunique_peptide} \\

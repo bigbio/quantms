@@ -26,10 +26,6 @@ input:
       type: file
       description: Identification and Quantification file from DIA-NN.
       pattern: "*.quant"
-  - cfg:
-      type: dir
-      description: Specifies a file to load options/commands.
-      pattern: "*.cfg"
 output:
   - report:
       type: file
@@ -38,7 +34,7 @@ output:
   - log:
       type: file
       description: DIA-NN log file
-      pattern: "*_diann.log"
+      pattern: "diannsummary.log"
   - version:
       type: file
       description: File containing software version

@@ -17,14 +17,11 @@ input:
   - quant:
       type: file
       description: The .quant files from DIA-NN preliminary analysis, containing IDs and quantification information.
+      pattern: "*.quant"
   - lib:
       type: file
       description: Spectra library file
       pattern: "*.tsv"
-  - diann_config:
-      type: dir
-      description: Specifies a file to load options/commands from.
-      pattern: "*.cfg"
 output:
   - empirical_library:
       type: file

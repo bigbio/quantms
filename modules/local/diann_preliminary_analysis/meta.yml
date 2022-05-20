@@ -21,10 +21,6 @@ input:
       type: file
       description: Spectra file in mzML format
       pattern: "*.mzML"
-  - cfg:
-      type: dir
-      description: Specifies a file to load options/commands from.
-      pattern: "*.cfg"
 output:
   - diann_quant:
       type: file

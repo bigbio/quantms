@@ -57,7 +57,7 @@ workflow DIA {
     //
     // MODULE: DIANN_PRELIMINARY_ANALYSIS
     //
-    DIANN_PRELIMINARY_ANALYSIS(file_preparation_results.combine(SILICOLIBRARYGENERATION.out.predict_speclib).combine(DIANNCFG.out.diann_cfg))
+    DIANN_PRELIMINARY_ANALYSIS(file_preparation_results.combine(SILICOLIBRARYGENERATION.out.predict_speclib))
     ch_software_versions = ch_software_versions.mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
 
     //
@@ -65,8 +65,7 @@ workflow DIA {
     //
     ASSEMBLE_EMPIRICAL_LIBRARY(result.mzml.collect(),
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
-                                SILICOLIBRARYGENERATION.out.predict_speclib,
-                                DIANNCFG.out.diann_cfg
+                                SILICOLIBRARYGENERATION.out.predict_speclib
                             )
     ch_software_versions = ch_software_versions.mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.version.ifEmpty(null))
 
