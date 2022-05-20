@@ -26,7 +26,6 @@ process FALSEDISCOVERYRATE {
         -in ${id_file} \\
         -out ${id_file.baseName}_fdr.idXML \\
         -threads $task.cpus \\
-        -protein $params.protein \\
         -algorithm:add_decoy_peptides \\
         -algorithm:add_decoy_proteins \\
         $args \\
