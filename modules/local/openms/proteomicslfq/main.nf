@@ -35,6 +35,7 @@ process PROTEOMICSLFQ {
 
     """
     ProteomicsLFQ \\
+        -threads ${task.cpus} \\
         -in ${(mzmls as List).join(' ')} \\
         -ids ${(id_files as List).join(' ')} \\
         -design ${expdes} \\
@@ -46,14 +47,14 @@ process PROTEOMICSLFQ {
         -transfer_ids ${params.transfer_ids} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
-        -picked_proteinFDR true \\
+        ${decoys_present} \\
+        -psmFDR ${params.psm_level_fdr_cutoff} \\
+        -proteinFDR ${params.protein_level_fdr_cutoff} \\
+        -picked_proteinFDR ${params.picked_fdr} \\
+        -out_cxml ${expdes.baseName - ~/_design$/}.consensusXML \\
         -out ${expdes.baseName - ~/_design$/}.mzTab \\
-        -threads ${task.cpus} \\
         ${msstats_present} \\
         ${triqler_present} \\
-        ${decoys_present} \\
-        -out_cxml ${expdes.baseName - ~/_design$/}.consensusXML \\
-        -proteinFDR ${params.protein_level_fdr_cutoff} \\
         $args \\
         |& tee proteomicslfq.log
 
