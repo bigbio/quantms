@@ -12,7 +12,10 @@ process DIANNSUMMARY {
     file(fasta)
 
     output:
-    path "diann_report.tsv", emit: report
+    path "diann_report.tsv", emit: main_report
+    path "diann_report.pr_matrix.tsv", emit: pr_matrix
+    path "diann_report.pg_matrix.tsv", emit: pg_matrix
+    path "diann_report.gg_matrix.tsv", emit: gg_matrix
     path "diannsummary.log", emit: log
     path "versions.yml", emit: version
 
@@ -41,6 +44,7 @@ process DIANNSUMMARY {
             --use-quant \\
             --matrices \\
             --out diann_report.tsv \\
+            --qvalue $params.psm_pep_fdr_cutoff \\
             $args \\
             |& tee diannsummary.log
 

@@ -25,6 +25,7 @@ process DIANNCONVERT {
     diann_convert.py convert \\
         --diann_report ${report} \\
         --exp_design ${exp_design} \\
+        --qvalue_threshold 0.01 \\
         |& tee trans_to_msstats.log
 
     cat <<-END_VERSIONS > versions.yml

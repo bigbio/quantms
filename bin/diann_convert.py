@@ -4,6 +4,7 @@ import pandas as pd
 import click
 import os
 import re
+import numpy as np
 from sdrf_pipelines.openms.unimod import UnimodDatabase
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -14,8 +15,9 @@ def cli():
 @click.command('convert')
 @click.option("--diann_report", "-r",)
 @click.option("--exp_design", "-e")
+@click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
-def convert(ctx, diann_report, exp_design):
+def convert(ctx, diann_report, exp_design, qvalue_threshold):
     # Convert to MSstats
     report = pd.read_csv(diann_report, sep = "\t", header = 0)
     unimod_data = UnimodDatabase()
@@ -30,6 +32,9 @@ def convert(ctx, diann_report, exp_design):
         s_table = [i.replace("\n", '').split("\t") for i in data[empty_row + 1:]][1:]
         s_header = data[empty_row + 1].replace("\n", "").split("\t")
         s_DataFrame = pd.DataFrame(s_table, columns=s_header)
+
+    # filter based on qvalue 0.01 so that downstream analysiss
+    report = report[report["Q.Value"] < qvalue_threshold]
 
     out_msstats = pd.DataFrame()
     out_msstats = report[['Protein.Names', 'Modified.Sequence', 'Precursor.Charge', 'Precursor.Quantity', 'File.Name','Run']]
@@ -47,7 +52,8 @@ def convert(ctx, diann_report, exp_design):
     out_triqler = pd.DataFrame()
     out_triqler = out_msstats[['ProteinName', 'PeptideSequence', 'PrecursorCharge', 'Intensity', 'Run', 'Condition']]
     out_triqler.columns = ['proteins', 'peptide', 'charge', 'intensity', 'run', 'condition']
-    out_triqler.loc[:, "searchScore"] = 1 - report['PEP']
+    out_triqler.loc[:, "searchScore"] = report['Q.Value']
+    out_triqler.loc[:, "searchScore"] = -np.log(out_triqler["searchScore"])
 
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
     out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_msstats.csv', sep=',', index=False)

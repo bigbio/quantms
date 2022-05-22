@@ -85,7 +85,7 @@ workflow DIA {
     //
     // MODULE: DIANNCONVERT
     //
-    DIANNCONVERT(DIANNSUMMARY.out.report, ch_expdesign)
+    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 
     //
@@ -99,7 +99,7 @@ workflow DIA {
 
     emit:
     versions        = ch_software_versions
-    diann_report    = DIANNSUMMARY.out.report
+    diann_report    = DIANNSUMMARY.out.main_report
     msstats_csv     = DIANNCONVERT.out.out_msstats
     out_triqler     = DIANNCONVERT.out.out_triqler
     msstats_out     = ch_msstats_out

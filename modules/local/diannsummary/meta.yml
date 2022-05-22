@@ -27,9 +27,21 @@ input:
       description: Identification and Quantification file from DIA-NN.
       pattern: "*.quant"
 output:
-  - report:
+  - main_report:
       type: file
       description: A text table containing precursor and protein IDs, as well as plenty of associated information.
+      pattern: "*.tsv"
+  - pr_matrix:
+      type: file
+      description: A text table containing normalized quantities for precursors. They are filtered at 1% FDR, using both global and run-specific q-values for precursors
+      pattern: "*.tsv"
+  - pg_matrix:
+      type: file
+      description: A text table containing normalized quantities for protein groups. They are filtered at 1% FDR, using global q-values for protein groups
+      pattern: "*.tsv"
+  - gg_matrix:
+      type: file
+      description: A text table containing normalized quantities for gene groups.
       pattern: "*.tsv"
   - log:
       type: file
