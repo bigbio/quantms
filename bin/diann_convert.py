@@ -55,7 +55,7 @@ def convert(ctx, diann_report, exp_design, qvalue_threshold):
 
     # https://github.com/statisticalbiotechnology/dia_sum/blob/main/scripts/result_scripts/diann_output_to_triqler_output.py
     out_triqler.loc[:, "searchScore"] = report['Q.Value']
-    out_triqler.loc[:, "searchScore"] = -np.log(out_triqler["searchScore"])
+    out_triqler.loc[:, "searchScore"] = 1 - out_triqler["searchScore"]
 
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
     out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_msstats.csv', sep=',', index=False)
