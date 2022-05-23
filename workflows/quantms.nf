@@ -84,7 +84,7 @@ workflow QUANTMS {
     // SUBWORKFLOW: Create input channel
     //
     CREATE_INPUT_CHANNEL (
-        ch_input,
+        INPUT_CHECK.out.ch_input_file,
         INPUT_CHECK.out.is_sdrf
     )
     ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
