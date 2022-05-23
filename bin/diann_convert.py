@@ -33,7 +33,7 @@ def convert(ctx, diann_report, exp_design, qvalue_threshold):
         s_header = data[empty_row + 1].replace("\n", "").split("\t")
         s_DataFrame = pd.DataFrame(s_table, columns=s_header)
 
-    # filter based on qvalue 0.01 so that downstream analysiss
+    # filter based on qvalue parameter for downstream analysiss
     report = report[report["Q.Value"] < qvalue_threshold]
 
     out_msstats = pd.DataFrame()
