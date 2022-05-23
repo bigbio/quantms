@@ -52,6 +52,8 @@ def convert(ctx, diann_report, exp_design, qvalue_threshold):
     out_triqler = pd.DataFrame()
     out_triqler = out_msstats[['ProteinName', 'PeptideSequence', 'PrecursorCharge', 'Intensity', 'Run', 'Condition']]
     out_triqler.columns = ['proteins', 'peptide', 'charge', 'intensity', 'run', 'condition']
+
+    # https://github.com/statisticalbiotechnology/dia_sum/blob/main/scripts/result_scripts/diann_output_to_triqler_output.py
     out_triqler.loc[:, "searchScore"] = report['Q.Value']
     out_triqler.loc[:, "searchScore"] = -np.log(out_triqler["searchScore"])
 
