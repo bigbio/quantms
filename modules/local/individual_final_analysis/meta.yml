@@ -22,6 +22,10 @@ input:
       type: file
       description: Spectra file in mzML format
       pattern: "*.mzML"
+  - fasta:
+      type: file
+      description: Protein sequence database in fasta format
+      pattern: "*.{fasta,fa}"
 output:
   - diann_quant:
       type: file

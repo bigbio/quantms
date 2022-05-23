@@ -14,7 +14,7 @@ include { PHOSPHOSCORING } from './phosphoscoring'
 
 workflow ID {
     take:
-    file_preparation_results
+    ch_file_preparation_results
     ch_database_wdecoy
 
     main:
@@ -25,7 +25,7 @@ workflow ID {
     // SUBWORKFLOW: DatabaseSearchEngines
     //
     DATABASESEARCHENGINES (
-        file_preparation_results,
+        ch_file_preparation_results,
         ch_database_wdecoy
     )
     ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
@@ -55,15 +55,15 @@ workflow ID {
     // SUBWORKFLOW：PHOSPHOSCORING
     //
     if (params.enable_mod_localization) {
-        PHOSPHOSCORING(file_preparation_results, PSMFDRCONTROL.out.id_filtered)
+        PHOSPHOSCORING(ch_file_preparation_results, PSMFDRCONTROL.out.id_filtered)
         ch_software_versions = ch_software_versions.mix(PHOSPHOSCORING.out.version.ifEmpty(null))
-        id_results = PHOSPHOSCORING.out.id_luciphor
+        ch_id_results = PHOSPHOSCORING.out.id_luciphor
     } else {
-        id_results = PSMFDRCONTROL.out.id_filtered
+        ch_id_results = PSMFDRCONTROL.out.id_filtered
     }
 
     emit:
-    id_results              = id_results
+    id_results              = ch_id_results
     psmrescoring_results    = PSMRESCORING.out.results
     version                 = ch_software_versions
 }

@@ -7,20 +7,20 @@ include { SEARCHENGINECOMET} from '../../modules/local/openms/thirdparty/searche
 
 workflow DATABASESEARCHENGINES {
     take:
-    mzmls_search
-    searchengine_in_db
+    ch_mzmls_search
+    ch_searchengine_in_db
 
     main:
     (ch_id_msgf, ch_id_comet, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty() ]
 
     if (params.search_engines.contains("msgf")){
-        SEARCHENGINEMSGF(mzmls_search.combine(searchengine_in_db))
+        SEARCHENGINEMSGF(ch_mzmls_search.combine(ch_searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINEMSGF.out.version)
         ch_id_msgf = ch_id_msgf.mix(SEARCHENGINEMSGF.out.id_files_msgf)
     }
 
     if (params.search_engines.contains("comet")){
-        SEARCHENGINECOMET(mzmls_search.combine(searchengine_in_db))
+        SEARCHENGINECOMET(ch_mzmls_search.combine(ch_searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINECOMET.out.version)
         ch_id_comet = ch_id_comet.mix(SEARCHENGINECOMET.out.id_files_comet)
     }
