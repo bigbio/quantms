@@ -1,0 +1,43 @@
+name: INDIVIDUAL_FINAL_ANALYSIS
+description: A module for final analysis of individual raw files based on DIA-NN.
+keywords:
+  - DIA-NN
+  - DIA
+tools:
+  - DIA-NN:
+      description: |
+        DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing by Demichev.
+      homepage: https://github.com/vdemichev/DiaNN
+      documentation: https://github.com/vdemichev/DiaNN
+input:
+  - diann_log:
+      type: file
+      description: DIA-NN log file
+      pattern: "*.log"
+  - library:
+      type: file
+      description: Silico-predicted spectral library by deep leaning predictor in DIA-NN
+      pattern: "*.tsv"
+  - mzML:
+      type: file
+      description: Spectra file in mzML format
+      pattern: "*.mzML"
+output:
+  - diann_quant:
+      type: file
+      description: Quantification file from DIA-NN
+      pattern: "*.quant"
+  - lib:
+      type: file
+      description: Spectral library file
+      pattern: "*.tsv"
+  - log:
+      type: file
+      description: DIA-NN log file
+      pattern: "*_diann.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

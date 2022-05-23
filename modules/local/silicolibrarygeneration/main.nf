@@ -1,20 +1,19 @@
-process LIBRARYGENERATION {
-    label 'process_high'
+process SILICOLIBRARYGENERATION {
+    tag "$fasta.Name"
+    label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple file(mzml), file(fasta)
-    file(library_config)
+    file(fasta)
+    file(diann_config)
 
     output:
-    path "*_lib.tsv", emit: lib_splib
     path "versions.yml", emit: version
-    path "report.log.txt", emit: log
-    path "*.tsv.speclib", emit: speclib
     path "*.predicted.speclib", emit: predict_speclib
+    path "silicolibrarygeneration.log", emit: log
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,15 +23,13 @@ process LIBRARYGENERATION {
 
     min_pr_mz = params.min_pr_mz ? "--min-pr-mz $params.min_pr_mz":""
     max_pr_mz = params.max_pr_mz ? "--max-pr-mz $params.max_pr_mz":""
-    min_fr_mz = params.min_fr_mz ? "--min_fr_mz $params.min_fr_mz":""
-    max_fr_mz = params.max_fr_mz ? "--max_fr_mz $params.max_fr_mz":""
+    min_fr_mz = params.min_fr_mz ? "--min-fr-mz $params.min_fr_mz":""
+    max_fr_mz = params.max_fr_mz ? "--max-fr-mz $params.max_fr_mz":""
 
     """
-    diann   `cat library_config.cfg` \\
+    diann   `cat diann_config.cfg` \\
             --fasta ${fasta} \\
             --fasta-search \\
-            --f ${mzml} \\
-            --out-lib ${mzml.baseName}_lib.tsv \\
             ${min_pr_mz} \\
             ${max_pr_mz} \\
             ${min_fr_mz} \\
@@ -46,7 +43,8 @@ process LIBRARYGENERATION {
             --threads ${task.cpus} \\
             --predictor \\
             --verbose $params.diann_debug \\
-            |& tee diann.log
+            --gen-spec-lib \\
+            |& tee silicolibrarygeneration.log
 
 
     cat <<-END_VERSIONS > versions.yml

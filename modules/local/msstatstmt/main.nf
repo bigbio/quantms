@@ -27,7 +27,7 @@ process MSSTATSTMT {
     """
     msstats_tmt.R \\
         ${msstatstmt_csv_input} \\
-        ${params.contrasts} \\
+        "${params.contrasts}" \\
         "${ref_con}" \\
         ${params.msstats_remove_one_feat_prot} \\
         ${params.msstatsiso_useunique_peptide} \\
@@ -39,13 +39,13 @@ process MSSTATSTMT {
         ${params.msstatsiso_reference_normalization} \\
         ${msstatstmt_csv_input.baseName} \\
         $args \\
-        > msstats_tmt.log \\
-        || echo "Optional MSstatsTMT step failed. Please check logs and re-run or do a manual statistical analysis."
+        |& tee msstats_tmt.log
 
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MSstatsTMT: \$(echo "2.2.0")
+        r-base: \$(echo \$(R --version 2>&1) | sed 's/^.*R version //; s/ .*\$//')
+        bioconductor-msstatstmt: \$(Rscript -e "library(MSstatsTMT); cat(as.character(packageVersion('MSstatsTMT')))")
     END_VERSIONS
     """
 }
