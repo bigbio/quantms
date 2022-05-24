@@ -46,6 +46,7 @@
                     "type": "string",
                     "description": "Overwrite the file type/extension of the filename as specified in the SDRF/design",
                     "fa_icon": "fas fa-file-invoice",
+                    "default": "mzML",
                     "help_text": "If the above [`--root_folder`](#root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF/design. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML' or 'raw' (the letter cases should match your files exactly)."
                 }
             }

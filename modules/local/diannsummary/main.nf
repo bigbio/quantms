@@ -44,7 +44,7 @@ process DIANNSUMMARY {
             --use-quant \\
             --matrices \\
             --out diann_report.tsv \\
-            --qvalue $params.psm_level_fdr_cutoff \\
+            --qvalue $params.protein_level_fdr_cutoff \\
             $args \\
             |& tee diannsummary.log
 

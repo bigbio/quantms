@@ -79,11 +79,12 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
     // apply transformations given by specified root_folder and type
     if (params.root_folder) {
         filestr = params.root_folder + File.separator + filestr
-    }
-
-    filestr = (params.local_input_type ? filestr.take(filestr.lastIndexOf('.'))
+        filestr = (params.local_input_type ? filestr.take(filestr.lastIndexOf('.'))
                                             + '.' + params.local_input_type
                                             : filestr)
+    }
+
+
 
     // existance check
     if (!file(filestr).exists()) {
