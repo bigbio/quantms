@@ -27,7 +27,7 @@ def convert(ctx, diann_report, exp_design, qvalue_threshold):
         f_table = [i.replace("\n", '').split("\t") for i in data[1:empty_row]]
         f_header = data[0].replace("\n", "").split("\t")
         f_table = pd.DataFrame(f_table, columns=f_header)
-        f_table.loc[:,"run"] = f_table.apply(lambda x: os.path.basename(x["Spectra_Filepath"]), axis=1)
+        f_table.loc[:,"run"] = f_table.apply(lambda x: os.path.splitext(os.path.basename(x["Spectra_Filepath"]))[0], axis=1)
 
         s_table = [i.replace("\n", '').split("\t") for i in data[empty_row + 1:]][1:]
         s_header = data[empty_row + 1].replace("\n", "").split("\t")
@@ -45,7 +45,7 @@ def convert(ctx, diann_report, exp_design, qvalue_threshold):
     out_msstats.loc[:,"IsotopeLabelType"] = "L"
     out_msstats["Reference"] = out_msstats.apply(lambda x: os.path.basename(x['Reference']), axis=1)
 
-    out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(lambda x: query_expdesign_value(x["Reference"], f_table, s_DataFrame),
+    out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(lambda x: query_expdesign_value(x["Run"], f_table, s_DataFrame),
                                                 axis=1, result_type="expand")
 
     # Convert to Triqler
