@@ -34,22 +34,60 @@ In order to analyze the DIA dataset the pipeline needs the acquisition method pr
 
    "Sample-1", "Escherichia coli K-12", "whole plant", "CT=Mixture;CN=UPS1;QY=0.1 fmol", "1", "run 1", "RD139_Narrow_UPS1_0_1fmol_inj1.raw", "1", "1", "NT=Data-Independent Acquisition;AC=NCIT:C161786", "AC=MS:1002038;NT=label free sample", "NT=Oxidation;MT=Variable;TA=M;AC=Unimod:35", "NT=Carbamidomethyl;TA=C;MT=fixed;AC=UNIMOD:4", "AC=MS:1001313;NT=Trypsin", "10 ppm", "20 mmu", "CT=Mixture;CN=UPS1;QY=0.1 fmol"
 
-The first step of the workflow, translate the SDRF parameters into DIA-NN configuration parameters, including port-translation modification, mass thresholds, etc. For the developers and bioinformaticians, the details can be found in `diann to parameters <https://github.com/bigbio/quantms/blob/dev/bin/prepare_diann_parameters.py>`_ .
+Similarly to the DDA workflow (see :doc:`lfq`, :doc:`iso`), we aim to make DIA-NN parallelize and distribute most of the tasks in the cluster.
 
-The DIA-NN is run with the following parameters than can be changed in the commandline:
+The first step of the workflow, translate the SDRF parameters into DIA-NN configuration parameters, including port-translation modification, enzyme, etc. For the developers and bioinformaticians, the details can be found in `diann to parameters <https://github.com/bigbio/quantms/blob/dev/bin/prepare_diann_parameters.py>`_ .
 
-- `--missed-cleavages`: Number of missed-cleavages.
-- `--min-pep-len & --max-pep-len`: Minimum & Maximum length of the peptides for the search.
-- `--min-pr-charge & --max-pr-charge`: Minimum & Maximum charge states.
-- `--var-mods`: Maximum number of modifications allows for a peptide.
-- `--IL_equivalent`: This parameter is used to handle I/L in the same way or differently. If `--IL_equivalent true` the I/L are considered the same.
+The second step of the workflow, generate an in-silico spectral library from a FASTA sequence database.
+The current step is run with the following parameters than can be changed in the commandline:
 
-**Match between runs (MBR)**: In MBR is allowed, peptides identified by tandem mass spectra in one run are transferred to another by inference based on m/z, charge state, retention time, and ion mobility when applicable. This options is available in the LFQ DDA workflow (:doc:`lfq`). Similarly to the LFQ DDA workflow, the LFQ DIA pipeline allows to perform match between runs by defining `--targeted_only false`.
+- `--min_pr_mz & --max_pr_mz`: Minimum & Maximum precursor mz.
+- `--min_fr_mz & --max_fr_mz`: Minimum & Maximum fragment mz.
+- `--allowed_missed_cleavages`: Number of missed-cleavages.
+- `--min_peptide_length & --max_peptide_length`: Minimum & Maximum length of the peptides for the search.
+- `--min_precursor_charge & --max_precursor_charge`: Minimum & Maximum charge states.
+- `--max_mods`: Maximum number of modifications allows for a peptide.
+
+The third step of the workflow, preliminary analysis of individual raw file based on in-silico predicted library. The .quant files for each raw file that contains IDs and quant info will be saved. This step is run with the following
+parameters that can be changed in the commandline:
+
+- `--mass_acc_automatic`: Mass accuracies are set to automatic, will be determined independently for different runs and enable `quick-mass-acc` algorithm.
+- `--mass_acc_ms2`: Sets the MS2 mass accuracy to N ppm.
+- `--mass_acc_ms1`: Sets the MS1 mass accurary to N ppm.
+- `--scan_window_automatic`: Scan window is set to automatic.
+- `--scan_window`: Sets the scan window radius.
+- `-time_corr_only`: Low RAM & high speed mode enabled.
+
+The fourth step of the workflow, assemble an empirical spectral library from .quant files. The `IDs RT & IM profiling` mode is enabled. The following parameters are used that can be changed in the commandline:
+
+- `--mass_acc_automatic`: as above.
+- `--mass_acc_ms2`: as above.
+- `--mass_acc_ms1`: as above.
+- `--scan_window_automatic`: as above.
+- `--scan_window`: as above.
+
+The fifth step of the workflow, final analysis of individual raw file used empirical spectral library (much faster than the preliminary step).
+Now, mass accuracies & scan window will be fixed here in case they were not fixed for step 2. The recommended settings for this experiment will be extracted from log file produced by step 3 and then passed to DIA-NN.
+High-precision quantification mode and protein inference are enabled by `--no-ifs-removal` and `--relaxed-prot-inf`.
+
+The last step of the workflow, summaries the information and then generates report files based on the .quant files. It is run with the following parameters than can be changed in the commandline:
+
+- `--pg_level`: Controls the protein inference mode, with 0 - isoforms, 1 - protein names (as in UniProt), 2 - gene names
+- `species-genes`: Instructs DIA-NN to add the organnism identifier to the gene names.
+- `protein_level_fdr_cutoff`: Q-value threshold.
+
+**Match between runs (MBR)**: In MBR is allowed, peptides identified by tandem mass spectra in one run are transferred to another by inference based on m/z, charge state, retention time, and ion mobility when applicable. This is done manually.
 
 MSstats
 ------------
 
-The output of DIA-NN is exported to MSstats for the downstream analysis, you can read more about MSstats in :doc:`msstats`.
+The output of DIA-NN is exported to MSstats for the downstream analysis by `diann to msstats <https://github.com/bigbio/quantms/blob/dev/bin/diann_convert.py>`_. you can read more about MSstats in :doc:`msstats`.
+
+Triqler
+------------
+
+The output of DIA-NN is exported to Triqler for the downstream analysis, you can read more about Triqler in :doc:`triqler`.
+The `searchScore` is computed by the dia converter as 1-Q.value. The details can be found `diann to triqler <https://github.com/bigbio/quantms/blob/dev/bin/diann_convert.py>`_.
 
 Important technical notes
 --------------------------
@@ -57,9 +95,6 @@ Important technical notes
 By 2022, the quantms DIA workflow based on DIA-NN has the following drawbacks:
 
 - **Conda NOT supported**: The steps of the DIA branch of the pipeline can only be run using **docker**, and **singularity**. The quantms team is working hard to also support conda. You can follow the `quantms discussions <https://github.com/bigbio/quantms/discussions>`_
-
-- **Parallelization**: The DIA-NN works similar to other tools like MaxQuant, where all the steps of the pipeline are done in one big heavy node. quantms' aims are a bit different (see :doc:`lfq`, :doc:`iso`), we aim to parallelize and distribute most of the tasks in the cluster. We are working to develop better ways to parallelize and distribute the tasks in the future.
-
 
 References
 ------------

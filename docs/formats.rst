@@ -78,6 +78,7 @@ The spectra data can be provided in RAW files (for Thermo-Fisher instruments onl
 If RAW files are provided, the first step of the identification pipeline
 `converts them into mzML <https://quantms.readthedocs.io/en/latest/identification.html#mass-spectra-processing-raw-conversion>`_.
 
+.. important:: If you want to load local input spectra files instead of from SDRF or Experimental Design file. Please set `--root_dir` and `--local_input_type` (default mzML) parameters.
 
 Protein databases
 ~~~~~~~~~~~~~~~~~~
