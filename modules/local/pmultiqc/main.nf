@@ -21,7 +21,7 @@ process PMULTIQC {
 
     script:
     def args = task.ext.args ?: ''
-    def disable_pmultqic = params.enable_pmultiqc ? "" : "--disable_plugin"
+    def disable_pmultqic = (params.enable_pmultiqc) && (params.export_mztab) ? "" : "--disable_plugin"
 
     """
     multiqc \\

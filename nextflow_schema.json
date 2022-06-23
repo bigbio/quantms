@@ -743,6 +743,12 @@
                     "default": "unique_peptides",
                     "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
                     "fa_icon": "fas fa-list-ol"
+                },
+                "export_mztab": {
+                    "type": "boolean",
+                    "description": "Export the results with mzTab format.",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square"
                 }
             },
             "fa_icon": "fas fa-braille"

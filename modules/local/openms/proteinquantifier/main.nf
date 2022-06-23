@@ -13,7 +13,7 @@ process PROTEINQUANTIFIER {
     output:
     path "*protein_out.csv", emit: protein_out
     path "*peptide_out.csv", emit: peptide_out
-    path "*.mzTab", emit: out_mztab
+    path "*.mzTab", emit: out_mztab optional true
     path "*.log"
     path "versions.yml", emit: version
 
@@ -23,13 +23,14 @@ process PROTEINQUANTIFIER {
     include_all = params.include_all ? "-include_all" : ""
     fix_peptides = params.fix_peptides ? "-fix_peptides" : ""
     normalize = params.normalize ? "-consensus:normalize" : ""
+    export_mztab = params.export_mztab ? "-mztab ${pro_quant_exp.baseName - ~/_design$/}_out.mzTab" : ""
 
     """
     ProteinQuantifier \\
         -in ${epi_filt_resolve} \\
         -design ${pro_quant_exp} \\
         -out ${pro_quant_exp.baseName - ~/_design$/}_protein_out.csv \\
-        -mztab ${pro_quant_exp.baseName - ~/_design$/}_out.mzTab \\
+        ${export_mztab} \\
         -peptide_out ${pro_quant_exp.baseName - ~/_design$/}_peptide_out.csv \\
         -top $params.top \\
         -average $params.average \\
