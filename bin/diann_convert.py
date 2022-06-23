@@ -4,7 +4,6 @@ import pandas as pd
 import click
 import os
 import re
-import numpy as np
 from sdrf_pipelines.openms.unimod import UnimodDatabase
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
@@ -57,9 +56,9 @@ def convert(ctx, diann_report, exp_design, qvalue_threshold):
     out_triqler.loc[:, "searchScore"] = 1 - out_triqler["searchScore"]
 
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
-    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_msstats.csv', sep=',', index=False)
+    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_msstats_in.csv', sep=',', index=False)
     out_triqler = out_triqler[out_triqler["intensity"] != 0]
-    out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_triqler.tsv', sep='\t', index=False)
+    out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_triqler_in.tsv', sep='\t', index=False)
 
 def query_expdesign_value(reference, f_table, s_table):
     query_reference = f_table[f_table["run"] == reference]

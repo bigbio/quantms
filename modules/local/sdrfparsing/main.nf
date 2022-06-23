@@ -11,8 +11,8 @@ process SDRFPARSING {
     path sdrf
 
     output:
-    path "${sdrf.baseName}_design.tsv", optional: true, emit: ch_expdesign
-    path "${sdrf.baseName}_config.tsv", optional: true, emit: ch_sdrf_config_file
+    path "${sdrf.baseName}_openms_design.tsv", optional: true, emit: ch_expdesign
+    path "${sdrf.baseName}_openms_config.tsv", optional: true, emit: ch_sdrf_config_file
     path "*.xml", optional: true, emit: mqpar
     path "*.log", emit: log
     path "versions.yml", emit: version
@@ -26,8 +26,8 @@ process SDRFPARSING {
     ## TODO Update the sdrf-pipelines to dynamic print versions
 
     parse_sdrf convert-openms -t2 -l -s ${sdrf} |& tee ${sdrf.baseName}_parsing.log
-    mv openms.tsv ${sdrf.baseName}_config.tsv
-    mv experimental_design.tsv ${sdrf.baseName}_design.tsv
+    mv openms.tsv ${sdrf.baseName}_openms_config.tsv
+    mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

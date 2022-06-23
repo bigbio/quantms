@@ -11,8 +11,8 @@ process PROTEINQUANTIFIER {
     path pro_quant_exp
 
     output:
-    path "protein_out.csv", emit: protein_out
-    path "peptide_out.csv", emit: peptide_out
+    path "*protein_out.csv", emit: protein_out
+    path "*peptide_out.csv", emit: peptide_out
     path "*.mzTab", emit: out_mztab
     path "*.log"
     path "versions.yml", emit: version
@@ -28,9 +28,9 @@ process PROTEINQUANTIFIER {
     ProteinQuantifier \\
         -in ${epi_filt_resolve} \\
         -design ${pro_quant_exp} \\
-        -out protein_out.csv \\
-        -mztab out.mzTab \\
-        -peptide_out peptide_out.csv \\
+        -out ${pro_quant_exp.baseName - ~/_design$/}_protein_out.csv \\
+        -mztab ${pro_quant_exp.baseName - ~/_design$/}_out.mzTab \\
+        -peptide_out ${pro_quant_exp.baseName - ~/_design$/}_peptide_out.csv \\
         -top $params.top \\
         -average $params.average \\
         ${include_all} \\
