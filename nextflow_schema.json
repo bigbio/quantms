@@ -746,7 +746,7 @@
                 },
                 "export_mztab": {
                     "type": "boolean",
-                    "description": "Export the results with mzTab format.",
+                    "description": "Export the results in mzTab format.",
                     "default": true,
                     "fa_icon": "fas fa-check-square"
                 }
