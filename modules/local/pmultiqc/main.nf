@@ -21,14 +21,14 @@ process PMULTIQC {
 
     script:
     def args = task.ext.args ?: ''
-    def disable_pmultqic = (params.enable_pmultiqc) && (params.export_mztab) ? "" : "--disable_plugin"
+    def disable_pmultiqc = (params.enable_pmultiqc) && (params.export_mztab) ? "" : "--disable_plugin"
 
     """
     multiqc \\
         -f \\
         --config ./results/multiqc_config.yml \\
         ${args} \\
-        ${disable_pmultqic} \\
+        ${disable_pmultiqc} \\
         ./results \\
         -o .
 

@@ -23,7 +23,7 @@ output:
   - ch_sdrf_config_file:
       type: file
       description: config file with search engine parameters in OpenMS nomenclature
-      pattern: "*openms_config.tsv"
+      pattern: "*_config.tsv"
   - mqpar:
       type: file
       description: maxquant configuration file
