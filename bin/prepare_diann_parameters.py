@@ -13,12 +13,8 @@ def cli():
 @click.option("--enzyme", "-e", help="")
 @click.option("--fix_mod", "-f", help="")
 @click.option("--var_mod", "-v", help="")
-@click.option("--precursor_tolerence", "-p", help="")
-@click.option("--precursor_tolerence_unit", "-pu", help="")
-@click.option("--fragment_tolerence", "-fr", help="")
-@click.option("--fragment_tolerence_unit", "-fu", help="")
 @click.pass_context
-def generate_cfg(ctx, enzyme, fix_mod, var_mod, precursor_tolerence, precursor_tolerence_unit, fragment_tolerence, fragment_tolerence_unit):
+def generate_cfg(ctx, enzyme, fix_mod, var_mod):
     cut = enzyme_cut(enzyme)
     unimod_database = UnimodDatabase()
     fix_ptm, var_ptm = convert_mod(unimod_database, fix_mod, var_mod)

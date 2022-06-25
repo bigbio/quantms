@@ -175,7 +175,7 @@ workflow QUANTMS {
 
     SUMMARYPIPELINE (
         CREATE_INPUT_CHANNEL.out.ch_expdesign
-            .combine(ch_pipeline_results.combine(ch_multiqc_files.collect())
+            .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
             .combine(ch_pmultiqc_mzmls.collect())
             .combine(ch_ids_pmultiqc.collect().ifEmpty([]))),
         ch_multiqc_quantms_logo

@@ -1,4 +1,5 @@
 process PROTEINQUANTIFIER {
+    tag "${pro_quant_exp.baseName}"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
@@ -11,9 +12,9 @@ process PROTEINQUANTIFIER {
     path pro_quant_exp
 
     output:
-    path "protein_out.csv", emit: protein_out
-    path "peptide_out.csv", emit: peptide_out
-    path "*.mzTab", emit: out_mztab
+    path "*protein_openms.csv", emit: protein_out
+    path "*peptide_openms.csv", emit: peptide_out
+    path "*.mzTab", emit: out_mztab optional true
     path "*.log"
     path "versions.yml", emit: version
 
@@ -23,14 +24,15 @@ process PROTEINQUANTIFIER {
     include_all = params.include_all ? "-include_all" : ""
     fix_peptides = params.fix_peptides ? "-fix_peptides" : ""
     normalize = params.normalize ? "-consensus:normalize" : ""
+    export_mztab = params.export_mztab ? "-mztab ${pro_quant_exp.baseName}_openms.mzTab" : ""
 
     """
     ProteinQuantifier \\
         -in ${epi_filt_resolve} \\
         -design ${pro_quant_exp} \\
-        -out protein_out.csv \\
-        -mztab out.mzTab \\
-        -peptide_out peptide_out.csv \\
+        -out ${pro_quant_exp.baseName}_protein_openms.csv \\
+        ${export_mztab} \\
+        -peptide_out ${pro_quant_exp.baseName}_peptide_openms.csv \\
         -top $params.top \\
         -average $params.average \\
         ${include_all} \\

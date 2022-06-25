@@ -14,8 +14,8 @@ process DIANNCONVERT {
     path(exp_design)
 
     output:
-    path "*out_msstats.csv", emit: out_msstats
-    path "*out_triqler.tsv", emit: out_triqler
+    path "*msstats_in.csv", emit: out_msstats
+    path "*triqler_in.tsv", emit: out_triqler
     path "versions.yml", emit: version
 
     script:
