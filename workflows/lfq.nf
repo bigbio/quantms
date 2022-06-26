@@ -75,6 +75,7 @@ workflow LFQ {
     ch_pmultiqc_ids = ch_pmultiqc_ids
     final_result    = PROTEOMICSLFQ.out.out_mztab
     versions        = ch_software_versions
+    msstats_in      = PROTEOMICSLFQ.out.out_msstats
     msstats_out     = ch_msstats_out
 }
 
