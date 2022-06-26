@@ -83,7 +83,7 @@ workflow TMT {
     emit:
     ch_pmultiqc_ids = ch_pmultiqc_ids
     final_result    = PROTEINQUANT.out.out_mztab
-    msstats_input   = PROTEINQUANT.out.msstats_csv
+    msstats_in  = PROTEINQUANT.out.msstats_csv
     msstats_out     = ch_msstats_out
     versions        = ch_software_versions
 }

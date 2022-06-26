@@ -100,7 +100,7 @@ workflow DIA {
     emit:
     versions        = ch_software_versions
     diann_report    = DIANNSUMMARY.out.main_report
-    msstats_csv     = DIANNCONVERT.out.out_msstats
+    msstats_in      = DIANNCONVERT.out.out_msstats
     out_triqler     = DIANNCONVERT.out.out_triqler
     msstats_out     = ch_msstats_out
 
