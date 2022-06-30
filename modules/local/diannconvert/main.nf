@@ -12,10 +12,18 @@ process DIANNCONVERT {
     input:
     path(report)
     path(exp_design)
+    path(report_pg)
+    path(report_pr)
+    path(report_unique_gene)
+    path(openms)
+    path(fasta)
+    val(charge)
+    val(missed_cleavages)
 
     output:
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
+    path "*out.mztab", emit: out_mztab
     path "versions.yml", emit: version
 
     script:
@@ -25,8 +33,15 @@ process DIANNCONVERT {
     diann_convert.py convert \\
         --diann_report ${report} \\
         --exp_design ${exp_design} \\
+        --pg_matrix ${report_pg} \\
+        --pr_matrix ${report_pr} \\
+        --unique_matrix ${report_unique_gene} \\
+        --openms ${openms} \\
+        --fasta ${fasta} \\
+        --charge ${charge} \\
+        --missed_cleavages ${missed_cleavages} \\
         --qvalue_threshold $params.protein_level_fdr_cutoff \\
-        |& tee trans_to_msstats.log
+        |& tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
