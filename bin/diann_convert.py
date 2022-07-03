@@ -28,29 +28,29 @@ def cli():
 @click.pass_context
 
 def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, openms, fasta, charge, missed_cleavages, qvalue_threshold):
-    """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab, for quality control 
-    and downstream analysis.
+    """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are 
+    used for quality control and downstream analysis.
 
     :param diann_report: Path to the main report output by DIA-NN
-    :type diann_report: str, optional
+    :type diann_report: str
     :param exp_design: Path to the experimental design file
-    :type exp_design: str, optional
+    :type exp_design: str
     :param pg_matrix: Path to a DIA-NN matrix file containing protein groups
-    :type pg_matrix: str, optional
+    :type pg_matrix: str
     :param pr_matrix: Path to a DIA-NN matrix file containing precursors
-    :type pr_matrix: str, optional
+    :type pr_matrix: str
     :param unique_matrix: Path to a DIA-NN matrix file containing unique genes
-    :type unique_matrix: str, optional
+    :type unique_matrix: str
     :param openms: Path to OpenMS, one of the workflow configuration files
-    :type openms: str, optional
+    :type openms: str
     :param fasta: Path to the fasta file
-    :type fasta: str, optional
+    :type fasta: str
     :param charge: The charge assigned by DIA-NN(max_precursor_charge)
-    :type charge: int, optional
+    :type charge: int
     :param missed_cleavages: Allowed missed cleavages assigned by DIA-NN
-    :type missed_cleavages: int, optional
+    :type missed_cleavages: int
     :param qvalue_threshold: Threshold for filtering q value
-    :type qvalue_threshold: float, optional
+    :type qvalue_threshold: float
     """
 
     pg = pd.read_csv(pg_matrix, sep = "\t", header = 0, dtype = "str")
@@ -59,7 +59,7 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     opms = pd.read_csv(openms, sep = "\t", header = 0, dtype = "str") 
     opms.fillna("null", inplace=True)
     report = pd.read_csv(diann_report, sep = "\t", header = 0, dtype = "str")
-    report["Precursor.Mz"] = report.apply(lambda x: molecular_weight(x["Stripped.Sequence"], 'protein', monoisotopic=True) / int(x["Precursor.Charge"]), axis=1)
+    report["Calculate.Precursor.Mz"] = report.apply(lambda x: molecular_weight(x["Stripped.Sequence"], 'protein', monoisotopic=True) / int(x["Precursor.Charge"]), axis=1)
     precursor_list = list(report["Precursor.Id"].unique())
     report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
 
@@ -140,6 +140,19 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
 
 
 def query_expdesign_value(reference, f_table, s_table):
+    """By matching the "Run" column in f_table or the "Sample" column in s_table, this function returns a tuple containing Fraction, 
+    BioReplicate and Condition.
+
+     :param reference: The "Run" column in out_msstats
+     :type reference: pandas.core.series.Series
+     :param f_table: A table contains experiment settings(search engine settings etc.)
+     :type f_table: pandas.core.frame.DataFrame
+     :param s_table: A table contains experimental design
+     :type s_table: pandas.core.frame.DataFrame
+     :return: A tuple contains Fraction, BioReplicate and Condition
+     :rtype: tuple
+    """
+
     query_reference = f_table[f_table["run"] == reference]
     Fraction = query_reference["Fraction"].values[0]
     row = s_table[s_table["Sample"] == query_reference["Sample"].values[0]]
@@ -150,6 +163,16 @@ def query_expdesign_value(reference, f_table, s_table):
 
 
 def convert_modification(peptide, unimod_data):
+    """Convert the accession in the peptide to name("Unimod:35" to "Oxidation" etc.).
+
+    :param peptide: Peptide contains the modification accessions
+    :type peptide: str
+    :param unimod_data: An instance of class UnimodDatabase
+    :type unimod_data: sdrf_pipelines.openms.unimod.UnimodDatabase
+    :return: Peptide contains the modification names
+    :rtype: str
+    """
+
     pattern = re.compile(r"\((.*?)\)")
     origianl_mods = re.findall(pattern, peptide)
     for mod in set(origianl_mods):
@@ -159,7 +182,20 @@ def convert_modification(peptide, unimod_data):
         peptide = peptide + "."
     return peptide
 
+
 def MTD_mod_info(unimod_database, fix_mod, var_mod):
+    """Convert fixed and variable modifications to the format required by the MTD sub-table.
+
+    :param unimod_database: An instance of class UnimodDatabase
+    :type unimod_database: sdrf_pipelines.openms.unimod.UnimodDatabase
+    :param fix_mod: Fixed modifications from openms.tsv
+    :type fix_mod: str
+    :param var_mod: Variable modifications from openms.tsv
+    :type var_mod: str
+    :return: A tuple contains fixed and variable modifications, and flags indicating whether they are null
+    :rtype: tuple
+    """
+    
     pattern = re.compile("\((.*?)\)")
     var_ptm = []
     fix_ptm = []
@@ -176,7 +212,7 @@ def MTD_mod_info(unimod_database, fix_mod, var_mod):
             fix_ptm.append(("[UNIMOD, " + mod_accession.upper() + ", " + mod_name + ", ]", site))
     else:
         fix_flag = 0
-        fix_ptm = ["[MS, MS:1002453, No fixed modifications searched, ]"]
+        fix_ptm.append("[MS, MS:1002453, No fixed modifications searched, ]")
 
     if var_mod != "null":
         var_flag = 1
@@ -190,12 +226,30 @@ def MTD_mod_info(unimod_database, fix_mod, var_mod):
             var_ptm.append(("[UNIMOD, " + mod_accession.upper() + ", " + mod_name + ", ]", site))
     else:
         var_flag = 0
-        var_ptm = ["[MS, MS:1002454, No variable modifications searched, ]"]
+        var_ptm.append("[MS, MS:1002454, No variable modifications searched, ]")
 
     return fix_ptm, var_ptm, fix_flag, var_flag
 
 
 def mztab_MTD(index_ref, opms, unimod_data, fasta, charge, missed_cleavages):
+    """Construct MTD sub-table.
+
+    :param index_ref: On the basis of f_table, two columns "MS_run" and "study_variable" are added for matching
+    :type indx_ref: pandas.core.frame.DataFrame
+    :param opms: Dataframe for openms.tsv
+    :type opms: pandas.core.frame.DataFrame
+    :param unimod_data: An instance of class UnimodDatabase
+    :type unimod_data: sdrf_pipelines.openms.unimod.UnimodDatabase
+    :param fasta: Fasta file path
+    :type fasta: str
+    :param charge: Charges set by Dia-NN
+    :type charge: int
+    :param missed_cleavages: Missed cleavages set by Dia-NN
+    :type missed_cleavages: int
+    :return: MTD sub-table
+    :rtype: pandas.core.frame.DataFrame
+    """
+
     FragmentMassTolerance = opms["FragmentMassTolerance"].values[0]
     FragmentMassToleranceUnit = opms["FragmentMassToleranceUnit"].values[0]
     PrecursorMassTolerance = opms["PrecursorMassTolerance"].values[0]
@@ -263,6 +317,8 @@ def mztab_MTD(index_ref, opms, unimod_data, fasta, charge, missed_cleavages):
         out_mztab_MTD.loc[1, "study_variable[" + str(i) + "]-description"] = "no description given"   
         
     out_mztab_MTD.loc[2, :] = "MTD"
+
+    # Transpose out_mztab_MTD
     col = list(out_mztab_MTD.columns)
     row = list(out_mztab_MTD.index)
     out_mztab_MTD_T = pd.DataFrame(out_mztab_MTD.values.T, index = col, columns = row)
@@ -277,6 +333,24 @@ def mztab_MTD(index_ref, opms, unimod_data, fasta, charge, missed_cleavages):
 
 
 def mztab_PRH(report, pg, unique, index_ref, database, fasta_pd):
+    """Construct PRH sub-table.
+
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param pg: Dataframe for Dia-NN protein groups matrix
+    :type pg: pandas.core.frame.DataFrame
+    :param unique: Dataframe for Dia-NN unique genes matrix
+    :type unique: pandas.core.frame.DataFrame  
+    :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
+    :type indx_ref: pandas.core.frame.DataFrame
+    :param database: Path to fasta file
+    :type database: str
+    :param fasta_pd: A dataframe contains protein IDs, sequences and lengths
+    :type fasta_pd: pandas.core.frame.DataFrame
+    :return: PRH sub-table
+    :rtype: pandas.core.frame.DataFrame
+    """
+
     file = list(pg.columns[5:])
     col = {}
     for i in file:
@@ -309,7 +383,6 @@ def mztab_PRH(report, pg, unique, index_ref, database, fasta_pd):
         lambda x: find_modification(x["modifiedSequence"]), axis=1, result_type="expand")
     
     ## quantity at protein level: PG.MaxLFQ
-    ## protein_abundance_study_variable[n]
     max_study_variable = max(index_ref["study_variable"])
     PRH_params = []
     for i in range(1, max_study_variable + 1):
@@ -317,19 +390,39 @@ def mztab_PRH(report, pg, unique, index_ref, database, fasta_pd):
                             "protein_abundance_std_error_study_variable[" + str(i) + "]"])
 
     out_mztab_PRH[PRH_params] = out_mztab_PRH.apply(
-        lambda x: match_in_report(report, x['accession'], max_study_variable, 0, 'protein'), axis=1, result_type='expand')
+        lambda x: match_in_report(report, x['accession'], max_study_variable, 1, 'protein'), axis=1, result_type='expand')
 
     out_mztab_PRH.loc[:, "opt_global_result_type"] = out_mztab_PRH.apply(
         lambda x: classify_protein(x["Genes"], unique["Genes"], "single_protein", "indistinguishable_protein_group"), axis=1, result_type="expand")
 
     out_mztab_PRH = out_mztab_PRH.drop(["Genes", "modifiedSequence"], axis=1)
     out_mztab_PRH.fillna("null", inplace=True)  
-    out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
+    # out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
     
     return out_mztab_PRH
 
 
 def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, database):
+    """Construct PEH sub-table.
+
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param pr: Dataframe for Dia-NN precursors matrix
+    :type pr: pandas.core.frame.DataFrame
+    :param unique: Dataframe for Dia-NN unique genes matrix
+    :type unique: pandas.core.frame.DataFrame 
+    :param unimod_data: An instance of class UnimodDatabase
+    :type unimod_data: sdrf_pipelines.openms.unimod.UnimodDatabase
+    :param precursor_list: A list contains all precursor IDs
+    :type precursor_list: list
+    :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
+    :type indx_ref: pandas.core.frame.DataFrame
+    :param database: Path to fasta file
+    :type database: str
+    :return: PEH sub-table
+    :rtype: pandas.core.frame.DataFrame
+    """
+
     out_mztab_PEH = pd.DataFrame()
     out_mztab_PEH = pr.iloc[:, 0:10]
     out_mztab_PEH = out_mztab_PEH.drop(["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis = 1)
@@ -373,23 +466,36 @@ def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, databa
     out_mztab_PEH[PEH_params] = out_mztab_PEH.apply(
         lambda x: match_in_report(report, x['pr_id'], max_study_variable, 1, 'pep'), axis=1, result_type='expand')
 
-    ## ["Q.Value", "RT", "Global.Q.Value", "Lib.Q.Value", "Precursor.Mz"]
     out_mztab_PEH[["best_search_engine_score[1]", "retention_time", "opt_global_q-value", "opt_global_SpecEValue_score", "mass_to_charge"
                 ]] = out_mztab_PEH.apply(lambda x: PEH_match_report(report, x['pr_id']), axis=1, result_type="expand")
 
     out_mztab_PEH[["opt_global_feature_id", "spectra_ref"]] = out_mztab_PEH.apply(lambda x:("null", "null"),axis = 1, result_type = "expand")
     out_mztab_PEH = out_mztab_PEH.drop(["Precursor.Id", "Genes", "pr_id"], axis = 1)
     out_mztab_PEH.fillna("null", inplace = True)  
-    out_mztab_PEH.to_csv("./out_peptide.mztab", sep=",", index=False)
+    # out_mztab_PEH.to_csv("./out_peptide.mztab", sep=",", index=False)
 
     return out_mztab_PEH
 
 
 def mztab_PSH(unique, unimod_data, report, database):
+    """Construct PSH sub-table.
+
+    :param unique: Dataframe for Dia-NN unique genes matrix
+    :type unique: pandas.core.frame.DataFrame
+    :param unimod_data: An instance of class UnimodDatabase
+    :type unimod_data: sdrf_pipelines.openms.unimod.UnimodDatabase
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param database: Path to fasta file
+    :type database: str
+    :return: PSH sub-table
+    :rtype: pandas.core.frame.DataFrame
+    """
+
     out_mztab_PSH = pd.DataFrame()
     ## Score at PSM level: Q.Value
     out_mztab_PSH = report[["Stripped.Sequence", "Protein.Ids", "Genes", "Q.Value", "RT",
-                            "Precursor.Charge", "Precursor.Mz", "Modified.Sequence", "PEP", "Global.Q.Value", "Global.Q.Value"]]
+                            "Precursor.Charge", "Calculate.Precursor.Mz", "Modified.Sequence", "PEP", "Global.Q.Value", "Global.Q.Value"]]
     out_mztab_PSH.columns = ["sequence", "accession", "Genes", "search_engine_score[1]", "retention_time", "charge", "calc_mass_to_charge",
                              "opt_global_cv_MS:1000889_peptidoform_sequence", "opt_global_SpecEValue_score", "opt_global_q-value", "opt_global_q-value_score"]
 
@@ -415,12 +521,22 @@ def mztab_PSH(unique, unimod_data, report, database):
 
     out_mztab_PSH = out_mztab_PSH.drop(["Genes"], axis = 1)
     out_mztab_PSH.fillna("null", inplace = True)  
-    out_mztab_PSH.to_csv("./out_psms.mztab", sep=",", index=False)
+    # out_mztab_PSH.to_csv("./out_psms.mztab", sep=",", index=False)
 
     return out_mztab_PSH
 
 
 def add_info(target, index_ref):
+    """On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching.
+
+    :param target: The "Run" column in f_table
+    :type target: pandas.core.series.Series
+    :param index_ref: A dataframe on the basis of f_table
+    :type indx_ref: pandas.core.frame.DataFrame
+    :return: A tuple contains ms_run and study_variable
+    :rtype: tuple
+    """
+
     match = index_ref[index_ref["run"] == target]
     ms_run = match["ms_run"].values[0]
     study_variable = match["study_variable"].values[0]
@@ -429,6 +545,20 @@ def add_info(target, index_ref):
 
 
 def classify_protein(target, unique, t, f):
+    """Proteins are classified according to whether the corresponding gene is unique or not.
+
+    :param target: The "Genes" column in out_mztab_PSH
+    :type target: pandas.core.series.Series
+    :param unique: The "Genes" column in unique(Dataframe for Dia-NN unique genes matrix)
+    :type unique: pandas.core.series.Series
+    :param t: The signature of the unique gene
+    :type t: str
+    :param f: The signature of the NOT unique gene
+    :type f: str
+    :return: The signature of genes
+    :rtype: str
+    """
+
     if any(unique == target):
         return t
     else:
@@ -436,6 +566,18 @@ def classify_protein(target, unique, t, f):
 
 
 def calculate_protein_coverage(report, target, fasta_pd):
+    """Calculate protein coverage.
+
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param target: The "accession" column in out_mztab_PRH
+    :type target: pandas.core.series.Series
+    :param fasta_pd: A dataframe contains protein IDs, sequences and lengths
+    :type fasta_pd: pandas.core.frame.DataFrame
+    :return: Protein coverage
+    :rtype: str
+    """
+
     protein_coverage = ""
     len_current = len(max(report[report["Protein.Ids"] == target]["Stripped.Sequence"].values, key = len))
     for i in target.split(";"):
@@ -445,11 +587,27 @@ def calculate_protein_coverage(report, target, fasta_pd):
     return protein_coverage.strip(";")
 
 
-def match_in_report(report, target, run, flag, level):
+def match_in_report(report, target, max, flag, level):
+    """This function is used to match the columns "ms_run" and "study_variable" in the report to get the information.
+
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param target: The "pr_id" column in out_mztab_PEH(level="peptide") or the "accession" column in out_mztab_PRH(level="protein")
+    :type target: pandas.core.series.Series
+    :param max: max_assay or max_study_variable
+    :type max: int
+    :param flag: Match the "study_variable" column(flag=1) or the "ms_run" column(flag=0) in the filter result
+    :type flag: int
+    :param level: "pep" or "protein"
+    :type level: str
+    :return: A tuple contains multiple messages
+    :rtype: tuple
+    """
+
     if flag == 1 and level == 'pep':
         result = report[report['precursor.Index'] == target]
         PEH_params = []
-        for i in range(1, run + 1):
+        for i in range(1, max + 1):
             match = result[result['study_variable'] == i]
             PEH_params.extend([match['Precursor.Normalised'].mean(), 'null', 'null', 'null', match['RT'].mean()])
 
@@ -458,16 +616,16 @@ def match_in_report(report, target, run, flag, level):
     elif flag == 0 and level == 'pep':
         result = report[report['precursor.Index'] == target]
         q_value = []
-        for i in range(1, run + 1):
+        for i in range(1, max + 1):
             match = result[result['ms_run'] == i]
             q_value.append(match['Q.Value'].values[0] if match['Q.Value'].values.size > 0 else np.nan)
 
         return tuple(q_value)
 
-    elif flag == 0 and level == 'protein':
+    elif flag == 1 and level == 'protein':
         result = report[report['Protein.Ids'] == target]
         PRH_params = []
-        for i in range(1, run + 1):
+        for i in range(1, max + 1):
             match = result[result['study_variable'] == i]
             PRH_params.extend([match['PG.MaxLFQ'].mean(), 'null', 'null'])
 
@@ -475,6 +633,16 @@ def match_in_report(report, target, run, flag, level):
 
 
 def PRH_match_report(report, target):
+    """Returns a tuple contains modified sequences and the score at protein level.
+
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param target: The "accession" column in report
+    :type target: pandas.core.series.Series
+    :return: A tuple contains multiple information to construct PRH sub-table
+    :rtype: tuple
+    """
+
     match = report[report["Protein.Ids"] == target]
     modSeq = match["Modified.Sequence"].values[0] if match["Modified.Sequence"].values.size > 0 else np.nan
     ## Score at protein level: Global.PG.Q.Value (without MBR)
@@ -484,18 +652,36 @@ def PRH_match_report(report, target):
 
 
 def PEH_match_report(report, target):
+    """Returns a tuple contains the score at peptide level, retain time, q_score, spec_e and mz.
+
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param target: The "pr_id" column in report
+    :type target: pandas.core.series.Series
+    :return: A tuple contains multiple information to construct PEH sub-table
+    :rtype: tuple
+    """
+
     match = report[report["precursor.Index"] == target]
     ## Score at peptide level: the minimum of the respective precursor q-values (minimum of Q.Value per group)
     search_score = match["Q.Value"].min()
     time = match["RT"].mean()
     q_score = match["Global.Q.Value"].values[0] if match["Global.Q.Value"].values.size > 0 else np.nan
     spec_e = match["Lib.Q.Value"].values[0] if match["Lib.Q.Value"].values.size > 0 else np.nan
-    mz = match["Precursor.Mz"].mean() 
+    mz = match["Calculate.Precursor.Mz"].mean() 
 
     return search_score, time, q_score, spec_e, mz
 
 
 def find_modification(peptide):
+    """Identify the modification site based on the peptide containing modifications.
+
+    :param peptide: Sequences of peptides
+    :type peptide: str
+    :return: Modification sites
+    :rtype: str
+    """
+
     pattern = re.compile(r"\((.*?)\)")
     original_mods = re.findall(pattern, peptide)
     peptide = re.sub('\(.*?\)','.',peptide)
@@ -506,9 +692,9 @@ def find_modification(peptide):
     for k in range(0,len(original_mods)):
         original_mods[k] = str(position[k]) + "-" + original_mods[k].upper()
 
-    original_mods = ",".join(str(i) for i in original_mods)
+    original_mods = ",".join(str(i) for i in original_mods) if len(original_mods) > 0 else "null"
 
-    return original_mods if len(original_mods) > 0 else "null"
+    return original_mods
 
 
 cli.add_command(convert)
