@@ -15,7 +15,7 @@ process DIANNCONVERT {
     path(report_pg)
     path(report_pr)
     path(report_unique_gene)
-    path(openms)
+    val(meta)
     path(fasta)
     val(charge)
     val(missed_cleavages)
@@ -23,24 +23,26 @@ process DIANNCONVERT {
     output:
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
-    path "*out.mztab", emit: out_mztab
+    path "*.mztab", emit: out_mztab
     path "versions.yml", emit: version
 
     script:
     def args = task.ext.args ?: ''
+    def dia_params = [meta.fragmentmasstolerance, meta.fragmentmasstoleranceunit, meta.precursormasstolerance, 
+                meta.precursormasstoleranceunit, meta.enzyme, meta.fixedmodifications, meta.variablemodifications].join(';')
 
     """
     diann_convert.py convert \\
-        --diann_report ${report} \\
-        --exp_design ${exp_design} \\
-        --pg_matrix ${report_pg} \\
-        --pr_matrix ${report_pr} \\
-        --unique_matrix ${report_unique_gene} \\
-        --openms ${openms} \\
-        --fasta ${fasta} \\
+        --diann_report "${report}" \\
+        --exp_design "${exp_design}" \\
+        --pg_matrix "${report_pg}" \\
+        --pr_matrix "${report_pr}" \\
+        --unique_matrix "${report_unique_gene}" \\
+        --dia_params "${dia_params}" \\
+        --fasta "${fasta}" \\
         --charge ${charge} \\
         --missed_cleavages ${missed_cleavages} \\
-        --qvalue_threshold $params.protein_level_fdr_cutoff \\
+        --qvalue_threshold ${params.protein_level_fdr_cutoff} \\
         |& tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml

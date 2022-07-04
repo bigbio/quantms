@@ -54,7 +54,6 @@ workflow CREATE_INPUT_CHANNEL {
     ch_meta_config_iso                     // [meta, [spectra_files ]]
     ch_meta_config_lfq                     // [meta, [spectra_files ]]
     ch_meta_config_dia                     // [meta, [spectra files ]]
-    ch_config
     ch_expdesign
 
     version         = ch_versions
