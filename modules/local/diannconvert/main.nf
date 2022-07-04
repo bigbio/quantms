@@ -28,8 +28,8 @@ process DIANNCONVERT {
 
     script:
     def args = task.ext.args ?: ''
-    def dia_params = [meta.fragmentmasstolerance, meta.fragmentmasstoleranceunit, meta.precursormasstolerance, 
-                meta.precursormasstoleranceunit, meta.enzyme, meta.fixedmodifications, meta.variablemodifications].join(';')
+    def dia_params = [meta.fragmentmasstolerance,meta.fragmentmasstoleranceunit,meta.precursormasstolerance,
+                        meta.precursormasstoleranceunit,meta.enzyme,meta.fixedmodifications,meta.variablemodifications].join(';')
 
     """
     diann_convert.py convert \\
