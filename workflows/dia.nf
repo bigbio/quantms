@@ -34,7 +34,6 @@ workflow DIA {
     take:
     ch_file_preparation_results
     ch_expdesign
-    ch_config
 
     main:
 
@@ -86,7 +85,8 @@ workflow DIA {
     //
     // MODULE: DIANNCONVERT
     //
-    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix, DIANNSUMMARY.out.unique_gene_matrix, ch_config, params.database, params.max_precursor_charge, params.allowed_missed_cleavages)
+    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix, DIANNSUMMARY.out.unique_gene_matrix, 
+                ch_result.meta.first(), params.database, params.max_precursor_charge, params.allowed_missed_cleavages)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 
     //

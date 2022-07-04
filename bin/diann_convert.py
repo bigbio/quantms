@@ -20,14 +20,14 @@ def cli():
 @click.option("--pg_matrix", "-pg")
 @click.option("--pr_matrix", "-pr")
 @click.option("--unique_matrix", "-un")
-@click.option("--openms", "-o")
+@click.option("--dia_params", "-p")
 @click.option("--fasta", "-f")
 @click.option("--charge", "-c")
 @click.option("--missed_cleavages", "-m")
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
 
-def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, openms, fasta, charge, missed_cleavages, qvalue_threshold):
+def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, dia_params, fasta, charge, missed_cleavages, qvalue_threshold):
     """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are 
     used for quality control and downstream analysis.
 
@@ -41,8 +41,8 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     :type pr_matrix: str
     :param unique_matrix: Path to a DIA-NN matrix file containing unique genes
     :type unique_matrix: str
-    :param openms: Path to OpenMS, one of the workflow configuration files
-    :type openms: str
+    :param dia_params: A list contains DIA parameters
+    :type dia_params: list
     :param fasta: Path to the fasta file
     :type fasta: str
     :param charge: The charge assigned by DIA-NN(max_precursor_charge)
@@ -52,12 +52,9 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     :param qvalue_threshold: Threshold for filtering q value
     :type qvalue_threshold: float
     """
-
     pg = pd.read_csv(pg_matrix, sep = "\t", header = 0, dtype = "str")
     pr = pd.read_csv(pr_matrix, sep = "\t", header = 0, dtype = "str")  
     unique = pd.read_csv(unique_matrix, sep = "\t", header = 0, dtype = "str")  
-    opms = pd.read_csv(openms, sep = "\t", header = 0, dtype = "str") 
-    opms.fillna("null", inplace=True)
     report = pd.read_csv(diann_report, sep = "\t", header = 0, dtype = "str")
     report["Calculate.Precursor.Mz"] = report.apply(lambda x: molecular_weight(x["Stripped.Sequence"], 'protein', monoisotopic=True) / int(x["Precursor.Charge"]), axis=1)
     precursor_list = list(report["Precursor.Id"].unique())
@@ -125,7 +122,7 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
     report[["ms_run", "study_variable"]] = report.apply(lambda x: add_info(x["Run"], index_ref), axis = 1, result_type = "expand")
 
-    (MTD, database) = mztab_MTD(index_ref, opms, unimod_data, fasta, charge, missed_cleavages)
+    (MTD, database) = mztab_MTD(index_ref, dia_params, unimod_data, fasta, charge, missed_cleavages)
     PRH = mztab_PRH(report, pg, unique, index_ref, database, fasta_pd)
     PEH = mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, database)
     PSH = mztab_PSH(unique, unimod_data, report, database)
@@ -152,7 +149,6 @@ def query_expdesign_value(reference, f_table, s_table):
      :return: A tuple contains Fraction, BioReplicate and Condition
      :rtype: tuple
     """
-
     query_reference = f_table[f_table["run"] == reference]
     Fraction = query_reference["Fraction"].values[0]
     row = s_table[s_table["Sample"] == query_reference["Sample"].values[0]]
@@ -172,7 +168,6 @@ def convert_modification(peptide, unimod_data):
     :return: Peptide contains the modification names
     :rtype: str
     """
-
     pattern = re.compile(r"\((.*?)\)")
     origianl_mods = re.findall(pattern, peptide)
     for mod in set(origianl_mods):
@@ -188,14 +183,13 @@ def MTD_mod_info(unimod_database, fix_mod, var_mod):
 
     :param unimod_database: An instance of class UnimodDatabase
     :type unimod_database: sdrf_pipelines.openms.unimod.UnimodDatabase
-    :param fix_mod: Fixed modifications from openms.tsv
+    :param fix_mod: Fixed modifications from DIA parameter list
     :type fix_mod: str
-    :param var_mod: Variable modifications from openms.tsv
+    :param var_mod: Variable modifications from DIA parameter list
     :type var_mod: str
     :return: A tuple contains fixed and variable modifications, and flags indicating whether they are null
     :rtype: tuple
     """
-    
     pattern = re.compile("\((.*?)\)")
     var_ptm = []
     fix_ptm = []
@@ -231,13 +225,13 @@ def MTD_mod_info(unimod_database, fix_mod, var_mod):
     return fix_ptm, var_ptm, fix_flag, var_flag
 
 
-def mztab_MTD(index_ref, opms, unimod_data, fasta, charge, missed_cleavages):
+def mztab_MTD(index_ref, dia_params, unimod_data, fasta, charge, missed_cleavages):
     """Construct MTD sub-table.
 
     :param index_ref: On the basis of f_table, two columns "MS_run" and "study_variable" are added for matching
     :type indx_ref: pandas.core.frame.DataFrame
-    :param opms: Dataframe for openms.tsv
-    :type opms: pandas.core.frame.DataFrame
+    :param dia_params: A list contains DIA parameters
+    :type dia_params: list
     :param unimod_data: An instance of class UnimodDatabase
     :type unimod_data: sdrf_pipelines.openms.unimod.UnimodDatabase
     :param fasta: Fasta file path
@@ -249,15 +243,14 @@ def mztab_MTD(index_ref, opms, unimod_data, fasta, charge, missed_cleavages):
     :return: MTD sub-table
     :rtype: pandas.core.frame.DataFrame
     """
-
-    FragmentMassTolerance = opms["FragmentMassTolerance"].values[0]
-    FragmentMassToleranceUnit = opms["FragmentMassToleranceUnit"].values[0]
-    PrecursorMassTolerance = opms["PrecursorMassTolerance"].values[0]
-    PrecursorMassToleranceUnit = opms["PrecursorMassToleranceUnit"].values[0]
-    Enzyme = opms["Enzyme"].values[0]
-    FixedModifications = opms["FixedModifications"].values[0]
-    VariableModifications = opms["VariableModifications"].values[0]
-
+    dia_params_list = dia_params.split(";")
+    FragmentMassTolerance = dia_params_list[0]
+    FragmentMassToleranceUnit = dia_params_list[1]
+    PrecursorMassTolerance = dia_params_list[2]
+    PrecursorMassToleranceUnit = dia_params_list[3]
+    Enzyme = dia_params_list[4]
+    FixedModifications = dia_params_list[5]
+    VariableModifications = dia_params_list[6]
     out_mztab_MTD = pd.DataFrame()
     out_mztab_MTD.loc[1, "mzTab-version"] = "1.0.0"
     out_mztab_MTD.loc[1, "mzTab-mode"] = "Summary"
@@ -350,7 +343,6 @@ def mztab_PRH(report, pg, unique, index_ref, database, fasta_pd):
     :return: PRH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
-
     file = list(pg.columns[5:])
     col = {}
     for i in file:
@@ -422,7 +414,6 @@ def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, databa
     :return: PEH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
-
     out_mztab_PEH = pd.DataFrame()
     out_mztab_PEH = pr.iloc[:, 0:10]
     out_mztab_PEH = out_mztab_PEH.drop(["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis = 1)
@@ -491,7 +482,6 @@ def mztab_PSH(unique, unimod_data, report, database):
     :return: PSH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
-
     out_mztab_PSH = pd.DataFrame()
     ## Score at PSM level: Q.Value
     out_mztab_PSH = report[["Stripped.Sequence", "Protein.Ids", "Genes", "Q.Value", "RT",
@@ -536,7 +526,6 @@ def add_info(target, index_ref):
     :return: A tuple contains ms_run and study_variable
     :rtype: tuple
     """
-
     match = index_ref[index_ref["run"] == target]
     ms_run = match["ms_run"].values[0]
     study_variable = match["study_variable"].values[0]
@@ -558,7 +547,6 @@ def classify_protein(target, unique, t, f):
     :return: The signature of genes
     :rtype: str
     """
-
     if any(unique == target):
         return t
     else:
@@ -577,7 +565,6 @@ def calculate_protein_coverage(report, target, fasta_pd):
     :return: Protein coverage
     :rtype: str
     """
-
     protein_coverage = ""
     len_current = len(max(report[report["Protein.Ids"] == target]["Stripped.Sequence"].values, key = len))
     for i in target.split(";"):
@@ -603,7 +590,6 @@ def match_in_report(report, target, max, flag, level):
     :return: A tuple contains multiple messages
     :rtype: tuple
     """
-
     if flag == 1 and level == 'pep':
         result = report[report['precursor.Index'] == target]
         PEH_params = []
@@ -642,7 +628,6 @@ def PRH_match_report(report, target):
     :return: A tuple contains multiple information to construct PRH sub-table
     :rtype: tuple
     """
-
     match = report[report["Protein.Ids"] == target]
     modSeq = match["Modified.Sequence"].values[0] if match["Modified.Sequence"].values.size > 0 else np.nan
     ## Score at protein level: Global.PG.Q.Value (without MBR)
@@ -661,7 +646,6 @@ def PEH_match_report(report, target):
     :return: A tuple contains multiple information to construct PEH sub-table
     :rtype: tuple
     """
-
     match = report[report["precursor.Index"] == target]
     ## Score at peptide level: the minimum of the respective precursor q-values (minimum of Q.Value per group)
     search_score = match["Q.Value"].min()
@@ -681,7 +665,6 @@ def find_modification(peptide):
     :return: Modification sites
     :rtype: str
     """
-
     pattern = re.compile(r"\((.*?)\)")
     original_mods = re.findall(pattern, peptide)
     peptide = re.sub('\(.*?\)','.',peptide)
