@@ -4,8 +4,9 @@ process PROTEOMICSLFQ {
 
     conda (params.enable_conda ? "openms::openms=3.0.0dev" : null)
     container "${ workflow.containerEngine == 'docker' && !task.ext.singularity_pull_docker_container ?
-        'https://ftp.pride.ebi.ac.uk/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img' :
-        'ghcr.io/openms/openms-executables:latest' }"
+        'ghcr.io/openms/openms-executables:latest' :
+        'https://ftp.pride.ebi.ac.uk/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img'
+        }"
 
     input:
     path(mzmls)
@@ -60,7 +61,7 @@ process PROTEOMICSLFQ {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ProteomicsLFQ: \$(ProteomicsLFQ 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        ProteomicsLFQ: \$(ProteomicsLFQ 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -c 1-50)
     END_VERSIONS
     """
 }
