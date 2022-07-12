@@ -5,8 +5,6 @@ import click
 import os
 import re
 import numpy as np
-from Bio import SeqIO
-from Bio.SeqUtils import molecular_weight
 from sdrf_pipelines.openms.unimod import UnimodDatabase
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -56,7 +54,6 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     pr = pd.read_csv(pr_matrix, sep = "\t", header = 0, dtype = "str")  
     unique = pd.read_csv(unique_matrix, sep = "\t", header = 0, dtype = "str")  
     report = pd.read_csv(diann_report, sep = "\t", header = 0, dtype = "str")
-    report["Calculate.Precursor.Mz"] = report.apply(lambda x: molecular_weight(x["Stripped.Sequence"], 'protein', monoisotopic=True) / int(x["Precursor.Charge"]), axis=1)
     precursor_list = list(report["Precursor.Id"].unique())
     report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
 
@@ -107,14 +104,6 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_triqler_in.tsv', sep='\t', index=False)
 
     # Convert to mzTab
-    fasta_pd = pd.DataFrame()
-    line = 0
-    for seq_record in SeqIO.parse(fasta,"fasta"):
-        fasta_pd.loc[line, "id"] = seq_record.id
-        fasta_pd.loc[line, "seq"] = re.sub("\(|\)|\,", "", str(seq_record.seq))
-        fasta_pd.loc[line, "len"] = len(seq_record)
-        line += 1
-    
     index_ref = f_table
     index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
     index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
@@ -123,7 +112,7 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     report[["ms_run", "study_variable"]] = report.apply(lambda x: add_info(x["Run"], index_ref), axis = 1, result_type = "expand")
 
     (MTD, database) = mztab_MTD(index_ref, dia_params, unimod_data, fasta, charge, missed_cleavages)
-    PRH = mztab_PRH(report, pg, unique, index_ref, database, fasta_pd)
+    PRH = mztab_PRH(report, pg, unique, index_ref, database)
     PEH = mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, database)
     PSH = mztab_PSH(unique, unimod_data, report, database)
     MTD.loc["", :] = ""
@@ -325,7 +314,7 @@ def mztab_MTD(index_ref, dia_params, unimod_data, fasta, charge, missed_cleavage
     return out_mztab_MTD_T, database
 
 
-def mztab_PRH(report, pg, unique, index_ref, database, fasta_pd):
+def mztab_PRH(report, pg, unique, index_ref, database):
     """Construct PRH sub-table.
 
     :param report: Dataframe for Dia-NN main report
@@ -338,8 +327,6 @@ def mztab_PRH(report, pg, unique, index_ref, database, fasta_pd):
     :type indx_ref: pandas.core.frame.DataFrame
     :param database: Path to fasta file
     :type database: str
-    :param fasta_pd: A dataframe contains protein IDs, sequences and lengths
-    :type fasta_pd: pandas.core.frame.DataFrame
     :return: PRH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
@@ -359,12 +346,9 @@ def mztab_PRH(report, pg, unique, index_ref, database, fasta_pd):
     out_mztab_PRH.loc[:, "database"] = database
 
     null_col = ["taxid", "species", "database_version", "search_engine", "opt_global_Posterior_Probability_score",
-                "opt_global_nr_found_peptides", "opt_global_cv_PRIDE:0000303_decoy_hit"]
+                "opt_global_nr_found_peptides", "opt_global_cv_PRIDE:0000303_decoy_hit", "protein_coverage"]
     for i in null_col:
         out_mztab_PRH.loc[:, i] = "null"
-
-    out_mztab_PRH.loc[:, "protein_coverage"] = out_mztab_PRH.apply(
-        lambda x: calculate_protein_coverage(report, x["accession"], fasta_pd), axis=1, result_type="expand")
 
     out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.loc[:, "accession"]
 
@@ -433,7 +417,7 @@ def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, databa
 
     out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: classify_protein(x["Genes"], unique["Genes"], "1", "0"), axis=1, result_type="expand")
 
-    null_col = ["database_version", "search_engine", "retention_time_window"]
+    null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
     for i in null_col:
         out_mztab_PEH.loc[:, i] = "null"
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -457,7 +441,7 @@ def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, databa
     out_mztab_PEH[PEH_params] = out_mztab_PEH.apply(
         lambda x: match_in_report(report, x['pr_id'], max_study_variable, 1, 'pep'), axis=1, result_type='expand')
 
-    out_mztab_PEH[["best_search_engine_score[1]", "retention_time", "opt_global_q-value", "opt_global_SpecEValue_score", "mass_to_charge"
+    out_mztab_PEH[["best_search_engine_score[1]", "retention_time", "opt_global_q-value", "opt_global_SpecEValue_score"
                 ]] = out_mztab_PEH.apply(lambda x: PEH_match_report(report, x['pr_id']), axis=1, result_type="expand")
 
     out_mztab_PEH[["opt_global_feature_id", "spectra_ref"]] = out_mztab_PEH.apply(lambda x:("null", "null"),axis = 1, result_type = "expand")
@@ -485,8 +469,8 @@ def mztab_PSH(unique, unimod_data, report, database):
     out_mztab_PSH = pd.DataFrame()
     ## Score at PSM level: Q.Value
     out_mztab_PSH = report[["Stripped.Sequence", "Protein.Ids", "Genes", "Q.Value", "RT",
-                            "Precursor.Charge", "Calculate.Precursor.Mz", "Modified.Sequence", "PEP", "Global.Q.Value", "Global.Q.Value"]]
-    out_mztab_PSH.columns = ["sequence", "accession", "Genes", "search_engine_score[1]", "retention_time", "charge", "calc_mass_to_charge",
+                            "Precursor.Charge", "Modified.Sequence", "PEP", "Global.Q.Value", "Global.Q.Value"]]
+    out_mztab_PSH.columns = ["sequence", "accession", "Genes", "search_engine_score[1]", "retention_time", "charge",
                              "opt_global_cv_MS:1000889_peptidoform_sequence", "opt_global_SpecEValue_score", "opt_global_q-value", "opt_global_q-value_score"]
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -499,7 +483,7 @@ def mztab_PSH(unique, unimod_data, report, database):
     out_mztab_PSH.loc[:, "database"] = database
 
     null_col = ["database_version", "spectra_ref", "search_engine", "exp_mass_to_charge", "pre", "post",
-                "start", "end", "opt_global_feature_id", "opt_global_map_index", "opt_global_spectrum_reference"]
+                "start", "end", "calc_mass_to_charge", "opt_global_feature_id", "opt_global_map_index", "opt_global_spectrum_reference"]
     for i in null_col:
         out_mztab_PSH.loc[:, i] = "null"
 
@@ -551,27 +535,6 @@ def classify_protein(target, unique, t, f):
         return t
     else:
         return f
-
-
-def calculate_protein_coverage(report, target, fasta_pd):
-    """Calculate protein coverage.
-
-    :param report: Dataframe for Dia-NN main report
-    :type report: pandas.core.frame.DataFrame
-    :param target: The "accession" column in out_mztab_PRH
-    :type target: pandas.core.series.Series
-    :param fasta_pd: A dataframe contains protein IDs, sequences and lengths
-    :type fasta_pd: pandas.core.frame.DataFrame
-    :return: Protein coverage
-    :rtype: str
-    """
-    protein_coverage = ""
-    len_current = len(max(report[report["Protein.Ids"] == target]["Stripped.Sequence"].values, key = len))
-    for i in target.split(";"):
-        len_original = fasta_pd[fasta_pd["id"].str.contains(i)]["len"].values[0]
-        protein_coverage += format(len_current / len_original, ".3f") + ";"
-
-    return protein_coverage.strip(";")
 
 
 def match_in_report(report, target, max, flag, level):
@@ -652,9 +615,8 @@ def PEH_match_report(report, target):
     time = match["RT"].mean()
     q_score = match["Global.Q.Value"].values[0] if match["Global.Q.Value"].values.size > 0 else np.nan
     spec_e = match["Lib.Q.Value"].values[0] if match["Lib.Q.Value"].values.size > 0 else np.nan
-    mz = match["Calculate.Precursor.Mz"].mean() 
 
-    return search_score, time, q_score, spec_e, mz
+    return search_score, time, q_score, spec_e
 
 
 def find_modification(peptide):
