@@ -1,0 +1,42 @@
+name: searchenginemsfragger
+description: Identifies peptides in MS/MS spectra via MSFragger.
+keywords:
+  - identification
+  - OpenMS
+  - msfragger
+tools:
+  - CometAdapter:
+      description: |
+        Identifies peptides in MS/MS spectra via MSFragger.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSFraggerAdapter.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSFraggerAdapter.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - mzml_file:
+      type: file
+      description: Input profile data file.
+      pattern: "*.mzML"
+  - database:
+      type: file
+      description: fasta file
+      pattern: "*.{fasta,fa}"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_msfragger:
+      type: file
+      description: Output file
+      pattern: "*.idXML"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@tillenglert"
