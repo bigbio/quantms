@@ -35,7 +35,7 @@ process PROTEINQUANTIFIER {
         ${export_mztab} \\
         -peptide_out ${pro_quant_exp.baseName}_peptide_openms.csv \\
         -top $params.top \\
-        -average $params.average \\
+        -aggregate $params.average \\
         ${include_all} \\
         ${fix_peptides} \\
         -ratios \\
