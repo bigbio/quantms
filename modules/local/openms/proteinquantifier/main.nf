@@ -29,6 +29,7 @@ process PROTEINQUANTIFIER {
 
     """
     ProteinQuantifier \\
+        -method 'top' \\
         -in ${epi_filt_resolve} \\
         -design ${pro_quant_exp} \\
         -out ${pro_quant_exp.baseName}_protein_openms.csv \\
