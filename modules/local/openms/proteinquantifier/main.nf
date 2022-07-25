@@ -22,7 +22,7 @@ process PROTEINQUANTIFIER {
     script:
     def args = task.ext.args ?: ''
 
-    include_all = params.include_all ? "-include_all" : ""
+    include_all = params.include_all ? "-top:include_all" : ""
     fix_peptides = params.fix_peptides ? "-fix_peptides" : ""
     normalize = params.normalize ? "-consensus:normalize" : ""
     export_mztab = params.export_mztab ? "-mztab ${pro_quant_exp.baseName}_openms.mzTab" : ""
@@ -35,8 +35,8 @@ process PROTEINQUANTIFIER {
         -out ${pro_quant_exp.baseName}_protein_openms.csv \\
         ${export_mztab} \\
         -peptide_out ${pro_quant_exp.baseName}_peptide_openms.csv \\
-        -top $params.top \\
-        -aggregate $params.average \\
+        -top:N $params.top \\
+        -top:aggregate $params.average \\
         ${include_all} \\
         ${fix_peptides} \\
         -ratios \\
