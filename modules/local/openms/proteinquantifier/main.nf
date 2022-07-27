@@ -47,7 +47,7 @@ process PROTEINQUANTIFIER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ProteinQuantifier: \$(ProteinQuantifier 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        ProteinQuantifier: \$(ProteinQuantifier 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -c 1-50)
     END_VERSIONS
     """
 }
