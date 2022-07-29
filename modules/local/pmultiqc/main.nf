@@ -31,7 +31,7 @@ process PMULTIQC {
         ${args} \\
         ${disable_pmultiqc} \\
         ${disable_table_plots} \\
-        --quantification_method $params.quantification_method} \\
+        --quantification_method $params.quantification_method \\
         ./results \\
         -o .
 
