@@ -1,7 +1,7 @@
 process PMULTIQC {
     label 'process_high'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.13" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::pmultiqc conda-forge::lzstring bioconda::pmultiqc=0.0.13" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.13--pyhdfd78af_0"
     } else {
