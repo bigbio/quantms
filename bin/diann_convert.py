@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
+from ast import AnnAssign
 import pandas as pd
 import click
 import os
 import re
 import numpy as np
+from pyopenms import *
 from sdrf_pipelines.openms.unimod import UnimodDatabase
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -17,7 +19,6 @@ def cli():
 @click.option("--exp_design", "-e")
 @click.option("--pg_matrix", "-pg")
 @click.option("--pr_matrix", "-pr")
-@click.option("--unique_matrix", "-un")
 @click.option("--dia_params", "-p")
 @click.option("--fasta", "-f")
 @click.option("--charge", "-c")
@@ -25,7 +26,7 @@ def cli():
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
 
-def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, dia_params, fasta, charge, missed_cleavages, qvalue_threshold):
+def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, dia_params, fasta, charge, missed_cleavages, qvalue_threshold):
     """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are 
     used for quality control and downstream analysis.
 
@@ -37,8 +38,6 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     :type pg_matrix: str
     :param pr_matrix: Path to a DIA-NN matrix file containing precursors
     :type pr_matrix: str
-    :param unique_matrix: Path to a DIA-NN matrix file containing unique genes
-    :type unique_matrix: str
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
     :param fasta: Path to the fasta file
@@ -51,9 +50,11 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     :type qvalue_threshold: float
     """
     pg = pd.read_csv(pg_matrix, sep = "\t", header = 0, dtype = "str")
-    pr = pd.read_csv(pr_matrix, sep = "\t", header = 0, dtype = "str")  
-    unique = pd.read_csv(unique_matrix, sep = "\t", header = 0, dtype = "str")  
+    pr = pd.read_csv(pr_matrix, sep = "\t", header = 0, dtype = "str")   
     report = pd.read_csv(diann_report, sep = "\t", header = 0, dtype = "str")
+    report["Calculate.Precursor.Mz"] = report.apply(
+        lambda x: AASequence.fromString(x["Stripped.Sequence"]).getMZ(int(x["Precursor.Charge"])), axis=1)
+
     precursor_list = list(report["Precursor.Id"].unique())
     report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
 
@@ -104,6 +105,17 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_triqler_in.tsv', sep='\t', index=False)
 
     # Convert to mzTab
+    fasta_pd = pd.DataFrame()
+    entries = []
+    f = FASTAFile()
+    f.load(fasta, entries)
+    line = 0
+    for e in entries:
+        fasta_pd.loc[line, "id"] = e.identifier
+        fasta_pd.loc[line, "seq"] = e.sequence
+        fasta_pd.loc[line, "len"] = len(e.sequence)
+        line += 1
+
     index_ref = f_table
     index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
     index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
@@ -112,9 +124,9 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, unique_matrix, 
     report[["ms_run", "study_variable"]] = report.apply(lambda x: add_info(x["Run"], index_ref), axis = 1, result_type = "expand")
 
     (MTD, database) = mztab_MTD(index_ref, dia_params, unimod_data, fasta, charge, missed_cleavages)
-    PRH = mztab_PRH(report, pg, unique, index_ref, database)
-    PEH = mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, database)
-    PSH = mztab_PSH(unique, unimod_data, report, database)
+    PRH = mztab_PRH(report, pg, index_ref, database, fasta_pd)
+    PEH = mztab_PEH(report, pr, unimod_data, precursor_list, index_ref, database)
+    PSH = mztab_PSH(unimod_data, report, database)
     MTD.loc["", :] = ""
     PRH.loc[len(PRH) + 1, :] = ""
     PEH.loc[len(PEH) + 1, :] = ""
@@ -314,19 +326,19 @@ def mztab_MTD(index_ref, dia_params, unimod_data, fasta, charge, missed_cleavage
     return out_mztab_MTD_T, database
 
 
-def mztab_PRH(report, pg, unique, index_ref, database):
+def mztab_PRH(report, pg, index_ref, database, fasta_pd):
     """Construct PRH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
     :param pg: Dataframe for Dia-NN protein groups matrix
     :type pg: pandas.core.frame.DataFrame
-    :param unique: Dataframe for Dia-NN unique genes matrix
-    :type unique: pandas.core.frame.DataFrame  
     :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
     :type indx_ref: pandas.core.frame.DataFrame
     :param database: Path to fasta file
     :type database: str
+    :param fasta_pd: A dataframe contains protein IDs, sequences and lengths
+    :type fasta_pd: pandas.core.frame.DataFrame
     :return: PRH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
@@ -336,9 +348,11 @@ def mztab_PRH(report, pg, unique, index_ref, database):
         col[i] = "protein_abundance_assay[" + str(index_ref[index_ref["run"] == i.split("/")[-1].split(".")[-2]]["ms_run"].values[0]) + "]"
 
     pg = pg.rename(columns = col)
+    pg.loc[:, "opt_global_result_type"] = pg.apply(lambda x: classify_result_type(x), axis=1, result_type="expand")
+
     out_mztab_PRH = pd.DataFrame()
-    out_mztab_PRH = pg.drop(["Protein.Group", "Protein.Names"], axis = 1)
-    out_mztab_PRH = out_mztab_PRH.rename(columns = {"Protein.Ids":"accession", "First.Protein.Description":"description"})
+    out_mztab_PRH = pg.drop(["Protein.Names"], axis = 1)
+    out_mztab_PRH = out_mztab_PRH.rename(columns = {"Protein.Group":"accession", "First.Protein.Description":"description"})
     out_mztab_PRH.loc[:, "PRH"] = "PRT"
     index = out_mztab_PRH.loc[:, "PRH"]
     out_mztab_PRH.drop(labels = ["PRH"], axis = 1, inplace = True)
@@ -346,18 +360,27 @@ def mztab_PRH(report, pg, unique, index_ref, database):
     out_mztab_PRH.loc[:, "database"] = database
 
     null_col = ["taxid", "species", "database_version", "search_engine", "opt_global_Posterior_Probability_score",
-                "opt_global_nr_found_peptides", "opt_global_cv_PRIDE:0000303_decoy_hit", "protein_coverage"]
+                "opt_global_nr_found_peptides", "opt_global_cv_PRIDE:0000303_decoy_hit"]
     for i in null_col:
         out_mztab_PRH.loc[:, i] = "null"
-
+    
     out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.loc[:, "accession"]
+
+    prh_series = out_mztab_PRH["accession"].str.split(";", expand = True).stack().reset_index(level = 1, drop = True)
+    prh_series.name = "accession"
+    out_mztab_PRH = out_mztab_PRH.drop("accession", axis = 1).join(prh_series).reset_index().drop(columns = "index")
+    out_mztab_PRH.loc[:, "protein_coverage"] = out_mztab_PRH.apply(
+        lambda x: calculate_protein_coverage(report, x["accession"], x["Protein.Ids"], fasta_pd), axis=1, result_type="expand")
+
+    out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.apply(
+        lambda x: "null" if x["opt_global_result_type"] == "protein_details" else x["ambiguity_members"], axis=1)
 
     out_mztab_PRH[["modifiedSequence", "best_search_engine_score[1]"]] = out_mztab_PRH.apply(
         lambda x: PRH_match_report(report, x["accession"]), axis=1, result_type="expand")
-
+    
     out_mztab_PRH.loc[:, "modifications"] = out_mztab_PRH.apply(
         lambda x: find_modification(x["modifiedSequence"]), axis=1, result_type="expand")
-    
+
     ## quantity at protein level: PG.MaxLFQ
     max_study_variable = max(index_ref["study_variable"])
     PRH_params = []
@@ -368,25 +391,20 @@ def mztab_PRH(report, pg, unique, index_ref, database):
     out_mztab_PRH[PRH_params] = out_mztab_PRH.apply(
         lambda x: match_in_report(report, x['accession'], max_study_variable, 1, 'protein'), axis=1, result_type='expand')
 
-    out_mztab_PRH.loc[:, "opt_global_result_type"] = out_mztab_PRH.apply(
-        lambda x: classify_protein(x["Genes"], unique["Genes"], "single_protein", "indistinguishable_protein_group"), axis=1, result_type="expand")
-
-    out_mztab_PRH = out_mztab_PRH.drop(["Genes", "modifiedSequence"], axis=1)
+    out_mztab_PRH = out_mztab_PRH.drop(["Genes", "modifiedSequence", "Protein.Ids"], axis=1)
     out_mztab_PRH.fillna("null", inplace=True)  
     # out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
     
     return out_mztab_PRH
 
 
-def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, database):
+def mztab_PEH(report, pr, unimod_data, precursor_list, index_ref, database):
     """Construct PEH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
     :param pr: Dataframe for Dia-NN precursors matrix
     :type pr: pandas.core.frame.DataFrame
-    :param unique: Dataframe for Dia-NN unique genes matrix
-    :type unique: pandas.core.frame.DataFrame 
     :param unimod_data: An instance of class UnimodDatabase
     :type unimod_data: sdrf_pipelines.openms.unimod.UnimodDatabase
     :param precursor_list: A list contains all precursor IDs
@@ -415,7 +433,7 @@ def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, databa
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1000889_peptidoform_sequence"] = out_mztab_PEH.apply(
         lambda x: convert_modification(x["opt_global_cv_MS:1000889_peptidoform_sequence"], unimod_data), axis=1)
 
-    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: classify_protein(x["Genes"], unique["Genes"], "1", "0"), axis=1, result_type="expand")
+    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: "0" if ";" in x["accession"] else "1", axis=1, result_type="expand")
 
     null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
     for i in null_col:
@@ -441,7 +459,7 @@ def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, databa
     out_mztab_PEH[PEH_params] = out_mztab_PEH.apply(
         lambda x: match_in_report(report, x['pr_id'], max_study_variable, 1, 'pep'), axis=1, result_type='expand')
 
-    out_mztab_PEH[["best_search_engine_score[1]", "retention_time", "opt_global_q-value", "opt_global_SpecEValue_score"
+    out_mztab_PEH[["best_search_engine_score[1]", "retention_time", "opt_global_q-value", "opt_global_SpecEValue_score", "mass_to_charge"
                 ]] = out_mztab_PEH.apply(lambda x: PEH_match_report(report, x['pr_id']), axis=1, result_type="expand")
 
     out_mztab_PEH[["opt_global_feature_id", "spectra_ref"]] = out_mztab_PEH.apply(lambda x:("null", "null"),axis = 1, result_type = "expand")
@@ -452,11 +470,9 @@ def mztab_PEH(report, pr, unique, unimod_data, precursor_list, index_ref, databa
     return out_mztab_PEH
 
 
-def mztab_PSH(unique, unimod_data, report, database):
+def mztab_PSH(unimod_data, report, database):
     """Construct PSH sub-table.
 
-    :param unique: Dataframe for Dia-NN unique genes matrix
-    :type unique: pandas.core.frame.DataFrame
     :param unimod_data: An instance of class UnimodDatabase
     :type unimod_data: sdrf_pipelines.openms.unimod.UnimodDatabase
     :param report: Dataframe for Dia-NN main report
@@ -469,8 +485,8 @@ def mztab_PSH(unique, unimod_data, report, database):
     out_mztab_PSH = pd.DataFrame()
     ## Score at PSM level: Q.Value
     out_mztab_PSH = report[["Stripped.Sequence", "Protein.Ids", "Genes", "Q.Value", "RT",
-                            "Precursor.Charge", "Modified.Sequence", "PEP", "Global.Q.Value", "Global.Q.Value"]]
-    out_mztab_PSH.columns = ["sequence", "accession", "Genes", "search_engine_score[1]", "retention_time", "charge",
+                            "Precursor.Charge", "Calculate.Precursor.Mz", "Modified.Sequence", "PEP", "Global.Q.Value", "Global.Q.Value"]]
+    out_mztab_PSH.columns = ["sequence", "accession", "Genes", "search_engine_score[1]", "retention_time", "charge", "calc_mass_to_charge",
                              "opt_global_cv_MS:1000889_peptidoform_sequence", "opt_global_SpecEValue_score", "opt_global_q-value", "opt_global_q-value_score"]
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -479,11 +495,11 @@ def mztab_PSH(unique, unimod_data, report, database):
     out_mztab_PSH.drop(labels = ["PSH"], axis = 1, inplace = True)
     out_mztab_PSH.insert(0, "PSH", index)
     out_mztab_PSH.loc[:, "PSM_ID"] = out_mztab_PSH.index
-    out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: classify_protein(x["Genes"], unique["Genes"], "1", "0"), axis=1, result_type="expand")
+    out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: "0" if ";" in x["accession"] else "1", axis=1, result_type="expand")
     out_mztab_PSH.loc[:, "database"] = database
 
     null_col = ["database_version", "spectra_ref", "search_engine", "exp_mass_to_charge", "pre", "post",
-                "start", "end", "calc_mass_to_charge", "opt_global_feature_id", "opt_global_map_index", "opt_global_spectrum_reference"]
+                "start", "end", "opt_global_feature_id", "opt_global_map_index", "opt_global_spectrum_reference"]
     for i in null_col:
         out_mztab_PSH.loc[:, i] = "null"
 
@@ -517,24 +533,41 @@ def add_info(target, index_ref):
     return ms_run, study_variable
 
 
-def classify_protein(target, unique, t, f):
-    """Proteins are classified according to whether the corresponding gene is unique or not.
+def classify_result_type(target):
+    """Classify proteins
 
-    :param target: The "Genes" column in out_mztab_PSH
-    :type target: pandas.core.series.Series
-    :param unique: The "Genes" column in unique(Dataframe for Dia-NN unique genes matrix)
-    :type unique: pandas.core.series.Series
-    :param t: The signature of the unique gene
-    :type t: str
-    :param f: The signature of the NOT unique gene
-    :type f: str
-    :return: The signature of genes
+    :param target: The target dataframe contains "Protein.Group" and "Protein.Ids"
+    :type target: pandas.core.frame.DataFrame
+    :return: A string implys protein type
     :rtype: str
     """
-    if any(unique == target):
-        return t
+    if ";" in target["Protein.Ids"]:
+        if ";" in target["Protein.Group"]:
+            return "protein_details"
+        else:
+            return "indistinguishable_protein_group"
     else:
-        return f
+        return "single_protein"
+
+
+def calculate_protein_coverage(report, target, reference, fasta_pd):
+    """Calculate protein coverage.
+    :param report: Dataframe for Dia-NN main report
+    :type report: pandas.core.frame.DataFrame
+    :param target: The "accession" column in out_mztab_PRH
+    :type target: pandas.core.series.Series
+    :param target: The "Protein.Ids" column in report
+    :type target: pandas.core.series.Series
+    :param fasta_pd: A dataframe contains protein IDs, sequences and lengths
+    :type fasta_pd: pandas.core.frame.DataFrame
+    :return: Protein coverage
+    :rtype: str
+    """
+    len_current = len(max(report[report["Protein.Ids"] == reference]["Stripped.Sequence"].values, key = len))
+    len_original = fasta_pd[fasta_pd["id"].str.contains(target)]["len"].values[0]
+    protein_coverage = format(len_current / len_original, ".3f")
+
+    return protein_coverage
 
 
 def match_in_report(report, target, max, flag, level):
@@ -615,8 +648,9 @@ def PEH_match_report(report, target):
     time = match["RT"].mean()
     q_score = match["Global.Q.Value"].values[0] if match["Global.Q.Value"].values.size > 0 else np.nan
     spec_e = match["Lib.Q.Value"].values[0] if match["Lib.Q.Value"].values.size > 0 else np.nan
+    mz = match["Calculate.Precursor.Mz"].mean()
 
-    return search_score, time, q_score, spec_e
+    return search_score, time, q_score, spec_e, mz
 
 
 def find_modification(peptide):
@@ -627,6 +661,7 @@ def find_modification(peptide):
     :return: Modification sites
     :rtype: str
     """
+    peptide = str(peptide)
     pattern = re.compile(r"\((.*?)\)")
     original_mods = re.findall(pattern, peptide)
     peptide = re.sub('\(.*?\)','.',peptide)
