@@ -182,7 +182,7 @@ workflow QUANTMS {
             .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
             .combine(ch_pmultiqc_mzmls.collect())
             .combine(ch_ids_pmultiqc.collect().ifEmpty([])))
-            .combine(ch_msstats_in),
+            .combine(ch_msstats_in.ifEmpty([])),
         ch_multiqc_quantms_logo
     )
     multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()

@@ -1182,6 +1182,12 @@
                     "fa_icon": "fas fa-cog",
                     "hidden": true
                 },
+                "skip_table_plots": {
+                    "type": "boolean",
+                    "description": "Skip protein/peptide table plots with pmultiqc for large dataset.",
+                    "fa_icon": "fas fa-toggle-on",
+                    "default": false
+                },
                 "tracedir": {
                     "type": "string",
                     "description": "Directory to keep pipeline Nextflow logs and reports.",
