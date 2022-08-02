@@ -26,7 +26,7 @@ include { ID } from '../subworkflows/local/id'
 
 workflow TMT {
     take:
-    file_preparation_results
+    ch_file_preparation_results
     ch_expdesign
     ch_database_wdecoy
 
@@ -38,13 +38,13 @@ workflow TMT {
     //
     // SUBWORKFLOWS: ID
     //
-    ID(file_preparation_results, ch_database_wdecoy)
+    ID(ch_file_preparation_results, ch_database_wdecoy)
     ch_software_versions = ch_software_versions.mix(ID.out.version.ifEmpty(null))
 
     //
     // SUBWORKFLOW: FEATUREMAPPER
     //
-    FEATUREMAPPER(file_preparation_results, ID.out.id_results)
+    FEATUREMAPPER(ch_file_preparation_results, ID.out.id_results)
     ch_software_versions = ch_software_versions.mix(FEATUREMAPPER.out.version.ifEmpty(null))
 
     //
@@ -83,7 +83,7 @@ workflow TMT {
     emit:
     ch_pmultiqc_ids = ch_pmultiqc_ids
     final_result    = PROTEINQUANT.out.out_mztab
-    msstats_input   = PROTEINQUANT.out.msstats_csv
+    msstats_in  = PROTEINQUANT.out.msstats_csv
     msstats_out     = ch_msstats_out
     versions        = ch_software_versions
 }

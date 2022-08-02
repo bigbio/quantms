@@ -14,8 +14,9 @@ def cli():
 @click.command('convert')
 @click.option("--diann_report", "-r",)
 @click.option("--exp_design", "-e")
+@click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
-def convert(ctx, diann_report, exp_design):
+def convert(ctx, diann_report, exp_design, qvalue_threshold):
     # Convert to MSstats
     report = pd.read_csv(diann_report, sep = "\t", header = 0)
     unimod_data = UnimodDatabase()
@@ -25,11 +26,14 @@ def convert(ctx, diann_report, exp_design):
         f_table = [i.replace("\n", '').split("\t") for i in data[1:empty_row]]
         f_header = data[0].replace("\n", "").split("\t")
         f_table = pd.DataFrame(f_table, columns=f_header)
-        f_table.loc[:,"run"] = f_table.apply(lambda x: os.path.basename(x["Spectra_Filepath"]), axis=1)
+        f_table.loc[:,"run"] = f_table.apply(lambda x: os.path.splitext(os.path.basename(x["Spectra_Filepath"]))[0], axis=1)
 
         s_table = [i.replace("\n", '').split("\t") for i in data[empty_row + 1:]][1:]
         s_header = data[empty_row + 1].replace("\n", "").split("\t")
         s_DataFrame = pd.DataFrame(s_table, columns=s_header)
+
+    # filter based on qvalue parameter for downstream analysiss
+    report = report[report["Q.Value"] < qvalue_threshold]
 
     out_msstats = pd.DataFrame()
     out_msstats = report[['Protein.Names', 'Modified.Sequence', 'Precursor.Charge', 'Precursor.Quantity', 'File.Name','Run']]
@@ -40,19 +44,21 @@ def convert(ctx, diann_report, exp_design):
     out_msstats.loc[:,"IsotopeLabelType"] = "L"
     out_msstats["Reference"] = out_msstats.apply(lambda x: os.path.basename(x['Reference']), axis=1)
 
-    out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(lambda x: query_expdesign_value(x["Reference"], f_table, s_DataFrame),
+    out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(lambda x: query_expdesign_value(x["Run"], f_table, s_DataFrame),
                                                 axis=1, result_type="expand")
 
     # Convert to Triqler
     out_triqler = pd.DataFrame()
     out_triqler = out_msstats[['ProteinName', 'PeptideSequence', 'PrecursorCharge', 'Intensity', 'Run', 'Condition']]
     out_triqler.columns = ['proteins', 'peptide', 'charge', 'intensity', 'run', 'condition']
-    out_triqler.loc[:, "searchScore"] = 1 - report['PEP']
+
+    out_triqler.loc[:, "searchScore"] = report['Q.Value']
+    out_triqler.loc[:, "searchScore"] = 1 - out_triqler["searchScore"]
 
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
-    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_msstats.csv', sep=',', index=False)
+    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_msstats_in.csv', sep=',', index=False)
     out_triqler = out_triqler[out_triqler["intensity"] != 0]
-    out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_out_triqler.tsv', sep='\t', index=False)
+    out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + '_triqler_in.tsv', sep='\t', index=False)
 
 def query_expdesign_value(reference, f_table, s_table):
     query_reference = f_table[f_table["run"] == reference]

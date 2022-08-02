@@ -7,16 +7,16 @@ include { IDMAPPER } from '../../modules/local/openms/idmapper/main'
 
 workflow FEATUREMAPPER {
     take:
-    mzml_files
-    id_files
+    ch_mzml_files
+    ch_id_files
 
     main:
     ch_version = Channel.empty()
 
-    ISOBARICANALYZER(mzml_files)
+    ISOBARICANALYZER(ch_mzml_files)
     ch_version = ch_version.mix(ISOBARICANALYZER.out.version)
 
-    IDMAPPER(id_files.combine(ISOBARICANALYZER.out.id_files_consensusXML, by: 0))
+    IDMAPPER(ch_id_files.combine(ISOBARICANALYZER.out.id_files_consensusXML, by: 0))
     ch_version = ch_version.mix(IDMAPPER.out.version)
 
     emit:

@@ -13,7 +13,7 @@ process MSSTATSCONVERTER {
     val quant_method
 
     output:
-    path "*.csv", emit: out_msstats
+    path "*_msstats_in.csv", emit: out_msstats
     path "versions.yml", emit: version
     path "*.log", emit: log
 
@@ -25,7 +25,7 @@ process MSSTATSCONVERTER {
         -in ${consensusXML} \\
         -in_design ${exp_file} \\
         -method ${quant_method} \\
-        -out ${exp_file.baseName}_out_msstats.csv \\
+        -out ${exp_file.baseName}_msstats_in.csv \\
         $args \\
         |& tee MSstatsConverter.log
 

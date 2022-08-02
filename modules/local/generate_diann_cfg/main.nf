@@ -24,10 +24,6 @@ process GENERATE_DIANN_CFG {
         --enzyme "${meta.enzyme}" \\
         --fix_mod "${meta.fixedmodifications}" \\
         --var_mod "${meta.variablemodifications}" \\
-        --precursor_tolerence ${meta.precursormasstolerance} \\
-        --precursor_tolerence_unit ${meta.precursormasstoleranceunit} \\
-        --fragment_tolerence ${meta.fragmentmasstolerance} \\
-        --fragment_tolerence_unit ${meta.fragmentmasstoleranceunit} \\
         |& tee GENERATE_DIANN_CFG.log
 
     cat <<-END_VERSIONS > versions.yml

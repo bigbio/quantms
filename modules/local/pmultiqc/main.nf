@@ -1,11 +1,11 @@
 process PMULTIQC {
     label 'process_high'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.11" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.12" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.11--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.12--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/pmultiqc:0.0.11--pyhdfd78af_0"
+        container "quay.io/biocontainers/pmultiqc:0.0.12--pyhdfd78af_0"
     }
 
     input:
@@ -21,14 +21,14 @@ process PMULTIQC {
 
     script:
     def args = task.ext.args ?: ''
-    def disable_pmultqic = params.enable_pmultiqc ? "" : "--disable_plugin"
+    def disable_pmultiqc = (params.enable_pmultiqc) && (params.export_mztab) ? "" : "--disable_plugin"
 
     """
     multiqc \\
         -f \\
         --config ./results/multiqc_config.yml \\
         ${args} \\
-        ${disable_pmultqic} \\
+        ${disable_pmultiqc} \\
         ./results \\
         -o .
 

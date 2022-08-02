@@ -8,18 +8,18 @@ include { IDFILTER } from '../../modules/local/openms/idfilter/main'
 
 workflow PSMFDRCONTROL {
     take:
-    id_files
+    ch_id_files
 
     main:
     ch_version = Channel.empty()
     ch_idfilter = Channel.empty()
 
     if (params.search_engines.split(",").size() == 1) {
-        IDSCORESWITCHER(id_files)
+        IDSCORESWITCHER(ch_id_files)
         ch_version = ch_version.mix(IDSCORESWITCHER.out.version)
         ch_idfilter = IDSCORESWITCHER.out.id_score_switcher
     } else {
-        FDRCONSENSUSID(id_files)
+        FDRCONSENSUSID(ch_id_files)
         ch_version = ch_version.mix(FDRCONSENSUSID.out.version)
         ch_idfilter = FDRCONSENSUSID.out.id_files_idx_ForIDPEP_FDR
     }

@@ -8,19 +8,19 @@ include { MSSTATSCONVERTER } from '../../modules/local/openms/msstatsconverter/m
 
 workflow PROTEINQUANT {
     take:
-    conflict_file
-    expdesign_file
+    ch_conflict_file
+    ch_expdesign_file
 
     main:
     ch_version = Channel.empty()
 
-    IDCONFLICTRESOLVER(conflict_file)
+    IDCONFLICTRESOLVER(ch_conflict_file)
     ch_version = ch_version.mix(IDCONFLICTRESOLVER.out.version)
 
-    PROTEINQUANTIFIER(IDCONFLICTRESOLVER.out.pro_resconf, expdesign_file)
+    PROTEINQUANTIFIER(IDCONFLICTRESOLVER.out.pro_resconf, ch_expdesign_file)
     ch_version = ch_version.mix(PROTEINQUANTIFIER.out.version)
 
-    MSSTATSCONVERTER(IDCONFLICTRESOLVER.out.pro_resconf, expdesign_file, "ISO")
+    MSSTATSCONVERTER(IDCONFLICTRESOLVER.out.pro_resconf, ch_expdesign_file, "ISO")
     ch_version = ch_version.mix(MSSTATSCONVERTER.out.version)
 
     emit:
