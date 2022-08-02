@@ -75,7 +75,7 @@ process SEARCHENGINEMSGF {
         -min_peptide_length $params.min_peptide_length \\
         -max_peptide_length $params.max_peptide_length \\
         -isotope_error_range $params.isotope_error_range \\
-        -enzyme ${enzyme} \\
+        -enzyme "${enzyme}" \\
         -tryptic ${msgf_num_enzyme_termini} \\
         -precursor_mass_tolerance $meta.precursormasstolerance \\
         -precursor_error_units $meta.precursormasstoleranceunit \\
