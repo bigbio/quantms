@@ -2,12 +2,10 @@ process DIANNCONVERT {
     tag "$exp_design.Name"
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::pyopenms=2.8.0-0" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py36h24c8720_0"
-    } else {
-        container "quay.io/biocontainers/pyopenms:2.8.0--py36h24c8720_0"
-    }
+    conda (params.enable_conda ? 'bioconda::multiqc=1.12' : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/multiqc:1.12--pyhdfd78af_0' :
+        'quay.io/biocontainers/multiqc:1.12--pyhdfd78af_0' }"
 
     input:
     path(report)
