@@ -2,11 +2,11 @@ process DIANNCONVERT {
     tag "$exp_design.Name"
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::pyopenms=2.8.0-0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.21--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py36h24c8720_0"
     } else {
-        container "quay.io/biocontainers/sdrf-pipelines:0.0.21--pyhdfd78af_0"
+        container "quay.io/biocontainers/pyopenms:2.8.0--py36h24c8720_0"
     }
 
     input:
@@ -14,11 +14,8 @@ process DIANNCONVERT {
     path(exp_design)
     path(report_pg)
     path(report_pr)
-    path(report_unique_gene)
     val(meta)
     path(fasta)
-    val(charge)
-    val(missed_cleavages)
 
     output:
     path "*msstats_in.csv", emit: out_msstats
@@ -37,17 +34,16 @@ process DIANNCONVERT {
         --exp_design "${exp_design}" \\
         --pg_matrix "${report_pg}" \\
         --pr_matrix "${report_pr}" \\
-        --unique_matrix "${report_unique_gene}" \\
         --dia_params "${dia_params}" \\
         --fasta "${fasta}" \\
-        --charge ${charge} \\
-        --missed_cleavages ${missed_cleavages} \\
-        --qvalue_threshold ${params.protein_level_fdr_cutoff} \\
+        --charge $params.max_precursor_charge \\
+        --missed_cleavages $params.allowed_missed_cleavages \\
+        --qvalue_threshold $params.protein_level_fdr_cutoff \\
         |& tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(echo "0.0.21")
+        pyopenms: \$(echo "2.8.0")
     END_VERSIONS
     """
 }
