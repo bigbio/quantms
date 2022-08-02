@@ -2,16 +2,12 @@ process SEARCHENGINEMSFRAGGER {
     tag "$meta.id"
     label 'process_medium'
 
-    //conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
-    //container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-    //    'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
-
     input:
     tuple val(meta), file(mzml_file), file(database)
 
     output:
-    tuple val(meta), path("${mzml_file.baseName}_msfragger.idXML"),  emit: id_files_msfragger
+    tuple val(meta), path("${mzml_file.baseName}_msfragger.idXML"), emit: id_files_msfragger
+    path("${mzml_file.baseName}_msfragger.pepXML"), emit: pepxml_files_msfragger
     path "versions.yml",   emit: version
     path "*.log",   emit: log
 
