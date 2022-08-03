@@ -688,6 +688,7 @@
                     "help_text": "Quantification method used in the experiment.",
                     "enum": [
                         "label free sample",
+                        "open mod search",
                         "itraq4plex",
                         "itraq8plex",
                         "tmt6plex",

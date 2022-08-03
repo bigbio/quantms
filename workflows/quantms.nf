@@ -38,6 +38,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
 include { DIA } from './dia'
+include { OMS } from './oms'
 include { PMULTIQC as SUMMARYPIPELINE } from '../modules/local/pmultiqc/main'
 include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main'
 
