@@ -85,7 +85,8 @@ workflow DIA {
     //
     // MODULE: DIANNCONVERT
     //
-    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign)
+    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix, 
+                ch_result.meta.first(), params.database)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 
     //
