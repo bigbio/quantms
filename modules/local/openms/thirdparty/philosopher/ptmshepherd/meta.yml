@@ -1,0 +1,46 @@
+name: ptmshepherd
+description: Characterization of PTM profiles in open search.
+keywords:
+  - PTM profiling
+  - Nesvilab
+  - OMS
+tools:
+  - PTMShepherd:
+      description: |
+        Characterization of PTM profiles in open search..
+      homepage: https://github.com/Nesvilab/PTM-Shepherd
+      documentation: https://github.com/Nesvilab/PTM-Shepherd/wiki
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - mzml_file:
+      type: file
+      description: Input profile data file.
+      pattern: "*.mzML"
+  - psm:
+      type: file
+      description: Input PSM file (PeptideProphet)
+      pattern: "*.tsv"
+  - database:
+      type: file
+      description: fasta file
+      pattern: "*.{fasta,fa}"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - ptmshepherd_sum:
+      type: file
+      description: Global modification profile output file
+      pattern: "*.tsv"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@tillenglert"

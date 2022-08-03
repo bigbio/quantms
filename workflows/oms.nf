@@ -8,14 +8,14 @@
 // MODULES: Local to the pipeline
 //
 
-include { PEPTIDEPROPHET } from './openms/thirdparty/philosopher/peptideprophet'
-include { PTMSHEPHERD } from './openms/thirdparty/philosopher/ptmshepherd'
+include { PEPTIDEPROPHET } from '../modules/local/openms/thirdparty/philosopher/peptideprophet/main'
+include { PTMSHEPHERD } from '../modules/local/openms/thirdparty/philosopher/ptmshepherd/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 //
 
-include { DATABASESEARCHENGINES } from './databasesearchengines'
+include { DATABASESEARCHENGINES } from '../subworkflows/local/databasesearchengines'
 
 /*
 ========================================================================================

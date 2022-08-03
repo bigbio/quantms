@@ -5,7 +5,7 @@ keywords:
   - OpenMS
   - msfragger
 tools:
-  - CometAdapter:
+  - MSFraggerAdapter:
       description: |
         Identifies peptides in MS/MS spectra via MSFragger.
       homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSFraggerAdapter.html
@@ -30,6 +30,10 @@ output:
       type: file
       description: Output file
       pattern: "*.idXML"
+  - pepxml_files_msfragger:
+      type: file
+      description: Output file
+      pattern: "*.pepXML"
   - log:
       type: file
       description: log file
