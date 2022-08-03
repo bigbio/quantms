@@ -322,27 +322,27 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     out_mztab_PRH = pd.DataFrame()
     out_mztab_PRH = pg.drop(["Protein.Names"], axis = 1)
     out_mztab_PRH = out_mztab_PRH.rename(columns = {"Protein.Group":"accession", "First.Protein.Description":"description"})
-    out_mztab_PRH.loc[:, "PRH"] = "PRT"
-    index = out_mztab_PRH.loc[:, "PRH"]
-    out_mztab_PRH.drop(labels = ["PRH"], axis = 1, inplace = True)
-    out_mztab_PRH.insert(0, "PRH", index)
     out_mztab_PRH.loc[:, "database"] = database
 
     null_col = ["taxid", "species", "database_version", "search_engine", "opt_global_Posterior_Probability_score",
                 "opt_global_nr_found_peptides", "opt_global_cv_PRIDE:0000303_decoy_hit"]
     for i in null_col:
         out_mztab_PRH.loc[:, i] = "null"
-    
-    out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.loc[:, "accession"]
+    out_mztab_PRH.loc[:, "accession"] = out_mztab_PRH.apply(lambda x: x["accession"].split(";")[0], axis = 1)
 
-    prh_series = out_mztab_PRH["accession"].str.split(";", expand = True).stack().reset_index(level = 1, drop = True)
+    protein_details_df = out_mztab_PRH[out_mztab_PRH["opt_global_result_type"] == "indistinguishable_protein_group"]
+    prh_series = protein_details_df["Protein.Ids"].str.split(";", expand = True).stack().reset_index(level = 1, drop = True)
     prh_series.name = "accession"
-    out_mztab_PRH = out_mztab_PRH.drop("accession", axis = 1).join(prh_series).reset_index().drop(columns = "index")
+    protein_details_df = protein_details_df.drop("accession", axis = 1).join(prh_series).reset_index().drop(columns = "index")
+    protein_details_df.loc[:, "opt_global_result_type"] = protein_details_df.apply(lambda x: "protein_details", axis = 1)
+    # protein_details_df = protein_details_df[-protein_details_df["accession"].str.contains("-")]
+    out_mztab_PRH = pd.concat([out_mztab_PRH, protein_details_df]).reset_index(drop = True)
+
     out_mztab_PRH.loc[:, "protein_coverage"] = out_mztab_PRH.apply(
         lambda x: calculate_protein_coverage(report, x["accession"], x["Protein.Ids"], fasta_df), axis=1, result_type="expand")
 
     out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.apply(
-        lambda x: "null" if x["opt_global_result_type"] == "protein_details" else x["ambiguity_members"], axis=1)
+        lambda x: x["Protein.Ids"] if x["opt_global_result_type"] == "indistinguishable_protein_group" else "null", axis=1)
 
     out_mztab_PRH[["modifiedSequence", "best_search_engine_score[1]"]] = out_mztab_PRH.apply(
         lambda x: PRH_match_report(report, x["accession"]), axis=1, result_type="expand")
@@ -361,7 +361,11 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         lambda x: match_in_report(report, x['accession'], max_study_variable, 1, 'protein'), axis=1, result_type='expand')
 
     out_mztab_PRH = out_mztab_PRH.drop(["Genes", "modifiedSequence", "Protein.Ids"], axis=1)
-    out_mztab_PRH.fillna("null", inplace=True)  
+    out_mztab_PRH.fillna("null", inplace=True)
+    out_mztab_PRH.loc[:, "PRH"] = "PRT"
+    index = out_mztab_PRH.loc[:, "PRH"]
+    out_mztab_PRH.drop(labels = ["PRH"], axis = 1, inplace = True)
+    out_mztab_PRH.insert(0, "PRH", index) 
     # out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
     
     return out_mztab_PRH
@@ -388,11 +392,6 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     out_mztab_PEH = out_mztab_PEH.drop(["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis = 1)
     out_mztab_PEH = out_mztab_PEH.rename(columns = {"Stripped.Sequence":"sequence", "Protein.Ids":"accession", 
                                                     "Modified.Sequence":"opt_global_cv_MS:1000889_peptidoform_sequence", "Precursor.Charge":"charge"})
-    out_mztab_PEH.loc[:, "PEH"] = "PEP"
-    index = out_mztab_PEH.loc[:, "PEH"]
-    out_mztab_PEH.drop(labels = ["PEH"], axis = 1, inplace = True)
-    out_mztab_PEH.insert(0, "PEH", index)
-    out_mztab_PEH.loc[:, "database"] = database
 
     out_mztab_PEH.loc[:, "modifications"] = out_mztab_PEH.apply(
         lambda x: find_modification(x["opt_global_cv_MS:1000889_peptidoform_sequence"]), axis=1, result_type="expand")
@@ -432,6 +431,11 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     out_mztab_PEH[["opt_global_feature_id", "spectra_ref"]] = out_mztab_PEH.apply(lambda x:("null", "null"),axis = 1, result_type = "expand")
     out_mztab_PEH = out_mztab_PEH.drop(["Precursor.Id", "Genes", "pr_id"], axis = 1)
     out_mztab_PEH.fillna("null", inplace = True)  
+    out_mztab_PEH.loc[:, "PEH"] = "PEP"
+    index = out_mztab_PEH.loc[:, "PEH"]
+    out_mztab_PEH.drop(labels = ["PEH"], axis = 1, inplace = True)
+    out_mztab_PEH.insert(0, "PEH", index)
+    out_mztab_PEH.loc[:, "database"] = database
     # out_mztab_PEH.to_csv("./out_peptide.mztab", sep=",", index=False)
 
     return out_mztab_PEH
@@ -455,10 +459,6 @@ def mztab_PSH(report, database, fasta_df):
                              "opt_global_cv_MS:1000889_peptidoform_sequence", "opt_global_SpecEValue_score", "opt_global_q-value", "opt_global_q-value_score"]
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
-    out_mztab_PSH.loc[:, "PSH"] = "PSM"
-    index = out_mztab_PSH.loc[:, "PSH"]
-    out_mztab_PSH.drop(labels = ["PSH"], axis = 1, inplace = True)
-    out_mztab_PSH.insert(0, "PSH", index)
     out_mztab_PSH.loc[:, "PSM_ID"] = out_mztab_PSH.index
     out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: Unique(x["accession"], x["sequence"], fasta_df), axis=1, result_type="expand")
     out_mztab_PSH.loc[:, "database"] = database
@@ -476,6 +476,10 @@ def mztab_PSH(report, database, fasta_df):
 
     out_mztab_PSH = out_mztab_PSH.drop(["Genes"], axis = 1)
     out_mztab_PSH.fillna("null", inplace = True)  
+    out_mztab_PSH.loc[:, "PSH"] = "PSM"
+    index = out_mztab_PSH.loc[:, "PSH"]
+    out_mztab_PSH.drop(labels = ["PSH"], axis = 1, inplace = True)
+    out_mztab_PSH.insert(0, "PSH", index)
     # out_mztab_PSH.to_csv("./out_psms.mztab", sep=",", index=False)
 
     return out_mztab_PSH
@@ -507,10 +511,7 @@ def classify_result_type(target):
     :rtype: str
     """
     if ";" in target["Protein.Ids"]:
-        if ";" in target["Protein.Group"]:
-            return "protein_details"
-        else:
-            return "indistinguishable_protein_group"
+        return "indistinguishable_protein_group"
     else:
         return "single_protein"
 
