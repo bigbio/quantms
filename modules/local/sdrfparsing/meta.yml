@@ -1,0 +1,40 @@
+name: SDRFPARSING
+description: Convert SDRF proteomics files into pipelines config files
+keywords:
+  - SDRF
+  - bioinformatics tools
+  - OpenMS
+tools:
+  - sdrf-pipelines:
+      description: |
+        Convert SDRF proteomics files into pipelines config files.
+      homepage: https://github.com/bigbio/sdrf-pipelines
+      documentation: https://github.com/bigbio/sdrf-pipelines
+input:
+  - sdrf_files:
+      type: file
+      description: |
+        A valid sdrf file
+output:
+  - experimental_design:
+      type: file
+      description: experimental design file in OpenMS format
+      pattern: "experimental_design.tsv"
+  - openms:
+      type: file
+      description: config file with search engine parameters in OpenMS nomenclature
+      pattern: "openms.tsv"
+  - mqpar:
+      type: file
+      description: maxquant configuration file
+      pattern: "*.xml"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

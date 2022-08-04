@@ -8,17 +8,20 @@ on:
   release:
     types: [published]
 
-env:
-  NXF_ANSI_LOG: false
-  CAPSULE_LOG: none
-
 jobs:
   test:
+    env:
+      NXF_ANSI_LOG: false
+      CAPSULE_LOG: none
+      TEST_PROFILE: ${{ matrix.test_profile }}
+      EXEC_PROFILE: ${{ matrix.exec_profile }}
+
     name: Run pipeline with test data
     # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/quantms') }}"
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/quantms') }}
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         # Nextflow versions
         include:
@@ -28,6 +31,13 @@ jobs:
           # Test latest edge release of Nextflow
           - NXF_VER: ""
             NXF_EDGE: "1"
+        test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt"]
+        exec_profile: ["docker", "conda"]
+        exclude:
+          - test_profile: test_dia
+            exec_profile: conda
+          - test_profile: test_localize
+            exec_profile: conda
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
@@ -42,9 +52,60 @@ jobs:
           wget -qO- get.nextflow.io | bash
           sudo mv nextflow /usr/local/bin/
 
+      - name: Install mamba
+        if: matrix.exec_profile == 'conda'
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.9
+          mamba-version: "*"
+          channels: conda-forge,defaults
+
+      #- name: Install micromamba as mamba
+      #  if: matrix.exec_profile == 'conda'
+      #  run: |
+      #    wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+      #    mv bin/micromamba bin/mamba
+      #    echo "$(pwd)/bin" >> $GITHUB_PATH
+      #    echo "$(pwd)/mamba/bin" >> $GITHUB_PATH
+      #    ./bin/mamba shell init -s bash -p ./mamba
+
       - name: Run pipeline with test data
+        if: matrix.exec_profile != 'conda'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker --outdir ./results
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Run pipeline with test data in conda profile (and single-threaded)
+        if: matrix.exec_profile == 'conda'
+        # TODO nf-core: You can customise CI pipeline run tests as required
+        # For example: adding multiple test runs with different parameters
+        # Remember that you can parallelise this by using strategy.matrix
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,mambaci --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Gather failed logs
+        if: failure() || cancelled()
+        run: |
+          mkdir failed_logs
+          failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
+          while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
+      - uses: actions/upload-artifact@v1
+        if: failure() || cancelled()
+        name: Upload failed logs
+        with:
+          name: failed_logs
+          path: failed_logs
+      - uses: actions/upload-artifact@v1
+        if: always()
+        name: Upload results
+        with:
+          name: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
+          path: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
+      - uses: actions/upload-artifact@v1
+        if: always()
+        name: Upload log
+        with:
+          name: nextflow.log
+          path: .nextflow.log

@@ -1,0 +1,40 @@
+name: falsediscoveryrate
+description: Estimates the false discovery rate on peptide and protein level using decoy searches.
+keywords:
+  - FDR
+  - decoy
+  - OpenMS
+tools:
+  - FalseDiscoveryRate:
+      description: |
+        Tool to estimate the false discovery rate on peptide and protein level.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_file:
+      type: file
+      description: |
+        Identifications from searching a target-decoy database.
+      pattern: "*.idXML"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_idx_ForIDPEP_FDR:
+      type: file
+      description: |
+        Identifications with annotated FDR.
+      pattern: "*.idXML"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

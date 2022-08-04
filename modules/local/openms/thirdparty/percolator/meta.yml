@@ -1,0 +1,38 @@
+name: percolator
+description: PercolatorAdapter facilitates the input to, the call of and output integration of Percolator for other OpenMS tools.
+keywords:
+  - identification
+  - OpenMS
+tools:
+  - PercolatorAdapter:
+      description: |
+        Percolator (http://percolator.ms/) is a tool to apply semi-supervised learning for peptide identification from shotgun proteomics datasets.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PercolatorAdapter.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PercolatorAdapter.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_file:
+      type: file
+      description: |
+        Input idXML file containing the identifications.
+      pattern: "*.idXML"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_perc:
+      type: file
+      description: |
+        Output file in idXML format
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
