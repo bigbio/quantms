@@ -45,15 +45,15 @@ workflow OMS {
     // Open Search post-processing
     //
 
-    (DATABASESEARCHENGINES.out.ch_id_files_pepx).mix(ch_database_wdecoy)
+    /*(DATABASESEARCHENGINES.out.ch_id_files_pepx).mix(ch_database_wdecoy)
         .multiMap { it ->
             ids: it[1]
             db: it[2]
         }
         .set{ ch_philosopher_pep }
-
-    PEPTIDEPROPHET(ch_philosopher_pep.ids,
-                ch_philosopher_pep.db
+    */
+    PEPTIDEPROPHET(DATABASESEARCHENGINES.out.ch_id_files_pepx,
+                ch_database_wdecoy
             )
     
     ch_software_versions = ch_software_versions.mix(PEPTIDEPROPHET.out.versions.ifEmpty(null))
