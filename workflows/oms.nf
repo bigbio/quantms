@@ -45,16 +45,14 @@ workflow OMS {
     // Open Search post-processing
     //
 
-    ch_file_preparation_results.join(DATABASESEARCHENGINES.out.ch_id_files_pepx).mix(ch_database_wdecoy)
+    (DATABASESEARCHENGINES.out.ch_id_files_pepx).mix(ch_database_wdecoy)
         .multiMap { it ->
-            mzmls: pmultiqc_mzmls: it[1]
-            ids: it[2]
-            db: it[3]
+            ids: it[1]
+            db: it[2]
         }
         .set{ ch_philosopher_pep }
 
-    PEPTIDEPROPHET(ch_philosopher_pep.mzmls,
-                ch_philosopher_pep.ids,
+    PEPTIDEPROPHET(ch_philosopher_pep.ids,
                 ch_philosopher_pep.db
             )
     
