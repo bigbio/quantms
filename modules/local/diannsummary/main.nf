@@ -16,6 +16,7 @@ process DIANNSUMMARY {
     path "diann_report.pr_matrix.tsv", emit: pr_matrix
     path "diann_report.pg_matrix.tsv", emit: pg_matrix
     path "diann_report.gg_matrix.tsv", emit: gg_matrix
+    path "diann_report.unique_genes_matrix.tsv", emit: unique_gene_matrix
     path "diannsummary.log", emit: log
     path "versions.yml", emit: version
 
