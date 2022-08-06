@@ -36,6 +36,10 @@ workflow DIA {
     ch_expdesign
 
     main:
+    // Print warning info when runing DIA-NN with conda
+    if(params.enable_conda){
+        log.info "Warning: DIA-NN doesn't support conda. Skip DIA-NN step!"
+    }
 
     ch_software_versions = Channel.empty()
     Channel.fromPath(params.database).set{ ch_searchdb }
@@ -85,7 +89,7 @@ workflow DIA {
     //
     // MODULE: DIANNCONVERT
     //
-    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix, 
+    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix,
                 ch_result.meta.first(), params.database)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 
