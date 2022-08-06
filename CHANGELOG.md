@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+- [#203](https://github.com/bigbio/quantms/pull/203) - update openms dependency -> 3.0.0dev
+- [#208](https://github.com/bigbio/quantms/pull/208) - update pmultiqc dependency -> 0.0.13
+
 ### `Deprecated`
 
 ### `Parameters`
