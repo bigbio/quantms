@@ -36,10 +36,6 @@ workflow DIA {
     ch_expdesign
 
     main:
-    // Print warning info when runing DIA-NN with conda
-    if(params.enable_conda){
-        log.info "Warning: DIA-NN doesn't support conda. Skip DIA-NN step!"
-    }
 
     ch_software_versions = Channel.empty()
     Channel.fromPath(params.database).set{ ch_searchdb }
