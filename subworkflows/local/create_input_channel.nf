@@ -161,7 +161,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             }
         }
     }else if(params.enable_conda){
-        log.error "DIA-NN currently doesn't support conda! Exit. Please use docker/singularity container."
+        log.error "File in DIA more found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
         exit 1
     }
 
