@@ -160,6 +160,9 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
                 exit 1
             }
         }
+    }else if(params.enable_conda){
+        log.error "File in DIA mode found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
+        exit 1
     }
 
     if (wrapper.labelling_type.contains("label free") || meta.acquisition_method == "dia") {
