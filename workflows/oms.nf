@@ -53,7 +53,7 @@ workflow OMS {
         .set{ ch_philosopher_pep }
     */
     PEPTIDEPROPHET (
-        DATABASESEARCHENGINES.out.pepxml_files_msfragger,
+        DATABASESEARCHENGINES.out.ch_id_files_pepx,
         ch_database_wdecoy
     )
     
