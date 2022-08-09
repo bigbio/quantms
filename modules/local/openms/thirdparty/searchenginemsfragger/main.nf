@@ -7,7 +7,7 @@ process SEARCHENGINEMSFRAGGER {
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_msfragger.idXML"), emit: id_files_msfragger
-    path("${mzml_file.baseName}_msfragger.pepXML"), emit: pepxml_files_msfragger
+    tuple val(meta), path("${mzml_file.baseName}_msfragger.pepXML"), emit: pepxml_files_msfragger
     path "versions.yml",   emit: version
     path "*.log",   emit: log
 
