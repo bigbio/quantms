@@ -26,5 +26,10 @@ process PEPTIDEPROPHET {
     philosopher filter --pepxml "interact-${pepXML.baseName}.pep.xml" --tag ${params.decoy_affix} >> ${pepXML.baseName}_peptideprophet.log
     philosopher report >> ${pepXML.baseName}_peptideprophet.log
     mv psm.tsv ${pepXML.baseName}_psm.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        Philosopher: \$(philosopher version 2>&1 | grep -E '* version=v*' | sed 's/.*version=v//g')
+    END_VERSIONS
     """
 }

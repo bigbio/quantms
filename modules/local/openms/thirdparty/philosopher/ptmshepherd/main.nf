@@ -30,7 +30,12 @@ process PTMSHEPHERD {
     varmod_masses = Failed_Carbamidomethylation:-57.021464
     localization_background = 4
     output_extended = true" > shepherd_config.txt
-    java -jar /thirdparty/PTMShepherd/ptmshepherd-0.3.5.jar shepherd_config.txt > ${mzml_file.baseName}_ptmshepherd.log
+    java -jar /thirdparty/PTMShepherd/ptmshepherd-2.0.0.jar shepherd_config.txt > ${mzml_file.baseName}_ptmshepherd.log
     mv global.modsummary.tsv ${mzml_file.baseName}_global.modsummary.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        PTMShepherd: \$(java -jar ptmshepherd-CLI-1.1.1.jar | grep -E version* | sed 's/.*version //g' | sed 's/ University of Michigan//g')
+    END_VERSIONS
     """
 }
