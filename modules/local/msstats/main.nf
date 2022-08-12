@@ -1,4 +1,5 @@
 process MSSTATS {
+    tag "$msstats_csv_input.Name"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::bioconductor-msstats=4.2.0" : null)
@@ -9,7 +10,7 @@ process MSSTATS {
     }
 
     input:
-    path out_msstats
+    path msstats_csv_input
 
     output:
     // The generation of the PDFs from MSstats are very unstable, especially with auto-contrasts.
@@ -25,16 +26,16 @@ process MSSTATS {
 
     """
     msstats_plfq.R \\
-        ${out_msstats} \\
-        ${params.contrasts} \\
+        ${msstats_csv_input} \\
+        "${params.contrasts}" \\
         "${ref_con}" \\
         ${params.msstats_remove_one_feat_prot} \\
         ${params.msstatslfq_removeFewMeasurements} \\
         ${params.msstatslfq_feature_subset_protein} \\
         ${params.msstatslfq_quant_summary_method} \\
+        ${msstats_csv_input.baseName} \\
         $args \\
-        > msstats.log \\
-        || echo "Optional MSstats step failed. Please check logs and re-run or do a manual statistical analysis."
+        |& tee msstats.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -7,13 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#176](https://github.com/bigbio/quantms/pull/176) - Add name of each ID step
+- [#205](https://github.com/bigbio/quantms/pull/205) - mzTab export for DIANN outputs
+
+### `Changed`
+
+- [#169](https://github.com/bigbio/quantms/pull/169) - Restruct DIA-NN step1 : Generate an in silico predicted spectral library
+- [#178](https://github.com/bigbio/quantms/pull/178) - Restruct DIA-NN step2 : Preliminary analysis of individual raw files
+- [#179](https://github.com/bigbio/quantms/pull/179) - Restruct DIA-NN steps 3-5 to be as parallel as possible
+- [#200](https://github.com/bigbio/quantms/pull/200) - Rename MSstats/Triqler/mzTab input and output
+
 ### `Fixed`
 
+- [#187](https://github.com/bigbio/quantms/pull/187) - Bug fixing in proteonicsLFQ applying FDR at PMS level
+- [#207](https://github.com/bigbio/quantms/pull/207) - Bug fixing in dissociation method translation for Luciphor
+
 ### `Dependencies`
+
+- [#203](https://github.com/bigbio/quantms/pull/203) - update openms dependency -> 3.0.0dev
+- [#208](https://github.com/bigbio/quantms/pull/208) - update pmultiqc dependency -> 0.0.13. Support for DIANN in pmultiqc and enable the generation of search engine scores distributions/peptide and protein table by pmultiqc.
 
 ### `Deprecated`
 
 ### `Parameters`
+
+- [#193](https://github.com/bigbio/quantms/pull/193) - Set the `local_input_type` default parameter to `mzML`
+- [#212](https://github.com/bigbio/quantms/pull/212) - Set the `min_consensus_support` default parameter to `1` to filter in ConsensusID for peptides identified with both search engines
+- [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow to run PROTEINQUANTIFIER TMT without exporting to mzTab
 
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
 

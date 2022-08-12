@@ -84,7 +84,7 @@ workflow QUANTMS {
     // SUBWORKFLOW: Create input channel
     //
     CREATE_INPUT_CHANNEL (
-        ch_input,
+        INPUT_CHECK.out.ch_input_file,
         INPUT_CHECK.out.is_sdrf
     )
     ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
@@ -116,6 +116,7 @@ workflow QUANTMS {
     //
     ch_pipeline_results = Channel.empty()
     ch_ids_pmultiqc = Channel.empty()
+    ch_msstats_in = Channel.empty()
 
     //
     // MODULE: Generate decoy database
@@ -128,28 +129,31 @@ workflow QUANTMS {
     | map { it[-1] }         // Remove the "trigger" part
     | set {ch_db_for_decoy_creation_or_null}
 
-    searchengine_in_db = params.add_decoys ? Channel.empty() : Channel.fromPath(params.database)
+    ch_searchengine_in_db = params.add_decoys ? Channel.empty() : Channel.fromPath(params.database)
     if (params.add_decoys) {
         DECOYDATABASE(
             ch_db_for_decoy_creation_or_null
         )
-        searchengine_in_db = DECOYDATABASE.out.db_decoy
+        ch_searchengine_in_db = DECOYDATABASE.out.db_decoy
         ch_versions = ch_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
     }
 
 
-    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, searchengine_in_db)
+    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
+    ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
     ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, searchengine_in_db)
+    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
     ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
+    ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
     DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign)
     ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
+    ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
     ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
 
 
@@ -175,9 +179,10 @@ workflow QUANTMS {
 
     SUMMARYPIPELINE (
         CREATE_INPUT_CHANNEL.out.ch_expdesign
-            .combine(ch_pipeline_results.combine(ch_multiqc_files.collect())
+            .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
             .combine(ch_pmultiqc_mzmls.collect())
-            .combine(ch_ids_pmultiqc.collect().ifEmpty([]))),
+            .combine(ch_ids_pmultiqc.collect().ifEmpty([])))
+            .combine(ch_msstats_in.ifEmpty([])),
         ch_multiqc_quantms_logo
     )
     multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()

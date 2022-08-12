@@ -19,11 +19,11 @@ output:
   - protein_out:
       type: file
       description: Output file for protein abundances
-      pattern: "*.csv"
+      pattern: "*protein_openms.csv"
   - peptide_out:
       type: file
       description: Output file for peptide abundances
-      pattern: "*.csv"
+      pattern: "*peptide_openms.csv"
   - out_mztab:
       type: file
       description: Output file (mzTab)

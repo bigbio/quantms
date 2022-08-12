@@ -79,11 +79,12 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
     // apply transformations given by specified root_folder and type
     if (params.root_folder) {
         filestr = params.root_folder + File.separator + filestr
-    }
-
-    filestr = (params.local_input_type ? filestr.take(filestr.lastIndexOf('.'))
+        filestr = (params.local_input_type ? filestr.take(filestr.lastIndexOf('.'))
                                             + '.' + params.local_input_type
                                             : filestr)
+    }
+
+
 
     // existance check
     if (!file(filestr).exists()) {
@@ -112,9 +113,22 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             log.error "Currently DIA and DDA are supported for the pipeline. Check and Fix your SDRF."
             exit 1
         }
+
+        // dissociation method conversion
+        if (row.DissociationMethod == "COLLISION-INDUCED DISSOCIATION"){
+            meta.dissociationmethod     = "CID"
+        } else if (row.DissociationMethod == "HIGHER ENERGY BEAM-TYPE COLLISION-INDUCED DISSOCIATION"){
+            meta.dissociationmethod     = "HCD"
+        } else if (row.DissociationMethod == "ELECTRON TRANSFER DISSOCIATION"){
+            meta.dissociationmethod     = "ETD"
+        } else if (row.DissociationMethod == "ELECTRON CAPTURE DISSOCIATION"){
+            meta.dissociationmethod     = "ECD"
+        } else{
+            meta.dissociationmethod         = row.DissociationMethod
+        }
+
         wrapper.acquisition_method       = meta.acquisition_method
         meta.labelling_type             = row.Label
-        meta.dissociationmethod         = row.DissociationMethod
         meta.fixedmodifications         = row.FixedModifications
         meta.variablemodifications      = row.VariableModifications
         meta.precursormasstolerance     = row.PrecursorMassTolerance
@@ -146,6 +160,9 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
                 exit 1
             }
         }
+    }else if(params.enable_conda){
+        log.error "File in DIA mode found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
+        exit 1
     }
 
     if (wrapper.labelling_type.contains("label free") || meta.acquisition_method == "dia") {

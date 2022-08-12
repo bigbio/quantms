@@ -47,38 +47,39 @@
                     "type": "string",
                     "description": "Overwrite the file type/extension of the filename as specified in the SDRF/design",
                     "fa_icon": "fas fa-file-invoice",
-                    "help_text": "If the above [`--root_folder`](#params_root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF/design. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML' or 'raw' (the letter cases should match your files exactly)."
+                    "default": "mzML",
+                    "help_text": "If the above [`--root_folder`](#root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF/design. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML' or 'raw' (the letter cases should match your files exactly)."
                 }
             }
         },
         "protein_database": {
             "title": "Protein database",
             "type": "object",
-            "description": "Settings that relate to the mandatory protein database and the optional generation of decoy entries.",
+            "description": "Settings that relate to the mandatory protein database and the optional generation of decoy entries. Note: Decoys for DIA will be created internally.",
             "default": "",
             "properties": {
                 "database": {
                     "type": "string",
-                    "description": "The `fasta` protein database used during database search.",
+                    "description": "The `fasta` protein database used during database search. *Note:* For DIA data, it must not contain decoys.",
                     "fa_icon": "fas fa-file",
-                    "help_text": "Since the database is not included in an SDRF, this parameter always needs to be given to specify the input protein database\nwhen you run the pipeline. Remember to include contaminants (and decoys if not added in the pipeline with \\-\\-add-decoys)\n\n```bash\n--database '[path to Fasta protein database]'\n```"
+                    "help_text": "Since the database is not included in an SDRF, this parameter always needs to be given to specify the input protein database\nwhen you run the pipeline. Remember to include contaminants (and decoys if not in DIA mode and if not added in the pipeline with [`--add_decoys`](#add_decoys))\n\n```bash\n--database '[path to fasta protein database]'\n```"
                 },
                 "add_decoys": {
                     "type": "boolean",
                     "description": "Generate and append decoys to the given protein database",
                     "fa_icon": "fas fa-coins",
-                    "help_text": "If decoys were not yet included in the input database, they have to be appended by OpenMS DecoyGenerator by adding this flag (TODO allow specifying type).\nDefault: pseudo-reverse peptides"
+                    "help_text": "If decoys were not yet included in the input database, they have to be appended by OpenMS DecoyGenerator by adding this flag (TODO allow specifying generator type).\nDefault: pseudo-reverse peptides"
                 },
                 "decoy_string": {
                     "type": "string",
                     "description": "Pre- or suffix of decoy proteins in their accession",
                     "default": "DECOY_",
                     "fa_icon": "fas fa-font",
-                    "help_text": "If [`--add-decoys`](#params_add_decoys) was set, this setting is used during generation and passed to all tools that need decoy information.\n If decoys were appended to the database externally, this setting needs to match the used affix. (While OpenMS tools can infer the affix automatically, some thirdparty tools might not.)\nTypical values are 'rev', 'decoy', 'dec'. Look for them in your database."
+                    "help_text": "If [`--add-decoys`](#add_decoys) was set, this setting is used during generation and passed to all tools that need decoy information.\n If decoys were appended to the database externally, this setting needs to match the used affix. (While OpenMS tools can infer the affix automatically, some thirdparty tools might not.)\nTypical values are 'rev', 'decoy', 'dec'. Look for them in your database."
                 },
                 "decoy_string_position": {
                     "type": "string",
-                    "description": "Location of the decoy marker string in the fasta accession. Before (prefix) or after (suffix)",
+                    "description": "Location of the decoy marker string in the `fasta` accession. Before (prefix) or after (suffix)",
                     "default": "prefix",
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Prefix is highly recommended. Only in case an external tool marked decoys with a suffix, e.g. `sp|Q12345|ProteinA_DECOY` change this parameter to suffix."
@@ -151,7 +152,7 @@
                     "description": "A comma separated list of search engines. Valid: comet, msgf",
                     "default": "comet",
                     "fa_icon": "fas fa-tasks",
-                    "help_text": "A comma-separated list of search engines to run in parallel on each mzML file. Currently supported: comet and msgf (default: comet)\nIf more than one search engine is given, results are combined based on posterior error probabilities (see the different types\nof estimation procedures under [`--posterior_probabilities`](#--posterior_probabilities)). Combination is done with\n[ConsensusID](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_ConsensusID.html).\nSee also its corresponding [`--consensusid_algorithm`](#--consensusid_algorithm) parameter for different combination strategies.\nCombinations may profit from an increased [`--num_hits`](#--num_hits) parameter."
+                    "help_text": "A comma-separated list of search engines to run in parallel on each mzML file. Currently supported: comet and msgf (default: comet)\nIf more than one search engine is given, results are combined based on posterior error probabilities (see the different types\nof estimation procedures under [`--posterior_probabilities`](#posterior_probabilities)). Combination is done with\n[ConsensusID](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_ConsensusID.html).\nSee also its corresponding [`--consensusid_algorithm`](#--consensusid_algorithm) parameter for different combination strategies.\nCombinations may profit from an increased [`--num_hits`](#--num_hits) parameter."
                 },
                 "enzyme": {
                     "type": "string",
@@ -175,7 +176,7 @@
                 },
                 "precursor_mass_tolerance": {
                     "type": "integer",
-                    "description": "Precursor mass tolerance used for database search. For High-Resolution instruments a precursor mass tolerance value of 5 ppm is recommended (i.e. 5). See also [`--precursor_mass_tolerance_unit`](#--precursor_mass_tolerance_unit).",
+                    "description": "Precursor mass tolerance used for database search. For High-Resolution instruments a precursor mass tolerance value of 5 ppm is recommended (i.e. 5). See also [`--precursor_mass_tolerance_unit`](#precursor_mass_tolerance_unit).",
                     "default": 5,
                     "fa_icon": "fas fa-sliders-h"
                 },
@@ -369,9 +370,9 @@
                     "default": "percolator",
                     "enum": ["percolator", "fit_distributions"]
                 },
-                "psm_pep_fdr_cutoff": {
+                "run_fdr_cutoff": {
                     "type": "number",
-                    "description": "FDR cutoff on PSM level (or potential peptide level; see Percolator options) before going into feature finding, map alignment and inference.",
+                    "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
                     "default": 0.01,
                     "fa_icon": "fas fa-filter"
                 },
@@ -402,7 +403,7 @@
         "psm_re_scoring_percolator": {
             "title": "PSM re-scoring (Percolator)",
             "type": "object",
-            "description": "In the following you can find help for the Percolator specific options that are only used if [`--posterior_probabilities`](#--posterior_probabilities) was set to 'percolator'.\nNote that there are currently some restrictions to the original options of Percolator:\n\n* no Percolator protein FDR possible (currently OpenMS' FDR is used on protein level)\n* no support for separate target and decoy databases (i.e. no min-max q-value calculation or target-decoy competition strategy)\n* no support for combined or experiment-wide peptide re-scoring. Currently search results per input file are submitted to Percolator independently.",
+            "description": "In the following you can find help for the Percolator specific options that are only used if [`--posterior_probabilities`](#posterior_probabilities) was set to 'percolator'.\nNote that there are currently some restrictions to the original options of Percolator:\n\n* no Percolator protein FDR possible (currently OpenMS' FDR is used on protein level)\n* no support for separate target and decoy databases (i.e. no min-max q-value calculation or target-decoy competition strategy)\n* no support for combined or experiment-wide peptide re-scoring. Currently search results per input file are submitted to Percolator independently.",
             "default": "",
             "properties": {
                 "FDR_level": {
@@ -426,7 +427,7 @@
                 },
                 "subset_max_train": {
                     "type": "integer",
-                    "description": "Only train an SVM on a subset of PSMs, and use the resulting score vector to evaluate the other PSMs. Recommended when analyzing huge numbers (>1 million) of PSMs. When set to 0, all PSMs are used for training as normal. This is a runtime vs. discriminability tradeoff. Default: 300,000",
+                    "description": "Only train an SVM on a subset of PSMs, and use the resulting score vector to evaluate the other PSMs. Recommended when analyzing huge numbers (>1 million) of PSMs. When set to 0, all PSMs are used for training as normal. This is a runtime vs. quality tradeoff. Default: 300,000",
                     "default": 300000,
                     "fa_icon": "fas fa-sliders-h"
                 },
@@ -465,12 +466,6 @@
                     "fa_icon": "fas fa-list-ol",
                     "enum": ["none", "ignore_iqr_outliers", "set_iqr_to_closest_valid", "ignore_extreme_percentiles"]
                 },
-                "protein": {
-                    "type": "boolean",
-                    "description": "Perform FDR calculation on protein level",
-                    "default": false,
-                    "fa_icon": "fas fa-ban"
-                },
                 "idpep_debug": {
                     "type": "integer",
                     "description": "Debug level for IDPEP step. Increase for verbose logging",
@@ -502,8 +497,8 @@
                     "help_text": "Limits the number of alternative peptide hits considered per spectrum/feature for each identification run. This helps to reduce runtime, especially for the PEPMatrix and PEPIons algorithms, which involve costly 'all vs. all' comparisons of peptide hits per spectrum across engines."
                 },
                 "min_consensus_support": {
-                    "type": "integer",
-                    "description": "A threshold for the ratio of occurence/similarity scores of a peptide in other runs, to be reported. See help.",
+                    "type": "number",
+                    "description": "A threshold for the ratio of occurrence/similarity scores of a peptide in other runs, to be reported. See help.",
                     "fa_icon": "fas fa-filter",
                     "help_text": "This allows filtering of peptide hits based on agreement between search engines. Every peptide sequence in the analysis has been identified by at least one search run. This parameter defines which fraction (between 0 and 1) of the remaining search runs must 'support' a peptide identification that should be kept. The meaning of 'support' differs slightly between algorithms: For best, worst, average and rank, each search run supports peptides that it has also identified among its top `consensusid_considered_top_hits` candidates. So `min_consensus_support` simply gives the fraction of additional search engines that must have identified a peptide. (For example, if there are three search runs, and only peptides identified by at least two of them should be kept, set `min_support` to 0.5.) For the similarity-based algorithms PEPMatrix and PEPIons, the 'support' for a peptide is the average similarity of the most-similar peptide from each (other) search run. (In the context of the JPR publication, this is the average of the similarity scores used in the consensus score calculation for a peptide.) Note: For most of the subsequent algorithms, only the best identification per spectrum is used."
                 },
@@ -516,6 +511,78 @@
                 }
             },
             "fa_icon": "fas fa-code-branch"
+        },
+        "isobaric_analyzer": {
+            "title": "Isobaric analyzer",
+            "type": "object",
+            "description": "Extracts and normalizes labeling information",
+            "default": "",
+            "properties": {
+                "select_activation": {
+                    "type": "string",
+                    "description": "Operate only on MSn scans where any of its precursors features a certain activation method. Set to empty to disable.",
+                    "fa_icon": "fas fa-font",
+                    "enum": ["HCD", "CID", "ETD", "ECD"]
+                },
+                "reporter_mass_shift": {
+                    "type": "number",
+                    "description": "Allowed shift (left to right) in Th from the expected position",
+                    "default": 0.002,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "min_precursor_intensity": {
+                    "type": "number",
+                    "description": "Minimum intensity of the precursor to be extracted",
+                    "default": 1.0,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "min_precursor_purity": {
+                    "type": "number",
+                    "description": "Minimum fraction of the total intensity. 0.0:1.0",
+                    "default": 0.0,
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "Minimum fraction of the total intensity in the isolation window of the precursor spectrum"
+                },
+                "min_reporter_intensity": {
+                    "type": "number",
+                    "description": "Minimum intensity of the individual reporter ions to be extracted.",
+                    "default": 0.0,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "precursor_isotope_deviation": {
+                    "type": "number",
+                    "description": "Maximum allowed deviation (in ppm) between theoretical and observed isotopic peaks of the precursor peak",
+                    "default": 10.0,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "isotope_correction": {
+                    "type": "boolean",
+                    "description": "Enable isotope correction (highly recommended)",
+                    "default": true,
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "iso_normalization": {
+                    "type": "boolean",
+                    "description": "Enable normalization of the channel intensities",
+                    "default": false,
+                    "fa_icon": "fas fa-toggle-on",
+                    "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
+                },
+                "reference_channel": {
+                    "type": "integer",
+                    "description": "The reference channel, e.g. for calculating ratios.",
+                    "fa_icon": "fas fa-list-ol",
+                    "default": 126
+                },
+                "iso_debug": {
+                    "type": "integer",
+                    "description": "Set the debug level",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0,
+                    "hidden": true
+                }
+            },
+            "fa_icon": "far fa-chart-bar"
         },
         "feature_mapper": {
             "title": "Feature Mapper",
@@ -545,19 +612,6 @@
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Infer proteins through:\n\n* 'aggregation'  =  aggregates all peptide scores across a protein (by calculating the maximum) (default)\n* 'bayesian'        =  compute a posterior probability for every protein based on a Bayesian network (i.e. using Epifany)\n* ('percolator' not yet supported)\n\n**Note:** If protein grouping is performed also depends on the `protein_quant` parameter (i.e. if peptides have to be unique or unique to a group only)",
                     "enum": ["aggregation", "bayesian"]
-                },
-                "protein_level_fdr_cutoff": {
-                    "type": "number",
-                    "description": "The experiment-wide protein (group)-level FDR cutoff. Default: 0.05",
-                    "default": 0.01,
-                    "fa_icon": "fas fa-filter",
-                    "help_text": "This can be protein level if 'strictly_unique_peptides' are used for protein quantification. See [`--protein_quant`](#params_protein_quant)"
-                },
-                "picked_fdr": {
-                    "type": "boolean",
-                    "description": "Use picked protein FDRs",
-                    "default": true,
-                    "fa_icon": "fas fa-list-ol"
                 },
                 "protein_score": {
                     "type": "string",
@@ -590,6 +644,26 @@
                     "default": false,
                     "fa_icon": "fas fa-list-ol",
                     "hidden": true
+                },
+                "protein_level_fdr_cutoff": {
+                    "type": "number",
+                    "description": "The experiment-wide protein (group)-level FDR cutoff. Default: 0.01",
+                    "default": 0.01,
+                    "fa_icon": "fas fa-filter",
+                    "help_text": "This can be protein level if 'strictly_unique_peptides' are used for protein quantification. See [`--protein_quant`](#protein_quant)"
+                },
+                "picked_fdr": {
+                    "type": "boolean",
+                    "description": "Use picked protein FDRs",
+                    "default": true,
+                    "fa_icon": "fas fa-list-ol"
+                },
+                "psm_level_fdr_cutoff": {
+                    "type": "number",
+                    "description": "The experiment-wide PSM-level FDR cutoff. Default: 0.01",
+                    "default": 0.01,
+                    "fa_icon": "fas fa-filter",
+                    "help_text": "After applying protein-level FDR cutoff, this additionally filters PSMs to be used for quantification and reporting."
                 },
                 "protein_inference_debug": {
                     "type": "integer",
@@ -670,6 +744,12 @@
                     "default": "unique_peptides",
                     "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
                     "fa_icon": "fas fa-list-ol"
+                },
+                "export_mztab": {
+                    "type": "boolean",
+                    "description": "Export the results in mzTab format.",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square"
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -714,8 +794,8 @@
                 },
                 "quantify_decoys": {
                     "type": "boolean",
-                    "description": "Also quantify decoys? (Usually only needed for Triqler post-processing output with `--add_triqler_output`, where it is auto-enabled)",
                     "default": false,
+                    "description": "Also quantify decoys? (Usually only needed for Triqler post-processing output with [`--add_triqler_output`](#add_triqler_output), where it is auto-enabled)",
                     "fa_icon": "far fa-check-square"
                 },
                 "plfq_debug": {
@@ -727,78 +807,6 @@
                 }
             },
             "fa_icon": "fas fa-braille"
-        },
-        "isobaric_analyzer": {
-            "title": "Isobaric analyzer",
-            "type": "object",
-            "description": "Extracts and normalizes labeling information",
-            "default": "",
-            "properties": {
-                "select_activation": {
-                    "type": "string",
-                    "description": "Operate only on MSn scans where any of its precursors features a certain activation method. Set to empty to disable.",
-                    "fa_icon": "fas fa-font",
-                    "enum": ["HCD", "CID", "ETD", "ECD"]
-                },
-                "reporter_mass_shift": {
-                    "type": "number",
-                    "description": "Allowed shift (left to right) in Th from the expected position",
-                    "default": 0.002,
-                    "fa_icon": "fas fa-sliders-h"
-                },
-                "min_precursor_intensity": {
-                    "type": "number",
-                    "description": "Minimum intensity of the precursor to be extracted",
-                    "default": 1.0,
-                    "fa_icon": "fas fa-sliders-h"
-                },
-                "min_precursor_purity": {
-                    "type": "number",
-                    "description": "Minimum fraction of the total intensity. 0.0:1.0",
-                    "default": 0.0,
-                    "fa_icon": "fas fa-sliders-h",
-                    "help_text": "Minimum fraction of the total intensity in the isolation window of the precursor spectrum"
-                },
-                "min_reporter_intensity": {
-                    "type": "number",
-                    "description": "Minimum intensity of the individual reporter ions to be extracted.",
-                    "default": 0.0,
-                    "fa_icon": "fas fa-sliders-h"
-                },
-                "precursor_isotope_deviation": {
-                    "type": "number",
-                    "description": "Maximum allowed deviation (in ppm) between theoretical and observed isotopic peaks of the precursor peak",
-                    "default": 10.0,
-                    "fa_icon": "fas fa-sliders-h"
-                },
-                "isotope_correction": {
-                    "type": "boolean",
-                    "description": "Enable isotope correction (highly recommended)",
-                    "default": true,
-                    "fa_icon": "fas fa-toggle-on"
-                },
-                "iso_normalization": {
-                    "type": "boolean",
-                    "description": "Enable normalization of the channel intensities",
-                    "default": false,
-                    "fa_icon": "fas fa-toggle-on",
-                    "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
-                },
-                "reference_channel": {
-                    "type": "integer",
-                    "description": "The reference channel, e.g. for calculating ratios.",
-                    "fa_icon": "fas fa-list-ol",
-                    "default": 126
-                },
-                "iso_debug": {
-                    "type": "integer",
-                    "description": "Set the debug level",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
-                }
-            },
-            "fa_icon": "far fa-chart-bar"
         },
         "DIA-NN": {
             "title": "DIA-NN",
@@ -813,11 +821,54 @@
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
                 },
-                "matrix_spec_q": {
-                    "type": "number",
-                    "description": "run-specific protein q-value filtering will be used, in addition to the global q-value filtering, when saving protein matrices. The ability to filter based on run-specific protein q-values, which allows to generate highly reliable data, is one of the advantages of DIA-NN",
-                    "default": 0.01,
+                "mass_acc_automatic": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Choosing the MS2 mass accuracy setting automatically",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "mass_acc_ms2": {
+                    "type": "integer",
+                    "description": "Sets the MS2 mass accuracy to N ppm",
+                    "default": 11,
                     "fa_icon": "fas fa-filter"
+                },
+                "mass_acc_ms1": {
+                    "type": "integer",
+                    "description": "Sets the MS1 mass accuracy to N ppm",
+                    "default": 15,
+                    "fa_icon": "fas fa-filter"
+                },
+                "scan_window_automatic": {
+                    "type": "boolean",
+                    "description": "Choosing scan_window setting automatically",
+                    "default": true,
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "scan_window": {
+                    "type": "integer",
+                    "description": "Set the scan window radius to a specific value",
+                    "fa_icon": "fas fa-filter",
+                    "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
+                    "default": 7
+                },
+                "min_corr": {
+                    "type": "number",
+                    "description": "Only peaks with correlation sum exceeding min_corr will be considered",
+                    "fa_icon": "fas fa-filter",
+                    "default": 2.0
+                },
+                "corr_diff": {
+                    "type": "number",
+                    "description": "Peaks with correlation sum below corr_diff from maximum will not be considered",
+                    "fa_icon": "fas fa-filter",
+                    "default": 1.0
+                },
+                "time_corr_only": {
+                    "type": "boolean",
+                    "description": "A single score will be used until RT alignment to save memory",
+                    "fa_icon": "fas fa-filter",
+                    "default": true
                 },
                 "min_pr_mz": {
                     "type": "number",
@@ -838,6 +889,19 @@
                     "type": "number",
                     "description": "The maximum fragment m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter"
+                },
+                "pg_level": {
+                    "type": "number",
+                    "description": "Controls the protein inference mode",
+                    "fa_icon": "fas fa-list-ol",
+                    "enum": [0, 1, 2],
+                    "default": 2
+                },
+                "species_genes": {
+                    "type": "boolean",
+                    "description": "Instructs DIA-NN to add the organism identifier to the gene names",
+                    "fa_icon": "far fa-check-square",
+                    "default": false
                 },
                 "diann_debug": {
                     "type": "integer",
@@ -869,12 +933,12 @@
                 },
                 "ref_condition": {
                     "type": "string",
-                    "description": "Instead of all pairwise contrasts (default), uses the given condition name/number (corresponding to your experimental design) as a reference and creates pairwise contrasts against it. (TODO not yet fully implemented)",
+                    "description": "Experimental: Instead of all pairwise contrasts (default), uses the given condition name/number (corresponding to your experimental design) as a reference and creates pairwise contrasts against it.",
                     "fa_icon": "fas fa-font"
                 },
                 "contrasts": {
                     "type": "string",
-                    "description": "Allows full control over contrasts by specifying a set of contrasts in a semicolon seperated list of R-compatible contrasts with the condition names/numbers as variables (e.g. `1-2;1-3;2-3`). Overwrites '--ref_condition' (TODO not yet fully implemented)",
+                    "description": "Experimental: Allows full control over contrasts by specifying a set of contrasts in a semicolon separated list of R-compatible contrasts with the condition names/numbers as variables (e.g. `1-2;1-3;2-3`). Overwrites [`--ref_condition`](#ref_condition).",
                     "fa_icon": "fas fa-font"
                 },
                 "add_triqler_output": {
@@ -1119,6 +1183,12 @@
                     "fa_icon": "fas fa-cog",
                     "hidden": true
                 },
+                "skip_table_plots": {
+                    "type": "boolean",
+                    "description": "Skip protein/peptide table plots with pmultiqc for large dataset.",
+                    "fa_icon": "fas fa-toggle-on",
+                    "default": false
+                },
                 "tracedir": {
                     "type": "string",
                     "description": "Directory to keep pipeline Nextflow logs and reports.",
@@ -1196,6 +1266,9 @@
             "$ref": "#/definitions/feature_mapper"
         },
         {
+            "$ref": "#/definitions/isobaric_analyzer"
+        },
+        {
             "$ref": "#/definitions/protein_inference"
         },
         {
@@ -1203,9 +1276,6 @@
         },
         {
             "$ref": "#/definitions/protein_quantification_lfq"
-        },
-        {
-            "$ref": "#/definitions/isobaric_analyzer"
         },
         {
             "$ref": "#/definitions/DIA-NN"

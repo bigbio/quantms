@@ -26,7 +26,7 @@ def multiqc_report = []
 
 workflow LFQ {
     take:
-    file_preparation_results
+    ch_file_preparation_results
     ch_expdesign
     ch_database_wdecoy
 
@@ -37,13 +37,13 @@ workflow LFQ {
     //
     // SUBWORKFLOWS: ID
     //
-    ID(file_preparation_results, ch_database_wdecoy)
+    ID(ch_file_preparation_results, ch_database_wdecoy)
     ch_software_versions = ch_software_versions.mix(ID.out.version.ifEmpty(null))
 
     //
     // SUBWORKFLOW: PROTEOMICSLFQ
     //
-    file_preparation_results.join(ID.out.id_results)
+    ch_file_preparation_results.join(ID.out.id_results)
         .multiMap { it ->
             mzmls: pmultiqc_mzmls: it[1]
             ids: it[2]
@@ -75,6 +75,7 @@ workflow LFQ {
     ch_pmultiqc_ids = ch_pmultiqc_ids
     final_result    = PROTEOMICSLFQ.out.out_mztab
     versions        = ch_software_versions
+    msstats_in      = PROTEOMICSLFQ.out.out_msstats
     msstats_out     = ch_msstats_out
 }
 
