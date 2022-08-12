@@ -43,7 +43,7 @@ process DIANNCONVERT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyopenms: \$(echo "2.8.0")
+        pmultiqc: \$(multiqc --pmultiqc_version | sed -e "s/pmultiqc, version //g")
     END_VERSIONS
     """
 }
