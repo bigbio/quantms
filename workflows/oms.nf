@@ -35,36 +35,33 @@ workflow OMS {
     //
     // SUBWORKFLOW: DatabaseSearchEngines
     //
-    DATABASESEARCHENGINES (
+    DATABASESEARCHENGINES(
         ch_file_preparation_results,
         ch_database_wdecoy
     )
+
+    ch_pepxml_files = DATABASESEARCHENGINES.out.ch_id_files_pepx
     ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
 
     //
     // Open Search post-processing
     //
 
-    /*(DATABASESEARCHENGINES.out.ch_id_files_pepx).mix(ch_database_wdecoy)
-        .multiMap { it ->
-            ids: it[1]
-            db: it[2]
-        }
-        .set{ ch_philosopher_pep }
-    */
-    PEPTIDEPROPHET (
-        DATABASESEARCHENGINES.out.ch_id_files_pepx.combine(ch_database_wdecoy)
-    )
-    
-    ch_software_versions = ch_software_versions.mix(PEPTIDEPROPHET.out.version)
-    
-    PTMSHEPHERD(
-        ch_file_preparation_results.join(PEPTIDEPROPHET.out.psm_philosopher).mix(ch_database_wdecoy)
-    )
+    PEPTIDEPROPHET(ch_pepxml_files.combine(ch_database_wdecoy))
 
+    ch_psm_files = PEPTIDEPROPHET.out.psm_philosopher
+    ch_software_versions = ch_software_versions.mix(PEPTIDEPROPHET.out.version)
+
+    //
+    // Modification mapping
+    //
+    
+    PTMSHEPHERD(ch_file_preparation_results.join(ch_psm_files).mix(ch_database_wdecoy))
+
+    ch_modification_sum = PTMSHEPHERD.out.ptmshepherd_sum
     ch_software_versions = ch_software_versions.mix(PTMSHEPHERD.out.version)
 
     emit:
-    final_result    = PTMSHEPHERD.out.ptmshepherd_sum
+    final_result    = ch_modification_sum
     versions        = ch_software_versions
 }
