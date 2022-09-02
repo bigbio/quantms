@@ -1,0 +1,33 @@
+name: filemerge
+description: Merges several MS files into one file.
+keywords:
+  - merge
+  - MS
+  - OpenMS
+tools:
+  - FileMerger:
+      description: |
+        Merges several MS files into one file.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FileMerger.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FileMerger.html
+input:
+  - id_file:
+      type: file
+      description: |
+        Input files separated by blank.
+      pattern: "*.{mzML,idXML,consensusXML}"
+output:
+  - id_merge:
+      type: file
+      description: Output Merged file
+      pattern: "*.{mzML,idXML,consensusXML}"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

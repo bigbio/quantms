@@ -1,0 +1,34 @@
+name: decoydatabase
+description: Create a decoy peptide database from standard FASTA databases.
+keywords:
+  - decoy
+  - fasta
+  - OpenMS
+tools:
+  - DecoyDatabase:
+      description: |
+        Create a decoy peptide database from standard FASTA databases.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_DecoyDatabase.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_DecoyDatabase.html
+input:
+  - db_for_decoy:
+      type: file
+      description: |
+        Input standard FASTA databases to create decoy.
+      pattern: "*.{fasta,fa}"
+output:
+  - db_decoy:
+      type: file
+      description: |
+        Protein database in FASTA format with appended decoys.
+      pattern: "*.{fasta,fa}"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

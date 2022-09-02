@@ -1,0 +1,31 @@
+name: idconflictresolver
+description: Resolves ambiguous annotations of features with peptide identifications.
+keywords:
+  - ambiguous
+  - OpenMS
+tools:
+  - IDConflictResolver:
+      description: |
+        Resolves ambiguous annotations of features with peptide identifications.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDConflictResolver.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDConflictResolver.html
+input:
+  - consus_file:
+      type: file
+      description: |
+        Input file (data annotated with identifications)
+      pattern: "*.{featureXML,consensusXML}"
+output:
+  - pro_resconf:
+      type: file
+      description: Output file (data with one peptide identification per feature)
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

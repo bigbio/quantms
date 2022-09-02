@@ -1,0 +1,38 @@
+name: idpep
+description: Tool to estimate the probability of peptide hits to be incorrectly assigned.
+keywords:
+  - PSM rescoring
+  - decoy
+  - OpenMS
+tools:
+  - IDPosteriorErrorProbability:
+      description: |
+        Tool to estimate the probability of peptide hits to be incorrectly assigned.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDPosteriorErrorProbability.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDPosteriorErrorProbability.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_file:
+      type: file
+      description: |
+        Identifications from searching a target-decoy database.
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_ForIDPEP:
+      type: file
+      description: |
+        Identifications with annotated FDR.
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

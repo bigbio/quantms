@@ -1,27 +1,29 @@
 process SAMPLESHEET_CHECK {
-    tag "$samplesheet"
 
-    conda (params.enable_conda ? "conda-forge::python=3.8.3" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/python:3.8.3' :
-        'quay.io/biocontainers/python:3.8.3' }"
+        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.21--pyhdfd78af_0' :
+        'quay.io/biocontainers/sdrf-pipelines:0.0.21--pyhdfd78af_0' }"
 
     input:
-    path samplesheet
+    path input_file
+    val is_sdrf
 
     output:
-    path '*.csv'       , emit: csv
+    path "*.log", emit: log
+    path "${input_file}", emit: checked_file
     path "versions.yml", emit: versions
 
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
+    // TODO validate experimental design file
+    def args = task.ext.args ?: ''
+
     """
-    check_samplesheet.py \\
-        $samplesheet \\
-        samplesheet.valid.csv
+    check_samplesheet.py "${input_file}" ${is_sdrf} --CHECK_MS |& tee input_check.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(python --version | sed 's/Python //g')
+        sdrf-pipelines: \$(echo "0.0.21")
     END_VERSIONS
     """
 }

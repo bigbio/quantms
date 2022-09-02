@@ -1,0 +1,36 @@
+name: msstatsconverter
+description: Converter to input for MSstats
+keywords:
+  - MSstats
+  - OpenMS
+tools:
+  - MSstatsConverter:
+      description: |
+        Converter to input for MSstats
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSstatsConverter.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSstatsConverter.html
+input:
+  - consensusXML:
+      type: file
+      description: |
+        Input consensusXML with peptide intensities
+      pattern: "*.consensusXML"
+  - exp_file:
+      type: file
+      description: Experimental Design file
+      pattern: "*.tsv"
+output:
+  - out_msstats:
+      type: file
+      description: Input CSV file for MSstats.
+      pattern: "*.csv"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

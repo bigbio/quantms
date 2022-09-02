@@ -1,0 +1,34 @@
+name: proteininference
+description: Computes a protein identification score based on an aggregation of scores of identified peptides.
+keywords:
+  - protein
+  - inference
+  - OpenMS
+tools:
+  - ProteinInference:
+      description: |
+        Computes a protein identification score based on an aggregation of scores of identified peptides.
+      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html
+      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html
+input:
+  - consus_file:
+      type: file
+      description: |
+        identification results.
+      pattern: "*.{idXML,consensusXML}"
+output:
+  - protein_inference:
+      type: file
+      description: |
+        identification results with scored/grouped proteins.
+      pattern: "*.consensusXML"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
