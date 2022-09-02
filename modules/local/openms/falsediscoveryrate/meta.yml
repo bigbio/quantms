@@ -8,8 +8,8 @@ tools:
   - FalseDiscoveryRate:
       description: |
         Tool to estimate the false discovery rate on peptide and protein level.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_FalseDiscoveryRate.html
 input:
   - meta:
       type: map

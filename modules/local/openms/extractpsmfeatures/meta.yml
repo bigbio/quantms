@@ -8,8 +8,8 @@ tools:
   - PSMFeatureExtractor:
       description: |
         Computes extra features for each input PSM.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_PSMFeatureExtractor.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_PSMFeatureExtractor.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_PSMFeatureExtractor.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_PSMFeatureExtractor.html
 input:
   - meta:
       type: map
