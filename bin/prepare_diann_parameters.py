@@ -37,7 +37,7 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod):
 
 
 def convert_mod(unimod_database, fix_mod, var_mod):
-    pattern = re.compile("\((.*?)\)")
+    pattern = re.compile(r"\((.*?)\)")
     var_ptm = []
     fix_ptm = []
 
