@@ -1,0 +1,7 @@
+name: sdrf-pipelines
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - sdrf-pipelines
