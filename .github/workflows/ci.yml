@@ -27,13 +27,9 @@ jobs:
       fail-fast: false
       matrix:
         # Nextflow versions
-        include:
-          # Test pipeline minimum Nextflow version
-          - NXF_VER: "21.10.3"
-            NXF_EDGE: ""
-          # Test latest edge release of Nextflow
-          - NXF_VER: ""
-            NXF_EDGE: "1"
+        NXF_VER:
+          - "21.10.3"
+          - "latest-everything"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt"]
         exec_profile: ["docker", "conda"]
         exclude:
