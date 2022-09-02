@@ -7,8 +7,8 @@ tools:
   - PercolatorAdapter:
       description: |
         Percolator (http://percolator.ms/) is a tool to apply semi-supervised learning for peptide identification from shotgun proteomics datasets.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PercolatorAdapter.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PercolatorAdapter.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PercolatorAdapter.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PercolatorAdapter.html
 input:
   - meta:
       type: map
