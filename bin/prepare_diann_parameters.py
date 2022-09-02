@@ -4,12 +4,15 @@ import re
 import click
 from sdrf_pipelines.openms.unimod import UnimodDatabase
 
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+
+
 @click.group(context_settings=CONTEXT_SETTINGS)
 def cli():
     pass
 
-@click.command('generate')
+
+@click.command("generate")
 @click.option("--enzyme", "-e", help="")
 @click.option("--fix_mod", "-f", help="")
 @click.option("--var_mod", "-v", help="")
@@ -24,12 +27,13 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod):
     diann_fix_ptm = ""
     diann_var_ptm = ""
     for mod in fix_ptm:
-        diann_fix_ptm += (fix_ptm_str + mod)
+        diann_fix_ptm += fix_ptm_str + mod
     for mod in var_ptm:
-        diann_var_ptm += (var_ptm_str + mod)
+        diann_var_ptm += var_ptm_str + mod
 
     with open("diann_config.cfg", "w") as f:
         f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
+
 
 def convert_mod(unimod_database, fix_mod, var_mod):
     pattern = re.compile("\((.*?)\)")
@@ -82,6 +86,7 @@ def convert_mod(unimod_database, fix_mod, var_mod):
 
     return fix_ptm, var_ptm
 
+
 def enzyme_cut(enzyme):
     if enzyme == "Trypsin":
         cut = "K*,R*,!*P"
@@ -94,10 +99,11 @@ def enzyme_cut(enzyme):
     elif enzyme == "Chymotrypsin":
         cut = "F*,W*,Y*,L*,!*P"
     elif enzyme == "Lys-C":
-        cut="K*,!*P"
+        cut = "K*,!*P"
     else:
         cut = "--cut"
     return cut
+
 
 cli.add_command(generate_cfg)
 
