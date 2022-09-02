@@ -17,7 +17,7 @@ nextflow run nf-core/quantms --input '/url/path/to/your/experimentX_design.tsv' 
 where the experimental design file has to be one of:
 
 - [Sample-to-data-relationship format](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.0c00376) (.sdrf.tsv)
-- [OpenMS experimental design format](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) (.tsv)
+- [OpenMS experimental design format](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) (.tsv)
 
 In the respective "comment[file uri]" or "Spectra_Filepath" columns, the raw or mzML files with the mass spectra to be staged have to be listed. URIs are possible,
 and the root folder as well as the file endings can be changed in the options in case of previously downloaded, moved or converted experiments.

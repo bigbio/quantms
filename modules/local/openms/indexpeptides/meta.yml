@@ -8,8 +8,8 @@ tools:
   - PeptideIndexer:
       description: |
         Refreshes the protein references for all peptide hits.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeptideIndexer.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeptideIndexer.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeptideIndexer.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeptideIndexer.html
 input:
   - meta:
       type: map
