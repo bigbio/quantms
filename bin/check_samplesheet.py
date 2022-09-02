@@ -3,13 +3,14 @@
 # nf-core: Update the script to check the sdrf
 # This script is based on the example at: https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
+import argparse
+import errno
 import os
 import sys
-import errno
-import argparse
-from sdrf_pipelines.sdrf.sdrf import SdrfDataFrame
-from sdrf_pipelines.sdrf.sdrf_schema import MASS_SPECTROMETRY, DEFAULT_TEMPLATE
+
 import pandas as pd
+from sdrf_pipelines.sdrf.sdrf import SdrfDataFrame
+from sdrf_pipelines.sdrf.sdrf_schema import DEFAULT_TEMPLATE, MASS_SPECTROMETRY
 
 
 def parse_args(args=None):

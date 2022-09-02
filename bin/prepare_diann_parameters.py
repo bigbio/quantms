@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import re
+
 import click
 from sdrf_pipelines.openms.unimod import UnimodDatabase
 

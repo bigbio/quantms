@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import pandas as pd
-import click
 import os
 import re
+
+import click
 import numpy as np
+import pandas as pd
 from pyopenms import *
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
