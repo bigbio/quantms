@@ -4,7 +4,7 @@
 // accept different file endings already?
 process PREPROCESS_EXPDESIGN {
 
-    conda "quantms-env.yaml"
+    conda (params.enable_conda ? "quantms-env.yaml" : null)
 
     label 'process_very_low'
     label 'process_single_thread'

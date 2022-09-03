@@ -1,6 +1,6 @@
 process SAMPLESHEET_CHECK {
 
-    conda "quantms-env.yaml"
+    conda (params.enable_conda ? "quantms-env.yaml" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.21--pyhdfd78af_0' :
         'quay.io/biocontainers/sdrf-pipelines:0.0.21--pyhdfd78af_0' }"
