@@ -4,5 +4,4 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - pandas
   - sdrf-pipelines
