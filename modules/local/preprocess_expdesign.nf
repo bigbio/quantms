@@ -3,9 +3,6 @@
 // Maybe the renaming can be done in the rawfileconversion step? Or check if the OpenMS tools
 // accept different file endings already?
 process PREPROCESS_EXPDESIGN {
-
-    conda (params.enable_conda ? "quantms-env.yaml" : null)
-
     label 'process_very_low'
     label 'process_single_thread'
     tag "$design.Name"
