@@ -4,8 +4,6 @@
 // accept different file endings already?
 process PREPROCESS_EXPDESIGN {
 
-    conda (params.enable_conda ? "bioconda::sdrf-pipelines=0.0.21" : null)
-
     label 'process_very_low'
     label 'process_single_thread'
     tag "$design.Name"
