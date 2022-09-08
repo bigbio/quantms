@@ -1,0 +1,38 @@
+name: deltamasshistogram
+description: Creates graphical histogram from PTMShepherd annotated deltamass tables.
+keywords:
+  - Resultsummary
+  - Python script
+  - Delta Mass
+  - Open Modification Search
+tools:
+  - Delta_Mass_Hist:
+      description: |
+        Python script to create graphical histograms from annotated delta-masses.
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - mzMLs:
+      type: file
+      description: Spectra files in mzml format.
+      pattern: "*.mzML"
+  - global_modification_table:
+      type: file
+      description: tabular file created by PTMShepherd containing the modification information.
+      pattern: "*.globl.modsummary.tsv"
+output:
+  - histogram_html:
+      type: file
+      description: HTML file containing the graphical histogram of the delta masses.
+      pattern: "*_delta-mass.html"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@tillenglert"
