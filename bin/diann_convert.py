@@ -404,7 +404,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1000889_peptidoform_sequence"] = out_mztab_PEH.apply(
         lambda x: AASequence.fromString(x["opt_global_cv_MS:1000889_peptidoform_sequence"]).toString(), axis=1)
 
-    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: Unique(x["accession"], x["sequence"], fasta_df), axis=1, result_type="expand")
+    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: "0" if ";" in x["accession"] else "1", axis=1, result_type="expand")
 
     null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
     for i in null_col:
@@ -465,7 +465,7 @@ def mztab_PSH(report, database, fasta_df):
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
     out_mztab_PSH.loc[:, "PSM_ID"] = out_mztab_PSH.index
-    # out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: Unique(x["accession"], x["sequence"], fasta_df), axis=1, result_type="expand")
+    out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: "0" if ";" in x["accession"] else "1", axis=1, result_type="expand")
     out_mztab_PSH.loc[:, "database"] = database
 
     null_col = ["database_version", "spectra_ref", "search_engine", "unique", "exp_mass_to_charge", "pre", "post",
@@ -519,33 +519,6 @@ def classify_result_type(target):
         return "indistinguishable_protein_group"
     else:
         return "single_protein"
-
-
-def Unique(accession, pep_seq, fasta_df):
-    '''Find the location of the peptide and determine if the peptide is unique  
-    
-    :param target: The value of "accession" column in out_mztab_PEH or out_mztab_PSH
-    :type target: str
-    :param pep_seq: Peptide sequence
-    :type sep_seq: str
-    :param fasta_df: A dataframe contains protein IDs, sequences and lengths
-    :type fasta_df: pandas.core.frame.DataFrame
-    :return: Unique flag(1 or 0)
-    :rtype: str
-    '''
-    unique = 1
-    for i in accession.split(";"):
-        pro_seq = fasta_df[fasta_df["id"].str.contains(i)]["seq"].values[0]
-        result = re.finditer(pep_seq, pro_seq)
-        section_list = []
-        if result:
-            for i in result:
-                section_list.append([i.span()[0],i.span()[1]-1])
-
-        if len(section_list) != 1:
-            unique = 0
-
-    return str(unique)
 
 
 def calculate_protein_coverage(report, target, reference, fasta_df):
