@@ -404,7 +404,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1000889_peptidoform_sequence"] = out_mztab_PEH.apply(
         lambda x: AASequence.fromString(x["opt_global_cv_MS:1000889_peptidoform_sequence"]).toString(), axis=1)
 
-    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: "0" if ";" in x["accession"] else "1", axis=1, result_type="expand")
+    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand")
 
     null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
     for i in null_col:
@@ -465,7 +465,7 @@ def mztab_PSH(report, database, fasta_df):
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
     out_mztab_PSH.loc[:, "PSM_ID"] = out_mztab_PSH.index
-    out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: "0" if ";" in x["accession"] else "1", axis=1, result_type="expand")
+    out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand")
     out_mztab_PSH.loc[:, "database"] = database
 
     null_col = ["database_version", "spectra_ref", "search_engine", "unique", "exp_mass_to_charge", "pre", "post",
