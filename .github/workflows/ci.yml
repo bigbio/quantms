@@ -38,7 +38,7 @@ jobs:
           - test_profile: test_localize
             exec_profile: conda
           - NXF_VER: "latest-everything"
-            profile: "conda"    
+            profile: "conda"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
