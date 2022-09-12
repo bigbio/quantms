@@ -34,8 +34,7 @@ workflow DATABASESEARCHENGINES {
     }
 
     emit:
-    ch_id_files_idx = ch_id_msgf.mix(ch_id_comet).mix(ch_id_msfragger)
+    ch_id_files_idx  = ch_id_msgf.mix(ch_id_comet).mix(ch_id_msfragger)
     ch_id_files_pepx = ch_pepx_msfragger
-
-    versions        = ch_versions
+    versions         = ch_versions
 }

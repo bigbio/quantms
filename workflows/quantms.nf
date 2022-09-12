@@ -108,10 +108,8 @@ workflow QUANTMS {
                 dia: it[0].acquisition_method.contains("dia")
                 iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
                 lfq: it[0].labelling_type.contains("label free")
-                oms: it[0].labelling_type.contains("open mod search")
             }
             .set{ch_fileprep_result}
-
 
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
@@ -140,28 +138,36 @@ workflow QUANTMS {
         ch_versions = ch_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
     }
 
+    // 
+    // Branch into open mod search
+    //
 
-    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
-    ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
-    ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
-    ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
-    ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
+    if (params.open_mod_search){
+        ch_fileprep_result_oms = ch_fileprep_result.iso.mix(ch_fileprep_result.lfq)
 
-    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
-    ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
-    ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
-    ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
-    ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
+        OMS(ch_fileprep_result_oms, ch_searchengine_in_db)
+        ch_pipeline_results = ch_pipeline_results.mix(OMS.out.final_result)
+        ch_versions = ch_versions.mix(OMS.out.versions.ifEmpty(null))
 
-    DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-    ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
-    ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
-    ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+    }
+    else {
+        TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
+        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
+        ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
+        ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
+        ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-    OMS(ch_fileprep_result.oms, ch_searchengine_in_db)
-    ch_pipeline_results = ch_pipeline_results.mix(OMS.out.final_result)
-    ch_versions = ch_versions.mix(OMS.out.versions.ifEmpty(null))
+        LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
+        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
+        ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
+        ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
+        ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
+        DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
+        ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
+        ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+    }
 
     //
     // MODULE: Pipeline reporting
