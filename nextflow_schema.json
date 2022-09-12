@@ -229,7 +229,7 @@
                     "description": "Comma-separated range of integers with allowed isotope peak errors for precursor tolerance (like MS-GF+ parameter '-ti'). E.g. -1,3",
                     "default": "0,1",
                     "fa_icon": "fas fa-tasks",
-                    "help_text": "Range of integers with allowed isotope peak errors (like MS-GF+ parameter '-ti'). Takes into account the error introduced by choosing a non-monoisotopic peak for fragmentation. Combined with 'precursor_mass_tolerance'/'precursor_error_units', this determines the actual precursor mass tolerance. E.g. for experimental mass 'exp' and calculated mass 'calc', '-precursor_mass_tolerance 20 -precursor_error_units ppm -isotope_error_range -1,2' tests '|exp - calc - n * 1.00335 Da| < 20 ppm' for n = -1, 0, 1, 2."
+                    "help_text": "Range of integers with allowed isotope peak errors (like MS-GF+ parameter '-ti'). For MSFragger this parameter is either 0 for open window searches or 0/1/2 for narrow window searches and is set accordingly. Takes into account the error introduced by choosing a non-monoisotopic peak for fragmentation. Combined with 'precursor_mass_tolerance'/'precursor_error_units', this determines the actual precursor mass tolerance. E.g. for experimental mass 'exp' and calculated mass 'calc', '-precursor_mass_tolerance 20 -precursor_error_units ppm -isotope_error_range -1,2' tests '|exp - calc - n * 1.00335 Da| < 20 ppm' for n = -1, 0, 1, 2."
                 },
                 "instrument": {
                     "type": "string",
@@ -285,6 +285,12 @@
                     "fa_icon": "fas fa-bug",
                     "default": 0,
                     "hidden": true
+                },
+                "msfragger_license": {
+                    "type": "string",
+                    "description": "Agree to the licence agreement of the msfragger search engine, which can be found online or in the thirdparty directory of OpenMS. Valid options are yes or no",
+                    "default": "no",
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fas fa-search"
@@ -334,6 +340,32 @@
                 }
             },
             "fa_icon": "fas fa-search-location"
+        },
+        "open_modification_search": {
+            "title": "Open Modification Search",
+            "type": "object",
+            "description": "Search for modifications using a large precursor mass window",
+            "default": "",
+            "properties": {
+                "open_mod_search": {
+                    "type": "boolean",
+                    "description": "Enable the open modification seach branch",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "precursor_mass_tolerance_upper": {
+                    "type": "integer",
+                    "description": "Upper precursor mass tolerance threshold in Da",
+                    "default": 500,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "precursor_mass_tolerance_lower": {
+                    "type": "integer",
+                    "description": "Lower precursor mass tolerance threshold in Da",
+                    "default": -150,
+                    "fa_icon": "fas fa-sliders-h"
+                }
+                
+            }
         },
         "peptide_re_indexing": {
             "title": "Peptide re-indexing",
@@ -688,7 +720,6 @@
                     "help_text": "Quantification method used in the experiment.",
                     "enum": [
                         "label free sample",
-                        "open mod search",
                         "itraq4plex",
                         "itraq8plex",
                         "tmt6plex",

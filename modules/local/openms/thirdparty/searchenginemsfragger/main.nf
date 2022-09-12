@@ -31,18 +31,18 @@ process SEARCHENGINEMSFRAGGER {
         precursor_mass_tolerance_upper = params.precursor_mass_tolerance_upper
         precursor_mass_tolerance_lower = -(params.precursor_mass_tolerance_lower)
         precursor_mass_tolerance_unit = "Da"
+        isotope_error = "0"
     }
     else {
         precursor_mass_tolerance_upper = meta.precursormasstolerance
         precursor_mass_tolerance_lower = meta.precursormasstolerance
         precursor_mass_tolerance_unit = meta.precursormasstoleranceunit
+        isotope_error = "0/1/2"
     }
 
     // TODO
-    // no licence hardcode
     // isotope error
     // msfragger executable
-    // more Open Mod Search parameters?
     
     """
     MSFraggerAdapter \\
@@ -50,7 +50,7 @@ process SEARCHENGINEMSFRAGGER {
         -out ${mzml_file.baseName}_msfragger.idXML \\
         -opt_out ${mzml_file.baseName}.pepXML \\
         -threads $task.cpus \\
-        -license yes \\
+        -license $params.msfragger_license \\
         -database \$PWD/${database} \\
         -executable "" \\
         -digest:allowed_missed_cleavage $params.allowed_missed_cleavages \\
@@ -58,7 +58,7 @@ process SEARCHENGINEMSFRAGGER {
         -digest:max_length $params.max_peptide_length \\
         -digest:num_enzyme_termini ${enzyme_termini} \\
         -digest:search_enzyme_name $meta.enzyme \\
-        -tolerance:isotope_error 0/1/2 \\
+        -tolerance:isotope_error $isotope_error \\
         -statmod:unimod ${meta.fixedmodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
         -varmod:unimod ${meta.variablemodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
         -varmod:max_variable_mods_per_peptide $params.max_mods \\
