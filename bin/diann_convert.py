@@ -652,8 +652,7 @@ def classify_result_type(target):
     """
     if ";" in target["Protein.Ids"]:
         return "indistinguishable_protein_group"
-    else:
-        return "single_protein"
+    return "single_protein"
 
 
 def calculate_protein_coverage(report, target, reference, fasta_df):
@@ -726,7 +725,7 @@ def match_in_report(report, target, max, flag, level):
 
         return tuple(PEH_params)
 
-    elif flag == 0 and level == "pep":
+    if flag == 0 and level == "pep":
         result = report[report["precursor.Index"] == target]
         q_value = []
         for i in range(1, max + 1):
@@ -735,7 +734,7 @@ def match_in_report(report, target, max, flag, level):
 
         return tuple(q_value)
 
-    elif flag == 1 and level == "protein":
+    if flag == 1 and level == "protein":
         result = report[report["Protein.Ids"] == target]
         PRH_params = []
         for i in range(1, max + 1):
