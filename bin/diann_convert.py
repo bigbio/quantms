@@ -17,10 +17,7 @@ def cli():
 
 
 @click.command("convert")
-@click.option(
-    "--diann_report",
-    "-r",
-)
+@click.option("--diann_report", "-r")
 @click.option("--exp_design", "-e")
 @click.option("--pg_matrix", "-pg")
 @click.option("--pr_matrix", "-pr")
