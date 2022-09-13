@@ -151,8 +151,8 @@ def convert(
 
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
-        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df)
-        PSH = mztab_PSH(report, database, fasta_df)
+        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database,)
+        PSH = mztab_PSH(report, database)
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
@@ -437,7 +437,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     return out_mztab_PRH
 
 
-def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
+def mztab_PEH(report, pr, precursor_list, index_ref, database):
     """Construct PEH sub-table.
 
     :param report: Dataframe for Dia-NN main report
@@ -539,7 +539,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     return out_mztab_PEH
 
 
-def mztab_PSH(report, database, fasta_df):
+def mztab_PSH(report, database):
     """Construct PSH sub-table.
 
     :param report: Dataframe for Dia-NN main report
