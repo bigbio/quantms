@@ -357,7 +357,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         )
 
     pg = pg.rename(columns=col)
-    pg.loc[:, "opt_global_result_type"] = pg.apply(lambda x: classify_result_type(x), axis=1, result_type="expand")
+    pg.loc[:, "opt_global_result_type"] = pg.apply(classify_result_type, axis=1, result_type="expand")
 
     out_mztab_PRH = pd.DataFrame()
     out_mztab_PRH = pg.drop(["Protein.Names"], axis=1)
