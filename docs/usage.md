@@ -17,7 +17,7 @@ nextflow run nf-core/quantms --input '/url/path/to/your/experimentX_design.tsv' 
 where the experimental design file has to be one of:
 
 - [Sample-to-data-relationship format](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.0c00376) (.sdrf.tsv)
-- [OpenMS experimental design format](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) (.tsv)
+- [OpenMS experimental design format](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) (.tsv)
 
 In the respective "comment[file uri]" or "Spectra_Filepath" columns, the raw or mzML files with the mass spectra to be staged have to be listed. URIs are possible,
 and the root folder as well as the file endings can be changed in the options in case of previously downloaded, moved or converted experiments.
@@ -26,7 +26,7 @@ This will launch the pipeline with the `docker` configuration profile. See below
 
 Note that the pipeline will create the following files in your working directory:
 
-```console
+```bash
 work                # Directory containing the nextflow working files
 <OUTDIR>            # Finished results in specified location (defined with --outdir)
 .nextflow_log       # Log file from Nextflow
@@ -37,7 +37,7 @@ work                # Directory containing the nextflow working files
 
 When you run the above command, Nextflow automatically pulls the pipeline code from GitHub and stores it as a cached version. When running the pipeline after this, it will always use the cached version if available - even if the pipeline has been updated since. To make sure that you're running the latest version of the pipeline, make sure that you regularly update the cached version of the pipeline:
 
-```console
+```bash
 nextflow pull nf-core/quantms
 ```
 
@@ -209,6 +209,6 @@ Some HPC setups also allow you to run nextflow within a cluster job submitted yo
 In some cases, the Nextflow Java virtual machines can start to request a large amount of memory.
 We recommend adding the following line to your environment to limit this (typically in `~/.bashrc` or `~./bash_profile`):
 
-```console
+```bash
 NXF_OPTS='-Xms1g -Xmx4g'
 ```
