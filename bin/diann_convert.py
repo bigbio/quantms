@@ -15,8 +15,12 @@ CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 def cli():
     pass
 
+
 @click.command("convert")
-@click.option("--diann_report", "-r",)
+@click.option(
+    "--diann_report",
+    "-r",
+)
 @click.option("--exp_design", "-e")
 @click.option("--pg_matrix", "-pg")
 @click.option("--pr_matrix", "-pr")
@@ -27,8 +31,19 @@ def cli():
 @click.option("--missed_cleavages", "-m")
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
-
-def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, dia_params, diann_version, fasta, charge, missed_cleavages, qvalue_threshold):
+def convert(
+    ctx,
+    diann_report,
+    exp_design,
+    pg_matrix,
+    pr_matrix,
+    dia_params,
+    diann_version,
+    fasta,
+    charge,
+    missed_cleavages,
+    qvalue_threshold,
+):
     """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are
     used for quality control and downstream analysis.
 
@@ -133,7 +148,9 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, dia_params, dia
         index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
         index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
         index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
-        report[["ms_run", "study_variable"]] = report.apply(lambda x: add_info(x["Run"], index_ref), axis = 1, result_type = "expand")
+        report[["ms_run", "study_variable"]] = report.apply(
+            lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
+        )
 
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
@@ -142,11 +159,11 @@ def convert(ctx, diann_report, exp_design, pg_matrix, pr_matrix, dia_params, dia
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
-        with open(os.path.splitext(os.path.basename(exp_design))[0] + '_out.mztab', "w", newline = "") as f:
-            MTD.to_csv(f, mode="w", sep = '\t', index = False, header = False)
-            PRH.to_csv(f, mode="w", sep = '\t', index = False, header = True)
-            PEH.to_csv(f, mode="w", sep = '\t', index = False, header = True)
-            PSH.to_csv(f, mode="w", sep = '\t', index = False, header = True)
+        with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mztab", "w", newline="") as f:
+            MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
+            PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+            PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+            PSH.to_csv(f, mode="w", sep="\t", index=False, header=True)
 
 
 def query_expdesign_value(reference, f_table, s_table):
@@ -336,7 +353,11 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     file = list(pg.columns[5:])
     col = {}
     for i in file:
-        col[i] = "protein_abundance_assay[" + str(index_ref[index_ref["run"] == os.path.splitext(os.path.split(i)[1])[0]]["ms_run"].values[0]) + "]"
+        col[i] = (
+            "protein_abundance_assay["
+            + str(index_ref[index_ref["run"] == os.path.splitext(os.path.split(i)[1])[0]]["ms_run"].values[0])
+            + "]"
+        )
 
     pg = pg.rename(columns=col)
     pg.loc[:, "opt_global_result_type"] = pg.apply(lambda x: classify_result_type(x), axis=1, result_type="expand")
@@ -457,7 +478,9 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
         lambda x: AASequence.fromString(x["opt_global_cv_MS:1000889_peptidoform_sequence"]).toString(), axis=1
     )
 
-    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand")
+    out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(
+        lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand"
+    )
 
     null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
     for i in null_col:
@@ -562,11 +585,25 @@ def mztab_PSH(report, database, fasta_df):
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
     out_mztab_PSH.loc[:, "PSM_ID"] = out_mztab_PSH.index
-    out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand")
+    out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(
+        lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand"
+    )
     out_mztab_PSH.loc[:, "database"] = database
 
-    null_col = ["database_version", "spectra_ref", "search_engine", "unique", "exp_mass_to_charge", "pre", "post",
-                "start", "end", "opt_global_feature_id", "opt_global_map_index", "opt_global_spectrum_reference"]
+    null_col = [
+        "database_version",
+        "spectra_ref",
+        "search_engine",
+        "unique",
+        "exp_mass_to_charge",
+        "pre",
+        "post",
+        "start",
+        "end",
+        "opt_global_feature_id",
+        "opt_global_map_index",
+        "opt_global_spectrum_reference",
+    ]
     for i in null_col:
         out_mztab_PSH.loc[:, i] = "null"
 
