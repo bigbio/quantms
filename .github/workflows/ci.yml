@@ -8,6 +8,9 @@ on:
   release:
     types: [published]
 
+env:
+  NXF_ANSI_LOG: false
+
 jobs:
   test:
     env:
@@ -24,13 +27,9 @@ jobs:
       fail-fast: false
       matrix:
         # Nextflow versions
-        include:
-          # Test pipeline minimum Nextflow version
-          - NXF_VER: "21.10.3"
-            NXF_EDGE: ""
-          # Test latest edge release of Nextflow
-          - NXF_VER: ""
-            NXF_EDGE: "1"
+        NXF_VER:
+          - "21.10.3"
+          - "latest-everything"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt"]
         exec_profile: ["docker", "conda"]
         exclude:
@@ -38,19 +37,16 @@ jobs:
             exec_profile: conda
           - test_profile: test_localize
             exec_profile: conda
+          - NXF_VER: "latest-everything"
+            exec_profile: "conda"
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v2
 
       - name: Install Nextflow
-        env:
-          NXF_VER: ${{ matrix.NXF_VER }}
-          # Uncomment only if the edge release is more recent than the latest stable release
-          # See https://github.com/nextflow-io/nextflow/issues/2467
-          # NXF_EDGE: ${{ matrix.NXF_EDGE }}
-        run: |
-          wget -qO- get.nextflow.io | bash
-          sudo mv nextflow /usr/local/bin/
+        uses: nf-core/setup-nextflow@v1
+        with:
+          version: "${{ matrix.NXF_VER }}"
 
       - name: Install mamba
         if: matrix.exec_profile == 'conda'

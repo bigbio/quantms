@@ -8,8 +8,8 @@ tools:
   - IDScoreSwitcher:
       description: |
         Switches between different scores of peptide or protein hits in identification data.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_IDScoreSwitcher.html
 input:
   - meta:
       type: map

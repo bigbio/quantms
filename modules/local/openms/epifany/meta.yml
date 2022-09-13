@@ -8,8 +8,8 @@ tools:
   - Epifany:
       description: |
         It is a protein inference engine based on a Bayesian network.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html
 input:
   - consus_file:
       type: file
