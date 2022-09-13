@@ -794,7 +794,7 @@ def find_modification(peptide):
     """
     peptide = str(peptide)
     pattern = re.compile(r"\((.*?)\)")
-    original_mods = re.findall(pattern, peptide)
+    original_mods = pattern.findall(peptide)
     peptide = re.sub(r"\(.*?\)", ".", peptide)
     position = [i.start() for i in re.finditer(r"\.", peptide)]
     for j in range(1, len(position)):
