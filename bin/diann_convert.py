@@ -6,7 +6,7 @@ import re
 import click
 import numpy as np
 import pandas as pd
-from pyopenms import *
+from pyopenms import AASequence, FASTAFile, ModificationsDB
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
