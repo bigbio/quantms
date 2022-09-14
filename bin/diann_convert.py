@@ -447,7 +447,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     :param precursor_list: A list contains all precursor IDs
     :type precursor_list: list
     :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :param database: Path to fasta file
     :type database: str
     :return: PEH sub-table
