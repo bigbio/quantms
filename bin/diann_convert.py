@@ -151,7 +151,7 @@ def convert(
 
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
-        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database,)
+        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
         PSH = mztab_PSH(report, database)
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
