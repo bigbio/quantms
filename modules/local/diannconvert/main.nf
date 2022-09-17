@@ -16,6 +16,7 @@ process DIANNCONVERT {
     path(report_pr)
     val(meta)
     path(fasta)
+    path(diann_version)
 
     output:
     path "*msstats_in.csv", emit: out_msstats
@@ -29,12 +30,15 @@ process DIANNCONVERT {
                         meta.precursormasstoleranceunit,meta.enzyme,meta.fixedmodifications,meta.variablemodifications].join(';')
 
     """
+    diann_version=`cat ${diann_version} | grep DIA-NN | awk  -F ": " '{print \$2}'`
+
     diann_convert.py convert \\
         --diann_report "${report}" \\
         --exp_design "${exp_design}" \\
         --pg_matrix "${report_pg}" \\
         --pr_matrix "${report_pr}" \\
         --dia_params "${dia_params}" \\
+        --diann_version "\${diann_version}" \\
         --fasta "${fasta}" \\
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\

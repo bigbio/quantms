@@ -3,6 +3,9 @@
 // Maybe the renaming can be done in the rawfileconversion step? Or check if the OpenMS tools
 // accept different file endings already?
 process PREPROCESS_EXPDESIGN {
+
+    conda (params.enable_conda ? "bioconda::sdrf-pipelines=0.0.21 conda-forge::pandas" : null)
+
     label 'process_very_low'
     label 'process_single_thread'
     tag "$design.Name"
@@ -24,6 +27,7 @@ process PREPROCESS_EXPDESIGN {
     sed 's/.raw\\t/.mzML\\t/I' ${design} > ${design.baseName}_openms_design.tsv
 
     # here we extract the filenames and fake an empty config (since the config values will be deduced from the workflow params)
-    a=\$(grep -n '^\$' ${design} | head -n1| awk -F":" '{print \$1}'); sed -e ''"\${a}"',\$d' ${design} > ${design.baseName}_config.tsv
+    a=\$(grep -n '^\$' ${design} | head -n 1 | awk -F ":" '{print \$1}')
+    sed -e ''"\${a}"',\$d' ${design} > ${design.baseName}_config.tsv
     """
 }

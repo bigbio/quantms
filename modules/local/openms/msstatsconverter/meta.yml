@@ -7,8 +7,8 @@ tools:
   - MSstatsConverter:
       description: |
         Converter to input for MSstats
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSstatsConverter.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSstatsConverter.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSstatsConverter.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_MSstatsConverter.html
 input:
   - consensusXML:
       type: file

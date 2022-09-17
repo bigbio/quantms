@@ -8,8 +8,8 @@ tools:
   - DecoyDatabase:
       description: |
         Create a decoy peptide database from standard FASTA databases.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_DecoyDatabase.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_DecoyDatabase.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_DecoyDatabase.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_DecoyDatabase.html
 input:
   - db_for_decoy:
       type: file
