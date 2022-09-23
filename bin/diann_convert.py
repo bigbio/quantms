@@ -233,7 +233,7 @@ def mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages):
     """Construct MTD sub-table.
 
     :param index_ref: On the basis of f_table, two columns "MS_run" and "study_variable" are added for matching
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
     :param fasta: Fasta file path
@@ -342,7 +342,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     :param pg: Dataframe for Dia-NN protein groups matrix
     :type pg: pandas.core.frame.DataFrame
     :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :param database: Path to fasta file
     :type database: str
     :param fasta_df: A dataframe contains protein IDs, sequences and lengths
@@ -450,7 +450,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     :param precursor_list: A list contains all precursor IDs
     :type precursor_list: list
     :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :param database: Path to fasta file
     :type database: str
     :return: PEH sub-table
@@ -634,7 +634,7 @@ def add_info(target, index_ref):
     :param target: The value of "Run" column in f_table
     :type target: str
     :param index_ref: A dataframe on the basis of f_table
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :return: A tuple contains ms_run and study_variable
     :rtype: tuple
     """
