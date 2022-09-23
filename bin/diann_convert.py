@@ -25,13 +25,24 @@ def cli():
 @click.option("--pg_matrix", "-pg")
 @click.option("--pr_matrix", "-pr")
 @click.option("--dia_params", "-p")
+@click.option("--diann_version", "-v")
 @click.option("--fasta", "-f")
 @click.option("--charge", "-c")
 @click.option("--missed_cleavages", "-m")
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
 def convert(
-    ctx, diann_report, exp_design, pg_matrix, pr_matrix, dia_params, fasta, charge, missed_cleavages, qvalue_threshold
+    ctx,
+    diann_report,
+    exp_design,
+    pg_matrix,
+    pr_matrix,
+    dia_params,
+    diann_version,
+    fasta,
+    charge,
+    missed_cleavages,
+    qvalue_threshold,
 ):
     """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are
     used for quality control and downstream analysis.
@@ -46,6 +57,8 @@ def convert(
     :type pr_matrix: str
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
+    :param diann_version: Version of DIA-NN
+    :type diann_version: str
     :param fasta: Path to the fasta file
     :type fasta: str
     :param charge: The charge assigned by DIA-NN(max_precursor_charge)
@@ -118,38 +131,39 @@ def convert(
     out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_triqler_in.tsv", sep="\t", index=False)
 
     # Convert to mzTab
-    fasta_df = pd.DataFrame()
-    entries = []
-    f = FASTAFile()
-    f.load(fasta, entries)
-    line = 0
-    for e in entries:
-        fasta_df.loc[line, "id"] = e.identifier
-        fasta_df.loc[line, "seq"] = e.sequence
-        fasta_df.loc[line, "len"] = len(e.sequence)
-        line += 1
+    if diann_version == "1.8.1":
+        fasta_df = pd.DataFrame()
+        entries = []
+        f = FASTAFile()
+        f.load(fasta, entries)
+        line = 0
+        for e in entries:
+            fasta_df.loc[line, "id"] = e.identifier
+            fasta_df.loc[line, "seq"] = e.sequence
+            fasta_df.loc[line, "len"] = len(e.sequence)
+            line += 1
 
-    index_ref = f_table
-    index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
-    index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
-    index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
-    index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
-    report[["ms_run", "study_variable"]] = report.apply(
-        lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
-    )
+        index_ref = f_table
+        index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
+        index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
+        index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
+        index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
+        report[["ms_run", "study_variable"]] = report.apply(
+            lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
+        )
 
-    (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
-    PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
-    PEH = mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df)
-    PSH = mztab_PSH(report, database, fasta_df)
-    MTD.loc["", :] = ""
-    PRH.loc[len(PRH) + 1, :] = ""
-    PEH.loc[len(PEH) + 1, :] = ""
-    with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mztab", "w", newline="") as f:
-        MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
-        PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
-        PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
-        PSH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+        (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
+        PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
+        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df)
+        PSH = mztab_PSH(report, database, fasta_df)
+        MTD.loc["", :] = ""
+        PRH.loc[len(PRH) + 1, :] = ""
+        PEH.loc[len(PEH) + 1, :] = ""
+        with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mztab", "w", newline="") as f:
+            MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
+            PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+            PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+            PSH.to_csv(f, mode="w", sep="\t", index=False, header=True)
 
 
 def query_expdesign_value(reference, f_table, s_table):
@@ -219,7 +233,7 @@ def mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages):
     """Construct MTD sub-table.
 
     :param index_ref: On the basis of f_table, two columns "MS_run" and "study_variable" are added for matching
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
     :param fasta: Fasta file path
@@ -232,6 +246,7 @@ def mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages):
     :rtype: pandas.core.frame.DataFrame
     """
     dia_params_list = dia_params.split(";")
+    dia_params_list = ["null" if i == "" else i for i in dia_params_list]
     FragmentMassTolerance = dia_params_list[0]
     FragmentMassToleranceUnit = dia_params_list[1]
     PrecursorMassTolerance = dia_params_list[2]
@@ -327,7 +342,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     :param pg: Dataframe for Dia-NN protein groups matrix
     :type pg: pandas.core.frame.DataFrame
     :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :param database: Path to fasta file
     :type database: str
     :param fasta_df: A dataframe contains protein IDs, sequences and lengths
@@ -340,7 +355,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     for i in file:
         col[i] = (
             "protein_abundance_assay["
-            + str(index_ref[index_ref["run"] == i.split("/")[-1].split(".")[-2]]["ms_run"].values[0])
+            + str(index_ref[index_ref["run"] == os.path.splitext(os.path.split(i)[1])[0]]["ms_run"].values[0])
             + "]"
         )
 
@@ -435,7 +450,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     :param precursor_list: A list contains all precursor IDs
     :type precursor_list: list
     :param index_ref: On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :param database: Path to fasta file
     :type database: str
     :return: PEH sub-table
@@ -464,7 +479,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     )
 
     out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(
-        lambda x: Unique(x["accession"], x["sequence"], fasta_df), axis=1, result_type="expand"
+        lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand"
     )
 
     null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
@@ -571,7 +586,7 @@ def mztab_PSH(report, database, fasta_df):
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
     out_mztab_PSH.loc[:, "PSM_ID"] = out_mztab_PSH.index
     out_mztab_PSH.loc[:, "unique"] = out_mztab_PSH.apply(
-        lambda x: Unique(x["accession"], x["sequence"], fasta_df), axis=1, result_type="expand"
+        lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand"
     )
     out_mztab_PSH.loc[:, "database"] = database
 
@@ -579,6 +594,7 @@ def mztab_PSH(report, database, fasta_df):
         "database_version",
         "spectra_ref",
         "search_engine",
+        "unique",
         "exp_mass_to_charge",
         "pre",
         "post",
@@ -618,7 +634,7 @@ def add_info(target, index_ref):
     :param target: The value of "Run" column in f_table
     :type target: str
     :param index_ref: A dataframe on the basis of f_table
-    :type indx_ref: pandas.core.frame.DataFrame
+    :type index_ref: pandas.core.frame.DataFrame
     :return: A tuple contains ms_run and study_variable
     :rtype: tuple
     """
@@ -641,33 +657,6 @@ def classify_result_type(target):
         return "indistinguishable_protein_group"
     else:
         return "single_protein"
-
-
-def Unique(accession, pep_seq, fasta_df):
-    """Find the location of the peptide and determine if the peptide is unique
-
-    :param target: The value of "accession" column in out_mztab_PEH or out_mztab_PSH
-    :type target: str
-    :param pep_seq: Peptide sequence
-    :type sep_seq: str
-    :param fasta_df: A dataframe contains protein IDs, sequences and lengths
-    :type fasta_df: pandas.core.frame.DataFrame
-    :return: Unique flag(1 or 0)
-    :rtype: str
-    """
-    unique = 1
-    for i in accession.split(";"):
-        pro_seq = fasta_df[fasta_df["id"].str.contains(i)]["seq"].values[0]
-        result = re.finditer(pep_seq, pro_seq)
-        section_list = []
-        if result:
-            for i in result:
-                section_list.append([i.span()[0], i.span()[1] - 1])
-
-        if len(section_list) != 1:
-            unique = 0
-
-    return str(unique)
 
 
 def calculate_protein_coverage(report, target, reference, fasta_df):
