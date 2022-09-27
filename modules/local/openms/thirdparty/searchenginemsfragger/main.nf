@@ -7,7 +7,7 @@ process SEARCHENGINEMSFRAGGER {
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_msfragger.idXML"), emit: id_files_msfragger
-    tuple val(meta), path("${mzml_file.baseName}_msfragger.pepXML"), emit: pepxml_files_msfragger
+    tuple val(meta), path("${mzml_file.baseName}.pepXML"), emit: pepxml_files_msfragger
     path "versions.yml",   emit: version
     path "*.log",   emit: log
 
@@ -42,15 +42,13 @@ process SEARCHENGINEMSFRAGGER {
     // no licence hardcode
     // isotope error
     // msfragger executable
-    // precursor charge override
-    // -spectrum:precursor_charge_min $params.min_precursor_charge \\
-    // -spectrum:precursor_charge_max $params.max_precursor_charge \\
+    // more Open Mod Search parameters?
     
     """
     MSFraggerAdapter \\
         -in \$PWD/${mzml_file} \\
         -out ${mzml_file.baseName}_msfragger.idXML \\
-        -opt_out ${mzml_file.baseName}_msfragger.pepXML \\
+        -opt_out ${mzml_file.baseName}.pepXML \\
         -threads $task.cpus \\
         -license yes \\
         -database \$PWD/${database} \\

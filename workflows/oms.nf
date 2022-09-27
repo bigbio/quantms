@@ -8,6 +8,7 @@
 // MODULES: Local to the pipeline
 //
 
+include { CRYSTALC } from '../modules/local/openms/thirdparty/philosopher/crystalC/main'
 include { PEPTIDEPROPHET } from '../modules/local/openms/thirdparty/philosopher/peptideprophet/main'
 include { PTMSHEPHERD } from '../modules/local/openms/thirdparty/philosopher/ptmshepherd/main'
 include { DELTAMASSHISTOGRAM } from '../modules/local/openms/thirdparty/philosopher/deltamasshistogram/main'
@@ -47,8 +48,10 @@ workflow OMS {
     // Open Search post-processing
     //
 
-    PEPTIDEPROPHET(DATABASESEARCHENGINES.out.ch_id_files_pepx.combine(ch_database_wdecoy))
+    CRYSTALC(ch_file_preparation_results.join(DATABASESEARCHENGINES.out.ch_id_files_pepx).combine(ch_database_wdecoy))
+    ch_software_versions = ch_software_versions.mix(CRYSTALC.out.version)
 
+    PEPTIDEPROPHET(CRYSTALC.out.pepxml_file_crystalc.combine(ch_database_wdecoy))
     ch_software_versions = ch_software_versions.mix(PEPTIDEPROPHET.out.version)
 
     //
