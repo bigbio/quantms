@@ -63,7 +63,7 @@ def check_expdesign(expdesign):
         lines = f.readlines()
         try:
             empty_row = lines.index("\n")
-        except ValueError as e:
+        except ValueError:
             print("the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf")
             sys.exit(1)
         if lines.index("\n") >= len(lines):
