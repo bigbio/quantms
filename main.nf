@@ -4,7 +4,8 @@
     nf-core/quantms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Github : https://github.com/nf-core/quantms
-Website: https://nf-co.re/quantms
+
+    Website: https://nf-co.re/quantms
     Slack  : https://nfcore.slack.com/channels/quantms
 ----------------------------------------------------------------------------------------
 */
