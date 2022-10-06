@@ -32,6 +32,10 @@ jobs:
             }
 
           profiles: test_${{ matrix.mode }},aws_tower
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: tower_action_*.log
           nextflow_config: |
-            process.errorStrategy = 'retry'
-            process.maxRetries = 3
+          process.errorStrategy = 'retry'
+          process.maxRetries = 3
