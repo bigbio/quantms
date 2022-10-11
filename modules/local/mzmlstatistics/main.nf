@@ -20,7 +20,7 @@ process MZMLSTATISTICS {
     def args = task.ext.args ?: ''
 
     """
-    python /home/qinchunyuan/proteomicsDIA/quantms-statistics/bin/mzml_statistics.py mzml_dataframe \\
+    mzml_statistics.py mzml_dataframe \\
         --mzml_folder "./out/" \\
         |& tee mzml_statistics.log
 
