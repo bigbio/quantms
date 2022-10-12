@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from pyopenms import MzMLFile, MSExperiment
 import os
 import pandas as pd
