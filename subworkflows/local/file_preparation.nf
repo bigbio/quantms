@@ -4,6 +4,7 @@
 
 include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main'
 include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main'
+include { MZMLSTATISTICS } from '../../modules/local/mzmlstatistics/main'
 include { OPENMSPEAKPICKER } from '../../modules/local/openms/openmspeakpicker/main'
 
 workflow FILE_PREPARATION {
@@ -13,6 +14,7 @@ workflow FILE_PREPARATION {
     main:
     ch_versions = Channel.empty()
     ch_results = Channel.empty()
+    ch_statistics = Channel.empty()
 
     //
     // Divide mzml files
@@ -51,6 +53,15 @@ workflow FILE_PREPARATION {
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
     ch_results = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
 
+    ch_results.multiMap{
+        meta: it[0]
+        mzml: it[1]
+    }.set{ ch_mzml }
+
+    MZMLSTATISTICS( ch_mzml.mzml.collect() )
+    ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics)
+    ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
+
     if (params.openms_peakpicking){
         OPENMSPEAKPICKER (
             ch_results
@@ -63,5 +74,6 @@ workflow FILE_PREPARATION {
 
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml]
+    statistics      = ch_statistics     // channel: [ mzml_statistics.tsv ]
     version         = ch_versions       // channel: [ *.version.txt ]
 }
