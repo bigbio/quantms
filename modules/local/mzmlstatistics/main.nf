@@ -3,10 +3,12 @@ process MZMLSTATISTICS {
     // TODO could be easily parallelized
     label 'process_single_thread'
 
-    conda (params.enable_conda ? "bioconda::pyopenms=2.8.0" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.16" : null)
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.16--pyhdfd78af_0"
+    } else {
+        container "quay.io/biocontainers/pmultiqc:0.0.16--pyhdfd78af_0"
+    }
 
     input:
     path("out/*")
