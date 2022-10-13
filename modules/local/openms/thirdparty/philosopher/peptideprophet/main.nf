@@ -24,7 +24,7 @@ process PEPTIDEPROPHET {
     philosopher peptideprophet --database ${database} --ppm --accmass --expectscore --decoyprobs --nonparam ${pepXML_file} >> ${pepXML_file.baseName}_peptideprophet.log
     echo "\n------------Postprocess------------" >> ${pepXML_file.baseName}_peptideprophet.log
     philosopher filter --pepxml "interact-${pepXML_file.baseName}.pep.xml" --tag ${params.decoy_string} >> ${pepXML_file.baseName}_peptideprophet.log
-    philosopher report >> ${pepXML_file.baseName}_peptideprophet.log
+    philosopher report >> ${pepXML_file.baseName}_peptideprophet.log    // isotope error
     mv psm.tsv ${pepXML_file.baseName}_psm.tsv
 
 cat <<-END_VERSIONS > versions.yml

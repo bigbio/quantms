@@ -2,6 +2,8 @@ process SEARCHENGINEMSFRAGGER {
     tag "$meta.id"
     label 'process_medium'
 
+    container = 'tillenglert/oopenms:latest'
+
     input:
     tuple val(meta), file(mzml_file), file(database)
 
