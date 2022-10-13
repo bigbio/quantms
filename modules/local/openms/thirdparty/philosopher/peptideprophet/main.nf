@@ -21,7 +21,7 @@ process PEPTIDEPROPHET {
     echo "------------Read Database-------------" >> ${pepXML_file.baseName}_peptideprophet.log
     philosopher database --custom ${database} >> ${pepXML_file.baseName}_peptideprophet.log
     echo "--------------Read File--------------" >> ${pepXML_file.baseName}_peptideprophet.log
-    philosopher peptideprophet --database ${database} --ppm --accmass --expectscore --decoyprobs --nonparam ${pepXML_file} >> ${pepXML_file.baseName}_peptideprophet.log
+    philosopher peptideprophet --database ${database} --ppm --accmass --expectscore --decoyprobs --decoy ${params.decoy_string} --nonparam ${pepXML_file} >> ${pepXML_file.baseName}_peptideprophet.log
     echo "\n------------Postprocess------------" >> ${pepXML_file.baseName}_peptideprophet.log
     philosopher filter --pepxml "interact-${pepXML_file.baseName}.pep.xml" --tag ${params.decoy_string} >> ${pepXML_file.baseName}_peptideprophet.log
     philosopher report >> ${pepXML_file.baseName}_peptideprophet.log    // isotope error
