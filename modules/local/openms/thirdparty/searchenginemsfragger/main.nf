@@ -41,7 +41,6 @@ process SEARCHENGINEMSFRAGGER {
     }
 
     // TODO
-    // isotope error
     // msfragger executable
     
     """
