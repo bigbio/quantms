@@ -3,8 +3,8 @@ process PROTEININFERENCE {
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img' :
+        'ghcr.io/openms/openms-executables:latest' }"
 
     input:
     tuple val(meta), path(consus_file)
@@ -37,7 +37,7 @@ process PROTEININFERENCE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ProteinInference: \$(ProteinInference 2>&1 | grep -E '^Version(.*) ' | sed 's/Version: //g')
+        ProteinInference: \$(ProteinInference 2>&1 | grep -E '^Version(.*) ' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }
