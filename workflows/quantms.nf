@@ -103,10 +103,6 @@ workflow QUANTMS {
     ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 
     FILE_PREPARATION.out.results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_mzmls }
-
-    FILE_PREPARATION.out.results
             .branch {
                 dia: it[0].acquisition_method.contains("dia")
                 iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
@@ -180,6 +176,7 @@ workflow QUANTMS {
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_quantms_logo = file("$projectDir/assets/nf-core-quantms_logo_light.png")
@@ -187,7 +184,6 @@ workflow QUANTMS {
     SUMMARYPIPELINE (
         CREATE_INPUT_CHANNEL.out.ch_expdesign
             .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
-            .combine(ch_pmultiqc_mzmls.collect())
             .combine(ch_ids_pmultiqc.collect().ifEmpty([])))
             .combine(ch_msstats_in.ifEmpty([])),
         ch_multiqc_quantms_logo
