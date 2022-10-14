@@ -33,7 +33,7 @@ process FALSEDISCOVERYRATE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        FalseDiscoveryRate: \$(FalseDiscoveryRate 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        FalseDiscoveryRate: \$(FalseDiscoveryRate 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

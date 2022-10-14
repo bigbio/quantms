@@ -28,7 +28,7 @@ process IDCONFLICTRESOLVER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IDConflictResolver: \$(IDConflictResolver 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        IDConflictResolver: \$(IDConflictResolver 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

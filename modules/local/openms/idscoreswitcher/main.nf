@@ -31,7 +31,7 @@ process IDSCORESWITCHER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IDScoreSwitcher: \$(IDScoreSwitcher 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        IDScoreSwitcher: \$(IDScoreSwitcher 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

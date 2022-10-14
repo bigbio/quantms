@@ -31,7 +31,7 @@ process EXTRACTPSMFEATURES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        PSMFeatureExtractor: \$(PSMFeatureExtractor 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        PSMFeatureExtractor: \$(PSMFeatureExtractor 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

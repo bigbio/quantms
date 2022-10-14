@@ -32,7 +32,7 @@ process FILEMERGE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        FileMerger: \$(FileMerger 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        FileMerger: \$(FileMerger 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }
