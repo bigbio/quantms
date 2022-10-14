@@ -363,8 +363,19 @@
                     "description": "Lower precursor mass tolerance threshold in Da",
                     "default": -150,
                     "fa_icon": "fas fa-sliders-h"
-                }
-                
+                },
+                "ptmshepherd_peakpicking_minPSM": {
+                    "type": "integer",
+                    "description": "The number of minimum PSMs required to form a peak (modification annotation) in the summary histogram",
+                    "default": 10,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "ptmshepherd_peakpicking_TopN": {
+                    "type": "integer",
+                    "description": "The number of chosen features which are annotated and included in the summary histogram",
+                    "default": 500,
+                    "fa_icon": "fas fa-sliders-h"
+                }                
             }
         },
         "peptide_re_indexing": {

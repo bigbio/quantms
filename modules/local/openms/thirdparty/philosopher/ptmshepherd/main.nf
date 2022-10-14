@@ -22,7 +22,8 @@ process PTMSHEPHERD {
     histo_smoothbins = 2
     peakpicking_promRatio = 0.3
     peakpicking_width = 0.002
-    peakpicking_topN = 500
+    peakpicking_topN = $params.ptmshepherd_peakpicking_TopN
+    peakpicking_minPsm = $params.ptmshepherd_peakpicking_minPSM
     precursor_tol = 0.01
     spectra_ppmtol = 20.0
     spectra_condPeaks = 100
