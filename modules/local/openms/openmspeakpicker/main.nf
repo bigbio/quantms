@@ -35,7 +35,7 @@ process OPENMSPEAKPICKER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        PeakPickerHiRes: \$(PeakPickerHiRes 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        PeakPickerHiRes: \$(PeakPickerHiRes 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }
