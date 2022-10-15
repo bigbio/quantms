@@ -47,7 +47,7 @@ process DIANNCONVERT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyopenms: \$(python -c "import pyopenms; print(pyopenms.__version__)")
+        pyopenms: \$(pip show pyopenms | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }
