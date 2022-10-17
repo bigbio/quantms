@@ -3,20 +3,10 @@
 from pyopenms import MzMLFile, MSExperiment
 import os
 import pandas as pd
-import click
-
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+import sys
 
 
-@click.group(context_settings=CONTEXT_SETTINGS)
-def cli():
-    pass
-
-
-@click.command("mzml_dataframe")
-@click.option("--mzml_folder", "-d")
-@click.pass_context
-def mzml_dataframe(ctx, mzml_folder):
+def mzml_dataframe(mzml_folder):
 
     file_columns = ["File_Name", "SpectrumID", "MSLevel", "Charge", "MS2_peaks", "Base_Peak_Intensity"]
     mzml_paths = list(i for i in os.listdir(mzml_folder) if i.endswith(".mzML"))
@@ -53,7 +43,10 @@ def mzml_dataframe(ctx, mzml_folder):
         mzml_count += 1
 
 
-cli.add_command(mzml_dataframe)
+def main():
+    mzmls_path = sys.argv[1]
+    mzml_dataframe(mzmls_path)
+
 
 if __name__ == "__main__":
-    cli()
+    sys.exit(main())

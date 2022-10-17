@@ -47,7 +47,7 @@ process DIANNCONVERT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pmultiqc: \$(multiqc --pmultiqc_version | sed -e "s/pmultiqc, version //g")
+        pyopenms: \$(pip show pyopenms | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }
