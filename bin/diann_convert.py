@@ -6,7 +6,7 @@ import re
 import click
 import numpy as np
 import pandas as pd
-from pyopenms import *
+from pyopenms import AASequence, FASTAFile, ModificationsDB
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
@@ -17,10 +17,7 @@ def cli():
 
 
 @click.command("convert")
-@click.option(
-    "--diann_report",
-    "-r",
-)
+@click.option("--diann_report", "-r")
 @click.option("--exp_design", "-e")
 @click.option("--pg_matrix", "-pg")
 @click.option("--pr_matrix", "-pr")
@@ -154,8 +151,8 @@ def convert(
 
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
-        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df)
-        PSH = mztab_PSH(report, database, fasta_df)
+        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
+        PSH = mztab_PSH(report, database)
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
@@ -360,7 +357,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         )
 
     pg = pg.rename(columns=col)
-    pg.loc[:, "opt_global_result_type"] = pg.apply(lambda x: classify_result_type(x), axis=1, result_type="expand")
+    pg.loc[:, "opt_global_result_type"] = pg.apply(classify_result_type, axis=1, result_type="expand")
 
     out_mztab_PRH = pd.DataFrame()
     out_mztab_PRH = pg.drop(["Protein.Names"], axis=1)
@@ -440,7 +437,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     return out_mztab_PRH
 
 
-def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
+def mztab_PEH(report, pr, precursor_list, index_ref, database):
     """Construct PEH sub-table.
 
     :param report: Dataframe for Dia-NN main report
@@ -542,7 +539,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database, fasta_df):
     return out_mztab_PEH
 
 
-def mztab_PSH(report, database, fasta_df):
+def mztab_PSH(report, database):
     """Construct PSH sub-table.
 
     :param report: Dataframe for Dia-NN main report
@@ -655,8 +652,7 @@ def classify_result_type(target):
     """
     if ";" in target["Protein.Ids"]:
         return "indistinguishable_protein_group"
-    else:
-        return "single_protein"
+    return "single_protein"
 
 
 def calculate_protein_coverage(report, target, reference, fasta_df):
@@ -729,7 +725,7 @@ def match_in_report(report, target, max, flag, level):
 
         return tuple(PEH_params)
 
-    elif flag == 0 and level == "pep":
+    if flag == 0 and level == "pep":
         result = report[report["precursor.Index"] == target]
         q_value = []
         for i in range(1, max + 1):
@@ -738,7 +734,7 @@ def match_in_report(report, target, max, flag, level):
 
         return tuple(q_value)
 
-    elif flag == 1 and level == "protein":
+    if flag == 1 and level == "protein":
         result = report[report["Protein.Ids"] == target]
         PRH_params = []
         for i in range(1, max + 1):
@@ -797,7 +793,7 @@ def find_modification(peptide):
     """
     peptide = str(peptide)
     pattern = re.compile(r"\((.*?)\)")
-    original_mods = re.findall(pattern, peptide)
+    original_mods = pattern.findall(peptide)
     peptide = re.sub(r"\(.*?\)", ".", peptide)
     position = [i.start() for i in re.finditer(r"\.", peptide)]
     for j in range(1, len(position)):

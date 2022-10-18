@@ -5,6 +5,8 @@ report_comment: >
 report_section_order:
   pmultiqc:
     order: 1
+  "nf-core-quantms-methods-description":
+    order: -1000
   software_versions:
     order: -1001
   "nf-core-quantms-summary":
