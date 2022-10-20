@@ -15,7 +15,7 @@ process DIANNCONVERT {
     path(report_pr)
     val(meta)
     path(fasta)
-    path(diann_version)
+    path("version/versions.yaml")
 
     output:
     path "*msstats_in.csv", emit: out_msstats
@@ -35,7 +35,7 @@ process DIANNCONVERT {
         --pg_matrix "${report_pg}" \\
         --pr_matrix "${report_pr}" \\
         --dia_params "${dia_params}" \\
-        --diann_version "${diann_version}" \\
+        --diann_version ./version/versions.yaml \\
         --fasta "${fasta}" \\
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
