@@ -7,7 +7,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple file(mzML), file(fasta), file(diann_log), file(library)
+    tuple val(meta), file(mzML), file(fasta), file(diann_log), file(library)
 
     output:
     path "*.quant", emit: diann_quant
@@ -19,15 +19,14 @@ process INDIVIDUAL_FINAL_ANALYSIS {
 
     script:
     def args = task.ext.args ?: ''
-
-    mass_acc = params.mass_acc_ms2
+    mass_acc_ms1 = meta.precursor_mass_tolerance_unit == "ppm" ? meta.precursor_mass_tolerance : 5
+    mass_acc_ms2 = meta.fragment_mass_tolerance_unit == "ppm" ? meta.fragment_mass_tolerance : 13
     scan_window = params.scan_window
-    ms1_accuracy = params.mass_acc_ms1
 
     if (params.mass_acc_automatic | params.scan_window_automatic){
-        mass_acc = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 11 | tr -cd \"[0-9]\")"
+        mass_acc_ms2 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 11 | tr -cd \"[0-9]\")"
         scan_window = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 19 | tr -cd \"[0-9]\")"
-        ms1_accuracy = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 15 | tr -cd \"[0-9]\")"
+        mass_acc_ms1 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 15 | tr -cd \"[0-9]\")"
     }
 
     """
@@ -37,8 +36,8 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
             --temp ./ \\
-            --mass-acc \$(echo ${mass_acc}) \\
-            --mass-acc-ms1 \$(echo ${ms1_accuracy}) \\
+            --mass-acc \$(echo ${mass_acc_ms2}) \\
+            --mass-acc-ms1 \$(echo ${mass_acc_ms1}) \\
             --window \$(echo ${scan_window}) \\
             --no-ifs-removal \\
             --no-main-report \\

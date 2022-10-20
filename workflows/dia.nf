@@ -41,12 +41,12 @@ workflow DIA {
     Channel.fromPath(params.database).set{ ch_searchdb }
 
     ch_file_preparation_results.multiMap {
-                                meta: it[0]
+                                meta: preprocessed_meta(it[0])
                                 mzml: it[1]
                                 }
                             .set { ch_result }
 
-    DIANNCFG(ch_result.meta.first())
+    DIANNCFG(ch_result.meta.unique())
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
     //
@@ -64,6 +64,7 @@ workflow DIA {
     // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
     //
     ASSEMBLE_EMPIRICAL_LIBRARY(ch_result.mzml.collect(),
+                                ch_result.meta.unique(),
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
                                 SILICOLIBRARYGENERATION.out.predict_speclib
                             )
@@ -72,13 +73,13 @@ workflow DIA {
     //
     // MODULE: INDIVIDUAL_FINAL_ANALYSIS
     //
-    INDIVIDUAL_FINAL_ANALYSIS(ch_result.mzml.combine(ch_searchdb).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library))
+    INDIVIDUAL_FINAL_ANALYSIS(ch_file_preparation_results.combine(ch_searchdb).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log).combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library))
     ch_software_versions = ch_software_versions.mix(INDIVIDUAL_FINAL_ANALYSIS.out.version.ifEmpty(null))
 
     //
     // MODULE: DIANNSUMMARY
     //
-    DIANNSUMMARY(ch_result.mzml.collect(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
+    DIANNSUMMARY(ch_result.mzml.collect(), ch_result.meta.unique(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
                     INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), ch_searchdb)
     ch_software_versions = ch_software_versions.mix(DIANNSUMMARY.out.version.ifEmpty(null))
 
@@ -86,8 +87,8 @@ workflow DIA {
     // MODULE: DIANNCONVERT
     //
     log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, other versions of DIA-NN do not support mzTab conversion."
-    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix, 
-                ch_result.meta.first(), params.database, DIANNSUMMARY.out.version)
+    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix,
+                ch_result.meta.unique(), ch_searchdb, DIANNSUMMARY.out.version)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 
     //
@@ -106,6 +107,13 @@ workflow DIA {
     out_triqler     = DIANNCONVERT.out.out_triqler
     msstats_out     = ch_msstats_out
 
+}
+
+
+def preprocessed_meta(LinkedHashMap meta){
+    def parameters = meta
+    parameters["id"] = null
+    return parameters
 }
 
 /*
