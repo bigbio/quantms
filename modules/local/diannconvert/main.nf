@@ -1,6 +1,5 @@
 process DIANNCONVERT {
-    tag "$exp_design.Name"
-    label 'process_low'
+    label 'process_medium'
 
     conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.16" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

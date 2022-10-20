@@ -46,7 +46,8 @@ workflow DIA {
                                 }
                             .set { ch_result }
 
-    DIANNCFG(ch_result.meta.unique())
+    meta = ch_result.meta.unique()
+    DIANNCFG(meta)
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
     //
@@ -64,7 +65,7 @@ workflow DIA {
     // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
     //
     ASSEMBLE_EMPIRICAL_LIBRARY(ch_result.mzml.collect(),
-                                ch_result.meta.unique(),
+                                meta,
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
                                 SILICOLIBRARYGENERATION.out.predict_speclib
                             )
@@ -79,7 +80,7 @@ workflow DIA {
     //
     // MODULE: DIANNSUMMARY
     //
-    DIANNSUMMARY(ch_result.mzml.collect(), ch_result.meta.unique(), ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
+    DIANNSUMMARY(ch_result.mzml.collect(), meta, ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
                     INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), ch_searchdb)
     ch_software_versions = ch_software_versions.mix(DIANNSUMMARY.out.version.ifEmpty(null))
 
@@ -88,7 +89,7 @@ workflow DIA {
     //
     log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, other versions of DIA-NN do not support mzTab conversion."
     DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix,
-                ch_result.meta.unique(), ch_searchdb, DIANNSUMMARY.out.version)
+                meta, ch_searchdb, DIANNSUMMARY.out.version)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 
     //
@@ -110,9 +111,20 @@ workflow DIA {
 }
 
 
+// remove meta.id to make sure cache identical HashCode
 def preprocessed_meta(LinkedHashMap meta){
-    def parameters = meta
-    parameters["id"] = null
+    def parameters = [:]
+    parameters["acquisition_method"]            = meta.acquisition_method
+    parameters["dissociationmethod"]            = meta.dissociationmethod
+    parameters["labelling_type"]                = meta.labelling_type
+    parameters["fixedmodifications"]            = meta.fixedmodifications
+    parameters["variablemodifications"]         = meta.variablemodifications
+    parameters["precursormasstolerance"]        = meta.precursormasstolerance
+    parameters["precursormasstoleranceunit"]    = meta.precursormasstoleranceunit
+    parameters["fragmentmasstolerance"]         = meta.fragmentmasstolerance
+    parameters["fragmentmasstoleranceunit"]     = meta.fragmentmasstoleranceunit
+    parameters["enzyme"]                        = meta.enzyme
+
     return parameters
 }
 
