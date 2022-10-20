@@ -813,6 +813,7 @@ def find_modification(peptide):
 
     return original_mods
 
+
 def calculate_mz(seq, charge):
     """Remove unknown aminoacids and calculate mz
 
