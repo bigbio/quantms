@@ -54,7 +54,7 @@ def convert(
     :type pr_matrix: str
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
-    :param diann_version: Version of DIA-NN
+    :param diann_version: Path to a version file of DIA-NN
     :type diann_version: str
     :param fasta: Path to the fasta file
     :type fasta: str
@@ -65,11 +65,18 @@ def convert(
     :param qvalue_threshold: Threshold for filtering q value
     :type qvalue_threshold: float
     """
+    with open(diann_version) as f:
+        for line in f:
+            if "DIA-NN" in line:
+                diann_version_id = line.rstrip("\n").split(": ")[1]
+                break
+    f.close()
+
     pg = pd.read_csv(pg_matrix, sep="\t", header=0, dtype="str")
     pr = pd.read_csv(pr_matrix, sep="\t", header=0, dtype="str")
     report = pd.read_csv(diann_report, sep="\t", header=0, dtype="str")
     report["Calculate.Precursor.Mz"] = report.apply(
-        lambda x: AASequence.fromString(x["Stripped.Sequence"]).getMZ(int(x["Precursor.Charge"])), axis=1
+        lambda x: calculate_mz(x["Stripped.Sequence"], x["Precursor.Charge"]), axis=1
     )
 
     precursor_list = list(report["Precursor.Id"].unique())
@@ -128,7 +135,7 @@ def convert(
     out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_triqler_in.tsv", sep="\t", index=False)
 
     # Convert to mzTab
-    if diann_version == "1.8.1":
+    if diann_version_id == "1.8.1":
         fasta_df = pd.DataFrame()
         entries = []
         f = FASTAFile()
@@ -805,6 +812,23 @@ def find_modification(peptide):
     original_mods = ",".join(str(i) for i in original_mods) if len(original_mods) > 0 else "null"
 
     return original_mods
+
+def calculate_mz(seq, charge):
+    """Remove unknown aminoacids and calculate mz
+
+    :param seq: Sequences of peptides
+    :type seq: str
+    :param charge: charge of peptides
+    :type seq: str
+    :return: mz
+    :rtype: float or NoneType
+    """
+    if "X" in seq:
+        seq = seq.replace("X", "")
+    if charge == "":
+        return None
+    else:
+        return AASequence.fromString(seq).getMZ(int(charge))
 
 
 cli.add_command(convert)
