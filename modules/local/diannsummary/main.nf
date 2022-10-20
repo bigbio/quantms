@@ -20,6 +20,7 @@ process DIANNSUMMARY {
     path "diann_report.unique_genes_matrix.tsv", emit: unique_gene_matrix
     path "diannsummary.log", emit: log
     path "versions.yml", emit: version
+    path "diann_version.yml", emit: diann_version
 
     when:
     task.ext.when == null || task.ext.when
@@ -57,5 +58,7 @@ process DIANNSUMMARY {
     "${task.process}":
         DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "(\\d*\\.\\d+\\.\\d+)|(\\d*\\.\\d+)")
     END_VERSIONS
+
+    cp "versions.yml" "diann_version.yml"
     """
 }
