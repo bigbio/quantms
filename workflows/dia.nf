@@ -87,7 +87,6 @@ workflow DIA {
     //
     // MODULE: DIANNCONVERT
     //
-    log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, other versions of DIA-NN do not support mzTab conversion."
     DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix,
                 meta, ch_searchdb, DIANNSUMMARY.out.version)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))

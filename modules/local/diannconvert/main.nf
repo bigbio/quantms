@@ -23,6 +23,9 @@ process DIANNCONVERT {
     path "*.mztab", emit: out_mztab
     path "versions.yml", emit: version
 
+    exec:
+        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, other versions of DIA-NN do not support mzTab conversion."
+
     script:
     def args = task.ext.args ?: ''
     def dia_params = [meta.fragmentmasstolerance,meta.fragmentmasstoleranceunit,meta.precursormasstolerance,
