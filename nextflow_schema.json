@@ -1309,6 +1309,9 @@
             "$ref": "#/definitions/modification_localization"
         },
         {
+            "ref": "#/open_modification_search"
+        },
+        {
             "$ref": "#/definitions/peptide_re_indexing"
         },
         {

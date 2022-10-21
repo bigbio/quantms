@@ -32,7 +32,7 @@ process PTMSHEPHERD {
     localization_background = 4" > shepherd_config.txt
     java -jar /thirdparty/PTMShepherd/ptmshepherd-CLI-1.1.1.jar shepherd_config.txt |& tee ${mzml_file.baseName}_ptmshepherd.log
     mv global.modsummary.tsv ${mzml_file.baseName}_global.modsummary.tsv
-    
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         PTMShepherd: \$(java -jar /thirdparty/PTMShepherd/ptmshepherd-CLI-1.1.1.jar | grep -E version* | sed 's/.*version //g' | sed 's/ University of Michigan//g')
