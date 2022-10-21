@@ -192,7 +192,7 @@ workflow QUANTMS {
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_quantms_logo = file("$projectDir/assets/nf-core-quantms_logo_light.png")
 
-    if !(params.open_mod_search){
+    if (params.open_mod_search==false){
         SUMMARYPIPELINE (
             CREATE_INPUT_CHANNEL.out.ch_expdesign
                 .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
