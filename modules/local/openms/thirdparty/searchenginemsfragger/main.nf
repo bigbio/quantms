@@ -2,7 +2,7 @@ process SEARCHENGINEMSFRAGGER {
     tag "$meta.id"
     label 'process_medium'
 
-    container = 'tillenglert/oopenms:latest'
+    container = 'tillenglert/oopenms_db_search:latest'
 
     input:
     tuple val(meta), file(mzml_file), file(database)
@@ -42,9 +42,6 @@ process SEARCHENGINEMSFRAGGER {
         isotope_error = "0/1/2"
     }
 
-    // TODO
-    // msfragger executable
-    
     """
     MSFraggerAdapter \\
         -in \$PWD/${mzml_file} \\

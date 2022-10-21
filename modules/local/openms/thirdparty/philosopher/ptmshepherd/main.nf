@@ -1,7 +1,7 @@
 process PTMSHEPHERD {
     label 'process_low'
 
-    container = 'tillenglert/oopenms:latest'
+    container = 'tillenglert/oopenms_post_process:latest'
 
     input:
     tuple val(meta), file(mzml_file), file(psm), file(database)

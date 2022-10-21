@@ -1,7 +1,7 @@
 process PEPTIDEPROPHET {
     label 'process_low'
 
-    container = 'prvst/philosopher:latest'
+    container = 'tillenglert/oopenms_post_process:latest'
 
     input:
     tuple val(meta), file(pepXML_file), file(database)
