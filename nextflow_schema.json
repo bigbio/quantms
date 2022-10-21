@@ -375,7 +375,7 @@
                     "description": "The number of chosen features which are annotated and included in the summary histogram",
                     "default": 500,
                     "fa_icon": "fas fa-sliders-h"
-                }                
+                }
             }
         },
         "peptide_re_indexing": {
@@ -1307,6 +1307,9 @@
         },
         {
             "$ref": "#/definitions/modification_localization"
+        },
+        {
+            "$ref": "#/definitions/open_modification_search"
         },
         {
             "$ref": "#/definitions/peptide_re_indexing"

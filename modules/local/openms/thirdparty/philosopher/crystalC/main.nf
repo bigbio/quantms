@@ -31,7 +31,7 @@ process CRYSTALC {
 
     java -Xmx53G -cp "/thirdparty/CrystalC/CrystalC-1.4.2.jar" crystalc.Run crystalc.params $pepXML |& tee ${mzml_file.baseName}_crystalc.log
 
-    
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         CrystalC: 1.4.2
