@@ -33,7 +33,6 @@ workflow TMT {
     main:
 
     ch_software_versions = Channel.empty()
-    ch_database_wdecoy.view()
 
     //
     // SUBWORKFLOWS: ID
