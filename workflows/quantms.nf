@@ -146,7 +146,6 @@ workflow QUANTMS {
         ch_fileprep_result_oms = ch_fileprep_result.iso.mix(ch_fileprep_result.lfq)
 
         OMS(ch_fileprep_result_oms, ch_searchengine_in_db)
-        ch_pipeline_results = ch_pipeline_results.mix(OMS.out.final_result)
         ch_versions = ch_versions.mix(OMS.out.versions.ifEmpty(null))
 
     }
