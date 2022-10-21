@@ -146,7 +146,6 @@ workflow QUANTMS {
         ch_fileprep_result_oms = ch_fileprep_result.iso.mix(ch_fileprep_result.lfq)
 
         OMS(ch_fileprep_result_oms, ch_searchengine_in_db)
-        ch_pipeline_results = ch_pipeline_results.mix(OMS.out.final_result)
         ch_versions = ch_versions.mix(OMS.out.versions.ifEmpty(null))
 
     }
@@ -193,15 +192,17 @@ workflow QUANTMS {
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_quantms_logo = file("$projectDir/assets/nf-core-quantms_logo_light.png")
 
-    SUMMARYPIPELINE (
-        CREATE_INPUT_CHANNEL.out.ch_expdesign
-            .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
-            .combine(ch_ids_pmultiqc.collect().ifEmpty([])))
-            .combine(ch_msstats_in.ifEmpty([])),
-        ch_multiqc_quantms_logo
-    )
+    if (params.open_mod_search==false){
+        SUMMARYPIPELINE (
+            CREATE_INPUT_CHANNEL.out.ch_expdesign
+                .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
+                .combine(ch_ids_pmultiqc.collect().ifEmpty([])))
+                .combine(ch_msstats_in.ifEmpty([])),
+            ch_multiqc_quantms_logo
+        )
     multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
     ch_versions         = ch_versions.mix(SUMMARYPIPELINE.out.versions)
+    }
 
 }
 
