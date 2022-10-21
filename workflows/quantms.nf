@@ -200,9 +200,9 @@ workflow QUANTMS {
                 .combine(ch_msstats_in.ifEmpty([])),
             ch_multiqc_quantms_logo
         )
-    }
     multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
     ch_versions         = ch_versions.mix(SUMMARYPIPELINE.out.versions)
+    }
 
 }
 
