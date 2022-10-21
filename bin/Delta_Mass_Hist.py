@@ -18,6 +18,7 @@ def parseArgs() -> tuple:
 
     return (tsvfile, pngfile)
 
+
 def parsetsv(tsvfile: str) -> list:
 
     tsv = open(tsvfile, "r")
@@ -26,6 +27,7 @@ def parsetsv(tsvfile: str) -> list:
         modificationtable.append(line.split("\t"))
 
     return modificationtable
+
 
 def makeHistogram(modificationtable: list, outputfile: str):
 
@@ -59,7 +61,7 @@ def main():
     makeHistogram(globalmods, pngfile)
     print(
         "Delta_Mass_Histogram took {} s (wall), {} s (CPU)".format(
-            round(time.time()-st_wall, 2), round(time.process_time()-st_process, 2)
+            round(time.time() - st_wall, 2), round(time.process_time() - st_process, 2)
         )
     )
 
