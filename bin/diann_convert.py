@@ -824,8 +824,8 @@ def calculate_mz(seq, charge):
     :return: mz
     :rtype: float or NoneType
     """
-    if "X" in seq:
-        seq = seq.replace("X", "")
+    ref = "ARNDBCEQZGHILKMFPSTWYV"
+    seq = "".join([i for i in seq if i in ref])
     if charge == "":
         return None
     else:
