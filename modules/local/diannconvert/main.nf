@@ -1,6 +1,5 @@
 process DIANNCONVERT {
-    tag "$exp_design.Name"
-    label 'process_low'
+    label 'process_medium'
 
     conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.16" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
@@ -16,13 +15,16 @@ process DIANNCONVERT {
     path(report_pr)
     val(meta)
     path(fasta)
-    path(diann_version)
+    path("version/versions.yaml")
 
     output:
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
     path "*.mztab", emit: out_mztab
     path "versions.yml", emit: version
+
+    exec:
+        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, other versions of DIA-NN do not support mzTab conversion."
 
     script:
     def args = task.ext.args ?: ''
@@ -36,7 +38,7 @@ process DIANNCONVERT {
         --pg_matrix "${report_pg}" \\
         --pr_matrix "${report_pr}" \\
         --dia_params "${dia_params}" \\
-        --diann_version "${diann_version}" \\
+        --diann_version ./version/versions.yaml \\
         --fasta "${fasta}" \\
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\

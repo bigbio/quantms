@@ -105,9 +105,9 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.enzyme                     = params.enzyme
         meta.acquisition_method          = params.acquisition_method
     } else {
-        if (row["Proteomics Data Acquisition Method"].contains("Data-Dependent Acquisition")) {
+        if (row["Proteomics Data Acquisition Method"].toString().toLowerCase().contains("data-dependent acquisition")) {
             meta.acquisition_method = "dda"
-        } else if (row["Proteomics Data Acquisition Method"].contains("Data-Independent Acquisition")){
+        } else if (row["Proteomics Data Acquisition Method"].toString().toLowerCase().contains("data-independent acquisition")){
             meta.acquisition_method = "dia"
         } else {
             log.error "Currently DIA and DDA are supported for the pipeline. Check and Fix your SDRF."
