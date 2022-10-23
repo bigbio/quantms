@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#176](https://github.com/bigbio/quantms/pull/176) - Add name of each ID step
 - [#205](https://github.com/bigbio/quantms/pull/205) - mzTab export for DIANN outputs
+- [#]() - Open modification search feature
 
 ### `Changed`
 
@@ -60,6 +61,7 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `thermorawfileparser` | 1.3.4      |
 | `comet`               | 2021010    |
 | `msgf+`               | 2022.01.07 |
+| `MSFragger`			 | 3.2	      |
 | `openms`              | 2.8.0      |
 | `sdrf-pipelines`      | 0.0.21     |
 | `percolator`          | 3.5        |
@@ -68,5 +70,8 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `dia-nn`              | 1.8.1      |
 | `msstats`             | 4.2.0      |
 | `msstatstmt`          | 2.2.0      |
+| `CrystalC`			 | 1.4.2	  |
+| `Philosopher`		 | 4.4.0	  |
+| `PTMShepherd`		 | 1.1.0	  |
 
 ### `Deprecated`

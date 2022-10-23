@@ -64,6 +64,15 @@ DIA-LFQ:
 3. Generation of output files (msstats)
 4. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
+OMS (Open Modification Search)
+
+1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. Peptide identification using ([`MSFragger`](https://msfragger.nesvilab.org/))
+3. Removal of artifacts using ([`CrystalC`](https://www.nesvilab.org/Crystal-C/))
+4. Validate peptide assignment using ([`Philosopher PeptideProhet`](https://philosopher.nesvilab.org/))
+5. Bin, map and annotate mass shifts to protein modifications using ([`PTMShepherd`](https://ptmshepherd.nesvilab.org/))
+6. Generate a graphical histogram of the binned mass shifts using python script ([`Delta_Mass_Hist.py`](https://github.com/tillenglert/quantms/blob/feature/Open_Search_MSFragger/bin/Delta_Mass_Hist.py))
+
 ## Functionality overview
 
 A graphical overview of suggested routes through the pipeline depending on context can be seen below.
