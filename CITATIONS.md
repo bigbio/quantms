@@ -47,15 +47,19 @@
   > The M, Käll L. Integrated Identification and Quantification Error Probabilities for Shotgun Proteomics. Mol Cell Proteomics. 2019 Mar;18(3):561-570. doi: 10.1074/mcp.RA118.001018. Epub 2018 Nov 27. PMID: 30482846; PMCID: PMC6398204.
 
 - [luciphor](https://pubmed.ncbi.nlm.nih.gov/23918812/)
+
   > Fermin D, Walmsley SJ, Gingras AC, Choi H, Nesvizhskii AI. LuciPHOr: algorithm for phosphorylation site localization with false localization rate estimation using modified target-decoy approach. Mol Cell Proteomics. 2013 Nov;12(11):3409-19. doi: 10.1074/mcp.M113.028928. Epub 2013 Aug 5. PMID: 23918812; PMCID: PMC3820951.
 
 - [MSFragger](https://www.nature.com/articles/nmeth.4256)
+
   > Kong, A., Leprevost, F., Avtonomov, D. et al. MSFragger: ultrafast and comprehensive peptide identification in mass spectrometry–based proteomics. Nat Methods 14, 513–520 (2017). https://doi.org/10.1038/nmeth.4256
 
 - [CrystalC](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.0c00119)
+
   > Hui-Yin Chang, Andy T. Kong, Felipe da Veiga Leprevost, Dmitry M. Avtonomov, Sarah E. Haynes, and Alexey I. Nesvizhskii. Journal of Proteome Research 2020 19 (6), 2511-2515. DOI: 10.1021/acs.jproteome.0c00119
 
 - [Philosopher](https://www.nature.com/articles/s41592-020-0912-y)
+
   > da Veiga Leprevost F, Haynes SE, Avtonomov DM, Chang HY, Shanmugam AK, Mellacheruvu D, Kong AT, Nesvizhskii AI. Philosopher: a versatile toolkit for shotgun proteomics data analysis. Nat Methods. 2020 Sep;17(9):869-870. doi: 10.1038/s41592-020-0912-y. PMID: 32669682; PMCID: PMC7509848.
 
 - [PTMShepherd](https://www.biorxiv.org/content/10.1101/2020.07.08.192583v1)

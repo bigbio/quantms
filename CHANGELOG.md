@@ -61,7 +61,7 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `thermorawfileparser` | 1.3.4      |
 | `comet`               | 2021010    |
 | `msgf+`               | 2022.01.07 |
-| `MSFragger`			 | 3.2	      |
+| `MSFragger`           | 3.2        |
 | `openms`              | 2.8.0      |
 | `sdrf-pipelines`      | 0.0.21     |
 | `percolator`          | 3.5        |
@@ -70,8 +70,8 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `dia-nn`              | 1.8.1      |
 | `msstats`             | 4.2.0      |
 | `msstatstmt`          | 2.2.0      |
-| `CrystalC`			 | 1.4.2	  |
-| `Philosopher`		 | 4.4.0	  |
-| `PTMShepherd`		 | 1.1.0	  |
+| `CrystalC`            | 1.4.2      |
+| `Philosopher`         | 4.4.0      |
+| `PTMShepherd`         | 1.1.0      |
 
 ### `Deprecated`

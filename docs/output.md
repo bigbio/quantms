@@ -37,6 +37,7 @@ As an example, a rough visualization of the DDA identification subworkflow can b
 ![quantms LFQ workflow](./images/id-dda-pipeline.png)
 
 For the open modification search feature, the workflow uses the following steps:
+
 1. (optional) Conversion of spectra data to indexedMzML: Using ThermoRawFileParser if Thermo Raw or using OpenMS' FileConverter if just an index is missing
 2. (optional) Decoy database generation for the provided DB (fasta) with OpenMS
 3. Database search with MSFragger through OpenMS adapters
@@ -82,8 +83,8 @@ results
   - [msstats/out_msstats.mzTab](#msstats-processed-mztab)
 - Open Modification Search:
   - [crystalc/\*.pepXML](#identifications)
-  - [peptideprophet/\*_psm.tsv](#validated-psms)
-  - [ptmshepherd/\*_global.modsummary.tsv](#mass-shift-table)
+  - [peptideprophet/\*\_psm.tsv](#validated-psms)
+  - [ptmshepherd/\*\_global.modsummary.tsv](#mass-shift-table)
   - [deltamasshistogram/\*.html](#graphical-histogram)
 
 ## Output description
