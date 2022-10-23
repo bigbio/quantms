@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#176](https://github.com/bigbio/quantms/pull/176) - Add name of each ID step
 - [#205](https://github.com/bigbio/quantms/pull/205) - mzTab export for DIANN outputs
-- [#]() - Open modification search feature
+- [#236](https://github.com/bigbio/quantms/pull/236) - Open modification search feature
 
 ### `Changed`
 
