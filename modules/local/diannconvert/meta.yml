@@ -36,6 +36,10 @@ input:
       type: file
       description: Protein sequence database in Fasta format.
       pattern: "*.{fasta,fa}"
+  - version:
+      type: file
+      description: File containing Dia-NN version
+      pattern: "versions.yml"
 output:
   - out_msstats:
       type: file

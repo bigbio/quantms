@@ -1,5 +1,5 @@
 process CONSENSUSID {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_medium'
     // TODO could be easily parallelized
     label 'process_single_thread'
@@ -14,18 +14,18 @@ process CONSENSUSID {
     tuple val(meta), path(id_file), val(qval_score)
 
     output:
-    tuple val(meta), path("${meta.id}_consensus.idXML"), emit: consensusids
+    tuple val(meta), path("${meta.mzml_id}_consensus.idXML"), emit: consensusids
     path "versions.yml", emit: version
     path "*.log", emit: log
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
     ConsensusID \\
         -in ${id_file} \\
-        -out ${meta.id}_consensus.idXML \\
+        -out ${meta.mzml_id}_consensus.idXML \\
         -per_spectrum \\
         -threads $task.cpus \\
         -algorithm $params.consensusid_algorithm \\
