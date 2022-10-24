@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#187](https://github.com/bigbio/quantms/pull/187) - Bug fixing in proteonicsLFQ applying FDR at PMS level
+- [#187](https://github.com/bigbio/quantms/pull/187) - Bug fixing in proteomicsLFQ applying FDR at PSM level
 - [#207](https://github.com/bigbio/quantms/pull/207) - Bug fixing in dissociation method translation for Luciphor
 
 ### `Dependencies`
