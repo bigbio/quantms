@@ -1,4 +1,5 @@
 process ASSEMBLE_EMPIRICAL_LIBRARY {
+    tag "$meta.experiment_id"
     label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

@@ -46,7 +46,8 @@ workflow DIA {
                                 }
                             .set { ch_result }
 
-    meta = ch_result.meta.unique()
+    meta = ch_result.meta.unique {it[0]}
+
     DIANNCFG(meta)
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 
@@ -113,6 +114,7 @@ workflow DIA {
 // remove meta.id to make sure cache identical HashCode
 def preprocessed_meta(LinkedHashMap meta){
     def parameters = [:]
+    parameters["experiment_id"]                 = meta.experiment_id
     parameters["acquisition_method"]            = meta.acquisition_method
     parameters["dissociationmethod"]            = meta.dissociationmethod
     parameters["labelling_type"]                = meta.labelling_type

@@ -1,4 +1,5 @@
 process DIANNCONVERT {
+    tag "$meta.experiment_id"
     label 'process_medium'
 
     conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.16" : null)

@@ -1,4 +1,5 @@
 process DIANNSUMMARY {
+    tag "$meta.experiment_id"
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

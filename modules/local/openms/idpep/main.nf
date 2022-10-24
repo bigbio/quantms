@@ -1,5 +1,5 @@
 process IDPEP {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_very_low'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
@@ -17,7 +17,7 @@ process IDPEP {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
     IDPosteriorErrorProbability \\
