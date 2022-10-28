@@ -49,7 +49,13 @@ def check_sdrf(check_ms, sdrf):
     errors = df.validate(DEFAULT_TEMPLATE)
     if check_ms:
         errors = errors + df.validate(MASS_SPECTROMETRY)
-    print(errors)
+    for error in errors:
+        print(error)
+    if not errors:
+        print("Everying seems to be fine. Well done.")
+    else:
+        print("There were validation errors!")
+    sys.exit(bool(errors))
 
 
 def check_expdesign(expdesign):

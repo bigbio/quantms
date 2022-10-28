@@ -56,14 +56,14 @@ jobs:
           mamba-version: "*"
           channels: conda-forge,defaults
 
-      #- name: Install micromamba as mamba
-      #  if: matrix.exec_profile == 'conda'
-      #  run: |
-      #    wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-      #    mv bin/micromamba bin/mamba
-      #    echo "$(pwd)/bin" >> $GITHUB_PATH
-      #    echo "$(pwd)/mamba/bin" >> $GITHUB_PATH
-      #    ./bin/mamba shell init -s bash -p ./mamba
+      # - name: Install micromamba as mamba
+      #   if: matrix.exec_profile == 'conda'
+      #   run: |
+      #     wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+      #     mv bin/micromamba bin/mamba
+      #     echo "$(pwd)/bin" >> $GITHUB_PATH
+      #     echo "$(pwd)/mamba/bin" >> $GITHUB_PATH
+      #     ./bin/mamba shell init -s bash -p ./mamba
 
       - name: Run pipeline with test data
         if: matrix.exec_profile != 'conda'
