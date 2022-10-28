@@ -79,10 +79,15 @@ workflow TMT {
         .map { it -> it[1] }
         .set { ch_pmultiqc_ids }
 
+    ID.out.ch_consensus_results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_consensus }
+
     emit:
-    ch_pmultiqc_ids = ch_pmultiqc_ids
-    final_result    = PROTEINQUANT.out.out_mztab
-    msstats_in  = PROTEINQUANT.out.msstats_csv
-    msstats_out     = ch_msstats_out
-    versions        = ch_software_versions
+    ch_pmultiqc_ids         = ch_pmultiqc_ids
+    ch_pmultiqc_consensus   = ch_pmultiqc_consensus
+    final_result            = PROTEINQUANT.out.out_mztab
+    msstats_in              = PROTEINQUANT.out.msstats_csv
+    msstats_out             = ch_msstats_out
+    versions                = ch_software_versions
 }
