@@ -40,10 +40,12 @@ workflow ID {
     // SUBWORKFLOW: PSMFDRCONTROL
     //
     ch_psmfdrcontrol = Channel.empty()
+    ch_consensus_results = Channel.empty()
     if (params.search_engines.split(",").size() > 1) {
         CONSENSUSID(PSMRESCORING.out.results.groupTuple(size: params.search_engines.split(",").size()))
         ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.version.ifEmpty(null))
         ch_psmfdrcontrol = CONSENSUSID.out.consensusids
+        ch_consensus_results = CONSENSUSID.out.consensusids
     } else {
         ch_psmfdrcontrol = PSMRESCORING.out.results
     }
@@ -65,5 +67,6 @@ workflow ID {
     emit:
     id_results              = ch_id_results
     psmrescoring_results    = PSMRESCORING.out.results
+    ch_consensus_results    = ch_consensus_results
     version                 = ch_software_versions
 }
