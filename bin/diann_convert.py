@@ -444,7 +444,9 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     out_mztab_PRH.insert(0, "PRH", index)
     out_mztab_PRH.fillna("null", inplace=True)
     out_mztab_PRH.loc[:, "database"] = database
-    new_cols = [col for col in out_mztab_PRH.columns if not col.startswith("opt_")] + [col for col in out_mztab_PRH.columns if col.startswith("opt_")]
+    new_cols = [col for col in out_mztab_PRH.columns if not col.startswith("opt_")] + [
+        col for col in out_mztab_PRH.columns if col.startswith("opt_")
+    ]
     out_mztab_PRH = out_mztab_PRH[new_cols]
 
     # out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
@@ -479,7 +481,8 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
             "Protein.Ids": "accession",
             "Modified.Sequence": "opt_global_cv_MS:1000889_peptidoform_sequence",
             "Precursor.Charge": "charge",
-        }, inplace=True
+        },
+        inplace=True,
     )
 
     out_mztab_PEH.loc[:, "modifications"] = out_mztab_PEH.apply(
@@ -545,7 +548,9 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     out_mztab_PEH.drop(["PEH", "Precursor.Id", "Genes", "pr_id"], axis=1, inplace=True)
     out_mztab_PEH.insert(0, "PEH", index)
     out_mztab_PEH.fillna("null", inplace=True)
-    new_cols = [col for col in out_mztab_PEH.columns if not col.startswith("opt_")] + [col for col in out_mztab_PEH.columns if col.startswith("opt_")]
+    new_cols = [col for col in out_mztab_PEH.columns if not col.startswith("opt_")] + [
+        col for col in out_mztab_PEH.columns if col.startswith("opt_")
+    ]
     out_mztab_PEH = out_mztab_PEH[new_cols]
     # out_mztab_PEH.to_csv("./out_peptide.mztab", sep=",", index=False)
 
@@ -591,7 +596,8 @@ def mztab_PSH(report, mzml_info, database):
             "PEP",
             "Global.Q.Value",
             "Global.Q.Value",
-            "opt_global_spectrum_reference"
+            "opt_global_spectrum_reference",
+            "ms_run",
         ]
     ]
     out_mztab_PSH.columns = [
@@ -607,7 +613,8 @@ def mztab_PSH(report, mzml_info, database):
         "opt_global_SpecEValue_score",
         "opt_global_q-value",
         "opt_global_q-value_score",
-        "opt_global_spectrum_reference"
+        "opt_global_spectrum_reference",
+        "ms_run",
     ]
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -625,7 +632,7 @@ def mztab_PSH(report, mzml_info, database):
         "start",
         "end",
         "opt_global_feature_id",
-        "opt_global_map_index"
+        "opt_global_map_index",
     ]
     for i in null_col:
         out_mztab_PSH.loc[:, i] = "null"
@@ -646,10 +653,12 @@ def mztab_PSH(report, mzml_info, database):
 
     out_mztab_PSH.loc[:, "PSH"] = "PSM"
     index = out_mztab_PSH.loc[:, "PSH"]
-    out_mztab_PSH.drop(["PSH", "Genes"], axis=1, inplace=True)
+    out_mztab_PSH.drop(["PSH", "Genes", "ms_run"], axis=1, inplace=True)
     out_mztab_PSH.insert(0, "PSH", index)
     out_mztab_PSH.fillna("null", inplace=True)
-    new_cols = [col for col in out_mztab_PSH.columns if not col.startswith("opt_")] + [col for col in out_mztab_PSH.columns if col.startswith("opt_")]
+    new_cols = [col for col in out_mztab_PSH.columns if not col.startswith("opt_")] + [
+        col for col in out_mztab_PSH.columns if col.startswith("opt_")
+    ]
     out_mztab_PSH = out_mztab_PSH[new_cols]
     # out_mztab_PSH.to_csv("./out_psms.mztab", sep=",", index=False)
 
