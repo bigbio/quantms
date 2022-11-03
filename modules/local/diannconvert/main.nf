@@ -14,6 +14,7 @@ process DIANNCONVERT {
     path(exp_design)
     path(report_pg)
     path(report_pr)
+    path(mzml_information)
     val(meta)
     path(fasta)
     path("version/versions.yaml")
@@ -38,6 +39,7 @@ process DIANNCONVERT {
         --exp_design "${exp_design}" \\
         --pg_matrix "${report_pg}" \\
         --pr_matrix "${report_pr}" \\
+        --mzml_info "${mzml_information}" \\
         --dia_params "${dia_params}" \\
         --diann_version ./version/versions.yaml \\
         --fasta "${fasta}" \\

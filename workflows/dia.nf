@@ -34,6 +34,7 @@ workflow DIA {
     take:
     ch_file_preparation_results
     ch_expdesign
+    ch_mzml_info
 
     main:
 
@@ -88,7 +89,7 @@ workflow DIA {
     //
     // MODULE: DIANNCONVERT
     //
-    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix,
+    DIANNCONVERT(DIANNSUMMARY.out.main_report, ch_expdesign, DIANNSUMMARY.out.pg_matrix, DIANNSUMMARY.out.pr_matrix, ch_mzml_info,
                 meta, ch_searchdb, DIANNSUMMARY.out.version)
     ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
 

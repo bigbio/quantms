@@ -4,11 +4,12 @@ from pyopenms import MzMLFile, MSExperiment
 import os
 import pandas as pd
 import sys
+import numpy as np
 
 
 def mzml_dataframe(mzml_folder):
 
-    file_columns = ["File_Name", "SpectrumID", "MSLevel", "Charge", "MS2_peaks", "Base_Peak_Intensity"]
+    file_columns = ["File_Name", "SpectrumID", "MSLevel", "Charge", "MS2_peaks", "Base_Peak_Intensity", "Retention_Time", "Exp_Mass_To_Charge"]
     mzml_paths = list(i for i in os.listdir(mzml_folder) if i.endswith(".mzML"))
     mzml_count = 1
 
@@ -20,17 +21,19 @@ def mzml_dataframe(mzml_folder):
             name = os.path.split(file_name)[1]
             id = i.getNativeID()
             MSLevel = i.getMSLevel()
+            rt = i.getRT() if i.getRT() else np.nan
             if MSLevel == 2:
                 charge_state = i.getPrecursors()[0].getCharge()
+                emz = i.getPrecursors()[0].getMZ() if i.getPrecursors()[0].getMZ() else np.nan
                 peaks_tuple = i.get_peaks()
                 peak_per_ms2 = len(peaks_tuple[0])
                 if i.getMetaValue("base peak intensity"):
                     base_peak_intensity = i.getMetaValue("base peak intensity")
                 else:
-                    base_peak_intensity = max(peaks_tuple[1]) if len(peaks_tuple[1]) > 0 else "null"
-                info_list = [name, id, 2, charge_state, peak_per_ms2, base_peak_intensity]
+                    base_peak_intensity = max(peaks_tuple[1]) if len(peaks_tuple[1]) > 0 else np.nan
+                info_list = [name, id, 2, charge_state, peak_per_ms2, base_peak_intensity, rt, emz]
             else:
-                info_list = [name, id, MSLevel, "null", "null", "null"]
+                info_list = [name, id, MSLevel, np.nan, np.nan, np.nan, rt, np.nan]
 
             info.append(info_list)
 

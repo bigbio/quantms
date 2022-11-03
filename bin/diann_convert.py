@@ -21,6 +21,7 @@ def cli():
 @click.option("--exp_design", "-e")
 @click.option("--pg_matrix", "-pg")
 @click.option("--pr_matrix", "-pr")
+@click.option("--mzml_info", "-mz")
 @click.option("--dia_params", "-p")
 @click.option("--diann_version", "-v")
 @click.option("--fasta", "-f")
@@ -34,6 +35,7 @@ def convert(
     exp_design,
     pg_matrix,
     pr_matrix,
+    mzml_info,
     dia_params,
     diann_version,
     fasta,
@@ -52,6 +54,8 @@ def convert(
     :type pg_matrix: str
     :param pr_matrix: Path to a DIA-NN matrix file containing precursors
     :type pr_matrix: str
+    :param mzml_info: Path to a tsv which contains information from mzMLs
+    :type mzml_info: str
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
     :param diann_version: Path to a version file of DIA-NN
@@ -75,19 +79,20 @@ def convert(
     pg = pd.read_csv(pg_matrix, sep="\t", header=0, dtype="str")
     pr = pd.read_csv(pr_matrix, sep="\t", header=0, dtype="str")
     report = pd.read_csv(diann_report, sep="\t", header=0, dtype="str")
+
+    col = ["Q.Value", "Precursor.Normalised", "RT", "RT.Start", "Global.Q.Value", "Lib.Q.Value", "PG.MaxLFQ"]
+    for i in col:
+        report.loc[:, i] = report.loc[:, i].astype("float", errors="ignore")
+
+    # filter based on qvalue parameter for downstream analysiss
+    report = report[report["Q.Value"] < qvalue_threshold]
+
     report["Calculate.Precursor.Mz"] = report.apply(
         lambda x: calculate_mz(x["Stripped.Sequence"], x["Precursor.Charge"]), axis=1
     )
 
     precursor_list = list(report["Precursor.Id"].unique())
     report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
-
-    col = ["Q.Value", "Precursor.Normalised", "RT", "Global.Q.Value", "Lib.Q.Value", "PG.MaxLFQ"]
-    for i in col:
-        report.loc[:, i] = report.loc[:, i].astype("float")
-
-    # filter based on qvalue parameter for downstream analysiss
-    report = report[report["Q.Value"] < qvalue_threshold]
 
     with open(exp_design, "r") as f:
         data = f.readlines()
@@ -159,7 +164,7 @@ def convert(
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
         PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
-        PSH = mztab_PSH(report, database)
+        PSH = mztab_PSH(report, mzml_info, database)
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
@@ -363,13 +368,13 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
             + "]"
         )
 
-    pg = pg.rename(columns=col)
+    pg.rename(columns=col, inplace=True)
     pg.loc[:, "opt_global_result_type"] = pg.apply(classify_result_type, axis=1, result_type="expand")
 
     out_mztab_PRH = pd.DataFrame()
     out_mztab_PRH = pg.drop(["Protein.Names"], axis=1)
-    out_mztab_PRH = out_mztab_PRH.rename(
-        columns={"Protein.Group": "accession", "First.Protein.Description": "description"}
+    out_mztab_PRH.rename(
+        columns={"Protein.Group": "accession", "First.Protein.Description": "description"}, inplace=True
     )
     out_mztab_PRH.loc[:, "database"] = database
 
@@ -433,12 +438,15 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         result_type="expand",
     )
 
-    out_mztab_PRH = out_mztab_PRH.drop(["Genes", "modifiedSequence", "Protein.Ids"], axis=1)
-    out_mztab_PRH.fillna("null", inplace=True)
     out_mztab_PRH.loc[:, "PRH"] = "PRT"
     index = out_mztab_PRH.loc[:, "PRH"]
-    out_mztab_PRH.drop(labels=["PRH"], axis=1, inplace=True)
+    out_mztab_PRH.drop(["PRH", "Genes", "modifiedSequence", "Protein.Ids"], axis=1, inplace=True)
     out_mztab_PRH.insert(0, "PRH", index)
+    out_mztab_PRH.fillna("null", inplace=True)
+    out_mztab_PRH.loc[:, "database"] = database
+    new_cols = [col for col in out_mztab_PRH.columns if not col.startswith("opt_")] + [col for col in out_mztab_PRH.columns if col.startswith("opt_")]
+    out_mztab_PRH = out_mztab_PRH[new_cols]
+
     # out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
 
     return out_mztab_PRH
@@ -462,16 +470,16 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     """
     out_mztab_PEH = pd.DataFrame()
     out_mztab_PEH = pr.iloc[:, 0:10]
-    out_mztab_PEH = out_mztab_PEH.drop(
-        ["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis=1
+    out_mztab_PEH.drop(
+        ["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis=1, inplace=True
     )
-    out_mztab_PEH = out_mztab_PEH.rename(
+    out_mztab_PEH.rename(
         columns={
             "Stripped.Sequence": "sequence",
             "Protein.Ids": "accession",
             "Modified.Sequence": "opt_global_cv_MS:1000889_peptidoform_sequence",
             "Precursor.Charge": "charge",
-        }
+        }, inplace=True
     )
 
     out_mztab_PEH.loc[:, "modifications"] = out_mztab_PEH.apply(
@@ -486,7 +494,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand"
     )
 
-    null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
+    null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge", "opt_global_feature_id"]
     for i in null_col:
         out_mztab_PEH.loc[:, i] = "null"
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -531,46 +539,59 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         ]
     ] = out_mztab_PEH.apply(lambda x: PEH_match_report(report, x["pr_id"]), axis=1, result_type="expand")
 
-    out_mztab_PEH[["opt_global_feature_id", "spectra_ref"]] = out_mztab_PEH.apply(
-        lambda x: ("null", "null"), axis=1, result_type="expand"
-    )
-    out_mztab_PEH = out_mztab_PEH.drop(["Precursor.Id", "Genes", "pr_id"], axis=1)
-    out_mztab_PEH.fillna("null", inplace=True)
     out_mztab_PEH.loc[:, "PEH"] = "PEP"
-    index = out_mztab_PEH.loc[:, "PEH"]
-    out_mztab_PEH.drop(labels=["PEH"], axis=1, inplace=True)
-    out_mztab_PEH.insert(0, "PEH", index)
     out_mztab_PEH.loc[:, "database"] = database
+    index = out_mztab_PEH.loc[:, "PEH"]
+    out_mztab_PEH.drop(["PEH", "Precursor.Id", "Genes", "pr_id"], axis=1, inplace=True)
+    out_mztab_PEH.insert(0, "PEH", index)
+    out_mztab_PEH.fillna("null", inplace=True)
+    new_cols = [col for col in out_mztab_PEH.columns if not col.startswith("opt_")] + [col for col in out_mztab_PEH.columns if col.startswith("opt_")]
+    out_mztab_PEH = out_mztab_PEH[new_cols]
     # out_mztab_PEH.to_csv("./out_peptide.mztab", sep=",", index=False)
 
     return out_mztab_PEH
 
 
-def mztab_PSH(report, database):
+def mztab_PSH(report, mzml_info, database):
     """Construct PSH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
+    :param mzml_info: Path to a tsv which contains information from mzMLs
+    :type mzml_info: str
     :param database: Path to fasta file
     :type database: str
     :return: PSH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
+    mzml_df = pd.read_csv(mzml_info, sep="\t")
     out_mztab_PSH = pd.DataFrame()
+    for n, group in report.groupby(["Run"]):
+        group.sort_values(by="RT.Start", inplace=True)
+        target = mzml_df[mzml_df["File_Name"] == n + ".mzML"]
+        target = target[["Retention_Time", "SpectrumID", "Exp_Mass_To_Charge"]]
+        target.columns = ["RT.Start", "opt_global_spectrum_reference", "exp_mass_to_charge"]
+        # TODO seconds returned from spectrum.getRT()
+        target.loc[:, "RT.Start"] = target.apply(lambda x: x["RT.Start"] / 60, axis=1)
+        out_mztab_PSH = pd.concat([out_mztab_PSH, pd.merge_asof(group, target, on="RT.Start")])
+    del report
+
     ## Score at PSM level: Q.Value
-    out_mztab_PSH = report[
+    out_mztab_PSH = out_mztab_PSH[
         [
             "Stripped.Sequence",
             "Protein.Ids",
             "Genes",
             "Q.Value",
-            "RT",
+            "RT.Start",
             "Precursor.Charge",
             "Calculate.Precursor.Mz",
+            "exp_mass_to_charge",
             "Modified.Sequence",
             "PEP",
             "Global.Q.Value",
             "Global.Q.Value",
+            "opt_global_spectrum_reference"
         ]
     ]
     out_mztab_PSH.columns = [
@@ -581,10 +602,12 @@ def mztab_PSH(report, database):
         "retention_time",
         "charge",
         "calc_mass_to_charge",
+        "exp_mass_to_charge",
         "opt_global_cv_MS:1000889_peptidoform_sequence",
         "opt_global_SpecEValue_score",
         "opt_global_q-value",
         "opt_global_q-value_score",
+        "opt_global_spectrum_reference"
     ]
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -596,17 +619,13 @@ def mztab_PSH(report, database):
 
     null_col = [
         "database_version",
-        "spectra_ref",
         "search_engine",
-        "unique",
-        "exp_mass_to_charge",
         "pre",
         "post",
         "start",
         "end",
         "opt_global_feature_id",
-        "opt_global_map_index",
-        "opt_global_spectrum_reference",
+        "opt_global_map_index"
     ]
     for i in null_col:
         out_mztab_PSH.loc[:, i] = "null"
@@ -615,18 +634,23 @@ def mztab_PSH(report, database):
         lambda x: find_modification(x["opt_global_cv_MS:1000889_peptidoform_sequence"]), axis=1, result_type="expand"
     )
 
+    out_mztab_PSH.loc[:, "spectra_ref"] = out_mztab_PSH.apply(
+        lambda x: "ms_run[{}]:".format(x["ms_run"]) + x["opt_global_spectrum_reference"], axis=1, result_type="expand"
+    )
+
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1000889_peptidoform_sequence"] = out_mztab_PSH.apply(
         lambda x: AASequence.fromString(x["opt_global_cv_MS:1000889_peptidoform_sequence"]).toString(),
         axis=1,
         result_type="expand",
     )
 
-    out_mztab_PSH = out_mztab_PSH.drop(["Genes"], axis=1)
-    out_mztab_PSH.fillna("null", inplace=True)
     out_mztab_PSH.loc[:, "PSH"] = "PSM"
     index = out_mztab_PSH.loc[:, "PSH"]
-    out_mztab_PSH.drop(labels=["PSH"], axis=1, inplace=True)
+    out_mztab_PSH.drop(["PSH", "Genes"], axis=1, inplace=True)
     out_mztab_PSH.insert(0, "PSH", index)
+    out_mztab_PSH.fillna("null", inplace=True)
+    new_cols = [col for col in out_mztab_PSH.columns if not col.startswith("opt_")] + [col for col in out_mztab_PSH.columns if col.startswith("opt_")]
+    out_mztab_PSH = out_mztab_PSH[new_cols]
     # out_mztab_PSH.to_csv("./out_psms.mztab", sep=",", index=False)
 
     return out_mztab_PSH
