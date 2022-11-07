@@ -279,6 +279,26 @@
                     "default": 3,
                     "fa_icon": "fas fa-sliders-h"
                 },
+                "min_pr_mz": {
+                    "type": "number",
+                    "description": "The minimum precursor m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
+                "max_pr_mz": {
+                    "type": "number",
+                    "description": "The maximum precursor m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
+                "min_fr_mz": {
+                    "type": "number",
+                    "description": "The minimum fragment m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
+                "max_fr_mz": {
+                    "type": "number",
+                    "description": "The maximum fragment m/z for the in silico library generation or library-free search",
+                    "fa_icon": "fas fa-filter"
+                },
                 "db_debug": {
                     "type": "integer",
                     "description": "Debug level when running the database search. Logs become more verbose and at '>5' temporary files are kept.",
@@ -857,30 +877,11 @@
             "description": "Settings for DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
             "default": "",
             "properties": {
-                "acquisition_method": {
-                    "type": "string",
-                    "description": "Proteomics data acquisition method",
-                    "default": "dda",
-                    "enum": ["dda", "dia"],
-                    "fa_icon": "far fa-list-ol"
-                },
                 "mass_acc_automatic": {
                     "type": "boolean",
                     "default": true,
                     "description": "Choosing the MS2 mass accuracy setting automatically",
                     "fa_icon": "fas fa-toggle-on"
-                },
-                "mass_acc_ms2": {
-                    "type": "integer",
-                    "description": "Sets the MS2 mass accuracy to N ppm",
-                    "default": 11,
-                    "fa_icon": "fas fa-filter"
-                },
-                "mass_acc_ms1": {
-                    "type": "integer",
-                    "description": "Sets the MS1 mass accuracy to N ppm",
-                    "default": 15,
-                    "fa_icon": "fas fa-filter"
                 },
                 "scan_window_automatic": {
                     "type": "boolean",
@@ -912,26 +913,6 @@
                     "description": "A single score will be used until RT alignment to save memory",
                     "fa_icon": "fas fa-filter",
                     "default": true
-                },
-                "min_pr_mz": {
-                    "type": "number",
-                    "description": "The minimum precursor m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter"
-                },
-                "max_pr_mz": {
-                    "type": "number",
-                    "description": "The maximum precursor m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter"
-                },
-                "min_fr_mz": {
-                    "type": "number",
-                    "description": "The minimum fragment m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter"
-                },
-                "max_fr_mz": {
-                    "type": "number",
-                    "description": "The maximum fragment m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter"
                 },
                 "pg_level": {
                     "type": "number",
@@ -1182,6 +1163,13 @@
                     "description": "Display help text.",
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
+                },
+                "acquisition_method": {
+                    "type": "string",
+                    "description": "Proteomics data acquisition method",
+                    "default": "dda",
+                    "enum": ["dda", "dia"],
+                    "fa_icon": "far fa-list-ol"
                 },
                 "publish_dir_mode": {
                     "type": "string",

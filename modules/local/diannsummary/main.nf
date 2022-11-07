@@ -1,4 +1,5 @@
 process DIANNSUMMARY {
+    tag "$meta.experiment_id"
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,6 +8,7 @@ process DIANNSUMMARY {
 
     input:
     file(mzMLs)
+    val(meta)
     file(empirical_library)
     file("quant/")
     file(fasta)
@@ -25,8 +27,10 @@ process DIANNSUMMARY {
 
     script:
     def args = task.ext.args ?: ''
+    mass_acc_ms1 = meta.precursor_mass_tolerance_unit == "ppm" ? meta.precursor_mass_tolerance : 5
+    mass_acc_ms2 = meta.fragment_mass_tolerance_unit == "ppm" ? meta.fragment_mass_tolerance : 13
 
-    mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $params.mass_acc_ms2 --mass-acc-ms1 $params.mass_acc_ms1"
+    mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1"
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     species_genes = params.species_genes ? "--species-genes": ""
 

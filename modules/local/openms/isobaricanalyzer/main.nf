@@ -1,5 +1,5 @@
 process ISOBARICANALYZER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
@@ -17,7 +17,7 @@ process ISOBARICANALYZER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     if (meta.dissociationmethod == "HCD" || meta.dissociationmethod == "HCID") diss_meth = "auto"
     else if (meta.dissociationmethod == "CID") diss_meth = "Collision-induced dissociation"
