@@ -1,5 +1,5 @@
 process SEARCHENGINECOMET {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
@@ -17,7 +17,7 @@ process SEARCHENGINECOMET {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     if (meta.fragmentmasstoleranceunit == "ppm") {
         // Note: This uses an arbitrary rule to decide if it was hi-res or low-res

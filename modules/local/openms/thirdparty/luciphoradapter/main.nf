@@ -1,5 +1,5 @@
 process LUCIPHORADAPTER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_medium'
 
     conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
@@ -26,7 +26,7 @@ process LUCIPHORADAPTER {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     def losses = params.luciphor_neutral_losses ? "-neutral_losses ${params.luciphor_neutral_losses}" : ""
     def dec_mass = params.luciphor_decoy_mass ? "-decoy_mass ${params.luciphor_decoy_mass}" : ""

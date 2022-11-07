@@ -71,12 +71,17 @@ workflow LFQ {
         .map { it -> it[1] }
         .set { ch_pmultiqc_ids }
 
+    ID.out.ch_consensus_results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_consensus }
+
     emit:
-    ch_pmultiqc_ids = ch_pmultiqc_ids
-    final_result    = PROTEOMICSLFQ.out.out_mztab
-    versions        = ch_software_versions
-    msstats_in      = PROTEOMICSLFQ.out.out_msstats
-    msstats_out     = ch_msstats_out
+    ch_pmultiqc_ids         = ch_pmultiqc_ids
+    ch_pmultiqc_consensus   = ch_pmultiqc_consensus
+    final_result            = PROTEOMICSLFQ.out.out_mztab
+    versions                = ch_software_versions
+    msstats_in              = PROTEOMICSLFQ.out.out_msstats
+    msstats_out             = ch_msstats_out
 }
 
 /*

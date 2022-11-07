@@ -3,11 +3,11 @@ process MZMLSTATISTICS {
     // TODO could be easily parallelized
     label 'process_single_thread'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.17" : null)
+    conda (params.enable_conda ? "bioconda::pyopenms=2.8.0" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.17--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
     } else {
-        container "quay.io/biocontainers/pmultiqc:0.0.17--pyhdfd78af_0"
+        container "quay.io/biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
     }
 
     input:
@@ -22,13 +22,12 @@ process MZMLSTATISTICS {
     def args = task.ext.args ?: ''
 
     """
-    mzml_statistics.py mzml_dataframe \\
-        --mzml_folder "./out/" \\
+    mzml_statistics.py "./out/" \\
         |& tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyopenms: \$(echo "2.8.0")
+        pyopenms: \$(pip show pyopenms | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

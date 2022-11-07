@@ -1,5 +1,5 @@
 process FALSEDISCOVERYRATE {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_low'
     label 'process_single_thread'
     label 'openms'
@@ -19,7 +19,7 @@ process FALSEDISCOVERYRATE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
     FalseDiscoveryRate \\

@@ -1,4 +1,5 @@
 process GENERATE_DIANN_CFG {
+    tag "$meta.experiment_id"
     label 'process_low'
 
     conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
@@ -28,7 +29,7 @@ process GENERATE_DIANN_CFG {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(echo "0.0.21")
+        sdrf-pipelines: \$(pip show sdrf-pipelines | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }
