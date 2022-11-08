@@ -174,7 +174,7 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
-        with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mztab", "w", newline="") as f:
+        with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mzTab", "w", newline="") as f:
             MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
             PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
             PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
