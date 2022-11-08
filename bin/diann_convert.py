@@ -586,7 +586,7 @@ def mztab_PSH(report, folder, database):
         target.columns = ["RT.Start", "opt_global_spectrum_reference", "exp_mass_to_charge"]
         # TODO seconds returned from precursor.getRT()
         target.loc[:, "RT.Start"] = target.apply(lambda x: x["RT.Start"] / 60, axis=1)
-        out_mztab_PSH = pd.concat([out_mztab_PSH, pd.merge_asof(group, target, on="RT.Start")])
+        out_mztab_PSH = pd.concat([out_mztab_PSH, pd.merge_asof(group, target, on="RT.Start", direction="nearest")])
     del report
 
     ## Score at PSM level: Q.Value
