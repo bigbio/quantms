@@ -48,13 +48,15 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Install mamba
+      - name: Install micromamba
         if: matrix.exec_profile == 'conda'
         uses: conda-incubator/setup-miniconda@v2
         with:
           python-version: 3.9
-          mamba-version: "*"
+          micromamba-version: "*"
           channels: conda-forge,defaults
+        run: |
+          alias mamba=micromamba
 
       # - name: Install micromamba as mamba
       #   if: matrix.exec_profile == 'conda'
