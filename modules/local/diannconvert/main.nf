@@ -36,7 +36,7 @@ process DIANNCONVERT {
     """
     diann_convert.py convert \\
         --folder ./ \\
-        --diann_version ./version/versions.yaml \\
+        --diann_version ./version/versions.yml \\
         --dia_params "${dia_params}" \\
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
