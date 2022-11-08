@@ -32,7 +32,7 @@ input:
   - report_pg:
       type: file
       description: A text table containing information from mzMLs
-      pattern: "mzml_info.tsv"
+      pattern: "*_mzml_info.tsv"
   - meta:
       type: map
       description: Groovy Map containing sample information

@@ -17,51 +17,25 @@ def cli():
 
 
 @click.command("convert")
-@click.option("--diann_report", "-r")
-@click.option("--exp_design", "-e")
-@click.option("--pg_matrix", "-pg")
-@click.option("--pr_matrix", "-pr")
-@click.option("--mzml_info", "-mz")
-@click.option("--dia_params", "-p")
+@click.option("--folder", "-f")
 @click.option("--diann_version", "-v")
-@click.option("--fasta", "-f")
+@click.option("--dia_params", "-p")
 @click.option("--charge", "-c")
 @click.option("--missed_cleavages", "-m")
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
-def convert(
-    ctx,
-    diann_report,
-    exp_design,
-    pg_matrix,
-    pr_matrix,
-    mzml_info,
-    dia_params,
-    diann_version,
-    fasta,
-    charge,
-    missed_cleavages,
-    qvalue_threshold,
-):
+def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
     """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are
     used for quality control and downstream analysis.
 
-    :param diann_report: Path to the main report output by DIA-NN
-    :type diann_report: str
-    :param exp_design: Path to the experimental design file
-    :type exp_design: str
-    :param pg_matrix: Path to a DIA-NN matrix file containing protein groups
-    :type pg_matrix: str
-    :param pr_matrix: Path to a DIA-NN matrix file containing precursors
-    :type pr_matrix: str
-    :param mzml_info: Path to a tsv which contains information from mzMLs
-    :type mzml_info: str
-    :param dia_params: A list contains DIA parameters
-    :type dia_params: list
+    :param folder: DiannConvert specifies the folder where the required file resides. The folder contains
+        the DiaNN main report, protein matrix, precursor matrix, experimental design file, protein sequence
+        FASTA file, version file of DiaNN and mzml_info TSVs
+    :type folder: str
     :param diann_version: Path to a version file of DIA-NN
     :type diann_version: str
-    :param fasta: Path to the fasta file
-    :type fasta: str
+    :param dia_params: A list contains DIA parameters
+    :type dia_params: list
     :param charge: The charge assigned by DIA-NN(max_precursor_charge)
     :type charge: int
     :param missed_cleavages: Allowed missed cleavages assigned by DIA-NN
@@ -69,7 +43,39 @@ def convert(
     :param qvalue_threshold: Threshold for filtering q value
     :type qvalue_threshold: float
     """
-    with open(diann_version) as f:
+    pathdict = {key: [] for key in ["report", "exp_design", "pg_matrix", "pr_matrix", "fasta", "mzml_info"]}
+    fileslist = os.listdir(folder)
+    if not folder.endswith("/"):
+        folder = folder + "/"
+    for i in fileslist:
+        if i.endswith("report.tsv"):
+            pathdict["report"].append(i)
+        elif i.endswith("_openms_design.tsv"):
+            pathdict["exp_design"].append(i)
+        elif i.endswith("pg_matrix.tsv"):
+            pathdict["pg_matrix"].append(i)
+        elif i.endswith("pr_matrix.tsv"):
+            pathdict["pr_matrix"].append(i)
+        elif i.endswith(".fasta") or i.endswith(".fa"):
+            pathdict["fasta"].append(i)
+        elif i.endswith("mzml_info.tsv"):
+            pathdict["mzml_info"].append(i)
+        else:
+            pass
+
+    for item in pathdict.items():
+        if item[0] != "mzml_info" and len(item[1]) > 1:
+            log.error(f"{item[0]} is duplicate, check whether the file is redundant or change the file name!")
+
+    diann_report = folder + pathdict["report"][0]
+    exp_design = folder + pathdict["exp_design"][0]
+    pg_matrix = folder + pathdict["pg_matrix"][0]
+    pr_matrix = folder + pathdict["pr_matrix"][0]
+    fasta = folder + pathdict["fasta"][0]
+    diann_version_file = diann_version
+    mzml_info = pathdict["mzml_info"]
+
+    with open(diann_version_file) as f:
         for line in f:
             if "DIA-NN" in line:
                 diann_version_id = line.rstrip("\n").split(": ")[1]
@@ -164,7 +170,7 @@ def convert(
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
         PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
-        PSH = mztab_PSH(report, mzml_info, database)
+        PSH = mztab_PSH(report, folder, database)
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
@@ -557,26 +563,28 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     return out_mztab_PEH
 
 
-def mztab_PSH(report, mzml_info, database):
+def mztab_PSH(report, folder, database):
     """Construct PSH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
-    :param mzml_info: Path to a tsv which contains information from mzMLs
-    :type mzml_info: str
+    :param folder: DiannConvert specifies the folder where the required file resides. The folder contains
+        the DiaNN main report, protein matrix, precursor matrix, experimental design file, protein sequence
+        FASTA file, version file of DiaNN and mzml_info TSVs
+    :type folder: str
     :param database: Path to fasta file
     :type database: str
     :return: PSH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
-    mzml_df = pd.read_csv(mzml_info, sep="\t")
     out_mztab_PSH = pd.DataFrame()
     for n, group in report.groupby(["Run"]):
+        file = folder + n + "_mzml_info.tsv"
+        target = pd.read_csv(file, sep="\t")
         group.sort_values(by="RT.Start", inplace=True)
-        target = mzml_df[mzml_df["File_Name"] == n + ".mzML"]
         target = target[["Retention_Time", "SpectrumID", "Exp_Mass_To_Charge"]]
         target.columns = ["RT.Start", "opt_global_spectrum_reference", "exp_mass_to_charge"]
-        # TODO seconds returned from spectrum.getRT()
+        # TODO seconds returned from precursor.getRT()
         target.loc[:, "RT.Start"] = target.apply(lambda x: x["RT.Start"] / 60, axis=1)
         out_mztab_PSH = pd.concat([out_mztab_PSH, pd.merge_asof(group, target, on="RT.Start")])
     del report
