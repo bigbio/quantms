@@ -14,7 +14,7 @@ process MZMLSTATISTICS {
     path("out/*")
 
     output:
-    path "mzml_info.tsv", emit: mzml_statistics
+    path "*_mzml_info.tsv", emit: mzml_statistics
     path "versions.yml", emit: version
     path "*.log", emit: log
 

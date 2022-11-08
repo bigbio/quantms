@@ -29,6 +29,10 @@ input:
       type: file
       description: A text table containing normalized quantities for protein groups. They are filtered at 1% FDR, using global q-values for protein groups
       pattern: "*pg_matrix.tsv"
+  - report_pg:
+      type: file
+      description: A text table containing information from mzMLs
+      pattern: "*_mzml_info.tsv"
   - meta:
       type: map
       description: Groovy Map containing sample information

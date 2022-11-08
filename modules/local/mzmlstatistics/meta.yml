@@ -17,7 +17,7 @@ output:
   - mzml_statistics:
       type: file
       description: mzMLs statistics file
-      pattern: "mzml_info.tsv"
+      pattern: "*_mzml_info.tsv"
   - version:
       type: file
       description: File containing software version
