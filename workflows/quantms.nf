@@ -154,7 +154,7 @@ workflow QUANTMS {
     ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
     ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
-    DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+    DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
     ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
     ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
     ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))

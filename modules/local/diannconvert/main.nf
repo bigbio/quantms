@@ -2,11 +2,11 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.16" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.17" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.16--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.17--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/pmultiqc:0.0.16--pyhdfd78af_0"
+        container "quay.io/biocontainers/pmultiqc:0.0.17--pyhdfd78af_0"
     }
 
     input:
@@ -14,9 +14,10 @@ process DIANNCONVERT {
     path(exp_design)
     path(report_pg)
     path(report_pr)
+    path(mzml_information)
     val(meta)
     path(fasta)
-    path("version/versions.yaml")
+    path("version/versions.yml")
 
     output:
     path "*msstats_in.csv", emit: out_msstats
@@ -34,13 +35,9 @@ process DIANNCONVERT {
 
     """
     diann_convert.py convert \\
-        --diann_report "${report}" \\
-        --exp_design "${exp_design}" \\
-        --pg_matrix "${report_pg}" \\
-        --pr_matrix "${report_pr}" \\
+        --folder ./ \\
+        --diann_version ./version/versions.yml \\
         --dia_params "${dia_params}" \\
-        --diann_version ./version/versions.yaml \\
-        --fasta "${fasta}" \\
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
         --qvalue_threshold $params.protein_level_fdr_cutoff \\
