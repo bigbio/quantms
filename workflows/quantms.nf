@@ -200,7 +200,7 @@ workflow QUANTMS {
             CREATE_INPUT_CHANNEL.out.ch_expdesign
                 .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
                 .combine(ch_ids_pmultiqc.collect().ifEmpty([])))
-                .combine(ch_consensus_pmultiqc.collect().ifEmpty([])))
+                .combine(ch_consensus_pmultiqc.collect().ifEmpty([]))
                 .combine(ch_msstats_in.ifEmpty([])),
             ch_multiqc_quantms_logo
         )
