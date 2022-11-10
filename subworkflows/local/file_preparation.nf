@@ -59,7 +59,7 @@ workflow FILE_PREPARATION {
     }.set{ ch_mzml }
 
     MZMLSTATISTICS( ch_mzml.mzml.collect() )
-    ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics)
+    ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
 
     if (params.openms_peakpicking){
@@ -74,6 +74,6 @@ workflow FILE_PREPARATION {
 
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml]
-    statistics      = ch_statistics     // channel: [ mzml_statistics.tsv ]
+    statistics      = ch_statistics     // channel: [ *_mzml_info.tsv ]
     version         = ch_versions       // channel: [ *.version.txt ]
 }

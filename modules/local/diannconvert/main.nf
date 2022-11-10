@@ -14,14 +14,15 @@ process DIANNCONVERT {
     path(exp_design)
     path(report_pg)
     path(report_pr)
+    path(mzml_information)
     val(meta)
     path(fasta)
-    path("version/versions.yaml")
+    path("version/versions.yml")
 
     output:
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
-    path "*.mztab", emit: out_mztab
+    path "*.mzTab", emit: out_mztab
     path "versions.yml", emit: version
 
     exec:
@@ -34,13 +35,9 @@ process DIANNCONVERT {
 
     """
     diann_convert.py convert \\
-        --diann_report "${report}" \\
-        --exp_design "${exp_design}" \\
-        --pg_matrix "${report_pg}" \\
-        --pr_matrix "${report_pr}" \\
+        --folder ./ \\
+        --diann_version ./version/versions.yml \\
         --dia_params "${dia_params}" \\
-        --diann_version ./version/versions.yaml \\
-        --fasta "${fasta}" \\
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
         --qvalue_threshold $params.protein_level_fdr_cutoff \\
