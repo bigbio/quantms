@@ -74,6 +74,7 @@ process SEARCHENGINEMSGF {
         -max_precursor_charge $params.max_precursor_charge \\
         -min_peptide_length $params.min_peptide_length \\
         -max_peptide_length $params.max_peptide_length \\
+        -max_missed_cleavages $params.allowed_missed_cleavages \\
         -isotope_error_range $params.isotope_error_range \\
         -enzyme "${enzyme}" \\
         -tryptic ${msgf_num_enzyme_termini} \\
