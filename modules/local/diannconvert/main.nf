@@ -2,11 +2,11 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.17" : null)
+    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.19" : null)
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.17--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.19--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/pmultiqc:0.0.17--pyhdfd78af_0"
+        container "quay.io/biocontainers/pmultiqc:0.0.19--pyhdfd78af_0"
     }
 
     input:
@@ -22,7 +22,7 @@ process DIANNCONVERT {
     output:
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
-    path "*.mztab", emit: out_mztab
+    path "*.mzTab", emit: out_mztab
     path "versions.yml", emit: version
 
     exec:
