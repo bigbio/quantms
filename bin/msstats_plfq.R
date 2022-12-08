@@ -183,7 +183,7 @@ if (length(args)<8) {
 }
 if (length(args)<9) {
     # adjusted p-value threshold
-    args[9] <- 0.1
+    args[9] <- 0.05
 }
 
 csv_input <- args[1]
