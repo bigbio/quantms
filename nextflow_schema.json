@@ -926,7 +926,7 @@
                     "type": "number",
                     "description": "The threshold value for differential expressed proteins in MSstats plots based on adjusted p-value",
                     "fa_icon": "fas fa-filter",
-                    "default": 0.1
+                    "default": 0.05
                 },
                 "add_triqler_output": {
                     "type": "boolean",
