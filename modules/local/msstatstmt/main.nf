@@ -38,6 +38,7 @@ process MSSTATSTMT {
         ${params.msstatsiso_remove_norm_channel} \\
         ${params.msstatsiso_reference_normalization} \\
         ${msstatstmt_csv_input.baseName} \\
+        ${params.msstats_threshold} \\
         $args \\
         |& tee msstats_tmt.log
 
