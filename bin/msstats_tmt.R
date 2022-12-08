@@ -833,14 +833,14 @@ if (l == 1) {
         warning("Warning: Not enough proteins with valid p-values for comparison. Skipping groupComparisonPlots step!")
     } else {
 
-        groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="ComparisonPlot", sig=args[13], width=12, height=12, dot.size = 2)
+        groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="ComparisonPlot", sig=as.numeric(args[13]), width=12, height=12, dot.size = 2)
 
-        groupComparisonPlots(data=valid_comp_data, type="VolcanoPlot", sig=args[13],
+        groupComparisonPlots(data=valid_comp_data, type="VolcanoPlot", sig=as.numeric(args[13]),
                             width=12, height=12, dot.size = 2)
 
         # Otherwise it fails since the behavior is undefined
         if (nrow(contrast_mat) > 1) {
-            groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="Heatmap", sig=args[13],
+            groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="Heatmap", sig=as.numeric(args[13]),
                                 width=12, height=12, dot.size = 2)
         }
     }
