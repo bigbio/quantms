@@ -789,6 +789,11 @@ if (length(args)<12) {
     args[12] <- './msstats'
 }
 
+if (length(args)<13) {
+    # adjusted p-value threshold
+    args[13] <- 0.1
+}
+
 csv_input <- args[1]
 contrast_str <- args[2]
 control_str <- args[3]
@@ -828,14 +833,14 @@ if (l == 1) {
         warning("Warning: Not enough proteins with valid p-values for comparison. Skipping groupComparisonPlots step!")
     } else {
 
-        groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="ComparisonPlot", width=12, height=12, dot.size = 2)
+        groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="ComparisonPlot", sig=args[13], width=12, height=12, dot.size = 2)
 
-        groupComparisonPlots(data=valid_comp_data, type="VolcanoPlot",
+        groupComparisonPlots(data=valid_comp_data, type="VolcanoPlot", sig=args[13],
                             width=12, height=12, dot.size = 2)
 
         # Otherwise it fails since the behavior is undefined
         if (nrow(contrast_mat) > 1) {
-            groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="Heatmap",
+            groupComparisonPlots(data=test.MSstatsTMT$ComparisonResult, type="Heatmap", sig=args[13],
                                 width=12, height=12, dot.size = 2)
         }
     }

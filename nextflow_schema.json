@@ -922,6 +922,12 @@
                     "description": "Experimental: Allows full control over contrasts by specifying a set of contrasts in a semicolon separated list of R-compatible contrasts with the condition names/numbers as variables (e.g. `1-2;1-3;2-3`). Overwrites [`--ref_condition`](#ref_condition).",
                     "fa_icon": "fas fa-font"
                 },
+                "msstats_threshold": {
+                    "type": "number",
+                    "description": "The threshold value for differential expressed proteins in MSstats plots based on adjusted p-value",
+                    "fa_icon": "fas fa-filter",
+                    "default": 0.1
+                },
                 "add_triqler_output": {
                     "type": "boolean",
                     "description": "Also create an output in Triqler's format for an alternative manual post-processing with that tool",
