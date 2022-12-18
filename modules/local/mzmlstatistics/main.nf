@@ -9,9 +9,9 @@ process MZMLSTATISTICS {
     } else {
         container "quay.io/biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
     }
-
+    
     input:
-    path("out/*")
+    path mzml_path
 
     output:
     path "*_mzml_info.tsv", emit: mzml_statistics
@@ -22,7 +22,7 @@ process MZMLSTATISTICS {
     def args = task.ext.args ?: ''
 
     """
-    mzml_statistics.py "./out/" \\
+    mzml_statistics.py "${mzml_path}" \\
         |& tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
