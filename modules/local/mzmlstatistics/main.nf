@@ -9,7 +9,7 @@ process MZMLSTATISTICS {
     } else {
         container "quay.io/biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
     }
-    
+
     input:
     path mzml_path
 
