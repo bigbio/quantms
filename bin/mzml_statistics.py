@@ -7,7 +7,6 @@ import sys
 
 
 def mzml_dataframe(mzml_path):
-
     file_columns = [
         "SpectrumID",
         "MSLevel",
