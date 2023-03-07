@@ -2,7 +2,7 @@ process MSSTATS {
     tag "$msstats_csv_input.Name"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::bioconductor-msstats=4.2.0" : null)
+    conda "bioconda::bioconductor-msstats=4.2.0"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/bioconductor-msstats:4.2.0--r41h619a076_1"
     } else {

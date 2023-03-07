@@ -5,7 +5,7 @@ process CONSENSUSID {
     label 'process_single_thread'
     label 'openms'
 
-    conda (params.enable_conda ? "bioconda::openms=2.9.0" : null)
+    conda "bioconda::openms=2.9.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/openms:2.9.0--h135471a_0' :
         'quay.io/biocontainers/openms:2.9.0--h135471a_0' }"
