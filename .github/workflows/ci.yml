@@ -28,7 +28,7 @@ jobs:
       matrix:
         # Nextflow versions
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt"]
         exec_profile: ["docker", "conda"]
