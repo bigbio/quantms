@@ -49,7 +49,14 @@
                     "fa_icon": "fas fa-file-invoice",
                     "default": "mzML",
                     "help_text": "If the above [`--root_folder`](#root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF/design. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML' or 'raw' (the letter cases should match your files exactly)."
-                }
+                },
+                "acquisition_method": {
+                    "type": "string",
+                    "description": "Proteomics data acquisition method",
+                    "default": "dda",
+                    "enum": ["dda", "dia"],
+                    "fa_icon": "far fa-list-ol"
+                },
             }
         },
         "protein_database": {
@@ -1127,12 +1134,11 @@
                     "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
-                "acquisition_method": {
-                    "type": "string",
-                    "description": "Proteomics data acquisition method",
-                    "default": "dda",
-                    "enum": ["dda", "dia"],
-                    "fa_icon": "far fa-list-ol"
+                "version": {
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
                 },
                 "publish_dir_mode": {
                     "type": "string",
@@ -1175,7 +1181,7 @@
                     "type": "string",
                     "description": "Incoming hook URL for messaging service",
                     "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, only MS Teams is supported.",
+                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {
@@ -1221,12 +1227,6 @@
                     "description": "Show all params when using `--help`",
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "enable_conda": {
-                    "type": "boolean",
-                    "description": "Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
                 },
                 "singularity_pull_docker_container": {
                     "type": "boolean",
