@@ -66,7 +66,7 @@ class WorkflowMain {
         NfcoreTemplate.checkConfigProvided(workflow, log)
 
         // Check that conda channels are set-up correctly
-        if (session.config.conda && session.config.conda.enabled) {
+        if (params.enable_conda) {
             Utils.checkCondaChannels(log)
         }
 
