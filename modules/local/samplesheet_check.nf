@@ -1,5 +1,8 @@
 process SAMPLESHEET_CHECK {
 
+    tag "$input_file"
+    label 'process_single'
+
     conda "bioconda::sdrf-pipelines=0.0.22"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0' :
@@ -13,6 +16,9 @@ process SAMPLESHEET_CHECK {
     path "*.log", emit: log
     path "${input_file}", emit: checked_file
     path "versions.yml", emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
     // TODO validate experimental design file
