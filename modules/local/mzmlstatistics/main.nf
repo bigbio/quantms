@@ -11,10 +11,10 @@ process MZMLSTATISTICS {
     }
 
     input:
-    path("out/*")
+    path mzml_path
 
     output:
-    path "mzml_info.tsv", emit: mzml_statistics
+    path "*_mzml_info.tsv", emit: mzml_statistics
     path "versions.yml", emit: version
     path "*.log", emit: log
 
@@ -22,7 +22,7 @@ process MZMLSTATISTICS {
     def args = task.ext.args ?: ''
 
     """
-    mzml_statistics.py "./out/" \\
+    mzml_statistics.py "${mzml_path}" \\
         |& tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml

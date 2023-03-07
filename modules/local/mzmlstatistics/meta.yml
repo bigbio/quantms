@@ -10,14 +10,15 @@ tools:
       homepage: https://github.com/bigbio/quantms
       documentation: https://github.com/bigbio/quantms/tree/readthedocs
 input:
-  - mzmls:
-      type: dir
-      description: mzML files directory
+  - mzml:
+      type: file
+      description: Spectra file in mzML format
+      pattern: "*.mzML"
 output:
   - mzml_statistics:
       type: file
       description: mzMLs statistics file
-      pattern: "mzml_info.tsv"
+      pattern: "*_mzml_info.tsv"
   - version:
       type: file
       description: File containing software version

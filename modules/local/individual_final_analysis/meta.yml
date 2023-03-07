@@ -13,11 +13,11 @@ input:
   - diann_log:
       type: file
       description: DIA-NN log file
-      pattern: "*.log"
-  - library:
+      pattern: "assemble_empirical_library.log"
+  - empirical_library:
       type: file
-      description: Silico-predicted spectral library by deep leaning predictor in DIA-NN
-      pattern: "*.tsv"
+      description: An empirical spectral library from the .quant files.
+      pattern: "empirical_library.tsv"
   - mzML:
       type: file
       description: Spectra file in mzML format

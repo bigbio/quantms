@@ -61,7 +61,7 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `comet`               | 2021010    |
 | `msgf+`               | 2022.01.07 |
 | `openms`              | 2.8.0      |
-| `sdrf-pipelines`      | 0.0.21     |
+| `sdrf-pipelines`      | 0.0.22     |
 | `percolator`          | 3.5        |
 | `pmultiqc`            | 0.0.11     |
 | `luciphor`            | 2020_04_03 |

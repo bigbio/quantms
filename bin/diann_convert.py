@@ -2,10 +2,10 @@
 
 import os
 import re
-
 import click
 import numpy as np
 import pandas as pd
+import logging as log
 from pyopenms import AASequence, FASTAFile, ModificationsDB
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -17,47 +17,25 @@ def cli():
 
 
 @click.command("convert")
-@click.option("--diann_report", "-r")
-@click.option("--exp_design", "-e")
-@click.option("--pg_matrix", "-pg")
-@click.option("--pr_matrix", "-pr")
-@click.option("--dia_params", "-p")
+@click.option("--folder", "-f")
 @click.option("--diann_version", "-v")
-@click.option("--fasta", "-f")
+@click.option("--dia_params", "-p")
 @click.option("--charge", "-c")
 @click.option("--missed_cleavages", "-m")
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
-def convert(
-    ctx,
-    diann_report,
-    exp_design,
-    pg_matrix,
-    pr_matrix,
-    dia_params,
-    diann_version,
-    fasta,
-    charge,
-    missed_cleavages,
-    qvalue_threshold,
-):
+def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
     """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are
     used for quality control and downstream analysis.
 
-    :param diann_report: Path to the main report output by DIA-NN
-    :type diann_report: str
-    :param exp_design: Path to the experimental design file
-    :type exp_design: str
-    :param pg_matrix: Path to a DIA-NN matrix file containing protein groups
-    :type pg_matrix: str
-    :param pr_matrix: Path to a DIA-NN matrix file containing precursors
-    :type pr_matrix: str
+    :param folder: DiannConvert specifies the folder where the required file resides. The folder contains
+        the DiaNN main report, protein matrix, precursor matrix, experimental design file, protein sequence
+        FASTA file, version file of DiaNN and mzml_info TSVs
+    :type folder: str
+    :param diann_version: Path to a version file of DIA-NN
+    :type diann_version: str
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
-    :param diann_version: Version of DIA-NN
-    :type diann_version: str
-    :param fasta: Path to the fasta file
-    :type fasta: str
     :param charge: The charge assigned by DIA-NN(max_precursor_charge)
     :type charge: int
     :param missed_cleavages: Allowed missed cleavages assigned by DIA-NN
@@ -65,22 +43,76 @@ def convert(
     :param qvalue_threshold: Threshold for filtering q value
     :type qvalue_threshold: float
     """
-    pg = pd.read_csv(pg_matrix, sep="\t", header=0, dtype="str")
-    pr = pd.read_csv(pr_matrix, sep="\t", header=0, dtype="str")
-    report = pd.read_csv(diann_report, sep="\t", header=0, dtype="str")
+    pathdict = {key: [] for key in ["report", "exp_design", "pg_matrix", "pr_matrix", "fasta", "mzml_info"]}
+    fileslist = os.listdir(folder)
+    if not folder.endswith("/"):
+        folder = folder + "/"
+    for i in fileslist:
+        if i.endswith("report.tsv"):
+            pathdict["report"].append(i)
+        elif i.endswith("_openms_design.tsv"):
+            pathdict["exp_design"].append(i)
+        elif i.endswith("pg_matrix.tsv"):
+            pathdict["pg_matrix"].append(i)
+        elif i.endswith("pr_matrix.tsv"):
+            pathdict["pr_matrix"].append(i)
+        elif i.endswith(".fasta") or i.endswith(".fa"):
+            pathdict["fasta"].append(i)
+        elif i.endswith("mzml_info.tsv"):
+            pathdict["mzml_info"].append(i)
+        else:
+            pass
+
+    for item in pathdict.items():
+        if item[0] != "mzml_info" and len(item[1]) > 1:
+            log.error(f"{item[0]} is duplicate, check whether the file is redundant or change the file name!")
+
+    diann_report = folder + pathdict["report"][0]
+    exp_design = folder + pathdict["exp_design"][0]
+    pg_matrix = folder + pathdict["pg_matrix"][0]
+    pr_matrix = folder + pathdict["pr_matrix"][0]
+    fasta = folder + pathdict["fasta"][0]
+    diann_version_file = diann_version
+    mzml_info = pathdict["mzml_info"]
+
+    with open(diann_version_file) as f:
+        for line in f:
+            if "DIA-NN" in line:
+                diann_version_id = line.rstrip("\n").split(": ")[1]
+                break
+    f.close()
+
+    remain_cols = [
+        "File.Name",
+        "Run",
+        "Protein.Group",
+        "Protein.Names",
+        "Protein.Ids",
+        "First.Protein.Description",
+        "PG.MaxLFQ",
+        "RT.Start",
+        "Global.Q.Value",
+        "Lib.Q.Value",
+        "PEP",
+        "Precursor.Normalised",
+        "Precursor.Id",
+        "Q.Value",
+        "Modified.Sequence",
+        "Stripped.Sequence",
+        "Precursor.Charge",
+        "Precursor.Quantity",
+        "Global.PG.Q.Value",
+    ]
+    report = pd.read_csv(diann_report, sep="\t", header=0, usecols=remain_cols)
+
+    # filter based on qvalue parameter for downstream analysiss
+    report = report[report["Q.Value"] < qvalue_threshold]
     report["Calculate.Precursor.Mz"] = report.apply(
-        lambda x: AASequence.fromString(x["Stripped.Sequence"]).getMZ(int(x["Precursor.Charge"])), axis=1
+        lambda x: calculate_mz(x["Stripped.Sequence"], x["Precursor.Charge"]), axis=1
     )
 
     precursor_list = list(report["Precursor.Id"].unique())
     report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
-
-    col = ["Q.Value", "Precursor.Normalised", "RT", "Global.Q.Value", "Lib.Q.Value", "PG.MaxLFQ"]
-    for i in col:
-        report.loc[:, i] = report.loc[:, i].astype("float")
-
-    # filter based on qvalue parameter for downstream analysiss
-    report = report[report["Q.Value"] < qvalue_threshold]
 
     with open(exp_design, "r") as f:
         data = f.readlines()
@@ -102,6 +134,7 @@ def convert(
         ["Protein.Names", "Modified.Sequence", "Precursor.Charge", "Precursor.Quantity", "File.Name", "Run"]
     ]
     out_msstats.columns = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Reference", "Run"]
+    out_msstats = out_msstats[out_msstats["Intensity"] != 0]
     out_msstats.loc[:, "PeptideSequence"] = out_msstats.apply(
         lambda x: AASequence.fromString(x["PeptideSequence"]).toString(), axis=1
     )
@@ -113,22 +146,22 @@ def convert(
     out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(
         lambda x: query_expdesign_value(x["Run"], f_table, s_DataFrame), axis=1, result_type="expand"
     )
+    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_msstats_in.csv", sep=",", index=False)
 
     # Convert to Triqler
     out_triqler = pd.DataFrame()
     out_triqler = out_msstats[["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Run", "Condition"]]
+    del out_msstats
     out_triqler.columns = ["proteins", "peptide", "charge", "intensity", "run", "condition"]
+    out_triqler = out_triqler[out_triqler["intensity"] != 0]
 
     out_triqler.loc[:, "searchScore"] = report["Q.Value"]
     out_triqler.loc[:, "searchScore"] = 1 - out_triqler["searchScore"]
-
-    out_msstats = out_msstats[out_msstats["Intensity"] != 0]
-    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_msstats_in.csv", sep=",", index=False)
-    out_triqler = out_triqler[out_triqler["intensity"] != 0]
     out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_triqler_in.tsv", sep="\t", index=False)
+    del out_triqler
 
     # Convert to mzTab
-    if diann_version == "1.8.1":
+    if diann_version_id == "1.8.1":
         fasta_df = pd.DataFrame()
         entries = []
         f = FASTAFile()
@@ -150,13 +183,26 @@ def convert(
         )
 
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
+        pg = pd.read_csv(
+            pg_matrix,
+            sep="\t",
+            header=0,
+        )
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
+        del pg
+        pr = pd.read_csv(
+            pr_matrix,
+            sep="\t",
+            header=0,
+        )
         PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
-        PSH = mztab_PSH(report, database)
+        del pr
+        PSH = mztab_PSH(report, folder, database)
+        del report
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
-        with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mztab", "w", newline="") as f:
+        with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mzTab", "w", newline="") as f:
             MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
             PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
             PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
@@ -356,13 +402,13 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
             + "]"
         )
 
-    pg = pg.rename(columns=col)
+    pg.rename(columns=col, inplace=True)
     pg.loc[:, "opt_global_result_type"] = pg.apply(classify_result_type, axis=1, result_type="expand")
 
     out_mztab_PRH = pd.DataFrame()
     out_mztab_PRH = pg.drop(["Protein.Names"], axis=1)
-    out_mztab_PRH = out_mztab_PRH.rename(
-        columns={"Protein.Group": "accession", "First.Protein.Description": "description"}
+    out_mztab_PRH.rename(
+        columns={"Protein.Group": "accession", "First.Protein.Description": "description"}, inplace=True
     )
     out_mztab_PRH.loc[:, "database"] = database
 
@@ -426,12 +472,17 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         result_type="expand",
     )
 
-    out_mztab_PRH = out_mztab_PRH.drop(["Genes", "modifiedSequence", "Protein.Ids"], axis=1)
-    out_mztab_PRH.fillna("null", inplace=True)
     out_mztab_PRH.loc[:, "PRH"] = "PRT"
     index = out_mztab_PRH.loc[:, "PRH"]
-    out_mztab_PRH.drop(labels=["PRH"], axis=1, inplace=True)
+    out_mztab_PRH.drop(["PRH", "Genes", "modifiedSequence", "Protein.Ids"], axis=1, inplace=True)
     out_mztab_PRH.insert(0, "PRH", index)
+    out_mztab_PRH.fillna("null", inplace=True)
+    out_mztab_PRH.loc[:, "database"] = database
+    new_cols = [col for col in out_mztab_PRH.columns if not col.startswith("opt_")] + [
+        col for col in out_mztab_PRH.columns if col.startswith("opt_")
+    ]
+    out_mztab_PRH = out_mztab_PRH[new_cols]
+
     # out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
 
     return out_mztab_PRH
@@ -455,16 +506,17 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     """
     out_mztab_PEH = pd.DataFrame()
     out_mztab_PEH = pr.iloc[:, 0:10]
-    out_mztab_PEH = out_mztab_PEH.drop(
-        ["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis=1
+    out_mztab_PEH.drop(
+        ["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis=1, inplace=True
     )
-    out_mztab_PEH = out_mztab_PEH.rename(
+    out_mztab_PEH.rename(
         columns={
             "Stripped.Sequence": "sequence",
             "Protein.Ids": "accession",
             "Modified.Sequence": "opt_global_cv_MS:1000889_peptidoform_sequence",
             "Precursor.Charge": "charge",
-        }
+        },
+        inplace=True,
     )
 
     out_mztab_PEH.loc[:, "modifications"] = out_mztab_PEH.apply(
@@ -479,7 +531,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand"
     )
 
-    null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge"]
+    null_col = ["database_version", "search_engine", "retention_time_window", "mass_to_charge", "opt_global_feature_id"]
     for i in null_col:
         out_mztab_PEH.loc[:, i] = "null"
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -524,60 +576,79 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         ]
     ] = out_mztab_PEH.apply(lambda x: PEH_match_report(report, x["pr_id"]), axis=1, result_type="expand")
 
-    out_mztab_PEH[["opt_global_feature_id", "spectra_ref"]] = out_mztab_PEH.apply(
-        lambda x: ("null", "null"), axis=1, result_type="expand"
-    )
-    out_mztab_PEH = out_mztab_PEH.drop(["Precursor.Id", "Genes", "pr_id"], axis=1)
-    out_mztab_PEH.fillna("null", inplace=True)
     out_mztab_PEH.loc[:, "PEH"] = "PEP"
-    index = out_mztab_PEH.loc[:, "PEH"]
-    out_mztab_PEH.drop(labels=["PEH"], axis=1, inplace=True)
-    out_mztab_PEH.insert(0, "PEH", index)
     out_mztab_PEH.loc[:, "database"] = database
+    index = out_mztab_PEH.loc[:, "PEH"]
+    out_mztab_PEH.drop(["PEH", "Precursor.Id", "Genes", "pr_id"], axis=1, inplace=True)
+    out_mztab_PEH.insert(0, "PEH", index)
+    out_mztab_PEH.fillna("null", inplace=True)
+    new_cols = [col for col in out_mztab_PEH.columns if not col.startswith("opt_")] + [
+        col for col in out_mztab_PEH.columns if col.startswith("opt_")
+    ]
+    out_mztab_PEH = out_mztab_PEH[new_cols]
     # out_mztab_PEH.to_csv("./out_peptide.mztab", sep=",", index=False)
 
     return out_mztab_PEH
 
 
-def mztab_PSH(report, database):
+def mztab_PSH(report, folder, database):
     """Construct PSH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
+    :param folder: DiannConvert specifies the folder where the required file resides. The folder contains
+        the DiaNN main report, protein matrix, precursor matrix, experimental design file, protein sequence
+        FASTA file, version file of DiaNN and mzml_info TSVs
+    :type folder: str
     :param database: Path to fasta file
     :type database: str
     :return: PSH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
     out_mztab_PSH = pd.DataFrame()
+    for n, group in report.groupby(["Run"]):
+        file = folder + n + "_mzml_info.tsv"
+        target = pd.read_csv(file, sep="\t")
+        group.sort_values(by="RT.Start", inplace=True)
+        target = target[["Retention_Time", "SpectrumID", "Exp_Mass_To_Charge"]]
+        target.columns = ["RT.Start", "opt_global_spectrum_reference", "exp_mass_to_charge"]
+        # TODO seconds returned from precursor.getRT()
+        target.loc[:, "RT.Start"] = target.apply(lambda x: x["RT.Start"] / 60, axis=1)
+        out_mztab_PSH = pd.concat([out_mztab_PSH, pd.merge_asof(group, target, on="RT.Start", direction="nearest")])
+    del report
+
     ## Score at PSM level: Q.Value
-    out_mztab_PSH = report[
+    out_mztab_PSH = out_mztab_PSH[
         [
             "Stripped.Sequence",
             "Protein.Ids",
-            "Genes",
             "Q.Value",
-            "RT",
+            "RT.Start",
             "Precursor.Charge",
             "Calculate.Precursor.Mz",
+            "exp_mass_to_charge",
             "Modified.Sequence",
             "PEP",
             "Global.Q.Value",
             "Global.Q.Value",
+            "opt_global_spectrum_reference",
+            "ms_run",
         ]
     ]
     out_mztab_PSH.columns = [
         "sequence",
         "accession",
-        "Genes",
         "search_engine_score[1]",
         "retention_time",
         "charge",
         "calc_mass_to_charge",
+        "exp_mass_to_charge",
         "opt_global_cv_MS:1000889_peptidoform_sequence",
         "opt_global_SpecEValue_score",
         "opt_global_q-value",
         "opt_global_q-value_score",
+        "opt_global_spectrum_reference",
+        "ms_run",
     ]
 
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
@@ -589,17 +660,13 @@ def mztab_PSH(report, database):
 
     null_col = [
         "database_version",
-        "spectra_ref",
         "search_engine",
-        "unique",
-        "exp_mass_to_charge",
         "pre",
         "post",
         "start",
         "end",
         "opt_global_feature_id",
         "opt_global_map_index",
-        "opt_global_spectrum_reference",
     ]
     for i in null_col:
         out_mztab_PSH.loc[:, i] = "null"
@@ -608,18 +675,25 @@ def mztab_PSH(report, database):
         lambda x: find_modification(x["opt_global_cv_MS:1000889_peptidoform_sequence"]), axis=1, result_type="expand"
     )
 
+    out_mztab_PSH.loc[:, "spectra_ref"] = out_mztab_PSH.apply(
+        lambda x: "ms_run[{}]:".format(x["ms_run"]) + x["opt_global_spectrum_reference"], axis=1, result_type="expand"
+    )
+
     out_mztab_PSH.loc[:, "opt_global_cv_MS:1000889_peptidoform_sequence"] = out_mztab_PSH.apply(
         lambda x: AASequence.fromString(x["opt_global_cv_MS:1000889_peptidoform_sequence"]).toString(),
         axis=1,
         result_type="expand",
     )
 
-    out_mztab_PSH = out_mztab_PSH.drop(["Genes"], axis=1)
-    out_mztab_PSH.fillna("null", inplace=True)
     out_mztab_PSH.loc[:, "PSH"] = "PSM"
     index = out_mztab_PSH.loc[:, "PSH"]
-    out_mztab_PSH.drop(labels=["PSH"], axis=1, inplace=True)
+    out_mztab_PSH.drop(["PSH", "ms_run"], axis=1, inplace=True)
     out_mztab_PSH.insert(0, "PSH", index)
+    out_mztab_PSH.fillna("null", inplace=True)
+    new_cols = [col for col in out_mztab_PSH.columns if not col.startswith("opt_")] + [
+        col for col in out_mztab_PSH.columns if col.startswith("opt_")
+    ]
+    out_mztab_PSH = out_mztab_PSH[new_cols]
     # out_mztab_PSH.to_csv("./out_psms.mztab", sep=",", index=False)
 
     return out_mztab_PSH
@@ -721,7 +795,7 @@ def match_in_report(report, target, max, flag, level):
         PEH_params = []
         for i in range(1, max + 1):
             match = result[result["study_variable"] == i]
-            PEH_params.extend([match["Precursor.Normalised"].mean(), "null", "null", "null", match["RT"].mean()])
+            PEH_params.extend([match["Precursor.Normalised"].mean(), "null", "null", "null", match["RT.Start"].mean()])
 
         return tuple(PEH_params)
 
@@ -775,7 +849,7 @@ def PEH_match_report(report, target):
     match = report[report["precursor.Index"] == target]
     ## Score at peptide level: the minimum of the respective precursor q-values (minimum of Q.Value per group)
     search_score = match["Q.Value"].min()
-    time = match["RT"].mean()
+    time = match["RT.Start"].mean()
     q_score = match["Global.Q.Value"].values[0] if match["Global.Q.Value"].values.size > 0 else np.nan
     spec_e = match["Lib.Q.Value"].values[0] if match["Lib.Q.Value"].values.size > 0 else np.nan
     mz = match["Calculate.Precursor.Mz"].mean()
@@ -805,6 +879,24 @@ def find_modification(peptide):
     original_mods = ",".join(str(i) for i in original_mods) if len(original_mods) > 0 else "null"
 
     return original_mods
+
+
+def calculate_mz(seq, charge):
+    """Remove unknown aminoacids and calculate mz
+
+    :param seq: Sequences of peptides
+    :type seq: str
+    :param charge: charge of peptides
+    :type seq: str
+    :return: mz
+    :rtype: float or NoneType
+    """
+    ref = "ARNDBCEQZGHILKMFPSTWYV"
+    seq = "".join([i for i in seq if i in ref])
+    if charge == "":
+        return None
+    else:
+        return AASequence.fromString(seq).getMZ(int(charge))
 
 
 cli.add_command(convert)

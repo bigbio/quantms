@@ -1,5 +1,5 @@
 process MZMLINDEXING {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_low'
 
     conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
@@ -17,10 +17,10 @@ process MZMLINDEXING {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    mkdir out
+    mkdir -p out
     FileConverter -in ${mzmlfile} -out out/${mzmlfile.baseName}.mzML |& tee ${mzmlfile.baseName}_mzmlindexing.log
 
     cat <<-END_VERSIONS > versions.yml

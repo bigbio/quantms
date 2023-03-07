@@ -34,6 +34,7 @@ process MSSTATS {
         ${params.msstatslfq_feature_subset_protein} \\
         ${params.msstatslfq_quant_summary_method} \\
         ${msstats_csv_input.baseName} \\
+        ${params.msstats_threshold} \\
         $args \\
         |& tee msstats.log
 
