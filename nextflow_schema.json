@@ -56,7 +56,7 @@
                     "default": "dda",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
-                },
+                }
             }
         },
         "protein_database": {
