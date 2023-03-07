@@ -21,7 +21,7 @@ process LUCIPHORADAPTER {
     luciphor_jar = ''
     if (workflow.containerEngine || (task.executor == "awsbatch")) {
         luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
-    } else if (params.enable_conda) {
+    } else if (session.config.conda && session.config.conda.enabled) {
         luciphor_jar = "-executable \$(find \$CONDA_PREFIX/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
     }
 

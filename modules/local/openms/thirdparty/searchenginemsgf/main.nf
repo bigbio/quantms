@@ -20,7 +20,7 @@ process SEARCHENGINEMSGF {
     msgf_jar = ''
     if (workflow.containerEngine || (task.executor == "awsbatch")) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
-    } else if (params.enable_conda) {
+    } else if (session.config.conda && session.config.conda.enabled) {
         msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 
