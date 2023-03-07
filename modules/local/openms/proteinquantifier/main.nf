@@ -4,7 +4,7 @@ process PROTEINQUANTIFIER {
 
     conda (params.enable_conda ? "openms::openms=3.0.0dev" : null)
     container "${ workflow.containerEngine == 'docker' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/openms/openms-executables:latest' :
+        'quay.io/biocontainers/openms:2.9.0--h135471a_0' :
         'https://ftp.pride.ebi.ac.uk/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img'
         }"
 
