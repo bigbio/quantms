@@ -23,7 +23,7 @@ process MZMLSTATISTICS {
 
     """
     mzml_statistics.py "${mzml_path}" \\
-        |& tee mzml_statistics.log
+        2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

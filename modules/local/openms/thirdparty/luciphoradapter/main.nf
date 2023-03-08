@@ -48,7 +48,7 @@ process LUCIPHORADAPTER {
         -max_charge_state $params.max_precursor_charge \\
         -max_peptide_length $params.max_peptide_length \\
         $args \\
-        |& tee ${id_file.baseName}_luciphor.log
+        2>&1 | tee ${id_file.baseName}_luciphor.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

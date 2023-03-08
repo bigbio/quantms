@@ -41,7 +41,7 @@ process DIANNCONVERT {
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
         --qvalue_threshold $params.protein_level_fdr_cutoff \\
-        |& tee convert_report.log
+        2>&1 | tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

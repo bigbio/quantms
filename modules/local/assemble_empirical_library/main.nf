@@ -41,7 +41,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             ${scan_window} \\
             --gen-spec-lib \\
             $args \\
-            |& tee assemble_empirical_library.log
+            2>&1 | tee assemble_empirical_library.log
 
 
     cat <<-END_VERSIONS > versions.yml

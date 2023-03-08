@@ -40,7 +40,7 @@ process ISOBARICANALYZER {
         -${meta.labelling_type}:reference_channel $params.reference_channel \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
         $args \\
-        |& tee ${mzml_file.baseName}_isob.log
+        2>&1 | tee ${mzml_file.baseName}_isob.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

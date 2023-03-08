@@ -36,7 +36,7 @@ process MSSTATS {
         ${msstats_csv_input.baseName} \\
         ${params.msstats_threshold} \\
         $args \\
-        |& tee msstats.log
+        2>&1 | tee msstats.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

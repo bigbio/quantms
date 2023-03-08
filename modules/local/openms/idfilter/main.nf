@@ -27,7 +27,7 @@ process IDFILTER {
         -out ${id_file.baseName}_filter$suffix \\
         -threads $task.cpus \\
         $args \\
-        |& tee ${id_file.baseName}_idfilter.log
+        2>&1 | tee ${id_file.baseName}_idfilter.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -29,7 +29,7 @@ process DECOYDATABASE {
         -shuffle_sequence_identity_threshold $params.shuffle_sequence_identity_threshold \\
         -debug $params.decoydatabase_debug \\
         $args \\
-        |& tee ${db_for_decoy.baseName}_decoy_database.log
+        2>&1 | tee ${db_for_decoy.baseName}_decoy_database.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

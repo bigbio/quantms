@@ -57,7 +57,7 @@ process PROTEOMICSLFQ {
         ${msstats_present} \\
         ${triqler_present} \\
         $args \\
-        |& tee proteomicslfq.log
+        2>&1 | tee proteomicslfq.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

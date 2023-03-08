@@ -28,7 +28,7 @@ process IDMAPPER {
         -threads $task.cpus \\
         -out ${id_file.baseName}_map.consensusXML \\
         $args \\
-        |& tee ${id_file.baseName}_map.log
+        2>&1 | tee ${id_file.baseName}_map.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -26,7 +26,7 @@ process IDPEP {
         -fit_algorithm:outlier_handling $params.outlier_handling \\
         -threads ${task.cpus} \\
         $args \\
-        |& tee ${id_file.baseName}_idpep.log
+        2>&1 | tee ${id_file.baseName}_idpep.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

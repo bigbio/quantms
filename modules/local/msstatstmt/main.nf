@@ -40,7 +40,7 @@ process MSSTATSTMT {
         ${msstatstmt_csv_input.baseName} \\
         ${params.msstats_threshold} \\
         $args \\
-        |& tee msstats_tmt.log
+        2>&1 | tee msstats_tmt.log
 
 
     cat <<-END_VERSIONS > versions.yml

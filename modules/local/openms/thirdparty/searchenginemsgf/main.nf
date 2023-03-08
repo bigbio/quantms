@@ -87,7 +87,7 @@ process SEARCHENGINEMSGF {
         -PeptideIndexing:unmatched_action ${params.unmatched_action} \\
         -debug $params.db_debug \\
         $args \\
-        |& tee ${mzml_file.baseName}_msgf.log
+        2>&1 | tee ${mzml_file.baseName}_msgf.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

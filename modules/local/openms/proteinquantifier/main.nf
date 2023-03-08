@@ -43,7 +43,7 @@ process PROTEINQUANTIFIER {
         -threads $task.cpus \\
         ${normalize} \\
         $args \\
-        |& tee pro_quant.log
+        2>&1 | tee pro_quant.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

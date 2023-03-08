@@ -29,7 +29,7 @@ process PERCOLATOR {
         -post_processing_tdc \\
         -score_type pep \\
         $args \\
-        |& tee ${id_file.baseName}_percolator.log
+        2>&1 | tee ${id_file.baseName}_percolator.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

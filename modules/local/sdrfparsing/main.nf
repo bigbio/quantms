@@ -25,7 +25,7 @@ process SDRFPARSING {
     ## -l for legacy behavior to always add sample columns
     ## TODO Update the sdrf-pipelines to dynamic print versions
 
-    parse_sdrf convert-openms -t2 -l -s ${sdrf} |& tee ${sdrf.baseName}_parsing.log
+    parse_sdrf convert-openms -t2 -l -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
 

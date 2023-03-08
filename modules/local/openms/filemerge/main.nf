@@ -28,7 +28,7 @@ process FILEMERGE {
         -threads $task.cpus \\
         -out ID_mapper_merge.consensusXML \\
         $args \\
-        |& tee ID_mapper_merge.log
+        2>&1 | tee ID_mapper_merge.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
