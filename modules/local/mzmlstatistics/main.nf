@@ -3,7 +3,7 @@ process MZMLSTATISTICS {
     // TODO could be easily parallelized
     label 'process_single_thread'
 
-    conda (params.enable_conda ? "bioconda::pyopenms=2.8.0" : null)
+    conda "bioconda::pyopenms=2.8.0"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
     } else {
@@ -11,7 +11,7 @@ process MZMLSTATISTICS {
     }
 
     input:
-    path("out/*")
+    path mzml_path
 
     output:
     path "*_mzml_info.tsv", emit: mzml_statistics
@@ -22,7 +22,7 @@ process MZMLSTATISTICS {
     def args = task.ext.args ?: ''
 
     """
-    mzml_statistics.py "./out/" \\
+    mzml_statistics.py "${mzml_path}" \\
         |& tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml

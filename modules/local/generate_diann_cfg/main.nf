@@ -2,7 +2,7 @@ process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22" : null)
+    conda "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0"
     } else {

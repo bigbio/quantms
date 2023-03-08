@@ -60,7 +60,7 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `thermorawfileparser` | 1.3.4      |
 | `comet`               | 2021010    |
 | `msgf+`               | 2022.01.07 |
-| `openms`              | 2.8.0      |
+| `openms`              | 2.9.0      |
 | `sdrf-pipelines`      | 0.0.22     |
 | `percolator`          | 3.5        |
 | `pmultiqc`            | 0.0.11     |

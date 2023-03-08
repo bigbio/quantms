@@ -2,9 +2,9 @@ process SEARCHENGINEMSGF {
     tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
+    conda "bioconda::openms-thirdparty=2.9.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.0--h9ee0642_0' :
         'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
 
     input:
@@ -20,7 +20,7 @@ process SEARCHENGINEMSGF {
     msgf_jar = ''
     if (workflow.containerEngine || (task.executor == "awsbatch")) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
-    } else if (params.enable_conda) {
+    } else if (session.config.conda && session.config.conda.enabled) {
         msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 

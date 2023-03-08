@@ -6,8 +6,7 @@ import pandas as pd
 import sys
 
 
-def mzml_dataframe(mzml_folder):
-
+def mzml_dataframe(mzml_path):
     file_columns = [
         "SpectrumID",
         "MSLevel",
@@ -17,8 +16,6 @@ def mzml_dataframe(mzml_folder):
         "Retention_Time",
         "Exp_Mass_To_Charge",
     ]
-    mzml_paths = list(i for i in os.listdir(mzml_folder) if i.endswith(".mzML"))
-    mzml_count = 1
 
     def parse_mzml(file_name, file_columns):
         info = []
@@ -45,20 +42,19 @@ def mzml_dataframe(mzml_folder):
 
         return pd.DataFrame(info, columns=file_columns)
 
-    for i in mzml_paths:
-        mzml_df = parse_mzml(mzml_folder + i, file_columns)
-        mzml_df.to_csv(
-            "{}_mzml_info.tsv".format(os.path.splitext(os.path.split(i)[1])[0]),
-            mode="a",
-            sep="\t",
-            index=False,
-            header=True,
-        )
+    mzml_df = parse_mzml(mzml_path, file_columns)
+    mzml_df.to_csv(
+        "{}_mzml_info.tsv".format(os.path.splitext(os.path.split(mzml_path)[1])[0]),
+        mode="a",
+        sep="\t",
+        index=False,
+        header=True,
+    )
 
 
 def main():
-    mzmls_path = sys.argv[1]
-    mzml_dataframe(mzmls_path)
+    mzml_path = sys.argv[1]
+    mzml_dataframe(mzml_path)
 
 
 if __name__ == "__main__":

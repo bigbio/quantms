@@ -2,10 +2,10 @@
 
 import os
 import re
-
 import click
 import numpy as np
 import pandas as pd
+import logging as log
 from pyopenms import AASequence, FASTAFile, ModificationsDB
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -82,17 +82,31 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
                 break
     f.close()
 
-    pg = pd.read_csv(pg_matrix, sep="\t", header=0, dtype="str")
-    pr = pd.read_csv(pr_matrix, sep="\t", header=0, dtype="str")
-    report = pd.read_csv(diann_report, sep="\t", header=0, dtype="str")
-
-    col = ["Q.Value", "Precursor.Normalised", "RT", "RT.Start", "Global.Q.Value", "Lib.Q.Value", "PG.MaxLFQ"]
-    for i in col:
-        report.loc[:, i] = report.loc[:, i].astype("float", errors="ignore")
+    remain_cols = [
+        "File.Name",
+        "Run",
+        "Protein.Group",
+        "Protein.Names",
+        "Protein.Ids",
+        "First.Protein.Description",
+        "PG.MaxLFQ",
+        "RT.Start",
+        "Global.Q.Value",
+        "Lib.Q.Value",
+        "PEP",
+        "Precursor.Normalised",
+        "Precursor.Id",
+        "Q.Value",
+        "Modified.Sequence",
+        "Stripped.Sequence",
+        "Precursor.Charge",
+        "Precursor.Quantity",
+        "Global.PG.Q.Value",
+    ]
+    report = pd.read_csv(diann_report, sep="\t", header=0, usecols=remain_cols)
 
     # filter based on qvalue parameter for downstream analysiss
     report = report[report["Q.Value"] < qvalue_threshold]
-
     report["Calculate.Precursor.Mz"] = report.apply(
         lambda x: calculate_mz(x["Stripped.Sequence"], x["Precursor.Charge"]), axis=1
     )
@@ -120,6 +134,7 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
         ["Protein.Names", "Modified.Sequence", "Precursor.Charge", "Precursor.Quantity", "File.Name", "Run"]
     ]
     out_msstats.columns = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Reference", "Run"]
+    out_msstats = out_msstats[out_msstats["Intensity"] != 0]
     out_msstats.loc[:, "PeptideSequence"] = out_msstats.apply(
         lambda x: AASequence.fromString(x["PeptideSequence"]).toString(), axis=1
     )
@@ -131,19 +146,19 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(
         lambda x: query_expdesign_value(x["Run"], f_table, s_DataFrame), axis=1, result_type="expand"
     )
+    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_msstats_in.csv", sep=",", index=False)
 
     # Convert to Triqler
     out_triqler = pd.DataFrame()
     out_triqler = out_msstats[["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Run", "Condition"]]
+    del out_msstats
     out_triqler.columns = ["proteins", "peptide", "charge", "intensity", "run", "condition"]
+    out_triqler = out_triqler[out_triqler["intensity"] != 0]
 
     out_triqler.loc[:, "searchScore"] = report["Q.Value"]
     out_triqler.loc[:, "searchScore"] = 1 - out_triqler["searchScore"]
-
-    out_msstats = out_msstats[out_msstats["Intensity"] != 0]
-    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_msstats_in.csv", sep=",", index=False)
-    out_triqler = out_triqler[out_triqler["intensity"] != 0]
     out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_triqler_in.tsv", sep="\t", index=False)
+    del out_triqler
 
     # Convert to mzTab
     if diann_version_id == "1.8.1":
@@ -168,9 +183,22 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
         )
 
         (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
+        pg = pd.read_csv(
+            pg_matrix,
+            sep="\t",
+            header=0,
+        )
         PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
+        del pg
+        pr = pd.read_csv(
+            pr_matrix,
+            sep="\t",
+            header=0,
+        )
         PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
+        del pr
         PSH = mztab_PSH(report, folder, database)
+        del report
         MTD.loc["", :] = ""
         PRH.loc[len(PRH) + 1, :] = ""
         PEH.loc[len(PEH) + 1, :] = ""
@@ -594,7 +622,6 @@ def mztab_PSH(report, folder, database):
         [
             "Stripped.Sequence",
             "Protein.Ids",
-            "Genes",
             "Q.Value",
             "RT.Start",
             "Precursor.Charge",
@@ -611,7 +638,6 @@ def mztab_PSH(report, folder, database):
     out_mztab_PSH.columns = [
         "sequence",
         "accession",
-        "Genes",
         "search_engine_score[1]",
         "retention_time",
         "charge",
@@ -661,7 +687,7 @@ def mztab_PSH(report, folder, database):
 
     out_mztab_PSH.loc[:, "PSH"] = "PSM"
     index = out_mztab_PSH.loc[:, "PSH"]
-    out_mztab_PSH.drop(["PSH", "Genes", "ms_run"], axis=1, inplace=True)
+    out_mztab_PSH.drop(["PSH", "ms_run"], axis=1, inplace=True)
     out_mztab_PSH.insert(0, "PSH", index)
     out_mztab_PSH.fillna("null", inplace=True)
     new_cols = [col for col in out_mztab_PSH.columns if not col.startswith("opt_")] + [
@@ -769,7 +795,7 @@ def match_in_report(report, target, max, flag, level):
         PEH_params = []
         for i in range(1, max + 1):
             match = result[result["study_variable"] == i]
-            PEH_params.extend([match["Precursor.Normalised"].mean(), "null", "null", "null", match["RT"].mean()])
+            PEH_params.extend([match["Precursor.Normalised"].mean(), "null", "null", "null", match["RT.Start"].mean()])
 
         return tuple(PEH_params)
 
@@ -823,7 +849,7 @@ def PEH_match_report(report, target):
     match = report[report["precursor.Index"] == target]
     ## Score at peptide level: the minimum of the respective precursor q-values (minimum of Q.Value per group)
     search_score = match["Q.Value"].min()
-    time = match["RT"].mean()
+    time = match["RT.Start"].mean()
     q_score = match["Global.Q.Value"].values[0] if match["Global.Q.Value"].values.size > 0 else np.nan
     spec_e = match["Lib.Q.Value"].values[0] if match["Lib.Q.Value"].values.size > 0 else np.nan
     mz = match["Calculate.Precursor.Mz"].mean()
