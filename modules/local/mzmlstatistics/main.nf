@@ -3,11 +3,11 @@ process MZMLSTATISTICS {
     // TODO could be easily parallelized
     label 'process_single_thread'
 
-    conda "bioconda::pyopenms=2.8.0"
+    conda "bioconda::pyopenms=2.9.1"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
+        container "https://depot.galaxyproject.org/singularity/pyopenms:2.9.1--py38hd8d5640_1"
     } else {
-        container "quay.io/biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
+        container "quay.io/biocontainers/pyopenms:2.9.1--py38hd8d5640_1"
     }
 
     input:
