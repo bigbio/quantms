@@ -39,7 +39,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
             ${mass_acc} \\
             ${time_corr_only} \\
             $args \\
-            |& tee ${mzML.baseName}_diann.log
+            2>&1 | tee ${mzML.baseName}_diann.log
 
 
     cat <<-END_VERSIONS > versions.yml

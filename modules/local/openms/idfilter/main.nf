@@ -4,10 +4,10 @@ process IDFILTER {
     label 'process_single_thread'
     label 'openms'
 
-    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img' :
-        'ghcr.io/openms/openms-executables:latest' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(meta), path(id_file)
@@ -27,7 +27,7 @@ process IDFILTER {
         -out ${id_file.baseName}_filter$suffix \\
         -threads $task.cpus \\
         $args \\
-        |& tee ${id_file.baseName}_idfilter.log
+        2>&1 | tee ${id_file.baseName}_idfilter.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

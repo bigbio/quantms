@@ -2,7 +2,7 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.19" : null)
+    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.19"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.19--pyhdfd78af_0"
     } else {
@@ -41,7 +41,7 @@ process DIANNCONVERT {
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
         --qvalue_threshold $params.protein_level_fdr_cutoff \\
-        |& tee convert_report.log
+        2>&1 | tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -2,10 +2,10 @@ process SEARCHENGINECOMET {
     tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
+    conda "bioconda::openms-thirdparty=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_0' }"
 
     input:
     tuple val(meta), file(mzml_file), file(database)
@@ -106,11 +106,11 @@ process SEARCHENGINECOMET {
         -debug $params.db_debug \\
         -force \\
         $args \\
-        |& tee ${mzml_file.baseName}_comet.log
+        2>&1 | tee ${mzml_file.baseName}_comet.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        CometAdapter: \$(CometAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        CometAdapter: \$(CometAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
         Comet: \$(comet 2>&1 | grep -E "Comet version.*" | sed 's/Comet version //g' | sed 's/"//g')
     END_VERSIONS
     """

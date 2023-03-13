@@ -102,6 +102,6 @@ class WorkflowMain {
         // check fasta database has been provided
         if (!params.database) {
             log.error "Please provide an fasta database to the pipeline e.g. '--database *.fasta'"
-        }
+    }
     }
 }
