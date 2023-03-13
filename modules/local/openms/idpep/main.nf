@@ -2,10 +2,10 @@ process IDPEP {
     tag "$meta.mzml_id"
     label 'process_very_low'
 
-    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img' :
-        'ghcr.io/openms/openms-executables:latest' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(meta), path(id_file)
@@ -26,7 +26,7 @@ process IDPEP {
         -fit_algorithm:outlier_handling $params.outlier_handling \\
         -threads ${task.cpus} \\
         $args \\
-        |& tee ${id_file.baseName}_idpep.log
+        2>&1 | tee ${id_file.baseName}_idpep.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

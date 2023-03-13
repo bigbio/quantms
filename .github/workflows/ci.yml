@@ -11,6 +11,10 @@ on:
 env:
   NXF_ANSI_LOG: false
 
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
 jobs:
   test:
     env:
@@ -28,7 +32,7 @@ jobs:
       matrix:
         # Nextflow versions
         NXF_VER:
-          - "21.10.3"
+          - "22.10.1"
           - "latest-everything"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt"]
         exec_profile: ["docker", "conda"]
@@ -41,7 +45,7 @@ jobs:
             exec_profile: "conda"
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v1

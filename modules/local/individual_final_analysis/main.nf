@@ -44,7 +44,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
             $args \\
-            |& tee ${mzML.baseName}_final_diann.log
+            2>&1 | tee ${mzML.baseName}_final_diann.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

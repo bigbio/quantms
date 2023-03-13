@@ -2,10 +2,10 @@ process SEARCHENGINEMSGF {
     tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
+    conda "bioconda::openms-thirdparty=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_0' }"
 
     input:
     tuple val(meta),  file(mzml_file), file(database)
@@ -20,7 +20,7 @@ process SEARCHENGINEMSGF {
     msgf_jar = ''
     if (workflow.containerEngine || (task.executor == "awsbatch")) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
-    } else if (params.enable_conda) {
+    } else if (session.config.conda && session.config.conda.enabled) {
         msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 
@@ -87,11 +87,11 @@ process SEARCHENGINEMSGF {
         -PeptideIndexing:unmatched_action ${params.unmatched_action} \\
         -debug $params.db_debug \\
         $args \\
-        |& tee ${mzml_file.baseName}_msgf.log
+        2>&1 | tee ${mzml_file.baseName}_msgf.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MSGFPlusAdapter: \$(MSGFPlusAdapter 2>&1 | grep -E '^Version(.*)' | sed "s/Version: //g")
+        MSGFPlusAdapter: \$(MSGFPlusAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
         msgf_plus: \$(msgf_plus 2>&1 | grep -E '^MS-GF\\+ Release.*')
     END_VERSIONS
     """

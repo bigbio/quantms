@@ -51,7 +51,7 @@ process DIANNSUMMARY {
             --out diann_report.tsv \\
             --qvalue $params.protein_level_fdr_cutoff \\
             $args \\
-            |& tee diannsummary.log
+            2>&1 | tee diannsummary.log
 
 
     cat <<-END_VERSIONS > versions.yml

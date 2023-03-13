@@ -2,10 +2,10 @@ process PROTEINQUANTIFIER {
     tag "${pro_quant_exp.baseName}"
     label 'process_medium'
 
-    conda (params.enable_conda ? "openms::openms=3.0.0dev" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'docker' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/openms/openms-executables:latest' :
-        'https://ftp.pride.ebi.ac.uk/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img'
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' :
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0'
         }"
 
     input:
@@ -43,7 +43,7 @@ process PROTEINQUANTIFIER {
         -threads $task.cpus \\
         ${normalize} \\
         $args \\
-        |& tee pro_quant.log
+        2>&1 | tee pro_quant.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

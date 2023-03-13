@@ -2,10 +2,10 @@ process PROTEOMICSLFQ {
     tag "${expdes.baseName}"
     label 'process_high'
 
-    conda (params.enable_conda ? "openms::openms=3.0.0dev" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'docker' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/openms/openms-executables:latest' :
-        'https://ftp.pride.ebi.ac.uk/pride/resources/tools/ghcr.io-openms-openms-executables-latest.img'
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' :
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0'
         }"
 
     input:
@@ -57,11 +57,11 @@ process PROTEOMICSLFQ {
         ${msstats_present} \\
         ${triqler_present} \\
         $args \\
-        |& tee proteomicslfq.log
+        2>&1 | tee proteomicslfq.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ProteomicsLFQ: \$(ProteomicsLFQ 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -c 1-50)
+        ProteomicsLFQ: \$(ProteomicsLFQ 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }
