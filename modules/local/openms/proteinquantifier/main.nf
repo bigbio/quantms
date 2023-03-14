@@ -15,7 +15,7 @@ process PROTEINQUANTIFIER {
     output:
     path "*protein_openms.csv", emit: protein_out
     path "*peptide_openms.csv", emit: peptide_out
-    path "*.mzTab", emit: out_mztab, optional true
+    path "*.mzTab", optional: true, emit: out_mztab
     path "*.log"
     path "versions.yml", emit: version
 
