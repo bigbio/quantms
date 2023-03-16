@@ -38,7 +38,7 @@ As an example, a rough visualization of the DDA identification subworkflow can b
 
 ## Output structure
 
-Output will be exported to the folder defined by parameter `--outdir`. Each step of the workflow export different files and reports with the specific data, peptide identifications, protein quantifications, etc. Most of the pipeline outputs are [HUPO-PSI](https://www.psidev.info/) standard file formats:
+Output will be saved to the folder defined by parameter `--outdir`. Each step of the workflow export different files and reports with the specific data, peptide identifications, protein quantifications, etc. Most of the pipeline outputs are [HUPO-PSI](https://www.psidev.info/) standard file formats:
 
 - [mzML](https://www.psidev.info/mzML): The mzML format is an open, XML-based format for mass spectrometer output files, developed with the full participation of vendors and researchers in order to create a single open format that would be supported by all software.
 - [mzTab](https://www.psidev.info/mztab>): mzTab is intended as a lightweight supplement to the existing standard mzML to store and represent peptide and protein and identifications together with experimental metadata and basic quantitative information.
