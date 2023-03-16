@@ -5,6 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1] nfcore/quantms - [TBD] - Berlin
 
+- Bugfixes and speed increases in the OpenMS tools due to version update to 2.9.1
+- Improvements in logging by adding many more process.ids
+- Large restructuring of DIA branch to increase parallelizability
+- Better error handling in MSstats step plus new parameter to filter for MSstats' adjusted p-value in the plots
+- More efficient parsing of mzML statistics in a separate step
+- A clearer distinction between per-run and experiment-wide FDRs with one parameter for each
+- More test profiles including larger "full" tests
+
 ### `Added`
 
 - [#176](https://github.com/bigbio/quantms/pull/176) - Add name of each ID step
