@@ -1,6 +1,5 @@
 process MZMLSTATISTICS {
     label 'process_medium'
-    // TODO could be easily parallelized
     label 'process_single_thread'
 
     conda "bioconda::pyopenms=2.8.0"
