@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-
+"""
+This script converts the output from DIA-NN into three standard formats: MSstats, Triqler and mzTab.
+License: Apache 2.0
+Authors: Hong Wang, Yasset Perez-Riverol
+"""
 import os
 import re
 import click
