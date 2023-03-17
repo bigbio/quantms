@@ -778,7 +778,7 @@ def calculate_protein_coverage(report, target, reference, fasta_df):
     return protein_coverage
 
 
-def match_in_report(report, target, max, flag, level):
+def match_in_report(report, target, max_, flag, level):
     """This function is used to match the columns "ms_run" and "study_variable" in the report to get the information.
 
     :param report: Dataframe for Dia-NN main report
@@ -797,7 +797,7 @@ def match_in_report(report, target, max, flag, level):
     if flag == 1 and level == "pep":
         result = report[report["precursor.Index"] == target]
         PEH_params = []
-        for i in range(1, max + 1):
+        for i in range(1, max_ + 1):
             match = result[result["study_variable"] == i]
             PEH_params.extend([match["Precursor.Normalised"].mean(), "null", "null", "null", match["RT.Start"].mean()])
 
@@ -806,7 +806,7 @@ def match_in_report(report, target, max, flag, level):
     if flag == 0 and level == "pep":
         result = report[report["precursor.Index"] == target]
         q_value = []
-        for i in range(1, max + 1):
+        for i in range(1, max_ + 1):
             match = result[result["ms_run"] == i]
             q_value.append(match["Q.Value"].values[0] if match["Q.Value"].values.size > 0 else np.nan)
 
@@ -815,7 +815,7 @@ def match_in_report(report, target, max, flag, level):
     if flag == 1 and level == "protein":
         result = report[report["Protein.Ids"] == target]
         PRH_params = []
-        for i in range(1, max + 1):
+        for i in range(1, max_ + 1):
             match = result[result["study_variable"] == i]
             PRH_params.extend([match["PG.MaxLFQ"].mean(), "null", "null"])
 
