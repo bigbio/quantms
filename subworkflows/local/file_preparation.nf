@@ -47,16 +47,16 @@ workflow FILE_PREPARATION {
 
     THERMORAWFILEPARSER( ch_branched_input.raw )
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
-    ch_results = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
+    (ch_results, ch_mzml) = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
 
     MZMLINDEXING( ch_branched_input_mzMLs.nonIndexedMzML )
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
-    ch_results = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
+    (ch_results, ch_mzml) = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
 
-    ch_results.multiMap{
-        meta: it[0]
-        mzml: it[1]
-    }.set{ ch_mzml }
+//     ch_results.{
+//         meta: it[0]
+//         mzml: it[1]
+//     }.set{ ch_mzml }
 
     MZMLSTATISTICS( ch_mzml )
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
