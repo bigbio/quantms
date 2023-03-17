@@ -1,4 +1,5 @@
 process MZMLSTATISTICS {
+    tag "$meta.mzml_id"
     label 'process_medium'
     label 'process_single_thread'
 
@@ -10,7 +11,7 @@ process MZMLSTATISTICS {
     }
 
     input:
-    path mzml_path
+    tuple val(meta), path(mzml)
 
     output:
     path "*_mzml_info.tsv", emit: mzml_statistics
@@ -19,9 +20,10 @@ process MZMLSTATISTICS {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    mzml_statistics.py "${mzml_path}" \\
+    mzml_statistics.py "${mzml}" \\
         2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
