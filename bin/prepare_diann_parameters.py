@@ -90,7 +90,7 @@ def convert_mod(unimod_database, fix_mod, var_mod):
 
 _ENZYME_SPECIFICITY = {
     "Trypsin": "K*,R*,!*P",
-    "Trypsin/P": "K*,R*,*P",
+    "Trypsin/P": "K*,R*",
     "Arg-C": "R*,!*P",
     "Asp-N": "*B,*D",
     "Chymotrypsin": "F*,W*,Y*,L*,!*P",
