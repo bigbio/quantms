@@ -11,7 +11,7 @@ process MZMLSTATISTICS {
     }
 
     input:
-    tuple val(meta), path(mzml_file)
+    tuple val(meta), path(mzml_file.mzml)
 
     output:
     path "*_mzml_info.tsv", emit: mzml_statistics
