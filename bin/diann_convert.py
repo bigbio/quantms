@@ -743,7 +743,7 @@ def classify_result_type(target):
 def calculate_protein_coverage(report, target, reference, fasta_df):
     """
     Calculate protein coverage.
-    
+
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
     :param target: The value of "accession" column in out_mztab_PRH
@@ -902,7 +902,7 @@ def find_modification(peptide):
 def calculate_mz(seq, charge):
     """
     Calculate the precursor m/z based on the peptide sequence and charge state.
-    
+
     :param seq: Sequence peptide
     :type seq: str
     :param charge: charge state
