@@ -20,6 +20,7 @@ process MZMLSTATISTICS {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
     mzml_statistics.py "${mzml_path}" \\
