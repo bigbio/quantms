@@ -38,7 +38,7 @@ As an example, a rough visualization of the DDA identification subworkflow can b
 
 ## Output structure
 
-Output is by default written to the $NXF_WORKSPACE/results folder. Each step of the workflow export different files and reports with the specific data, peptide identifications, protein quantifications, etc. Most of the pipeline outputs are [HUPO-PSI](https://www.psidev.info/) standard file formats:
+Output will be saved to the folder defined by parameter `--outdir`. Each step of the workflow export different files and reports with the specific data, peptide identifications, protein quantifications, etc. Most of the pipeline outputs are [HUPO-PSI](https://www.psidev.info/) standard file formats:
 
 - [mzML](https://www.psidev.info/mzML): The mzML format is an open, XML-based format for mass spectrometer output files, developed with the full participation of vendors and researchers in order to create a single open format that would be supported by all software.
 - [mzTab](https://www.psidev.info/mztab>): mzTab is intended as a lightweight supplement to the existing standard mzML to store and represent peptide and protein and identifications together with experimental metadata and basic quantitative information.
@@ -88,7 +88,7 @@ results
 
 #### Spectra
 
-Quantms main format for spectra is the open [mzML](https://www.psidev.info/mzML) format. However it also supports Thermo raw files through conversion with
+Quantms main format for spectra is the open [mzML](https://www.psidev.info/mzML) format. However, it also supports Thermo raw files through conversion with
 ThermoRawFileParser. Mixed inputs should be possible but are untested. Conversion results can be cached if run locally or outputted to results.
 Mismatches between file extensions in the design and on disk can be corrected through parameters.
 
@@ -133,7 +133,7 @@ decoy identifications and search engine scores.
 
 The mzTab is exported for all three workflows DDA-LFQ, DDA-ISO and DIA-LFQ. It is a complete [mzTab](https://github.com/HUPO-PSI/mzTab) file
 ready for submission to [PRIDE](https://www.ebi.ac.uk/pride/). It contains both identifications (only those responsible for a quantification),
-quantities as well as some metadata about both the experiment and the quantification.
+quantities and some metadata about both the experiment and the quantification.
 
 #### MSstats-processed mzTab
 

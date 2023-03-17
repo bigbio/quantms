@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import re
+from typing import List, Tuple
 
 import click
 from sdrf_pipelines.openms.unimod import UnimodDatabase
@@ -32,11 +33,11 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod):
     for mod in var_ptm:
         diann_var_ptm += var_ptm_str + mod
 
-    with open("diann_config.cfg", "w") as f:
-        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
+    with open("diann_config.cfg", "w") as file:
+        file.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
 
 
-def convert_mod(unimod_database, fix_mod, var_mod):
+def convert_mod(unimod_database, fix_mod: str, var_mod: str) -> Tuple[List, List]:
     pattern = re.compile(r"\((.*?)\)")
     var_ptm = []
     fix_ptm = []
@@ -44,9 +45,9 @@ def convert_mod(unimod_database, fix_mod, var_mod):
     if fix_mod != "":
         for mod in fix_mod.split(","):
             tag = 0
-            for m in unimod_database.modifications:
-                if m.get_name() == mod.split(" ")[0]:
-                    diann_mod = m.get_name() + "," + str(m._delta_mono_mass)
+            for modification in unimod_database.modifications:
+                if modification.get_name() == mod.split(" ")[0]:
+                    diann_mod = modification.get_name() + "," + str(modification._delta_mono_mass)
                     tag = 1
                     break
             if tag == 0:
@@ -66,9 +67,9 @@ def convert_mod(unimod_database, fix_mod, var_mod):
     if var_mod != "":
         for mod in var_mod.split(","):
             tag = 0
-            for m in unimod_database.modifications:
-                if m.get_name() == mod.split(" ")[0]:
-                    diann_mod = m.get_name() + "," + str(m._delta_mono_mass)
+            for modification in unimod_database.modifications:
+                if modification.get_name() == mod.split(" ")[0]:
+                    diann_mod = modification.get_name() + "," + str(modification._delta_mono_mass)
                     tag = 1
                     break
             if tag == 0:
@@ -88,22 +89,18 @@ def convert_mod(unimod_database, fix_mod, var_mod):
     return fix_ptm, var_ptm
 
 
-def enzyme_cut(enzyme):
-    if enzyme == "Trypsin":
-        cut = "K*,R*,!*P"
-    elif enzyme == "Trypsin/P":
-        cut = "K*,R*,*P"
-    elif enzyme == "Arg-C":
-        cut = "R*,!*P"
-    elif enzyme == "Asp-N":
-        cut = "*B,*D"
-    elif enzyme == "Chymotrypsin":
-        cut = "F*,W*,Y*,L*,!*P"
-    elif enzyme == "Lys-C":
-        cut = "K*,!*P"
-    else:
-        cut = "--cut"
-    return cut
+_ENZYME_SPECIFICITY = {
+    "Trypsin": "K*,R*,!*P",
+    "Trypsin/P": "K*,R*",
+    "Arg-C": "R*,!*P",
+    "Asp-N": "*B,*D",
+    "Chymotrypsin": "F*,W*,Y*,L*,!*P",
+    "Lys-C": "K*,!*P",
+}
+
+
+def enzyme_cut(enzyme: str) -> str:
+    return _ENZYME_SPECIFICITY.get(enzyme) or "--cut"
 
 
 cli.add_command(generate_cfg)
