@@ -53,7 +53,7 @@ workflow FILE_PREPARATION {
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
     ch_results = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
 
-    ch_results.map{ it -> [it[0], it[1]] }}.set{ ch_mzml }
+    ch_results.map{ it -> [it[0], it[1]] }.set{ ch_mzml }
 
     MZMLSTATISTICS( ch_mzml )
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
