@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 from pyopenms import MSExperiment, MzMLFile
@@ -45,7 +45,7 @@ def mzml_dataframe(mzml_path):
 
     mzml_df = parse_mzml(mzml_path, file_columns)
     mzml_df.to_csv(
-        "{}_mzml_info.tsv".format(os.path.splitext(os.path.split(mzml_path)[1])[0]),
+        f"{Path(mzml_path).stem}_mzml_info.tsv",
         mode="a",
         sep="\t",
         index=False,
