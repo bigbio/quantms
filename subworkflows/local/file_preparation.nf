@@ -58,7 +58,7 @@ workflow FILE_PREPARATION {
         mzml: it[1]
     }.set{ ch_mzml }
 
-    MZMLSTATISTICS( ch_mzml.mzml )
+    MZMLSTATISTICS( ch_mzml )
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
 

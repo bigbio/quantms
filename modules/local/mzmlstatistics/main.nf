@@ -1,4 +1,5 @@
 process MZMLSTATISTICS {
+    tag "$meta.mzml_id"
     label 'process_medium'
     label 'process_single_thread'
 
@@ -10,7 +11,7 @@ process MZMLSTATISTICS {
     }
 
     input:
-    path mzml_path
+    tuple val(meta), file(mzml_path)
 
     output:
     path "*_mzml_info.tsv", emit: mzml_statistics
