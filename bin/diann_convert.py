@@ -78,13 +78,13 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     pr_matrix = folder + pathdict["pr_matrix"][0]
     fasta = folder + pathdict["fasta"][0]
     diann_version_file = diann_version
-    
+
     with open(diann_version_file) as f:
         for line in f:
             if "DIA-NN" in line:
                 diann_version_id = line.rstrip("\n").split(": ")[1]
                 break
-    
+
     remain_cols = [
         "File.Name",
         "Run",
