@@ -23,7 +23,7 @@ def mzml_dataframe(mzml_path: str) -> None:
         exp = MSExperiment()
         MzMLFile().load(file_name, exp)
         for spectrum in exp:
-            id = spectrum.getNativeID()
+            id_ = spectrum.getNativeID()
             MSLevel = spectrum.getMSLevel()
             rt = spectrum.getRT() if spectrum.getRT() else None
             if MSLevel == 2:
@@ -35,9 +35,9 @@ def mzml_dataframe(mzml_path: str) -> None:
                     base_peak_intensity = spectrum.getMetaValue("base peak intensity")
                 else:
                     base_peak_intensity = max(peaks_tuple[1]) if len(peaks_tuple[1]) > 0 else None
-                info_list = [id, 2, charge_state, peak_per_ms2, base_peak_intensity, rt, emz]
+                info_list = [id_, 2, charge_state, peak_per_ms2, base_peak_intensity, rt, emz]
             else:
-                info_list = [id, MSLevel, None, None, None, rt, None]
+                info_list = [id_, MSLevel, None, None, None, rt, None]
 
             info.append(info_list)
 
