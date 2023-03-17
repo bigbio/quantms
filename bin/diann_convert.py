@@ -890,7 +890,7 @@ def calculate_mz(seq, charge):
     :param seq: Sequences of peptides
     :type seq: str
     :param charge: charge of peptides
-    :type seq: str
+    :type charge: str
     :return: mz
     :rtype: float or NoneType
     """
