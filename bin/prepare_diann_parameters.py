@@ -32,8 +32,8 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod):
     for mod in var_ptm:
         diann_var_ptm += var_ptm_str + mod
 
-    with open("diann_config.cfg", "w") as f:
-        f.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
+    with open("diann_config.cfg", "w") as file:
+        file.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
 
 
 def convert_mod(unimod_database, fix_mod, var_mod):
@@ -44,9 +44,9 @@ def convert_mod(unimod_database, fix_mod, var_mod):
     if fix_mod != "":
         for mod in fix_mod.split(","):
             tag = 0
-            for m in unimod_database.modifications:
-                if m.get_name() == mod.split(" ")[0]:
-                    diann_mod = m.get_name() + "," + str(m._delta_mono_mass)
+            for modification in unimod_database.modifications:
+                if modification.get_name() == mod.split(" ")[0]:
+                    diann_mod = modification.get_name() + "," + str(modification._delta_mono_mass)
                     tag = 1
                     break
             if tag == 0:
@@ -66,9 +66,9 @@ def convert_mod(unimod_database, fix_mod, var_mod):
     if var_mod != "":
         for mod in var_mod.split(","):
             tag = 0
-            for m in unimod_database.modifications:
-                if m.get_name() == mod.split(" ")[0]:
-                    diann_mod = m.get_name() + "," + str(m._delta_mono_mass)
+            for modification in unimod_database.modifications:
+                if modification.get_name() == mod.split(" ")[0]:
+                    diann_mod = modification.get_name() + "," + str(modification._delta_mono_mass)
                     tag = 1
                     break
             if tag == 0:
