@@ -4,12 +4,13 @@ This script converts the output from DIA-NN into three standard formats: MSstats
 License: Apache 2.0
 Authors: Hong Wong, Yasset Perez-Riverol
 """
+import logging
 import os
 import re
+
 import click
 import numpy as np
 import pandas as pd
-import logging as log
 from pyopenms import AASequence, FASTAFile, ModificationsDB
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -69,7 +70,7 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
 
     for item in pathdict.items():
         if item[0] != "mzml_info" and len(item[1]) > 1:
-            log.error(f"{item[0]} is duplicate, check whether the file is redundant or change the file name!")
+            logging.error(f"{item[0]} is duplicate, check whether the file is redundant or change the file name!")
 
     diann_report = folder + pathdict["report"][0]
     exp_design = folder + pathdict["exp_design"][0]
@@ -77,14 +78,12 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     pr_matrix = folder + pathdict["pr_matrix"][0]
     fasta = folder + pathdict["fasta"][0]
     diann_version_file = diann_version
-    mzml_info = pathdict["mzml_info"]
 
     with open(diann_version_file) as f:
         for line in f:
             if "DIA-NN" in line:
                 diann_version_id = line.rstrip("\n").split(": ")[1]
                 break
-    f.close()
 
     remain_cols = [
         "File.Name",
@@ -778,7 +777,7 @@ def calculate_protein_coverage(report, target, reference, fasta_df):
     return protein_coverage
 
 
-def match_in_report(report, target, max, flag, level):
+def match_in_report(report, target, max_, flag, level):
     """This function is used to match the columns "ms_run" and "study_variable" from the report and
      get the corresponding information for the mztab ms_run and study_values metadata values.
 
@@ -786,8 +785,8 @@ def match_in_report(report, target, max, flag, level):
     :type report: pandas.core.frame.DataFrame
     :param target: The value of "pr_id" column in out_mztab_PEH(level="peptide") or the "accession" column in out_mztab_PRH(level="protein")
     :type target: str
-    :param max: max_assay or max_study_variable
-    :type max: int
+    :param max_: max_assay or max_study_variable
+    :type max_: int
     :param flag: Match the "study_variable" column(flag=1) or the "ms_run" column(flag=0) in the filter result
     :type flag: int
     :param level: "pep" or "protein"
@@ -798,7 +797,7 @@ def match_in_report(report, target, max, flag, level):
     if flag == 1 and level == "pep":
         result = report[report["precursor.Index"] == target]
         PEH_params = []
-        for i in range(1, max + 1):
+        for i in range(1, max_ + 1):
             match = result[result["study_variable"] == i]
             PEH_params.extend([match["Precursor.Normalised"].mean(), "null", "null", "null", match["RT.Start"].mean()])
 
@@ -807,7 +806,7 @@ def match_in_report(report, target, max, flag, level):
     if flag == 0 and level == "pep":
         result = report[report["precursor.Index"] == target]
         q_value = []
-        for i in range(1, max + 1):
+        for i in range(1, max_ + 1):
             match = result[result["ms_run"] == i]
             q_value.append(match["Q.Value"].values[0] if match["Q.Value"].values.size > 0 else np.nan)
 
@@ -816,7 +815,7 @@ def match_in_report(report, target, max, flag, level):
     if flag == 1 and level == "protein":
         result = report[report["Protein.Ids"] == target]
         PRH_params = []
-        for i in range(1, max + 1):
+        for i in range(1, max_ + 1):
             match = result[result["study_variable"] == i]
             PRH_params.extend([match["PG.MaxLFQ"].mean(), "null", "null"])
 

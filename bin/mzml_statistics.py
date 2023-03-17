@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
-from pyopenms import MzMLFile, MSExperiment
-import os
-import pandas as pd
 import sys
+from pathlib import Path
+
+import pandas as pd
+from pyopenms import MSExperiment, MzMLFile
 
 
-def mzml_dataframe(mzml_path):
+def mzml_dataframe(mzml_path: str) -> None:
     file_columns = [
         "SpectrumID",
         "MSLevel",
@@ -17,7 +18,7 @@ def mzml_dataframe(mzml_path):
         "Exp_Mass_To_Charge",
     ]
 
-    def parse_mzml(file_name, file_columns):
+    def parse_mzml(file_name: str, file_columns: list):
         info = []
         exp = MSExperiment()
         MzMLFile().load(file_name, exp)
@@ -44,7 +45,7 @@ def mzml_dataframe(mzml_path):
 
     mzml_df = parse_mzml(mzml_path, file_columns)
     mzml_df.to_csv(
-        "{}_mzml_info.tsv".format(os.path.splitext(os.path.split(mzml_path)[1])[0]),
+        f"{Path(mzml_path).stem}_mzml_info.tsv",
         mode="a",
         sep="\t",
         index=False,
