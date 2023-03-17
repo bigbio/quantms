@@ -779,7 +779,8 @@ def calculate_protein_coverage(report, target, reference, fasta_df):
 
 
 def match_in_report(report, target, max, flag, level):
-    """This function is used to match the columns "ms_run" and "study_variable" in the report to get the information.
+    """This function is used to match the columns "ms_run" and "study_variable" from the report and
+     get the corresponding information for the mztab ms_run and study_values metadata values.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
@@ -886,14 +887,13 @@ def find_modification(peptide):
 
 
 def calculate_mz(seq, charge):
-    """Remove unknown aminoacids and calculate mz
-
-    :param seq: Sequences of peptides
+    """
+    Calculate the precursor m/z based on the peptide sequence and charge state.
+    :param seq: Sequence peptide
     :type seq: str
-    :param charge: charge of peptides
-    :type seq: str
-    :return: mz
-    :rtype: float or NoneType
+    :param charge: charge state
+    :type charge: int
+    :return:
     """
     ref = "ARNDBCEQZGHILKMFPSTWYV"
     seq = "".join([i for i in seq if i in ref])
