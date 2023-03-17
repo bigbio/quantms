@@ -84,8 +84,7 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
             if "DIA-NN" in line:
                 diann_version_id = line.rstrip("\n").split(": ")[1]
                 break
-    f.close()
-
+    
     remain_cols = [
         "File.Name",
         "Run",
