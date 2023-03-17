@@ -4,7 +4,7 @@ This script converts the output from DIA-NN into three standard formats: MSstats
 License: Apache 2.0
 Authors: Hong Wong, Yasset Perez-Riverol
 """
-import logging as log
+import logging
 import os
 import re
 
@@ -70,7 +70,7 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
 
     for item in pathdict.items():
         if item[0] != "mzml_info" and len(item[1]) > 1:
-            log.error(f"{item[0]} is duplicate, check whether the file is redundant or change the file name!")
+            logging.error(f"{item[0]} is duplicate, check whether the file is redundant or change the file name!")
 
     diann_report = folder + pathdict["report"][0]
     exp_design = folder + pathdict["exp_design"][0]
