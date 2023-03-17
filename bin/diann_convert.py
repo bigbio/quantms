@@ -78,8 +78,7 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     pr_matrix = folder + pathdict["pr_matrix"][0]
     fasta = folder + pathdict["fasta"][0]
     diann_version_file = diann_version
-    mzml_info = pathdict["mzml_info"]
-
+    
     with open(diann_version_file) as f:
         for line in f:
             if "DIA-NN" in line:
