@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import re
+from typing import List, Tuple
 
 import click
 from sdrf_pipelines.openms.unimod import UnimodDatabase
@@ -36,7 +37,7 @@ def generate_cfg(ctx, enzyme, fix_mod, var_mod):
         file.write("--cut " + cut + diann_fix_ptm + diann_var_ptm)
 
 
-def convert_mod(unimod_database, fix_mod, var_mod):
+def convert_mod(unimod_database, fix_mod: str, var_mod: str) -> Tuple[List, List]:
     pattern = re.compile(r"\((.*?)\)")
     var_ptm = []
     fix_ptm = []

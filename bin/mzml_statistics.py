@@ -7,7 +7,7 @@ import pandas as pd
 from pyopenms import MSExperiment, MzMLFile
 
 
-def mzml_dataframe(mzml_path):
+def mzml_dataframe(mzml_path: str) -> None:
     file_columns = [
         "SpectrumID",
         "MSLevel",
@@ -18,7 +18,7 @@ def mzml_dataframe(mzml_path):
         "Exp_Mass_To_Charge",
     ]
 
-    def parse_mzml(file_name, file_columns):
+    def parse_mzml(file_name: str, file_columns: list):
         info = []
         exp = MSExperiment()
         MzMLFile().load(file_name, exp)
