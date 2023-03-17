@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
-from pyopenms import MzMLFile, MSExperiment
 import os
-import pandas as pd
 import sys
+
+import pandas as pd
+from pyopenms import MSExperiment, MzMLFile
 
 
 def mzml_dataframe(mzml_path):

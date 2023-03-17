@@ -4,12 +4,13 @@ This script converts the output from DIA-NN into three standard formats: MSstats
 License: Apache 2.0
 Authors: Hong Wong, Yasset Perez-Riverol
 """
+import logging as log
 import os
 import re
+
 import click
 import numpy as np
 import pandas as pd
-import logging as log
 from pyopenms import AASequence, FASTAFile, ModificationsDB
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
