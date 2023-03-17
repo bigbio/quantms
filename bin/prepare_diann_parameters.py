@@ -88,22 +88,18 @@ def convert_mod(unimod_database, fix_mod, var_mod):
     return fix_ptm, var_ptm
 
 
-def enzyme_cut(enzyme):
-    if enzyme == "Trypsin":
-        cut = "K*,R*,!*P"
-    elif enzyme == "Trypsin/P":
-        cut = "K*,R*,*P"
-    elif enzyme == "Arg-C":
-        cut = "R*,!*P"
-    elif enzyme == "Asp-N":
-        cut = "*B,*D"
-    elif enzyme == "Chymotrypsin":
-        cut = "F*,W*,Y*,L*,!*P"
-    elif enzyme == "Lys-C":
-        cut = "K*,!*P"
-    else:
-        cut = "--cut"
-    return cut
+_ENZYME_SPECIFICITY = {
+    "Trypsin": "K*,R*,!*P",
+    "Trypsin/P": "K*,R*,*P",
+    "Arg-C": "R*,!*P",
+    "Asp-N": "*B,*D",
+    "Chymotrypsin": "F*,W*,Y*,L*,!*P",
+    "Lys-C": "K*,!*P",
+}
+
+
+def enzyme_cut(enzyme: str) -> str:
+    return _ENZYME_SPECIFICITY.get(enzyme) or "--cut"
 
 
 cli.add_command(generate_cfg)
