@@ -7,14 +7,14 @@
 //
 // MODULES: Local to the pipeline
 //
-include { GENERATE_DIANN_CFG  as DIANNCFG } from '../modules/local/generate_diann_cfg/main'
-include { DIANNCONVERT } from '../modules/local/diannconvert/main'
-include { MSSTATS } from '../modules/local/msstats/main'
-include { DIANN_PRELIMINARY_ANALYSIS } from '../modules/local/diann_preliminary_analysis/main'
-include { ASSEMBLE_EMPIRICAL_LIBRARY } from '../modules/local/assemble_empirical_library/main'
-include { SILICOLIBRARYGENERATION } from '../modules/local/silicolibrarygeneration/main'
-include { INDIVIDUAL_FINAL_ANALYSIS } from '../modules/local/individual_final_analysis/main'
-include { DIANNSUMMARY } from '../modules/local/diannsummary/main'
+include { GENERATE_DIANN_CFG as DIANNCFG } from '../modules/local/generate_diann_cfg/main'
+include { DIANNCONVERT                   } from '../modules/local/diannconvert/main'
+include { MSSTATS                        } from '../modules/local/msstats/main'
+include { DIANN_PRELIMINARY_ANALYSIS     } from '../modules/local/diann_preliminary_analysis/main'
+include { ASSEMBLE_EMPIRICAL_LIBRARY     } from '../modules/local/assemble_empirical_library/main'
+include { SILICOLIBRARYGENERATION        } from '../modules/local/silicolibrarygeneration/main'
+include { INDIVIDUAL_FINAL_ANALYSIS      } from '../modules/local/individual_final_analysis/main'
+include { DIANNSUMMARY                   } from '../modules/local/diannsummary/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules

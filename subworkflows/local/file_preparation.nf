@@ -3,17 +3,17 @@
 //
 
 include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main'
-include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main'
-include { MZMLSTATISTICS } from '../../modules/local/mzmlstatistics/main'
-include { OPENMSPEAKPICKER } from '../../modules/local/openms/openmspeakpicker/main'
+include { MZMLINDEXING        } from '../../modules/local/openms/mzmlindexing/main'
+include { MZMLSTATISTICS      } from '../../modules/local/mzmlstatistics/main'
+include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openmspeakpicker/main'
 
 workflow FILE_PREPARATION {
     take:
     ch_mzmls            // channel: [ val(meta), raw/mzml ]
 
     main:
-    ch_versions = Channel.empty()
-    ch_results = Channel.empty()
+    ch_versions   = Channel.empty()
+    ch_results    = Channel.empty()
     ch_statistics = Channel.empty()
 
     //
@@ -47,11 +47,11 @@ workflow FILE_PREPARATION {
 
     THERMORAWFILEPARSER( ch_branched_input.raw )
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
-    ch_results = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
+    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
 
     MZMLINDEXING( ch_branched_input_mzMLs.nonIndexedMzML )
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
-    ch_results = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
+    ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
 
     ch_results.map{ it -> [it[0], it[1]] }.set{ ch_mzml }
 

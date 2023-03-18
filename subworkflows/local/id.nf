@@ -2,15 +2,15 @@
 // MODULE: Local to the pipeline
 //
 include { DECOYDATABASE } from '../../modules/local/openms/decoydatabase/main'
-include { CONSENSUSID } from '../../modules/local/openms/consensusid/main'
+include { CONSENSUSID   } from '../../modules/local/openms/consensusid/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { DATABASESEARCHENGINES } from './databasesearchengines'
-include { PSMRESCORING } from './psmrescoring'
-include { PSMFDRCONTROL } from './psmfdrcontrol'
-include { PHOSPHOSCORING } from './phosphoscoring'
+include { PSMRESCORING          } from './psmrescoring'
+include { PSMFDRCONTROL         } from './psmfdrcontrol'
+include { PHOSPHOSCORING        } from './phosphoscoring'
 
 workflow ID {
     take:
@@ -39,7 +39,7 @@ workflow ID {
     //
     // SUBWORKFLOW: PSMFDRCONTROL
     //
-    ch_psmfdrcontrol = Channel.empty()
+    ch_psmfdrcontrol     = Channel.empty()
     ch_consensus_results = Channel.empty()
     if (params.search_engines.split(",").size() > 1) {
         CONSENSUSID(PSMRESCORING.out.results.groupTuple(size: params.search_engines.split(",").size()))

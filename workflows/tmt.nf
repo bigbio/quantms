@@ -7,16 +7,16 @@
 //
 // MODULES: Local to the pipeline
 //
-include { FILEMERGE } from '../modules/local/openms/filemerge/main'
+include { FILEMERGE  } from '../modules/local/openms/filemerge/main'
 include { MSSTATSTMT } from '../modules/local/msstatstmt/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 //
-include { FEATUREMAPPER } from '../subworkflows/local/featuremapper'
+include { FEATUREMAPPER    } from '../subworkflows/local/featuremapper'
 include { PROTEININFERENCE } from '../subworkflows/local/proteininference'
-include { PROTEINQUANT } from '../subworkflows/local/proteinquant'
-include { ID } from '../subworkflows/local/id'
+include { PROTEINQUANT     } from '../subworkflows/local/proteinquant'
+include { ID               } from '../subworkflows/local/id'
 
 /*
 ========================================================================================
@@ -73,7 +73,6 @@ workflow TMT {
         ch_msstats_out = MSSTATSTMT.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(MSSTATSTMT.out.version.ifEmpty(null))
     }
-
 
     ID.out.psmrescoring_results
         .map { it -> it[1] }

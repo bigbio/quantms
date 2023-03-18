@@ -3,7 +3,7 @@
 //
 
 include { ISOBARICANALYZER } from '../../modules/local/openms/isobaricanalyzer/main'
-include { IDMAPPER } from '../../modules/local/openms/idmapper/main'
+include { IDMAPPER         } from '../../modules/local/openms/idmapper/main'
 
 workflow FEATUREMAPPER {
     take:

@@ -8,7 +8,7 @@
 // MODULES: Local to the pipeline
 //
 include { PROTEOMICSLFQ } from '../modules/local/openms/proteomicslfq/main'
-include { MSSTATS } from '../modules/local/msstats/main'
+include { MSSTATS       } from '../modules/local/msstats/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
