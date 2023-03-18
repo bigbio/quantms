@@ -905,7 +905,7 @@ def calculate_mz(seq, charge):
     """
     Calculate the precursor m/z based on the peptide sequence and charge state.
 
-    :param seq: Sequence peptide
+    :param seq: Peptide sequence
     :type seq: str
     :param charge: charge state
     :type charge: int
