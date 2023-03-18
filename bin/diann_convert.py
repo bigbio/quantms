@@ -30,7 +30,9 @@ def cli():
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
 def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
-    """This function is designed to convert the DIA-NN output into three standard formats: MSstats, Triqler and mzTab. These documents are
+    """
+    Convert DIA-NN output to MSstats, Triqler or mzTab.
+     The output formats are
     used for quality control and downstream analysis.
 
     :param folder: DiannConvert specifies the folder where the required file resides. The folder contains
@@ -213,7 +215,8 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
 
 
 def query_expdesign_value(reference, f_table, s_table):
-    """By matching the "Run" column in f_table or the "Sample" column in s_table, this function returns a tuple containing Fraction,
+    """
+    By matching the "Run" column in f_table or the "Sample" column in s_table, this function returns a tuple containing Fraction,
     BioReplicate and Condition.
 
      :param reference: The value of "Run" column in out_msstats
@@ -235,7 +238,8 @@ def query_expdesign_value(reference, f_table, s_table):
 
 
 def MTD_mod_info(fix_mod, var_mod):
-    """Convert fixed and variable modifications to the format required by the MTD sub-table.
+    """
+    Convert fixed and variable modifications to the format required by the MTD sub-table.
 
     :param fix_mod: Fixed modifications from DIA parameter list
     :type fix_mod: str
@@ -276,7 +280,8 @@ def MTD_mod_info(fix_mod, var_mod):
 
 
 def mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages):
-    """Construct MTD sub-table.
+    """
+    Construct MTD sub-table.
 
     :param index_ref: On the basis of f_table, two columns "MS_run" and "study_variable" are added for matching
     :type index_ref: pandas.core.frame.DataFrame
@@ -381,7 +386,8 @@ def mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages):
 
 
 def mztab_PRH(report, pg, index_ref, database, fasta_df):
-    """Construct PRH sub-table.
+    """
+    Construct PRH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
@@ -492,7 +498,8 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
 
 
 def mztab_PEH(report, pr, precursor_list, index_ref, database):
-    """Construct PEH sub-table.
+    """
+    Construct PEH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
@@ -595,7 +602,8 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
 
 
 def mztab_PSH(report, folder, database):
-    """Construct PSH sub-table.
+    """
+    Construct PSH sub-table.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
@@ -703,7 +711,8 @@ def mztab_PSH(report, folder, database):
 
 
 def add_info(target, index_ref):
-    """On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching.
+    """
+    On the basis of f_table, two columns "ms_run" and "study_variable" are added for matching.
 
     :param target: The value of "Run" column in f_table
     :type target: str
@@ -733,7 +742,9 @@ def classify_result_type(target):
 
 
 def calculate_protein_coverage(report, target, reference, fasta_df):
-    """Calculate protein coverage.
+    """
+    Calculate protein coverage.
+
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
     :param target: The value of "accession" column in out_mztab_PRH
@@ -778,14 +789,16 @@ def calculate_protein_coverage(report, target, reference, fasta_df):
 
 
 def match_in_report(report, target, max_, flag, level):
-    """This function is used to match the columns "ms_run" and "study_variable" in the report to get the information.
+    """
+    This function is used to match the columns "ms_run" and "study_variable" from the report and
+    get the corresponding information for the mztab ms_run and study_values metadata values.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
     :param target: The value of "pr_id" column in out_mztab_PEH(level="peptide") or the "accession" column in out_mztab_PRH(level="protein")
     :type target: str
-    :param max: max_assay or max_study_variable
-    :type max: int
+    :param max_: max_assay or max_study_variable
+    :type max_: int
     :param flag: Match the "study_variable" column(flag=1) or the "ms_run" column(flag=0) in the filter result
     :type flag: int
     :param level: "pep" or "protein"
@@ -822,7 +835,8 @@ def match_in_report(report, target, max_, flag, level):
 
 
 def PRH_match_report(report, target):
-    """Returns a tuple contains modified sequences and the score at protein level.
+    """
+    Returns a tuple contains modified sequences and the score at protein level.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
@@ -840,7 +854,8 @@ def PRH_match_report(report, target):
 
 
 def PEH_match_report(report, target):
-    """Returns a tuple contains the score at peptide level, retain time, q_score, spec_e and mz.
+    """
+    Returns a tuple contains the score at peptide level, retain time, q_score, spec_e and mz.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
@@ -861,7 +876,8 @@ def PEH_match_report(report, target):
 
 
 def find_modification(peptide):
-    """Identify the modification site based on the peptide containing modifications.
+    """
+    Identify the modification site based on the peptide containing modifications.
 
     :param peptide: Sequences of peptides
     :type peptide: str
@@ -885,14 +901,14 @@ def find_modification(peptide):
 
 
 def calculate_mz(seq, charge):
-    """Remove unknown aminoacids and calculate mz
+    """
+    Calculate the precursor m/z based on the peptide sequence and charge state.
 
-    :param seq: Sequences of peptides
+    :param seq: Peptide sequence
     :type seq: str
-    :param charge: charge of peptides
-    :type charge: str
-    :return: mz
-    :rtype: float or NoneType
+    :param charge: charge state
+    :type charge: int
+    :return:
     """
     ref = "ARNDBCEQZGHILKMFPSTWYV"
     seq = "".join([i for i in seq if i in ref])
