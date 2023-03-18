@@ -3,8 +3,8 @@
 //
 
 include { IDCONFLICTRESOLVER } from '../../modules/local/openms/idconflictresolver/main'
-include { PROTEINQUANTIFIER } from '../../modules/local/openms/proteinquantifier/main'
-include { MSSTATSCONVERTER } from '../../modules/local/openms/msstatsconverter/main'
+include { PROTEINQUANTIFIER  } from '../../modules/local/openms/proteinquantifier/main'
+include { MSSTATSCONVERTER   } from '../../modules/local/openms/msstatsconverter/main'
 
 workflow PROTEINQUANT {
     take:

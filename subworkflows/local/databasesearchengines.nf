@@ -2,8 +2,8 @@
 // search engines msgf,comet and index peptide
 //
 
-include { SEARCHENGINEMSGF } from '../../modules/local/openms/thirdparty/searchenginemsgf/main'
-include { SEARCHENGINECOMET} from '../../modules/local/openms/thirdparty/searchenginecomet/main'
+include { SEARCHENGINEMSGF  } from '../../modules/local/openms/thirdparty/searchenginemsgf/main'
+include { SEARCHENGINECOMET } from '../../modules/local/openms/thirdparty/searchenginecomet/main'
 
 workflow DATABASESEARCHENGINES {
     take:

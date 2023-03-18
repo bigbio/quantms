@@ -2,10 +2,10 @@
 // Extract psm feature and ReScoring psm
 //
 
-include { EXTRACTPSMFEATURES } from '../../modules/local/openms/extractpsmfeatures/main'
-include { PERCOLATOR } from '../../modules/local/openms/thirdparty/percolator/main'
+include { EXTRACTPSMFEATURES             } from '../../modules/local/openms/extractpsmfeatures/main'
+include { PERCOLATOR                     } from '../../modules/local/openms/thirdparty/percolator/main'
 include { FALSEDISCOVERYRATE as FDRIDPEP } from '../../modules/local/openms/falsediscoveryrate/main'
-include { IDPEP } from '../../modules/local/openms/idpep/main'
+include { IDPEP                          } from '../../modules/local/openms/idpep/main'
 
 workflow PSMRESCORING {
     take:
@@ -13,7 +13,7 @@ workflow PSMRESCORING {
 
     main:
     ch_versions = Channel.empty()
-    ch_results = Channel.empty()
+    ch_results  = Channel.empty()
     ch_fdridpep = Channel.empty()
 
     if (params.posterior_probabilities == 'percolator') {

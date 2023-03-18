@@ -3,7 +3,7 @@
 //
 
 include { IDSCORESWITCHER as IDSCORESWITCHERFORLUCIPHOR } from '../../modules/local/openms/idscoreswitcher/main'
-include { LUCIPHORADAPTER } from '../../modules/local/openms/thirdparty/luciphoradapter/main'
+include { LUCIPHORADAPTER                               } from '../../modules/local/openms/thirdparty/luciphoradapter/main'
 
 workflow PHOSPHOSCORING {
     take:
