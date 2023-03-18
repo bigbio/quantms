@@ -32,7 +32,6 @@ def cli():
 def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
     """
     Convert DIA-NN output to MSstats, Triqler or mzTab.
-    
      The output formats are
     used for quality control and downstream analysis.
 
