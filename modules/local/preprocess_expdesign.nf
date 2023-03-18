@@ -3,13 +3,14 @@
 // Maybe the renaming can be done in the rawfileconversion step? Or check if the OpenMS tools
 // accept different file endings already?
 process PREPROCESS_EXPDESIGN {
-
-    conda "bioconda::sdrf-pipelines=0.0.22 conda-forge::pandas"
-    label 'process_very_low'
-    label 'process_single_thread'
+    label 'process_low'
+    label 'process_single'
     tag "$design.Name"
 
-    container "frolvlad/alpine-bash"
+    conda "bioconda::sdrf-pipelines=0.0.22"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0' :
+        'quay.io/biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0' }"
 
     input:
     path design
@@ -28,5 +29,10 @@ process PREPROCESS_EXPDESIGN {
     # here we extract the filenames and fake an empty config (since the config values will be deduced from the workflow params)
     a=\$(grep -n '^\$' ${design} | head -n 1 | awk -F ":" '{print \$1}')
     sed -e ''"\${a}"',\$d' ${design} > ${design.baseName}_config.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        sdrf-pipelines: \$(echo "0.0.22")
+    END_VERSIONS
     """
 }
