@@ -18,6 +18,7 @@ process PREPROCESS_EXPDESIGN {
     output:
     path "${design.baseName}_openms_design.tsv", emit: ch_expdesign
     path "${design.baseName}_config.tsv", emit: ch_config
+    path "versions.yml", emit: versions
 
     script:
 
