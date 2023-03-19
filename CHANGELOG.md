@@ -35,8 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#203](https://github.com/bigbio/quantms/pull/203) - update openms dependency -> 3.0.0dev
 - [#208](https://github.com/bigbio/quantms/pull/208) - update pmultiqc dependency -> 0.0.13. Support for DIANN in pmultiqc and enable the generation of search engine scores distributions/peptide and protein table by pmultiqc.
 
-### `Deprecated`
-
 ### `Parameters`
 
 - [#193](https://github.com/bigbio/quantms/pull/193) - Set the `local_input_type` default parameter to `mzML`
@@ -76,5 +74,3 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `dia-nn`              | 1.8.1      |
 | `msstats`             | 4.2.0      |
 | `msstatstmt`          | 2.2.0      |
-
-### `Deprecated`
