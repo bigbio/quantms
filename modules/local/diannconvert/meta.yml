@@ -1,10 +1,11 @@
 name: DIANNCONVERT
-description: A module to convert DIA report files to MSstats
+description: A module to convert DIA report files to MSstats, Triqler and mzTab
 keywords:
   - DIA-NN
   - conversion
   - MSstats
   - Triqler
+  - mzTab
 tools:
   - custom:
       description: |
@@ -20,6 +21,29 @@ input:
       type: file
       description: An experimental design file including Sample and replicates column et al.
       pattern: "*.tsv"
+  - report_pr:
+      type: file
+      description: A text table containing normalized quantities for precursors. They are filtered at 1% FDR, using both global and run-specific q-values for precursors
+      pattern: "*pr_matrix.tsv"
+  - report_pg:
+      type: file
+      description: A text table containing normalized quantities for protein groups. They are filtered at 1% FDR, using global q-values for protein groups
+      pattern: "*pg_matrix.tsv"
+  - report_pg:
+      type: file
+      description: A text table containing information from mzMLs
+      pattern: "*_mzml_info.tsv"
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - fasta:
+      type: file
+      description: Protein sequence database in Fasta format.
+      pattern: "*.{fasta,fa}"
+  - version:
+      type: file
+      description: File containing Dia-NN version
+      pattern: "versions.yml"
 output:
   - out_msstats:
       type: file
@@ -29,9 +53,14 @@ output:
       type: file
       description: Triqler input file
       pattern: "out_triqler.tsv"
+  - out_mztab:
+      type: file
+      description: mzTab
+      pattern: "*.mztab"
   - version:
       type: file
       description: File containing software version
       pattern: "versions.yml"
 authors:
   - "@daichengxin"
+  - "@wanghong"

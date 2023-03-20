@@ -1,5 +1,9 @@
 #!/usr/bin/env Rscript
 
+# R script to run MSstats for LFQ data.
+# License: Apache 2.0
+# Author: Dai Chengxin, Julianus Pfeuffer, Yasset Perez-Riverol
+
 # load the MSstats library
 require(MSstats)
 require(tibble)
@@ -181,6 +185,10 @@ if (length(args)<8) {
     # outputPrefix
     args[8] <- './msstats'
 }
+if (length(args)<9) {
+    # adjusted p-value threshold
+    args[9] <- 0.05
+}
 
 csv_input <- args[1]
 contrast_str <- args[2]
@@ -212,16 +220,21 @@ if (l == 1) {
     #write all comparisons into one CSV file
     write.table(test.MSstats$ComparisonResult, file=paste0(args[8],"_comparisons.csv"), quote=FALSE, sep='\t', row.names = FALSE)
 
-    groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot",
+    valid_comp_data <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue), ]
+    if (nrow(valid_comp_data[!duplicated(valid_comp_data$Protein),]) < 2) {
+        warning("Warning: Not enough proteins with valid p-values for comparison. Skipping groupComparisonPlots step!")
+    } else {
+        groupComparisonPlots(data=test.MSstats$ComparisonResult, type="ComparisonPlot", sig=as.numeric(args[9]),
                         width=12, height=12,dot.size = 2)
 
-    test.MSstats$Volcano <- test.MSstats$ComparisonResult[!is.na(test.MSstats$ComparisonResult$pvalue),]
-    groupComparisonPlots(data=test.MSstats$Volcano, type="VolcanoPlot",
-                        width=12, height=12,dot.size = 2)
-
-    # Otherwise it fails since the behaviour is undefined
-    if (nrow(contrast_mat) > 1) {
-        groupComparisonPlots(data=test.MSstats$ComparisonResult, type="Heatmap",
+        groupComparisonPlots(data=valid_comp_data, type="VolcanoPlot", sig=as.numeric(args[9]),
                             width=12, height=12,dot.size = 2)
+
+        # Otherwise it fails since the behaviour is undefined
+        if (nrow(contrast_mat) > 1) {
+            groupComparisonPlots(data=test.MSstats$ComparisonResult, type="Heatmap", sig=as.numeric(args[9]),
+                                width=12, height=12,dot.size = 2)
+        }
     }
+
 }

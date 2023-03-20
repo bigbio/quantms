@@ -1,12 +1,13 @@
 //
 // Create channel for input file
 //
-include { SDRFPARSING } from '../../modules/local/sdrfparsing/main'
+include { SDRFPARSING          } from '../../modules/local/sdrfparsing/main'
 include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign'
 
 class Wrapper {
     def labelling_type = ""
     def acquisition_method = ""
+    def experiment_id = ""
 }
 
 workflow CREATE_INPUT_CHANNEL {
@@ -35,8 +36,9 @@ workflow CREATE_INPUT_CHANNEL {
 
     // TODO remove. We can't use the variable to direct channels anyway
     wrapper = new Wrapper()
-    wrapper.labelling_type = ""
+    wrapper.labelling_type     = ""
     wrapper.acquisition_method = ""
+    wrapper.experiment_id      = ch_sdrf_or_design
 
     ch_config.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
@@ -74,16 +76,18 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         }
     }
 
-    meta.id                             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
+    meta.mzml_id                        = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
+    meta.experiment_id                  = file(wrapper.experiment_id.toString()).baseName
 
     // apply transformations given by specified root_folder and type
     if (params.root_folder) {
         filestr = params.root_folder + File.separator + filestr
-    }
-
-    filestr = (params.local_input_type ? filestr.take(filestr.lastIndexOf('.'))
+        filestr = (params.local_input_type ? filestr.take(filestr.lastIndexOf('.'))
                                             + '.' + params.local_input_type
                                             : filestr)
+    }
+
+
 
     // existance check
     if (!file(filestr).exists()) {
@@ -104,17 +108,30 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.enzyme                     = params.enzyme
         meta.acquisition_method          = params.acquisition_method
     } else {
-        if (row["Proteomics Data Acquisition Method"].contains("Data-Dependent Acquisition")) {
+        if (row["Proteomics Data Acquisition Method"].toString().toLowerCase().contains("data-dependent acquisition")) {
             meta.acquisition_method = "dda"
-        } else if (row["Proteomics Data Acquisition Method"].contains("Data-Independent Acquisition")){
+        } else if (row["Proteomics Data Acquisition Method"].toString().toLowerCase().contains("data-independent acquisition")){
             meta.acquisition_method = "dia"
         } else {
             log.error "Currently DIA and DDA are supported for the pipeline. Check and Fix your SDRF."
             exit 1
         }
+
+        // dissociation method conversion
+        if (row.DissociationMethod == "COLLISION-INDUCED DISSOCIATION"){
+            meta.dissociationmethod     = "CID"
+        } else if (row.DissociationMethod == "HIGHER ENERGY BEAM-TYPE COLLISION-INDUCED DISSOCIATION"){
+            meta.dissociationmethod     = "HCD"
+        } else if (row.DissociationMethod == "ELECTRON TRANSFER DISSOCIATION"){
+            meta.dissociationmethod     = "ETD"
+        } else if (row.DissociationMethod == "ELECTRON CAPTURE DISSOCIATION"){
+            meta.dissociationmethod     = "ECD"
+        } else{
+            meta.dissociationmethod         = row.DissociationMethod
+        }
+
         wrapper.acquisition_method       = meta.acquisition_method
         meta.labelling_type             = row.Label
-        meta.dissociationmethod         = row.DissociationMethod
         meta.fixedmodifications         = row.FixedModifications
         meta.variablemodifications      = row.VariableModifications
         meta.precursormasstolerance     = row.PrecursorMassTolerance
@@ -146,6 +163,9 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
                 exit 1
             }
         }
+    }else if(session.config.conda && session.config.conda.enabled){
+        log.error "File in DIA mode found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
+        exit 1
     }
 
     if (wrapper.labelling_type.contains("label free") || meta.acquisition_method == "dia") {

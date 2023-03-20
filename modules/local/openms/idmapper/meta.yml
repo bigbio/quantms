@@ -8,8 +8,8 @@ tools:
   - IDMapper:
       description: |
         Assigns protein/peptide identifications to features or consensus features.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IDMapper.html
 input:
   - meta:
       type: map

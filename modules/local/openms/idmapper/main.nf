@@ -1,13 +1,13 @@
 process IDMAPPER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
 
     label 'process_medium'
     label 'openms'
 
-    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(meta), path(id_file), path(map_file)
@@ -19,7 +19,7 @@ process IDMAPPER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
     IDMapper \\
@@ -28,11 +28,11 @@ process IDMAPPER {
         -threads $task.cpus \\
         -out ${id_file.baseName}_map.consensusXML \\
         $args \\
-        |& tee ${id_file.baseName}_map.log
+        2>&1 | tee ${id_file.baseName}_map.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IDMapper: \$(IDMapper 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        IDMapper: \$(IDMapper 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

@@ -8,8 +8,8 @@ tools:
   - ProteomicsLFQ:
       description: |
         ProteomicsLFQ performs label-free quantification of peptides and proteins.
-      homepage: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
-      documentation: https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
 input:
   - mzmls:
       type: file
@@ -39,6 +39,11 @@ output:
   - out_msstats:
       type: file
       description: MSstats file with analysis results for statistical downstream analysis in MSstats.
+      pattern: "*msstats_in.csv"
+  - out_triqler:
+      type: file
+      description: Triqler file with analysis results for statistical downstream analysis in Triqler.
+      pattern: "*triqler_in.csv"
   - log:
       type: file
       description: log file

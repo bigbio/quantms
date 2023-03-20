@@ -1,18 +1,14 @@
 # ![nf-core/quantms](docs/images/nf-core-quantms_logo_light.png#gh-light-mode-only) ![nf-core/quantms](docs/images/nf-core-quantms_logo_dark.png#gh-dark-mode-only)
 
-[![GitHub Actions CI Status](https://github.com/nf-core/quantms/workflows/nf-core%20CI/badge.svg)](https://github.com/nf-core/quantms/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting Status](https://github.com/nf-core/quantms/workflows/nf-core%20linting/badge.svg)](https://github.com/nf-core/quantms/actions?query=workflow%3A%22nf-core+linting%22)
-[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/quantms/results)
-[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/quantms/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 
-[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A521.10.3-23aa62.svg?labelColor=000000)](https://www.nextflow.io/)
+[![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
+[![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/nf-core/quantms)
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23quantms-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/quantms)
-[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
-[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23quantms-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/quantms)[![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
@@ -43,8 +39,8 @@ DDA-LFQ:
 3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
 4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
 5. Modification localization [`luciphor`](https://github.com/dfermin/lucXor)
-6. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
-7. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+6. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
+7. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
 8. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 9. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
 
@@ -55,9 +51,9 @@ DDA-ISO:
 3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
 4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
 5. Modification localization [`luciphor`](https://github.com/dfermin/lucXor)
-6. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
-7. Protein inference [`ProteinInference`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html) or [`Epifany`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html) for bayesian inference.
-8. Protein Quantification [`ProteinQuantifier`](https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html)
+6. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
+7. Protein inference [`ProteinInference`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html) or [`Epifany`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html) for bayesian inference.
+8. Protein Quantification [`ProteinQuantifier`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html)
 9. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 10. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
 
@@ -78,13 +74,13 @@ A graphical overview of suggested routes through the pipeline depending on conte
 
 ## Quick Start
 
-1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=21.10.3`)
+1. Install [`Nextflow`](https://www.nextflow.io/docs/latest/getstarted.html#installation) (`>=22.10.1`)
 
 2. Install any of [`Docker`](https://docs.docker.com/engine/installation/), [`Singularity`](https://www.sylabs.io/guides/3.0/user-guide/), [`Podman`](https://podman.io/), [`Shifter`](https://nersc.gitlab.io/development/shifter/how-to-use/) or [`Charliecloud`](https://hpc.github.io/charliecloud/) for full pipeline reproducibility _(please only use [`Conda`](https://conda.io/miniconda.html) as a last resort; see [docs](https://nf-co.re/usage/configuration#basic-configuration-profiles))_
 
 3. Download the pipeline and test it on a minimal dataset with a single command:
 
-   ```console
+   ```bash
    nextflow run nf-core/quantms -profile test,YOURPROFILE --input project.sdrf.tsv --database protein.fasta --outdir <OUTDIR>
    ```
 
@@ -104,8 +100,8 @@ A graphical overview of suggested routes through the pipeline depending on conte
 
    <!-- TODO nf-core: Update the example "typical command" below used to run the pipeline -->
 
-   ```console
-   nextflow run nf-core/quantms -profile <docker/singularity/podman/shifter/charliecloud/conda/institute> --input project.sdrf.tsv --database database.fasta --outdir <OUTDIR>
+   ```bash
+   nextflow run nf-core/quantms --input project.sdrf.tsv --database database.fasta --outdir <OUTDIR> -profile <docker/singularity/podman/shifter/charliecloud/conda/institute>
    ```
 
 ## Documentation

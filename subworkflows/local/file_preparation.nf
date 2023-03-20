@@ -3,29 +3,31 @@
 //
 
 include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main'
-include { MZMLINDEXING } from '../../modules/local/openms/mzmlindexing/main'
-include { OPENMSPEAKPICKER } from '../../modules/local/openms/openmspeakpicker/main'
+include { MZMLINDEXING        } from '../../modules/local/openms/mzmlindexing/main'
+include { MZMLSTATISTICS      } from '../../modules/local/mzmlstatistics/main'
+include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openmspeakpicker/main'
 
 workflow FILE_PREPARATION {
     take:
-    mzmls            // channel: [ val(meta), raw/mzml ]
+    ch_mzmls            // channel: [ val(meta), raw/mzml ]
 
     main:
-    ch_versions = Channel.empty()
-    ch_results = Channel.empty()
+    ch_versions   = Channel.empty()
+    ch_results    = Channel.empty()
+    ch_statistics = Channel.empty()
 
     //
     // Divide mzml files
     //
-    mzmls
+    ch_mzmls
     .branch {
         raw: WorkflowQuantms.hasExtension(it[1], 'raw')
         mzML: WorkflowQuantms.hasExtension(it[1], 'mzML')
     }
-    .set {branched_input}
+    .set { ch_branched_input }
 
     //TODO we could also check for outdated mzML versions and try to update them
-    branched_input.mzML
+    ch_branched_input.mzML
     .branch {
         nonIndexedMzML: file(it[1]).withReader {
             f = it; 1.upto(5) {
@@ -40,16 +42,22 @@ workflow FILE_PREPARATION {
                 return false;
         }
     }
-    .set {branched_input_mzMLs}
-    ch_results = ch_results.mix(branched_input_mzMLs.inputIndexedMzML)
+    .set { ch_branched_input_mzMLs }
+    ch_results = ch_results.mix(ch_branched_input_mzMLs.inputIndexedMzML)
 
-    THERMORAWFILEPARSER( branched_input.raw )
+    THERMORAWFILEPARSER( ch_branched_input.raw )
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
-    ch_results = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
+    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
 
-    MZMLINDEXING( branched_input_mzMLs.nonIndexedMzML )
+    MZMLINDEXING( ch_branched_input_mzMLs.nonIndexedMzML )
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
-    ch_results = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
+    ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
+
+    ch_results.map{ it -> [it[0], it[1]] }.set{ ch_mzml }
+
+    MZMLSTATISTICS( ch_mzml )
+    ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
+    ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
 
     if (params.openms_peakpicking){
         OPENMSPEAKPICKER (
@@ -63,5 +71,6 @@ workflow FILE_PREPARATION {
 
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml]
+    statistics      = ch_statistics     // channel: [ *_mzml_info.tsv ]
     version         = ch_versions       // channel: [ *.version.txt ]
 }

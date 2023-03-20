@@ -1,13 +1,13 @@
 process IDFILTER {
-
+    tag {task.ext.suffix == ".idXML" ? "$meta.mzml_id" : "$id_file.baseName"}
     label 'process_very_low'
-    label 'process_single_thread'
+    label 'process_single'
     label 'openms'
 
-    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(meta), path(id_file)
@@ -27,11 +27,11 @@ process IDFILTER {
         -out ${id_file.baseName}_filter$suffix \\
         -threads $task.cpus \\
         $args \\
-        |& tee ${id_file.baseName}_idfilter.log
+        2>&1 | tee ${id_file.baseName}_idfilter.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IDFilter: \$(IDFilter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        IDFilter: \$(IDFilter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

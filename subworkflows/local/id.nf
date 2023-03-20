@@ -2,19 +2,19 @@
 // MODULE: Local to the pipeline
 //
 include { DECOYDATABASE } from '../../modules/local/openms/decoydatabase/main'
-include { CONSENSUSID } from '../../modules/local/openms/consensusid/main'
+include { CONSENSUSID   } from '../../modules/local/openms/consensusid/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { DATABASESEARCHENGINES } from './databasesearchengines'
-include { PSMRESCORING } from './psmrescoring'
-include { PSMFDRCONTROL } from './psmfdrcontrol'
-include { PHOSPHOSCORING } from './phosphoscoring'
+include { PSMRESCORING          } from './psmrescoring'
+include { PSMFDRCONTROL         } from './psmfdrcontrol'
+include { PHOSPHOSCORING        } from './phosphoscoring'
 
 workflow ID {
     take:
-    file_preparation_results
+    ch_file_preparation_results
     ch_database_wdecoy
 
     main:
@@ -25,7 +25,7 @@ workflow ID {
     // SUBWORKFLOW: DatabaseSearchEngines
     //
     DATABASESEARCHENGINES (
-        file_preparation_results,
+        ch_file_preparation_results,
         ch_database_wdecoy
     )
     ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
@@ -39,11 +39,13 @@ workflow ID {
     //
     // SUBWORKFLOW: PSMFDRCONTROL
     //
-    ch_psmfdrcontrol = Channel.empty()
+    ch_psmfdrcontrol     = Channel.empty()
+    ch_consensus_results = Channel.empty()
     if (params.search_engines.split(",").size() > 1) {
         CONSENSUSID(PSMRESCORING.out.results.groupTuple(size: params.search_engines.split(",").size()))
         ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.version.ifEmpty(null))
         ch_psmfdrcontrol = CONSENSUSID.out.consensusids
+        ch_consensus_results = CONSENSUSID.out.consensusids
     } else {
         ch_psmfdrcontrol = PSMRESCORING.out.results
     }
@@ -55,15 +57,16 @@ workflow ID {
     // SUBWORKFLOW：PHOSPHOSCORING
     //
     if (params.enable_mod_localization) {
-        PHOSPHOSCORING(file_preparation_results, PSMFDRCONTROL.out.id_filtered)
+        PHOSPHOSCORING(ch_file_preparation_results, PSMFDRCONTROL.out.id_filtered)
         ch_software_versions = ch_software_versions.mix(PHOSPHOSCORING.out.version.ifEmpty(null))
-        id_results = PHOSPHOSCORING.out.id_luciphor
+        ch_id_results = PHOSPHOSCORING.out.id_luciphor
     } else {
-        id_results = PSMFDRCONTROL.out.id_filtered
+        ch_id_results = PSMFDRCONTROL.out.id_filtered
     }
 
     emit:
-    id_results              = id_results
+    id_results              = ch_id_results
     psmrescoring_results    = PSMRESCORING.out.results
+    ch_consensus_results    = ch_consensus_results
     version                 = ch_software_versions
 }

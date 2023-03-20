@@ -1,11 +1,11 @@
 process LUCIPHORADAPTER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
+    conda "bioconda::openms-thirdparty=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_0' }"
 
     input:
     tuple val(meta), path(mzml_file), path(id_file)
@@ -21,12 +21,12 @@ process LUCIPHORADAPTER {
     luciphor_jar = ''
     if (workflow.containerEngine || (task.executor == "awsbatch")) {
         luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
-    } else if (params.enable_conda) {
+    } else if (session.config.conda && session.config.conda.enabled) {
         luciphor_jar = "-executable \$(find \$CONDA_PREFIX/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     def losses = params.luciphor_neutral_losses ? "-neutral_losses ${params.luciphor_neutral_losses}" : ""
     def dec_mass = params.luciphor_decoy_mass ? "-decoy_mass ${params.luciphor_decoy_mass}" : ""
@@ -48,7 +48,7 @@ process LUCIPHORADAPTER {
         -max_charge_state $params.max_precursor_charge \\
         -max_peptide_length $params.max_peptide_length \\
         $args \\
-        |& tee ${id_file.baseName}_luciphor.log
+        2>&1 | tee ${id_file.baseName}_luciphor.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

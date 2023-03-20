@@ -1,11 +1,11 @@
 process OPENMSPEAKPICKER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(meta), path(mzml_file)
@@ -17,7 +17,7 @@ process OPENMSPEAKPICKER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     in_mem = params.peakpicking_inmemory ? "inmermory" : "lowmemory"
     lvls = params.peakpicking_ms_levels ? "-algorithm:ms_levels ${params.peakpicking_ms_levels}" : ""
@@ -31,11 +31,11 @@ process OPENMSPEAKPICKER {
         -processOption ${in_mem} \\
         ${lvls} \\
         $args \\
-        |& tee ${mzml_file.baseName}_pp.log
+        2>&1 | tee ${mzml_file.baseName}_pp.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        PeakPickerHiRes: \$(PeakPickerHiRes 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        PeakPickerHiRes: \$(PeakPickerHiRes 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

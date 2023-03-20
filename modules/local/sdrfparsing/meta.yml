@@ -16,14 +16,14 @@ input:
       description: |
         A valid sdrf file
 output:
-  - experimental_design:
+  - ch_expdesign:
       type: file
       description: experimental design file in OpenMS format
-      pattern: "experimental_design.tsv"
-  - openms:
+      pattern: "*openms_design.tsv"
+  - ch_sdrf_config_file:
       type: file
       description: config file with search engine parameters in OpenMS nomenclature
-      pattern: "openms.tsv"
+      pattern: "*_config.tsv"
   - mqpar:
       type: file
       description: maxquant configuration file

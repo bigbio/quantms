@@ -1,10 +1,10 @@
 process THERMORAWFILEPARSER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_low'
-    label 'process_single_thread'
+    label 'process_single'
     label 'error_retry'
 
-    conda (params.enable_conda ? "conda-forge::mono bioconda::thermorawfileparser=1.3.4" : null)
+    conda "conda-forge::mono bioconda::thermorawfileparser=1.3.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0' :
         'quay.io/biocontainers/thermorawfileparser:1.3.4--ha8f3691_0' }"
@@ -37,10 +37,10 @@ process THERMORAWFILEPARSER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    ThermoRawFileParser.sh -i=${rawfile} -f=2 -o=./ |& tee ${rawfile.baseName}_conversion.log
+    ThermoRawFileParser.sh -i=${rawfile} -f=2 -o=./ 2>&1 | tee ${rawfile.baseName}_conversion.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -4,10 +4,10 @@ process EPIFANY {
 
     publishDir "${params.outdir}"
 
-    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(meta), path(consus_file)
@@ -32,11 +32,11 @@ process EPIFANY {
         -algorithm:top_PSMs $params.top_PSMs \\
         -out ${consus_file.baseName}_epi.consensusXML \\
         $args \\
-        |& tee ${consus_file.baseName}_inference.log
+        2>&1 | tee ${consus_file.baseName}_inference.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        Epifany: \$(Epifany 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        Epifany: \$(Epifany 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

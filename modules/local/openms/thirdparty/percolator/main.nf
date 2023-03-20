@@ -1,10 +1,11 @@
 process PERCOLATOR {
+    tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::openms-thirdparty=2.8.0" : null)
+    conda "bioconda::openms-thirdparty=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_0' }"
 
     input:
     tuple val(meta), path(id_file)
@@ -16,7 +17,7 @@ process PERCOLATOR {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
     OMP_NUM_THREADS=$task.cpus PercolatorAdapter \\
@@ -28,7 +29,7 @@ process PERCOLATOR {
         -post_processing_tdc \\
         -score_type pep \\
         $args \\
-        |& tee ${id_file.baseName}_percolator.log
+        2>&1 | tee ${id_file.baseName}_percolator.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

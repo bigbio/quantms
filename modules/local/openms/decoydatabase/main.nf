@@ -2,10 +2,10 @@ process DECOYDATABASE {
     label 'process_very_low'
     label 'openms'
 
-    conda (params.enable_conda ? "bioconda::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     path(db_for_decoy)
@@ -29,11 +29,11 @@ process DECOYDATABASE {
         -shuffle_sequence_identity_threshold $params.shuffle_sequence_identity_threshold \\
         -debug $params.decoydatabase_debug \\
         $args \\
-        |& tee ${db_for_decoy.baseName}_decoy_database.log
+        2>&1 | tee ${db_for_decoy.baseName}_decoy_database.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DecoyDatabase: \$(DecoyDatabase 2>&1  | grep -E '^Version(.*)' | sed 's/Version: //g')
+        DecoyDatabase: \$(DecoyDatabase 2>&1  | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }
