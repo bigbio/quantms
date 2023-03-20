@@ -1,6 +1,5 @@
 process CONSENSUSID {
     tag "$meta.mzml_id"
-    label 'process_medium'
     label 'process_single'
     label 'openms'
 
