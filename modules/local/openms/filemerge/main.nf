@@ -1,6 +1,6 @@
 process FILEMERGE {
     label 'process_medium'
-    label 'process_single_thread'
+    label 'process_single'
     label 'openms'
 
     conda "bioconda::openms=2.9.1"

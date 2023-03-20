@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-
+"""
+This script parse and mzml and generates a set of statistics about the file.
+License: Apache 2.0
+Authors: Hong Wong, Yasset Perez-Riverol
+"""
 import sys
 from pathlib import Path
 

@@ -1,7 +1,7 @@
 process EXTRACTPSMFEATURES {
     tag "$meta.mzml_id"
     label 'process_very_low'
-    label 'process_single_thread'
+    label 'process_single'
     label 'openms'
 
     conda "bioconda::openms=2.9.1"

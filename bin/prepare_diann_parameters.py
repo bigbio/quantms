@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""
+This script converts SDRF parameters to DIA-NN parameters
+License: Apache 2.0
+Authors: Dai Chengxin, Yasset Perez-Riverol
+"""
+
 import re
 from typing import List, Tuple
 

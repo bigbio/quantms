@@ -1,7 +1,7 @@
 process THERMORAWFILEPARSER {
     tag "$meta.mzml_id"
     label 'process_low'
-    label 'process_single_thread'
+    label 'process_single'
     label 'error_retry'
 
     conda "conda-forge::mono bioconda::thermorawfileparser=1.3.4"
