@@ -1,7 +1,6 @@
 process CONSENSUSID {
     tag "$meta.mzml_id"
     label 'process_medium'
-    // TODO could be easily parallelized
     label 'process_single_thread'
     label 'openms'
 
