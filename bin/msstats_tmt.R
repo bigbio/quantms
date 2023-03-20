@@ -1,4 +1,9 @@
 #!/usr/bin/env Rscript
+
+# This file is part of MSstats.
+# License: Apache 2.0
+# Author: Dai Chengxin, Julianus Pfeuffer, Yasset Perez-Riverol
+
 require(MSstatsTMT)
 require(stats)
 require(gplots)

@@ -1,5 +1,9 @@
 #!/usr/bin/env Rscript
 
+# R script to run MSstats for LFQ data.
+# License: Apache 2.0
+# Author: Dai Chengxin, Julianus Pfeuffer, Yasset Perez-Riverol
+
 # load the MSstats library
 require(MSstats)
 require(tibble)
