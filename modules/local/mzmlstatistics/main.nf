@@ -1,7 +1,7 @@
 process MZMLSTATISTICS {
     tag "$meta.mzml_id"
     label 'process_medium'
-    label 'process_single_thread'
+    label 'process_single'
 
     conda "bioconda::pyopenms=2.8.0"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {

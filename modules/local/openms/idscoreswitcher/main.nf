@@ -1,7 +1,7 @@
 process IDSCORESWITCHER {
     tag "$meta.mzml_id"
     label 'process_very_low'
-    label 'process_single_thread'
+    label 'process_single'
 
     conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
