@@ -1,11 +1,11 @@
 process ISOBARICANALYZER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "openms::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(meta), path(mzml_file)
@@ -17,7 +17,7 @@ process ISOBARICANALYZER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     if (meta.dissociationmethod == "HCD" || meta.dissociationmethod == "HCID") diss_meth = "auto"
     else if (meta.dissociationmethod == "CID") diss_meth = "Collision-induced dissociation"
@@ -40,11 +40,11 @@ process ISOBARICANALYZER {
         -${meta.labelling_type}:reference_channel $params.reference_channel \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
         $args \\
-        > ${mzml_file.baseName}_isob.log
+        2>&1 | tee ${mzml_file.baseName}_isob.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        IsobaricAnalyzer: \$(IsobaricAnalyzer --version 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        IsobaricAnalyzer: \$(IsobaricAnalyzer --version 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }

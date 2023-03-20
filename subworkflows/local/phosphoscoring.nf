@@ -3,20 +3,20 @@
 //
 
 include { IDSCORESWITCHER as IDSCORESWITCHERFORLUCIPHOR } from '../../modules/local/openms/idscoreswitcher/main'
-include { LUCIPHORADAPTER } from '../../modules/local/openms/thirdparty/luciphoradapter/main'
+include { LUCIPHORADAPTER                               } from '../../modules/local/openms/thirdparty/luciphoradapter/main'
 
 workflow PHOSPHOSCORING {
     take:
-    mzml_files
-    id_files
+    ch_mzml_files
+    ch_id_files
 
     main:
     ch_version = Channel.empty()
 
-    IDSCORESWITCHERFORLUCIPHOR(id_files.combine(Channel.value("\"Posterior Error Probability_score\"")))
+    IDSCORESWITCHERFORLUCIPHOR(ch_id_files.combine(Channel.value("\"Posterior Error Probability_score\"")))
     ch_version = ch_version.mix(IDSCORESWITCHERFORLUCIPHOR.out.version)
 
-    LUCIPHORADAPTER(mzml_files.join(IDSCORESWITCHERFORLUCIPHOR.out.id_score_switcher))
+    LUCIPHORADAPTER(ch_mzml_files.join(IDSCORESWITCHERFORLUCIPHOR.out.id_score_switcher))
     ch_version = ch_version.mix(LUCIPHORADAPTER.out.version)
 
     emit:

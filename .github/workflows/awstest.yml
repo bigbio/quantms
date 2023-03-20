@@ -1,6 +1,6 @@
 name: nf-core AWS test
 # This workflow can be triggered manually with the GitHub actions workflow dispatch button.
-# It runs the -profile 'test' on AWS batch
+# It runs the -profile 'test_tmt' on AWS batch
 
 on:
   workflow_dispatch:
@@ -13,7 +13,6 @@ jobs:
       # Launch workflow using Tower CLI tool action
       - name: Launch workflow via tower
         uses: nf-core/tower-action@v3
-
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -23,7 +22,11 @@ jobs:
             {
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/quantms/results-test-${{ github.sha }}"
             }
-          profiles: test,aws_tower
+          profiles: test_tmt,aws_tower
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Tower debug log file
+          path: tower_action_*.log
           nextflow_config: |
             process.errorStrategy = 'retry'
             process.maxRetries = 3

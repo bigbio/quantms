@@ -1,11 +1,11 @@
 process LUCIPHORADAPTER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda (params.enable_conda ? "bioconda::bumbershoot bioconda::comet-ms bioconda::crux-toolkit=3.2 bioconda::fido=1.0 conda-forge::gnuplot bioconda::luciphor2=2020_04_03 bioconda::msgf_plus=2021.03.22 bioconda::openms=2.8.0 bioconda::pepnovo=20101117 bioconda::percolator=3.5 bioconda::sirius-csifingerid=4.0.1 bioconda::thermorawfileparser=1.3.4 bioconda::xtandem=15.12.15.2 bioconda::openms-thirdparty=2.8.0" : null)
+    conda "bioconda::openms-thirdparty=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.8.0--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.8.0--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_0' :
+        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_0' }"
 
     input:
     tuple val(meta), path(mzml_file), path(id_file)
@@ -17,13 +17,16 @@ process LUCIPHORADAPTER {
     path "*.log", emit: log
 
     script:
+    // The OpenMS adapters need the actuall jar file, not the executable/shell wrapper that (bio)conda creates
     luciphor_jar = ''
-    if (workflow.containerEngine) {
+    if (workflow.containerEngine || (task.executor == "awsbatch")) {
         luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
+    } else if (session.config.conda && session.config.conda.enabled) {
+        luciphor_jar = "-executable \$(find \$CONDA_PREFIX/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     def losses = params.luciphor_neutral_losses ? "-neutral_losses ${params.luciphor_neutral_losses}" : ""
     def dec_mass = params.luciphor_decoy_mass ? "-decoy_mass ${params.luciphor_decoy_mass}" : ""
@@ -45,7 +48,7 @@ process LUCIPHORADAPTER {
         -max_charge_state $params.max_precursor_charge \\
         -max_peptide_length $params.max_peptide_length \\
         $args \\
-        > ${id_file.baseName}_luciphor.log
+        2>&1 | tee ${id_file.baseName}_luciphor.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,19 +1,19 @@
 process GENERATE_DIANN_CFG {
+    tag "$meta.experiment_id"
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.21" : null)
+    conda "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.21--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/sdrf-pipelines:0.0.21--pyhdfd78af_0"
+        container "quay.io/biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0"
     }
 
     input:
     val(meta)
 
     output:
-    path "diann_config.cfg", emit: search_cfg
-    path "library_config.cfg", emit: library_config
+    path "diann_config.cfg", emit: diann_cfg
     path "versions.yml", emit: version
     path "*.log"
 
@@ -25,15 +25,11 @@ process GENERATE_DIANN_CFG {
         --enzyme "${meta.enzyme}" \\
         --fix_mod "${meta.fixedmodifications}" \\
         --var_mod "${meta.variablemodifications}" \\
-        --precursor_tolerence ${meta.precursormasstolerance} \\
-        --precursor_tolerence_unit ${meta.precursormasstoleranceunit} \\
-        --fragment_tolerence ${meta.fragmentmasstolerance} \\
-        --fragment_tolerence_unit ${meta.fragmentmasstoleranceunit} \\
-        > GENERATE_DIANN_CFG.log
+        2>&1 | tee GENERATE_DIANN_CFG.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(echo "0.0.21")
+        sdrf-pipelines: \$(pip show sdrf-pipelines | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

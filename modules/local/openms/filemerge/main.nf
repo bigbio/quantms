@@ -1,12 +1,12 @@
 process FILEMERGE {
     label 'process_medium'
-    label 'process_single_thread'
+    label 'process_single'
     label 'openms'
 
-    conda (params.enable_conda ? "openms::openms=2.8.0" : null)
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.8.0--h7ca0330_1' :
-        'quay.io/biocontainers/openms:2.8.0--h7ca0330_1' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     file(id_map)
@@ -28,11 +28,11 @@ process FILEMERGE {
         -threads $task.cpus \\
         -out ID_mapper_merge.consensusXML \\
         $args \\
-        > ID_mapper_merge.log
+        2>&1 | tee ID_mapper_merge.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        FileMerger: \$(FileMerger 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        FileMerger: \$(FileMerger 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }
