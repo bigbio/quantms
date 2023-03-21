@@ -3,6 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] nfcore/quantms - [TBD] - {TBD City name}
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Parameters`
+
+### `Deprecations`
+
 ## [1.1.0] nfcore/quantms - [03/20/2023] - Berlin
 
 - Bugfixes and speed increases in the OpenMS tools due to version update to 2.9.1
