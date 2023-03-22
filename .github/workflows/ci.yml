@@ -52,14 +52,13 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Install micromamba as mamba
+      - name: Install micromamba
         if: matrix.exec_profile == 'conda'
         run: |
           wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-          mv bin/micromamba bin/mamba
           echo "$(pwd)/bin" >> $GITHUB_PATH
-          echo "$(pwd)/mamba/bin" >> $GITHUB_PATH
-          ./bin/mamba shell init -s bash -p ./mamba
+          echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
+          ./bin/micromamba shell init -s bash -p ./micromamba
 
       - name: Run pipeline with test data
         if: matrix.exec_profile != 'conda'
