@@ -3,9 +3,9 @@ process PROTEOMICSLFQ {
     label 'process_high'
 
     conda "bioconda::openms=2.9.1"
-    container "${ workflow.containerEngine == 'docker' && !task.ext.singularity_pull_docker_container ?
-        'quay.io/biocontainers/openms:2.9.1--h135471a_0' :
-        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0'
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0'
         }"
 
     input:
