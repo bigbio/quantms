@@ -59,7 +59,7 @@ jobs:
           echo "$(pwd)/bin" >> $GITHUB_PATH
           echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
           ./bin/micromamba shell init -s bash -p ./micromamba
-          echo "channels:\n  - conda-forge\nuse_lockfiles: false" >> ~/.mambarc
+          echo $'channels:\n  - conda-forge\nuse_lockfiles: false' >> ~/.mambarc
 
       - name: Run pipeline with test data
         if: matrix.exec_profile != 'conda'
