@@ -179,6 +179,7 @@ PSM section:
 - opt_global_q-value(_score): Experiment-wide q-value. The exact interpretation depends on the FDR/q-value settings of the pipeline.
 -	opt_global_cv_MS:1002217_decoy_peptide: If the peptide from this match was a target peptide from the digest of the input protein database, or an annotated or generated decoy.
 
+Note that columns with scores heavily depend on the chosen search engines and rescoring tools and are better looked up in the documentation of the underlying tool.
 
 #### MSstats-processed mzTab
 
