@@ -145,7 +145,7 @@ mzTab is a multi-section TSV file where the first column is a section identifier
 - PSH: Peptide-spectrum match header
 - PSM: Peptide-spectrum match entry line
 
-Some explanations for optional ("opt_") columns:
+Some explanations for optional ("opt\_") columns:
 
 PRT section:
 
@@ -162,11 +162,10 @@ PEP section:
 - opt_global_cv_MS:1000889_peptidoform_sequence: The sequence of the best explanation of this feature/spectrum but with modifications.
 - opt_global_feature_id: A unique ID assigned by internal algorithms. E.g., for looking up additional information in the PSM section or other output files like consensusXML
 - opt_global_SpecEValue_score: Spectral E-Value for the best match for this peptide (from the MSGF search engine)
-- opt_global_q-value(_score): Experiment-wide q-value of the best match. The exact interpretation depends on the FDR/q-value settings of the pipeline.
+- opt_global_q-value(\_score): Experiment-wide q-value of the best match. The exact interpretation depends on the FDR/q-value settings of the pipeline.
 - opt_global_cv_MS:1002217_decoy_peptide: If the peptide from the best match was a target peptide from the digest of the input protein database, or an annotated or generated decoy.
 - opt_global_mass_to_charge_study_variable[n]: The m/z of the precursor (isobaric) or the feature (LFQ) in study_variable (= usually sample) n.
 - opt_global_retention_time_study_variable[n]: The retention time in seconds of the precursor (isobaric) or the feature (LFQ) in study_variable (= usually sample) n.
-
 
 PSM section:
 
@@ -175,9 +174,9 @@ PSM section:
 - opt_global_map_index: May be ignored. Should be a one-to-one correspondence between "ms_run" in which this PSM was found and the value in this column + 1.
 - opt_global_spectrum_reference: May be ignored. Should be a one-to-one correspondence between the second part of the spectra_ref column and this column.
 - opt_global_cv_MS:1000889_peptidoform_sequence: The sequence for this match including modifications.
--	opt_global_SpecEValue_score: Spectral E-Value for this match (from the MSGF search engine)
-- opt_global_q-value(_score): Experiment-wide q-value. The exact interpretation depends on the FDR/q-value settings of the pipeline.
--	opt_global_cv_MS:1002217_decoy_peptide: If the peptide from this match was a target peptide from the digest of the input protein database, or an annotated or generated decoy.
+- opt_global_SpecEValue_score: Spectral E-Value for this match (from the MSGF search engine)
+- opt_global_q-value(\_score): Experiment-wide q-value. The exact interpretation depends on the FDR/q-value settings of the pipeline.
+- opt_global_cv_MS:1002217_decoy_peptide: If the peptide from this match was a target peptide from the digest of the input protein database, or an annotated or generated decoy.
 
 Note that columns with scores heavily depend on the chosen search engines and rescoring tools and are better looked up in the documentation of the underlying tool.
 
