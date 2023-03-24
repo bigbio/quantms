@@ -135,6 +135,51 @@ The mzTab is exported for all three workflows DDA-LFQ, DDA-ISO and DIA-LFQ. It i
 ready for submission to [PRIDE](https://www.ebi.ac.uk/pride/). It contains both identifications (only those responsible for a quantification),
 quantities and some metadata about both the experiment and the quantification.
 
+mzTab is a multi-section TSV file where the first column is a section identifier:
+
+- MTD: Metadata
+- PRH: Protein header line
+- PRT: Protein entry line
+- PEH: Peptide header line
+- PEP: Peptide entry line
+- PSH: Peptide-spectrum match header
+- PSM: Peptide-spectrum match entry line
+
+Some explanations for optional ("opt\_") columns:
+
+PRT section:
+
+- opt_global_Posterior_Probability_score: As opposed to the best_search_engine_score columns (which usually represent an FDR [consult the MTD section]) this specifies the posterior probability for a protein or protein group as calculated by protein inference.
+- opt_global_nr_found_peptides: The number of found peptides for the protein (group). By default this counts unmodified peptide sequences (TODO double-check)
+- opt_global_cv_PRIDE:0000303_decoy_hit: If this was a real target hit or a decoy entry added artificially to the protein database.
+- opt_global_result_type:
+  - single_protein: A protein that is uniquely distinguishable from others. Note: this could be a subsumable protein.
+  - indistinguishable_protein_group: A group of proteins that share exactly the same set of observed peptides.
+  - protein_details: A dummy entry for every protein belonging to either of the two classes above. In case of an indistinguishable group, it would otherwise not be possible to report unique sequence coverage information about each member of the group. Do not use these entries for quantitative information or scoring as they will be "null/empty". They shall only be used to extract auxiliary information if required.
+
+PEP section:
+
+- opt_global_cv_MS:1000889_peptidoform_sequence: The sequence of the best explanation of this feature/spectrum but with modifications.
+- opt_global_feature_id: A unique ID assigned by internal algorithms. E.g., for looking up additional information in the PSM section or other output files like consensusXML
+- opt_global_SpecEValue_score: Spectral E-Value for the best match for this peptide (from the MSGF search engine)
+- opt_global_q-value(\_score): Experiment-wide q-value of the best match. The exact interpretation depends on the FDR/q-value settings of the pipeline.
+- opt_global_cv_MS:1002217_decoy_peptide: If the peptide from the best match was a target peptide from the digest of the input protein database, or an annotated or generated decoy.
+- opt_global_mass_to_charge_study_variable[n]: The m/z of the precursor (isobaric) or the feature (LFQ) in study_variable (= usually sample) n.
+- opt_global_retention_time_study_variable[n]: The retention time in seconds of the precursor (isobaric) or the feature (LFQ) in study_variable (= usually sample) n.
+
+PSM section:
+
+- opt_global_FFId_category: Currently always "internal".
+- opt_global_feature_id: A unique ID assigned by internal algorithms. E.g., for looking up additional information in the PEP section or other output files like consensusXML.
+- opt_global_map_index: May be ignored. Should be a one-to-one correspondence between "ms_run" in which this PSM was found and the value in this column + 1.
+- opt_global_spectrum_reference: May be ignored. Should be a one-to-one correspondence between the second part of the spectra_ref column and this column.
+- opt_global_cv_MS:1000889_peptidoform_sequence: The sequence for this match including modifications.
+- opt_global_SpecEValue_score: Spectral E-Value for this match (from the MSGF search engine)
+- opt_global_q-value(\_score): Experiment-wide q-value. The exact interpretation depends on the FDR/q-value settings of the pipeline.
+- opt_global_cv_MS:1002217_decoy_peptide: If the peptide from this match was a target peptide from the digest of the input protein database, or an annotated or generated decoy.
+
+Note that columns with scores heavily depend on the chosen search engines and rescoring tools and are better looked up in the documentation of the underlying tool.
+
 #### MSstats-processed mzTab
 
 If MSstats was enabled, the pipeline additionally exports an mzTab file where the quantities are replaced with the normalized and imputed ones from
