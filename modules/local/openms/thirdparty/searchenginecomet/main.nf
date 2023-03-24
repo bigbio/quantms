@@ -4,8 +4,8 @@ process SEARCHENGINECOMET {
 
     conda "bioconda::openms-thirdparty=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_0' :
-        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_0' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_1' :
+        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_1' }"
 
     input:
     tuple val(meta), file(mzml_file), file(database)
