@@ -3,13 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0] nfcore/quantms - [TBD] - Thimphu
+## [1.1.1] nfcore/quantms - [TBD] - Berlin
 
 ### `Added`
 
+- [#92](https://github.com/nf-core/quantms/pull/92) Improved output docs for mzTab
+- [#91](https://github.com/nf-core/quantms/pull/91) Added dev profile for nightly versions of OpenMS tools
+
 ### `Changed`
 
+- [#88](https://github.com/nf-core/quantms/pull/88) Updated Comet version to latest release (2023010)
+
 ### `Fixed`
+
+- [#93](https://github.com/nf-core/quantms/pull/93) Fixed bug in docker vs. singularity container logic in some processes.
 
 ### `Dependencies`
 
