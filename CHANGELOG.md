@@ -18,12 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#93](https://github.com/nf-core/quantms/pull/93) Fixed bug in docker vs. singularity container logic in some processes.
 
-### `Dependencies`
-
-### `Parameters`
-
-### `Deprecations`
-
 ## [1.1.0] nfcore/quantms - [03/20/2023] - Berlin
 
 - Bugfixes and speed increases in the OpenMS tools due to version update to 2.9.1
