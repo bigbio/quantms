@@ -52,22 +52,14 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Install mamba
+      - name: Install micromamba
         if: matrix.exec_profile == 'conda'
-        uses: conda-incubator/setup-miniconda@v2
-        with:
-          python-version: 3.9
-          mamba-version: "*"
-          channels: conda-forge,defaults
-
-      # - name: Install micromamba as mamba
-      #   if: matrix.exec_profile == 'conda'
-      #   run: |
-      #     wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-      #     mv bin/micromamba bin/mamba
-      #     echo "$(pwd)/bin" >> $GITHUB_PATH
-      #     echo "$(pwd)/mamba/bin" >> $GITHUB_PATH
-      #     ./bin/mamba shell init -s bash -p ./mamba
+        run: |
+          wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+          echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
+          ./bin/micromamba shell init -s bash -p ./micromamba
+          echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
 
       - name: Run pipeline with test data
         if: matrix.exec_profile != 'conda'
@@ -82,7 +74,7 @@ jobs:
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,mambaci --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
       - name: Gather failed logs
         if: failure() || cancelled()
         run: |
