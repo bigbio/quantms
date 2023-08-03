@@ -3,6 +3,7 @@
 //
 
 include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main'
+include { TDF2MZML } from '../../modules/local/tdf2mzml/main'
 include { MZMLINDEXING        } from '../../modules/local/openms/mzmlindexing/main'
 include { MZMLSTATISTICS      } from '../../modules/local/mzmlstatistics/main'
 include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openmspeakpicker/main'
