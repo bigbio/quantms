@@ -9,7 +9,7 @@ include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openmspeakpicke
 
 workflow FILE_PREPARATION {
     take:
-    ch_mzmls            // channel: [ val(meta), raw/mzml ]
+    ch_mzmls            // channel: [ val(meta), raw/mzml/d.tar ]
 
     main:
     ch_versions   = Channel.empty()
@@ -23,6 +23,7 @@ workflow FILE_PREPARATION {
     .branch {
         raw: WorkflowQuantms.hasExtension(it[1], 'raw')
         mzML: WorkflowQuantms.hasExtension(it[1], 'mzML')
+        dotD: WorkflowQuantms.hasExtension(it[1], '.d.tar')
     }
     .set { ch_branched_input }
 
@@ -46,6 +47,12 @@ workflow FILE_PREPARATION {
     ch_results = ch_results.mix(ch_branched_input_mzMLs.inputIndexedMzML)
 
     THERMORAWFILEPARSER( ch_branched_input.raw )
+    // Output is
+    // {'mzmls_converted': Tuple[val(meta), path(mzml)],
+    //  'version': Path(versions.yml),
+    //  'log': Path(*.txt)}
+
+    // Where meta is the same as the input meta
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
     ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
 
@@ -53,15 +60,22 @@ workflow FILE_PREPARATION {
     ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
     ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
 
-    ch_results.map{ it -> [it[0], it[1]] }.set{ ch_mzml }
+    ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
 
-    MZMLSTATISTICS( ch_mzml )
+    TDF2MZML( ch_branched_input.dotD )
+    ch_versions = ch_versions.mix(TDF2MZML.out.version)
+    indexed_mzml_bundle = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
+    ch_results = indexed_mzml_bundle.mix(TDF2MZML.out.dotd_files)
+    // todo... evaluate if the .mzml is used explicitly anywhere else downstream
+
+    MZMLSTATISTICS( indexed_mzml_bundle )
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
 
     if (params.openms_peakpicking){
+        // If the peak picker is enabled, it will over-write not bypass the .d files
         OPENMSPEAKPICKER (
-            ch_results
+            indexed_mzml_bundle
         )
 
         ch_versions = ch_versions.mix(OPENMSPEAKPICKER.out.version)
@@ -70,7 +84,7 @@ workflow FILE_PREPARATION {
 
 
     emit:
-    results         = ch_results        // channel: [val(mzml_id), indexedmzml]
+    results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
     statistics      = ch_statistics     // channel: [ *_mzml_info.tsv ]
     version         = ch_versions       // channel: [ *.version.txt ]
 }

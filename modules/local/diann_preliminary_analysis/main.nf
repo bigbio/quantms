@@ -7,7 +7,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), file(mzML), file(predict_tsv)
+    tuple val(meta), path(mzML), path(predict_tsv)
 
     output:
     path "*.quant", emit: diann_quant
