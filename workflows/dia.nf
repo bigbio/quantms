@@ -55,12 +55,18 @@ workflow DIA {
     //
     // MODULE: SILICOLIBRARYGENERATION
     //
-    SILICOLIBRARYGENERATION(ch_searchdb, DIANNCFG.out.diann_cfg)
+    if (!params.diann_speclib) {
+        SILICOLIBRARYGENERATION(ch_searchdb, DIANNCFG.out.diann_cfg)
+        speclib = SILICOLIBRARYGENERATION.out.predict_speclib
+    } else {
+        speclib = Channel.fromPath(params.diann_speclib)
+    }
+
 
     //
     // MODULE: DIANN_PRELIMINARY_ANALYSIS
     //
-    DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(SILICOLIBRARYGENERATION.out.predict_speclib))
+    DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
     ch_software_versions = ch_software_versions.mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
 
     //
@@ -69,7 +75,7 @@ workflow DIA {
     ASSEMBLE_EMPIRICAL_LIBRARY(ch_result.mzml.collect(),
                                 meta,
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
-                                SILICOLIBRARYGENERATION.out.predict_speclib
+                                speclib
                             )
     ch_software_versions = ch_software_versions.mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.version.ifEmpty(null))
 
