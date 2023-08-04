@@ -13,6 +13,10 @@ import numpy as np
 import pandas as pd
 from pyopenms import AASequence, FASTAFile, ModificationsDB
 
+pd.set_option('display.max_rows', 500)
+pd.set_option('display.max_columns', 500)
+pd.set_option('display.width', 1000)
+
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
@@ -149,6 +153,9 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     out_msstats["Reference"] = out_msstats.apply(lambda x: os.path.basename(x["Reference"]), axis=1)
 
     # TODO remove this if not debugging
+    print("\n\nReference Column >>>")
+    print(out_msstats["Reference"])
+
     print("\n\nout_msstats >>>")
     print(out_msstats.head(5))
 
@@ -239,6 +246,17 @@ def query_expdesign_value(reference, f_table, s_table):
      :return: A tuple contains Fraction, BioReplicate and Condition
      :rtype: tuple
     """
+    # TODO remove this if not debugging
+    print("\n\nreference >>>")
+    print(reference)
+
+    print("\n\nf_table >>>")
+    print(f_table.head(5))
+
+    print("\n\ns_table >>>")
+    print(s_table.head(5))
+    # END TODO
+
     query_reference = f_table[f_table["run"] == reference]
     Fraction = query_reference["Fraction"].values[0]
     row = s_table[s_table["Sample"] == query_reference["Sample"].values[0]]
