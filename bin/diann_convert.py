@@ -148,6 +148,17 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     out_msstats.loc[:, "IsotopeLabelType"] = "L"
     out_msstats["Reference"] = out_msstats.apply(lambda x: os.path.basename(x["Reference"]), axis=1)
 
+    # TODO remove this if not debugging
+    print("\n\nout_msstats >>>")
+    print(out_msstats.head(5))
+
+    print("\n\nf_table >>>")
+    print(f_table.head(5))
+
+    print("\n\ns_DataFrame >>>")
+    print(s_DataFrame.head(5))
+    ## END TODO
+
     out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(
         lambda x: query_expdesign_value(x["Run"], f_table, s_DataFrame), axis=1, result_type="expand"
     )
