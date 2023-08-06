@@ -3,19 +3,24 @@
 This script converts the output from DIA-NN into three standard formats: MSstats, Triqler and mzTab.
 License: Apache 2.0
 Authors: Hong Wong, Yasset Perez-Riverol
+Revisions:
+    2023-Aug-05: J. Sebastian Paez
 """
 import logging
 import os
 import re
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, List
 
 import click
 import numpy as np
 import pandas as pd
 from pyopenms import AASequence, FASTAFile, ModificationsDB
 
-pd.set_option('display.max_rows', 500)
-pd.set_option('display.max_columns', 500)
-pd.set_option('display.width', 1000)
+pd.set_option("display.max_rows", 500)
+pd.set_option("display.max_columns", 500)
+pd.set_option("display.width", 1000)
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
@@ -43,10 +48,10 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
         the DiaNN main report, protein matrix, precursor matrix, experimental design file, protein sequence
         FASTA file, version file of DiaNN and mzml_info TSVs
     :type folder: str
-    :param diann_version: Path to a version file of DIA-NN
-    :type diann_version: str
     :param dia_params: A list contains DIA parameters
     :type dia_params: list
+    :param diann_version: Path to a version file of DIA-NN
+    :type diann_version: str
     :param charge: The charge assigned by DIA-NN(max_precursor_charge)
     :type charge: int
     :param missed_cleavages: Allowed missed cleavages assigned by DIA-NN
@@ -54,94 +59,21 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     :param qvalue_threshold: Threshold for filtering q value
     :type qvalue_threshold: float
     """
-    pathdict = {key: [] for key in ["report", "exp_design", "pg_matrix", "pr_matrix", "fasta", "mzml_info"]}
-    fileslist = os.listdir(folder)
-    if not folder.endswith("/"):
-        folder = folder + "/"
-    for i in fileslist:
-        if i.endswith("report.tsv"):
-            pathdict["report"].append(i)
-        elif i.endswith("_openms_design.tsv"):
-            pathdict["exp_design"].append(i)
-        elif i.endswith("pg_matrix.tsv"):
-            pathdict["pg_matrix"].append(i)
-        elif i.endswith("pr_matrix.tsv"):
-            pathdict["pr_matrix"].append(i)
-        elif i.endswith(".fasta") or i.endswith(".fa"):
-            pathdict["fasta"].append(i)
-        elif i.endswith("mzml_info.tsv"):
-            pathdict["mzml_info"].append(i)
-        else:
-            pass
-
-    for item in pathdict.items():
-        if item[0] != "mzml_info" and len(item[1]) > 1:
-            logging.error(f"{item[0]} is duplicate, check whether the file is redundant or change the file name!")
-
-    diann_report = folder + pathdict["report"][0]
-    exp_design = folder + pathdict["exp_design"][0]
-    pg_matrix = folder + pathdict["pg_matrix"][0]
-    pr_matrix = folder + pathdict["pr_matrix"][0]
-    fasta = folder + pathdict["fasta"][0]
-    diann_version_file = diann_version
-
-    with open(diann_version_file) as f:
-        for line in f:
-            if "DIA-NN" in line:
-                diann_version_id = line.rstrip("\n").split(": ")[1]
-                break
-
-    remain_cols = [
-        "File.Name",
-        "Run",
-        "Protein.Group",
-        "Protein.Names",
-        "Protein.Ids",
-        "First.Protein.Description",
-        "PG.MaxLFQ",
-        "RT.Start",
-        "Global.Q.Value",
-        "Lib.Q.Value",
-        "PEP",
-        "Precursor.Normalised",
-        "Precursor.Id",
-        "Q.Value",
-        "Modified.Sequence",
-        "Stripped.Sequence",
-        "Precursor.Charge",
-        "Precursor.Quantity",
-        "Global.PG.Q.Value",
-    ]
-    report = pd.read_csv(diann_report, sep="\t", header=0, usecols=remain_cols)
-
-    # filter based on qvalue parameter for downstream analysiss
-    report = report[report["Q.Value"] < qvalue_threshold]
-    report["Calculate.Precursor.Mz"] = report.apply(
-        lambda x: calculate_mz(x["Stripped.Sequence"], x["Precursor.Charge"]), axis=1
-    )
-
-    precursor_list = list(report["Precursor.Id"].unique())
-    report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
-
-    with open(exp_design, "r") as f:
-        data = f.readlines()
-        empty_row = data.index("\n")
-        f_table = [i.replace("\n", "").split("\t") for i in data[1:empty_row]]
-        f_header = data[0].replace("\n", "").split("\t")
-        f_table = pd.DataFrame(f_table, columns=f_header)
-        f_table.loc[:, "run"] = f_table.apply(
-            lambda x: os.path.splitext(os.path.basename(x["Spectra_Filepath"]))[0], axis=1
-        )
-
-        s_table = [i.replace("\n", "").split("\t") for i in data[empty_row + 1 :]][1:]
-        s_header = data[empty_row + 1].replace("\n", "").split("\t")
-        s_DataFrame = pd.DataFrame(s_table, columns=s_header)
+    diann_directory = DiannDirectory(folder, diann_version_file=diann_version)
+    report = diann_directory.main_report_df(qvalue_threshold=qvalue_threshold)
+    s_DataFrame, f_table = diann_directory.exp_design_dfs()
 
     # Convert to MSstats
-    out_msstats = pd.DataFrame()
-    out_msstats = report[
-        ["Protein.Names", "Modified.Sequence", "Precursor.Charge", "Precursor.Quantity", "File.Name", "Run"]
+    msstats_columns_keep = [
+        "Protein.Names",
+        "Modified.Sequence",
+        "Precursor.Charge",
+        "Precursor.Quantity",
+        "File.Name",
+        "Run",
     ]
+
+    out_msstats = report[msstats_columns_keep]
     out_msstats.columns = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Reference", "Run"]
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
     out_msstats.loc[:, "PeptideSequence"] = out_msstats.apply(
@@ -169,73 +101,200 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(
         lambda x: query_expdesign_value(x["Run"], f_table, s_DataFrame), axis=1, result_type="expand"
     )
-    out_msstats.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_msstats_in.csv", sep=",", index=False)
+    exp_out_prefix = str(Path(diann_directory.exp_design).stem)
+    out_msstats.to_csv(exp_out_prefix + "_msstats_in.csv", sep=",", index=False)
 
     # Convert to Triqler
-    out_triqler = pd.DataFrame()
-    out_triqler = out_msstats[["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Run", "Condition"]]
+    trinqler_cols = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Run", "Condition"]
+    out_triqler = out_msstats[trinqler_cols]
     del out_msstats
     out_triqler.columns = ["proteins", "peptide", "charge", "intensity", "run", "condition"]
     out_triqler = out_triqler[out_triqler["intensity"] != 0]
 
     out_triqler.loc[:, "searchScore"] = report["Q.Value"]
     out_triqler.loc[:, "searchScore"] = 1 - out_triqler["searchScore"]
-    out_triqler.to_csv(os.path.splitext(os.path.basename(exp_design))[0] + "_triqler_in.tsv", sep="\t", index=False)
+    out_triqler.to_csv(exp_out_prefix + "_triqler_in.tsv", sep="\t", index=False)
     del out_triqler
 
     # Convert to mzTab
-    if diann_version_id == "1.8.1":
-        fasta_df = pd.DataFrame()
-        entries = []
-        f = FASTAFile()
-        f.load(fasta, entries)
-        line = 0
-        for e in entries:
-            fasta_df.loc[line, "id"] = e.identifier
-            fasta_df.loc[line, "seq"] = e.sequence
-            fasta_df.loc[line, "len"] = len(e.sequence)
-            line += 1
+    diann_directory.convert_to_mztab(
+        report=report, f_table=f_table, charge=charge, missed_cleavages=missed_cleavages, dia_params=dia_params
+    )
 
-        index_ref = f_table
-        index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
-        index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
-        index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
-        index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
-        report[["ms_run", "study_variable"]] = report.apply(
-            lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
+
+@dataclass
+class DiannDirectory:
+    base_path: os.PathLike
+    diann_version_file: str
+
+    def __post_init__(self):
+        self.base_path = Path(self.base_path)
+        if not self.base_path.exists() and not self.base_path.is_dir():
+            raise NotADirectoryError(f"Path {self.base_path} does not exist")
+        self.diann_version_file = Path(self.diann_version_file)
+        if not self.diann_version_file.is_file():
+            raise FileNotFoundError(f"Path {self.diann_version_file} does not exist")
+
+    def find_suffix_file(self, suffix: str, only_first=True) -> os.PathLike:
+        matching = self.base_path.glob(f"**/*{suffix}")
+        if only_first:
+            try:
+                return next(matching)
+            except StopIteration:
+                raise FileNotFoundError(f"Could not find file with suffix {suffix}")
+        else:
+            out = list(matching)
+            if len(out) == 0:
+                raise FileNotFoundError(f"Could not find file with suffix {suffix}")
+            else:
+                return out
+
+    @property
+    def report(self) -> os.PathLike:
+        return self.find_suffix_file("report.tsv")
+
+    @property
+    def exp_design(self) -> os.PathLike:
+        return self.find_suffix_file("_openms_design.tsv")
+
+    def exp_design_dfs(self):
+        with open(self.exp_design, "r") as f:
+            data = f.readlines()
+            empty_row = data.index("\n")
+            f_table = [i.replace("\n", "").split("\t") for i in data[1:empty_row]]
+            f_header = data[0].replace("\n", "").split("\t")
+            f_table = pd.DataFrame(f_table, columns=f_header)
+            f_table.loc[:, "run"] = f_table.apply(
+                lambda x: os.path.splitext(os.path.basename(x["Spectra_Filepath"]))[0], axis=1
+            )
+
+            s_table = [i.replace("\n", "").split("\t") for i in data[empty_row + 1 :]][1:]
+            s_header = data[empty_row + 1].replace("\n", "").split("\t")
+            s_DataFrame = pd.DataFrame(s_table, columns=s_header)
+
+        return s_DataFrame, f_table
+
+    @property
+    def pg_matrix(self) -> os.PathLike:
+        return self.find_suffix_file("pg_matrix.tsv")
+
+    @property
+    def pr_matrix(self) -> os.PathLike:
+        return self.find_suffix_file("pr_matrix.tsv")
+
+    @property
+    def fasta(self) -> os.PathLike:
+        try:
+            return self.find_suffix_file(".fasta")
+        except FileNotFoundError:
+            return self.find_suffix_file(".fa")
+
+    @property
+    def mzml_info(self) -> os.PathLike:
+        return self.find_suffix_file("mzml_info.tsv")
+
+    @property
+    def diann_version(self) -> str:
+        with open(self.diann_version_file) as f:
+            for line in f:
+                if "DIA-NN" in line:
+                    diann_version_id = line.rstrip("\n").split(": ")[1]
+                    return diann_version_id
+
+    def convert_to_mztab(self, report, f_table, charge: int, missed_cleavages: int, dia_params: List[Any]) -> None:
+        # Convert to mzTab
+        if self.diann_version == "1.8.1":
+            fasta_df = pd.DataFrame()
+            entries = []
+            f = FASTAFile()
+            f.load(self.fasta, entries)
+            line = 0
+            for e in entries:
+                fasta_df.loc[line, "id"] = e.identifier
+                fasta_df.loc[line, "seq"] = e.sequence
+                fasta_df.loc[line, "len"] = len(e.sequence)
+                line += 1
+
+            index_ref = f_table
+            index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
+            index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
+            index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
+            index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
+            report[["ms_run", "study_variable"]] = report.apply(
+                lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
+            )
+
+            (MTD, database) = mztab_MTD(index_ref, dia_params, str(self.fasta), charge, missed_cleavages)
+            pg = pd.read_csv(
+                self.pg_matrix,
+                sep="\t",
+                header=0,
+            )
+            PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
+            del pg
+            pr = pd.read_csv(
+                self.pr_matrix,
+                sep="\t",
+                header=0,
+            )
+            precursor_list = list(report["Precursor.Id"].unique())
+            PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
+            del pr
+            PSH = mztab_PSH(report, str(self.base_path), database)
+            del report
+            MTD.loc["", :] = ""
+            PRH.loc[len(PRH) + 1, :] = ""
+            PEH.loc[len(PEH) + 1, :] = ""
+            out_basename = Path(self.exp_design).stem
+            with open(out_basename + "_out.mzTab", "w", newline="") as f:
+                MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
+                PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+                PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+                PSH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+
+            logging.info(f"mzTab file generated successfully! at {out_basename}_out.mzTab")
+        else:
+            # Maybe this error should be detected beforehand to save time ...
+            raise ValueError(f"Unsupported DIANN version {self.diann_version}")
+
+    def main_report_df(self, qvalue_threshold: float) -> pd.DataFrame:
+        remain_cols = [
+            "File.Name",
+            "Run",
+            "Protein.Group",
+            "Protein.Names",
+            "Protein.Ids",
+            "First.Protein.Description",
+            "PG.MaxLFQ",
+            "RT.Start",
+            "Global.Q.Value",
+            "Lib.Q.Value",
+            "PEP",
+            "Precursor.Normalised",
+            "Precursor.Id",
+            "Q.Value",
+            "Modified.Sequence",
+            "Stripped.Sequence",
+            "Precursor.Charge",
+            "Precursor.Quantity",
+            "Global.PG.Q.Value",
+        ]
+        report = pd.read_csv(self.report, sep="\t", header=0, usecols=remain_cols)
+
+        # filter based on qvalue parameter for downstream analysiss
+        report = report[report["Q.Value"] < qvalue_threshold]
+        report["Calculate.Precursor.Mz"] = report.apply(
+            lambda x: calculate_mz(x["Stripped.Sequence"], x["Precursor.Charge"]), axis=1
         )
 
-        (MTD, database) = mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages)
-        pg = pd.read_csv(
-            pg_matrix,
-            sep="\t",
-            header=0,
-        )
-        PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
-        del pg
-        pr = pd.read_csv(
-            pr_matrix,
-            sep="\t",
-            header=0,
-        )
-        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
-        del pr
-        PSH = mztab_PSH(report, folder, database)
-        del report
-        MTD.loc["", :] = ""
-        PRH.loc[len(PRH) + 1, :] = ""
-        PEH.loc[len(PEH) + 1, :] = ""
-        with open(os.path.splitext(os.path.basename(exp_design))[0] + "_out.mzTab", "w", newline="") as f:
-            MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
-            PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
-            PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
-            PSH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+        precursor_list = list(report["Precursor.Id"].unique())
+        report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
 
 
 def query_expdesign_value(reference, f_table, s_table):
     """
-    By matching the "Run" column in f_table or the "Sample" column in s_table, this function returns a tuple containing Fraction,
-    BioReplicate and Condition.
+    By matching the "Run" column in f_table or the "Sample" column in s_table, this function
+    returns a tuple containing Fraction, BioReplicate and Condition.
 
      :param reference: The value of "Run" column in out_msstats
      :type reference: str
@@ -256,6 +315,9 @@ def query_expdesign_value(reference, f_table, s_table):
     print("\n\ns_table >>>")
     print(s_table.head(5))
     # END TODO
+
+    if reference not in f_table["run"].values:
+        raise ValueError(f"Reference {reference} not found in f_table;" f" values are {set(f_table['run'].values)}")
 
     query_reference = f_table[f_table["run"] == reference]
     Fraction = query_reference["Fraction"].values[0]

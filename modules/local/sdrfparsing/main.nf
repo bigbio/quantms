@@ -23,12 +23,18 @@ process SDRFPARSING {
     """
     ## -t2 since the one-table format parser is broken in OpenMS2.5
     ## -l for legacy behavior to always add sample columns
-    ## TODO Update the sdrf-pipelines to dynamic print versions
 
-    parse_sdrf convert-openms -t2 -l -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
+    ## JSPP 2023-Aug -- Adding --raw for now, this will allow the development of the
+    # bypass diann pipelie but break every other aspect of it. Make sure
+    # this flag is gone when PRing
+
+    parse_sdrf convert-openms --raw -t2 -l -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
 
+    ## TODO Update the sdrf-pipelines to dynamic print versions
+    # Version reporting can now be programmatic, since:
+    # https://github.com/bigbio/sdrf-pipelines/pull/134
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         sdrf-pipelines: \$(echo "0.0.22")
