@@ -25,6 +25,12 @@ process PMULTIQC {
     def disable_table_plots = (params.enable_pmultiqc) && (params.skip_table_plots) ? "--disable_table" : ""
 
     """
+    # TODO remove the next line, it is only for debugging
+    tree results
+
+    # Current hack to attempt matching file stems and not file extensions
+    # sed -i -e "s/((.d.tar)|(.d)|(.mzML)|(.mzml))\\t/\\t/g" 
+
     multiqc \\
         -f \\
         --config ./results/multiqc_config.yml \\

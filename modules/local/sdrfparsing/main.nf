@@ -26,11 +26,22 @@ process SDRFPARSING {
 
     ## JSPP 2023-Aug -- Adding --raw for now, this will allow the development of the
     # bypass diann pipelie but break every other aspect of it. Make sure
-    # this flag is gone when PRing
+    # this flag is gone when PRing.
+    # Context, without --raw, all file name extenssions are changed to mzML.
+    # related: https://github.com/bigbio/sdrf-pipelines/issues/145
 
     parse_sdrf convert-openms --raw -t2 -l -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
+
+    # Adding here the removal of the .tar, since DIANN takes the .d directly
+    # all logs from the tool match only the .d suffix. so it is easier to
+    # remove it here than doing the forensic tracking back of the file.
+    sed -i -e "s/((.tar)|(.tar.gz))\\t/\\t/g" ${sdrf.baseName}_openms_design.tsv
+    
+    # I am almost sure these do need to be as they exist in the file system
+    # before execution.
+    # sed -i -e "s/((.tar)|(.tar.gz))\\t/\\t/g" ${sdrf.baseName}_config.tsv
 
     ## TODO Update the sdrf-pipelines to dynamic print versions
     # Version reporting can now be programmatic, since:
