@@ -45,7 +45,7 @@ process TDF2MZML {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    \$(tar --version)
+    tar --version
     echo "Unpacking..." | tee --append ${rawfile.baseName}_conversion.log
     tar -xvf ${rawfile} 2>&1 | tee --append ${rawfile.baseName}_conversion.log
     echo "Converting..." | tee --append ${rawfile.baseName}_conversion.log
