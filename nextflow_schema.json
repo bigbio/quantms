@@ -891,6 +891,13 @@
                     "fa_icon": "far fa-check-square",
                     "default": false
                 },
+                "diann_speclib": {
+                    "type": "string",
+                    "description": "The spectral library to use for DIA-NN",
+                    "fa_icon": "fas fa-file",
+                    "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
+                    "hidden": false
+                },
                 "diann_debug": {
                     "type": "integer",
                     "description": "Debug level",
