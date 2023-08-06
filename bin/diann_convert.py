@@ -613,7 +613,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     # protein_details_df = protein_details_df[-protein_details_df["accession"].str.contains("-")]
     out_mztab_PRH = pd.concat([out_mztab_PRH, protein_details_df]).reset_index(drop=True)
 
-    logger.debug("Calculating protein coverage...")
+    logger.debug("Calculating protein coverage (bottleneck)...")
     # This is a bottleneck
     out_mztab_PRH.loc[:, "protein_coverage"] = out_mztab_PRH.apply(
         lambda x: calculate_protein_coverage(report, x["accession"], x["Protein.Ids"], fasta_df),
@@ -639,6 +639,9 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     )
 
     ## quantity at protein level: PG.MaxLFQ
+    logger.debug("Matching PRH to protein quantification (bottleneck)...")
+    # TODO optimize this section
+    # This is a second bottleneck
     max_study_variable = max(index_ref["study_variable"])
     PRH_params = []
     for i in range(1, max_study_variable + 1):
@@ -655,6 +658,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         axis=1,
         result_type="expand",
     )
+    # end TODO
 
     out_mztab_PRH.loc[:, "PRH"] = "PRT"
     index = out_mztab_PRH.loc[:, "PRH"]
@@ -732,13 +736,17 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     max_assay = max(index_ref["ms_run"])
     max_study_variable = max(index_ref["study_variable"])
 
+    logger.debug("Getting scores per run (bottleneck)")
     ms_run_score = []
     for i in range(1, max_assay + 1):
         ms_run_score.append("search_engine_score[1]_ms_run[" + str(i) + "]")
+    
     out_mztab_PEH[ms_run_score] = out_mztab_PEH.apply(
         lambda x: match_in_report(report, x["pr_id"], max_assay, 0, "pep"), axis=1, result_type="expand"
     )
 
+    logger.debug("Getting peptide abundances per study variable (bottleneck)")
+    # TODO optimize this
     PEH_params = []
     for i in range(1, max_study_variable + 1):
         PEH_params.extend(
@@ -754,6 +762,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         lambda x: match_in_report(report, x["pr_id"], max_study_variable, 1, "pep"), axis=1, result_type="expand"
     )
 
+    logger.debug("Getting peptide properties")
     out_mztab_PEH[
         [
             "best_search_engine_score[1]",
