@@ -11,7 +11,8 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List
+from typing import Any, List, Tuple, Dict
+from functools import lru_cache
 
 import click
 import numpy as np
@@ -24,6 +25,9 @@ pd.set_option("display.width", 1000)
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
+logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 
 @click.group(context_settings=CONTEXT_SETTINGS)
 def cli():
@@ -32,13 +36,14 @@ def cli():
 
 @click.command("convert")
 @click.option("--folder", "-f")
+@click.option("--exp_design", "-d")
 @click.option("--diann_version", "-v")
 @click.option("--dia_params", "-p")
 @click.option("--charge", "-c")
 @click.option("--missed_cleavages", "-m")
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
-def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
+def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
     """
     Convert DIA-NN output to MSstats, Triqler or mzTab.
      The output formats are
@@ -61,7 +66,7 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     """
     diann_directory = DiannDirectory(folder, diann_version_file=diann_version)
     report = diann_directory.main_report_df(qvalue_threshold=qvalue_threshold)
-    s_DataFrame, f_table = diann_directory.exp_design_dfs()
+    s_DataFrame, f_table = get_exp_design_dfs(exp_design)
 
     # Convert to MSstats
     msstats_columns_keep = [
@@ -85,24 +90,28 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     out_msstats["Reference"] = out_msstats.apply(lambda x: os.path.basename(x["Reference"]), axis=1)
 
     # TODO remove this if not debugging
-    print("\n\nReference Column >>>")
-    print(out_msstats["Reference"])
+    logger.debug("\n\nReference Column >>>")
+    logger.debug(out_msstats["Reference"])
 
-    print("\n\nout_msstats >>>")
-    print(out_msstats.head(5))
+    logger.debug(f"\n\nout_msstats ({out_msstats.shape}) >>>")
+    logger.debug(out_msstats.head(5))
 
-    print("\n\nf_table >>>")
-    print(f_table.head(5))
+    logger.debug(f"\n\nf_table ({f_table.shape})>>>")
+    logger.debug(f_table.head(5))
 
-    print("\n\ns_DataFrame >>>")
-    print(s_DataFrame.head(5))
+    logger.debug(f"\n\ns_DataFrame ({s_DataFrame.shape})>>>")
+    logger.debug(s_DataFrame.head(5))
     ## END TODO
 
+    logger.debug("Adding Fraction, BioReplicate, Condition columns")
+    design_looker = ExpDesignLooker(f_table=f_table, s_table=s_DataFrame)
     out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(
-        lambda x: query_expdesign_value(x["Run"], f_table, s_DataFrame), axis=1, result_type="expand"
+        lambda x: design_looker.query_expdesign_value(x["Run"]), axis=1, result_type="expand"
     )
-    exp_out_prefix = str(Path(diann_directory.exp_design).stem)
+    del design_looker
+    exp_out_prefix = str(Path(exp_design).stem)
     out_msstats.to_csv(exp_out_prefix + "_msstats_in.csv", sep=",", index=False)
+    logger.info(f"MSstats input file is saved as {exp_out_prefix}_msstats_in.csv")
 
     # Convert to Triqler
     trinqler_cols = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Run", "Condition"]
@@ -114,12 +123,64 @@ def convert(ctx, folder, dia_params, diann_version, charge, missed_cleavages, qv
     out_triqler.loc[:, "searchScore"] = report["Q.Value"]
     out_triqler.loc[:, "searchScore"] = 1 - out_triqler["searchScore"]
     out_triqler.to_csv(exp_out_prefix + "_triqler_in.tsv", sep="\t", index=False)
+    logger.info(f"Triqler input file is saved as {exp_out_prefix}_triqler_in.tsv")
     del out_triqler
 
+    mztab_out = f"{str(Path(exp_design).stem)}_out.mzTab"
     # Convert to mzTab
     diann_directory.convert_to_mztab(
-        report=report, f_table=f_table, charge=charge, missed_cleavages=missed_cleavages, dia_params=dia_params
+        report=report,
+        f_table=f_table,
+        charge=charge,
+        missed_cleavages=missed_cleavages,
+        dia_params=dia_params,
+        out=mztab_out,
     )
+
+
+def _true_stem(x):
+    """
+    Return the true stem of a file name, i.e. the
+    file name without the extension.
+
+    :param x: The file name
+    :type x: str
+    :return: The true stem of the file name
+    :rtype: str
+
+    Examples:
+    >>> _true_stem("foo.mzML")
+    'foo'
+    >>> _true_stem("foo.d.tar")
+    'foo'
+
+    These examples can be tested with pytest:
+    $ pytest -v --doctest-modules
+    """
+    split = os.path.basename(x).split(".")
+    stem = split[0]
+
+    # Should I check here that the extensions are
+    # allowed? I can see how this would break if the
+    # file name contains a period.
+    return stem
+
+
+def get_exp_design_dfs(exp_design_file):
+    logger.info(f"Reading experimental design file: {exp_design_file}")
+    with open(exp_design_file, "r") as f:
+        data = f.readlines()
+        empty_row = data.index("\n")
+        f_table = [i.replace("\n", "").split("\t") for i in data[1:empty_row]]
+        f_header = data[0].replace("\n", "").split("\t")
+        f_table = pd.DataFrame(f_table, columns=f_header)
+        f_table.loc[:, "run"] = f_table.apply(lambda x: _true_stem(x["Spectra_Filepath"]), axis=1)
+
+        s_table = [i.replace("\n", "").split("\t") for i in data[empty_row + 1 :]][1:]
+        s_header = data[empty_row + 1].replace("\n", "").split("\t")
+        s_DataFrame = pd.DataFrame(s_table, columns=s_header)
+
+    return s_DataFrame, f_table
 
 
 @dataclass
@@ -136,6 +197,15 @@ class DiannDirectory:
             raise FileNotFoundError(f"Path {self.diann_version_file} does not exist")
 
     def find_suffix_file(self, suffix: str, only_first=True) -> os.PathLike:
+        """Finds a file with a given suffix in the directory.
+
+        :param suffix: The suffix to search for
+        :type suffix: str
+        :param only_first: Whether to return only the first file found, if false returns all, defaults to True
+        :type only_first: bool, optional
+
+        :raises FileNotFoundError: If no file with the given suffix is found
+        """
         matching = self.base_path.glob(f"**/*{suffix}")
         if only_first:
             try:
@@ -152,27 +222,6 @@ class DiannDirectory:
     @property
     def report(self) -> os.PathLike:
         return self.find_suffix_file("report.tsv")
-
-    @property
-    def exp_design(self) -> os.PathLike:
-        return self.find_suffix_file("_openms_design.tsv")
-
-    def exp_design_dfs(self):
-        with open(self.exp_design, "r") as f:
-            data = f.readlines()
-            empty_row = data.index("\n")
-            f_table = [i.replace("\n", "").split("\t") for i in data[1:empty_row]]
-            f_header = data[0].replace("\n", "").split("\t")
-            f_table = pd.DataFrame(f_table, columns=f_header)
-            f_table.loc[:, "run"] = f_table.apply(
-                lambda x: os.path.splitext(os.path.basename(x["Spectra_Filepath"]))[0], axis=1
-            )
-
-            s_table = [i.replace("\n", "").split("\t") for i in data[empty_row + 1 :]][1:]
-            s_header = data[empty_row + 1].replace("\n", "").split("\t")
-            s_DataFrame = pd.DataFrame(s_table, columns=s_header)
-
-        return s_DataFrame, f_table
 
     @property
     def pg_matrix(self) -> os.PathLike:
@@ -194,68 +243,81 @@ class DiannDirectory:
         return self.find_suffix_file("mzml_info.tsv")
 
     @property
-    def diann_version(self) -> str:
+    def validate_diann_version(self) -> str:
+        logger.debug("Validating DIANN version")
+        diann_version_id = None
         with open(self.diann_version_file) as f:
             for line in f:
                 if "DIA-NN" in line:
+                    logger.debug(f"Found DIA-NN version: {line}")
                     diann_version_id = line.rstrip("\n").split(": ")[1]
-                    return diann_version_id
 
-    def convert_to_mztab(self, report, f_table, charge: int, missed_cleavages: int, dia_params: List[Any]) -> None:
-        # Convert to mzTab
-        if self.diann_version == "1.8.1":
-            fasta_df = pd.DataFrame()
-            entries = []
-            f = FASTAFile()
-            f.load(self.fasta, entries)
-            line = 0
-            for e in entries:
-                fasta_df.loc[line, "id"] = e.identifier
-                fasta_df.loc[line, "seq"] = e.sequence
-                fasta_df.loc[line, "len"] = len(e.sequence)
-                line += 1
-
-            index_ref = f_table
-            index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
-            index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
-            index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
-            index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
-            report[["ms_run", "study_variable"]] = report.apply(
-                lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
-            )
-
-            (MTD, database) = mztab_MTD(index_ref, dia_params, str(self.fasta), charge, missed_cleavages)
-            pg = pd.read_csv(
-                self.pg_matrix,
-                sep="\t",
-                header=0,
-            )
-            PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
-            del pg
-            pr = pd.read_csv(
-                self.pr_matrix,
-                sep="\t",
-                header=0,
-            )
-            precursor_list = list(report["Precursor.Id"].unique())
-            PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
-            del pr
-            PSH = mztab_PSH(report, str(self.base_path), database)
-            del report
-            MTD.loc["", :] = ""
-            PRH.loc[len(PRH) + 1, :] = ""
-            PEH.loc[len(PEH) + 1, :] = ""
-            out_basename = Path(self.exp_design).stem
-            with open(out_basename + "_out.mzTab", "w", newline="") as f:
-                MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
-                PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
-                PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
-                PSH.to_csv(f, mode="w", sep="\t", index=False, header=True)
-
-            logging.info(f"mzTab file generated successfully! at {out_basename}_out.mzTab")
+        if diann_version_id is None:
+            raise ValueError(f"Could not find DIA-NN version in file {self.diann_version_file}")
+        elif diann_version_id == "1.8.1":
+            return diann_version_id
         else:
             # Maybe this error should be detected beforehand to save time ...
             raise ValueError(f"Unsupported DIANN version {self.diann_version}")
+
+    def convert_to_mztab(
+        self, report, f_table, charge: int, missed_cleavages: int, dia_params: List[Any], out: os.PathLike
+    ) -> None:
+        logger.info("Converting to mzTab")
+        # Convert to mzTab
+        self.validate_diann_version
+
+        # This could be a branching point if we want to support other versions
+        # of DIA-NN, maybe something like this:
+        # if diann_version_id == "1.8.1":
+        #     self.convert_to_mztab_1_8_1(report, f_table, charge, missed_cleavages, dia_params)
+        # else:
+        #     raise ValueError(f"Unsupported DIANN version {diann_version_id}, supported versions are 1.8.1 ...")
+
+        logger.info(f"Reading fasta file: {self.fasta}")
+        entries = []
+        f = FASTAFile()
+        f.load(str(self.fasta), entries)
+        fasta_entries = [(e.identifier, e.sequence, len(e.sequence)) for e in entries]
+        fasta_df = pd.DataFrame(fasta_entries, columns=["id", "seq", "len"])
+
+        index_ref = f_table
+        index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
+        index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
+        index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
+        index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
+        report[["ms_run", "study_variable"]] = report.apply(
+            lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
+        )
+
+        (MTD, database) = mztab_MTD(index_ref, dia_params, str(self.fasta), charge, missed_cleavages)
+        pg = pd.read_csv(
+            self.pg_matrix,
+            sep="\t",
+            header=0,
+        )
+        PRH = mztab_PRH(report, pg, index_ref, database, fasta_df)
+        del pg
+        pr = pd.read_csv(
+            self.pr_matrix,
+            sep="\t",
+            header=0,
+        )
+        precursor_list = list(report["Precursor.Id"].unique())
+        PEH = mztab_PEH(report, pr, precursor_list, index_ref, database)
+        del pr
+        PSH = mztab_PSH(report, str(self.base_path), database)
+        del report
+        MTD.loc["", :] = ""
+        PRH.loc[len(PRH) + 1, :] = ""
+        PEH.loc[len(PEH) + 1, :] = ""
+        with open(out, "w", newline="") as f:
+            MTD.to_csv(f, mode="w", sep="\t", index=False, header=False)
+            PRH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+            PEH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+            PSH.to_csv(f, mode="w", sep="\t", index=False, header=True)
+
+        logger.info(f"mzTab file generated successfully! at {out}_out.mzTab")
 
     def main_report_df(self, qvalue_threshold: float) -> pd.DataFrame:
         remain_cols = [
@@ -292,41 +354,51 @@ class DiannDirectory:
         return report
 
 
-def query_expdesign_value(reference, f_table, s_table):
-    """
-    By matching the "Run" column in f_table or the "Sample" column in s_table, this function
-    returns a tuple containing Fraction, BioReplicate and Condition.
+@dataclass
+class ExpDesignLooker:
+    """Caches the lookup of values in the experimetal design table."""
 
-     :param reference: The value of "Run" column in out_msstats
-     :type reference: str
-     :param f_table: A table contains experiment settings(search engine settings etc.)
-     :type f_table: pandas.core.frame.DataFrame
-     :param s_table: A table contains experimental design
-     :type s_table: pandas.core.frame.DataFrame
-     :return: A tuple contains Fraction, BioReplicate and Condition
-     :rtype: tuple
-    """
-    # TODO remove this if not debugging
-    print("\n\nreference >>>")
-    print(reference)
+    f_table: pd.DataFrame
+    s_table: pd.DataFrame
 
-    print("\n\nf_table >>>")
-    print(f_table.head(5))
+    def __hash__(self):
+        # This is not a perfect hash function but it will work
+        # for our use case, since we are not going to change
+        # the content of f_table and s_table
 
-    print("\n\ns_table >>>")
-    print(s_table.head(5))
-    # END TODO
+        # I am using this over a strict hash for performance reasons
+        # since the hash is calculated every time a method with cache
+        # is called.
+        hash_v = hash(self.f_table.values.shape) + hash(self.s_table.values.shape)
+        return hash_v
 
-    if reference not in f_table["run"].values:
-        raise ValueError(f"Reference {reference} not found in f_table;" f" values are {set(f_table['run'].values)}")
+    @lru_cache(maxsize=128)
+    def query_expdesign_value(self, reference):
+        """
+        By matching the "Run" column in f_table or the "Sample" column in s_table, this function
+        returns a tuple containing Fraction, BioReplicate and Condition.
 
-    query_reference = f_table[f_table["run"] == reference]
-    Fraction = query_reference["Fraction"].values[0]
-    row = s_table[s_table["Sample"] == query_reference["Sample"].values[0]]
-    BioReplicate = row["MSstats_BioReplicate"].values[0]
-    Condition = row["MSstats_Condition"].values[0]
+        :param reference: The value of "Run" column in out_msstats
+        :type reference: str
+        :param f_table: A table contains experiment settings(search engine settings etc.)
+        :type f_table: pandas.core.frame.DataFrame
+        :param s_table: A table contains experimental design
+        :type s_table: pandas.core.frame.DataFrame
+        :return: A tuple contains Fraction, BioReplicate and Condition
+        :rtype: tuple
+        """
+        f_table = self.f_table
+        s_table = self.s_table
+        if reference not in f_table["run"].values:
+            raise ValueError(f"Reference {reference} not found in f_table;" f" values are {set(f_table['run'].values)}")
 
-    return Fraction, BioReplicate, Condition
+        query_reference = f_table[f_table["run"] == reference]
+        Fraction = query_reference["Fraction"].values[0]
+        row = s_table[s_table["Sample"] == query_reference["Sample"].values[0]]
+        BioReplicate = row["MSstats_BioReplicate"].values[0]
+        Condition = row["MSstats_Condition"].values[0]
+
+        return Fraction, BioReplicate, Condition
 
 
 def MTD_mod_info(fix_mod, var_mod):
@@ -388,6 +460,7 @@ def mztab_MTD(index_ref, dia_params, fasta, charge, missed_cleavages):
     :return: MTD sub-table
     :rtype: pandas.core.frame.DataFrame
     """
+    logger.info("Constructing MTD sub-table...")
     dia_params_list = dia_params.split(";")
     dia_params_list = ["null" if i == "" else i for i in dia_params_list]
     FragmentMassTolerance = dia_params_list[0]
@@ -494,16 +567,17 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     :return: PRH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
+    logger.info("Constructing PRH sub-table...")
     file = list(pg.columns[5:])
     col = {}
     for i in file:
         col[i] = (
-            "protein_abundance_assay["
-            + str(index_ref[index_ref["run"] == os.path.splitext(os.path.split(i)[1])[0]]["ms_run"].values[0])
-            + "]"
+            "protein_abundance_assay[" + str(index_ref[index_ref["run"] == _true_stem(i)]["ms_run"].values[0]) + "]"
         )
 
     pg.rename(columns=col, inplace=True)
+
+    logger.debug("Classifying results type ...")
     pg.loc[:, "opt_global_result_type"] = pg.apply(classify_result_type, axis=1, result_type="expand")
 
     out_mztab_PRH = pd.DataFrame()
@@ -524,6 +598,8 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     ]
     for i in null_col:
         out_mztab_PRH.loc[:, i] = "null"
+
+    logger.debug("Extracting accession values (keeping first)...")
     out_mztab_PRH.loc[:, "accession"] = out_mztab_PRH.apply(lambda x: x["accession"].split(";")[0], axis=1)
 
     protein_details_df = out_mztab_PRH[out_mztab_PRH["opt_global_result_type"] == "indistinguishable_protein_group"]
@@ -532,25 +608,32 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     protein_details_df = (
         protein_details_df.drop("accession", axis=1).join(prh_series).reset_index().drop(columns="index")
     )
+    # Q: how is the next line different from `df.loc[:, "col"] = 'protein_details'` ??
     protein_details_df.loc[:, "opt_global_result_type"] = protein_details_df.apply(lambda x: "protein_details", axis=1)
     # protein_details_df = protein_details_df[-protein_details_df["accession"].str.contains("-")]
     out_mztab_PRH = pd.concat([out_mztab_PRH, protein_details_df]).reset_index(drop=True)
 
+    logger.debug("Calculating protein coverage...")
+    # This is a bottleneck
     out_mztab_PRH.loc[:, "protein_coverage"] = out_mztab_PRH.apply(
         lambda x: calculate_protein_coverage(report, x["accession"], x["Protein.Ids"], fasta_df),
         axis=1,
         result_type="expand",
     )
 
+    logger.debug("Getting ambiguity members...")
     out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.apply(
         lambda x: x["Protein.Ids"] if x["opt_global_result_type"] == "indistinguishable_protein_group" else "null",
         axis=1,
     )
 
+    logger.debug("Matching PRH to best search engine score...")
+    score_looker = ModScoreLooker(report)
     out_mztab_PRH[["modifiedSequence", "best_search_engine_score[1]"]] = out_mztab_PRH.apply(
-        lambda x: PRH_match_report(report, x["accession"]), axis=1, result_type="expand"
+        lambda x: score_looker.get_score(x["accession"]), axis=1, result_type="expand"
     )
 
+    logger.debug("Matching PRH to modifications...")
     out_mztab_PRH.loc[:, "modifications"] = out_mztab_PRH.apply(
         lambda x: find_modification(x["modifiedSequence"]), axis=1, result_type="expand"
     )
@@ -583,9 +666,6 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         col for col in out_mztab_PRH.columns if col.startswith("opt_")
     ]
     out_mztab_PRH = out_mztab_PRH[new_cols]
-
-    # out_mztab_PRH.to_csv("./out_protein.mztab", sep=",", index=False)
-
     return out_mztab_PRH
 
 
@@ -606,6 +686,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     :return: PEH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
+    logger.info("Constructing PEH sub-table...")
     out_mztab_PEH = pd.DataFrame()
     out_mztab_PEH = pr.iloc[:, 0:10]
     out_mztab_PEH.drop(
@@ -621,14 +702,17 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         inplace=True,
     )
 
+    logger.debug("Finding modifications...")
     out_mztab_PEH.loc[:, "modifications"] = out_mztab_PEH.apply(
         lambda x: find_modification(x["opt_global_cv_MS:1000889_peptidoform_sequence"]), axis=1, result_type="expand"
     )
 
+    logger.debug("Extracting sequence...")
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1000889_peptidoform_sequence"] = out_mztab_PEH.apply(
         lambda x: AASequence.fromString(x["opt_global_cv_MS:1000889_peptidoform_sequence"]).toString(), axis=1
     )
 
+    logger.debug("Checking accession uniqueness...")
     out_mztab_PEH.loc[:, "unique"] = out_mztab_PEH.apply(
         lambda x: "0" if ";" in str(x["accession"]) else "1", axis=1, result_type="expand"
     )
@@ -638,11 +722,13 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         out_mztab_PEH.loc[:, i] = "null"
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
 
+    logger.debug("Matching precursor IDs...")
     ## average value of each study_variable
     ## quantity at peptide level: Precursor.Normalised
     out_mztab_PEH.loc[:, "pr_id"] = out_mztab_PEH.apply(
         lambda x: precursor_list.index(x["Precursor.Id"]), axis=1, result_type="expand"
     )
+    logger.debug("Done Matching precursor IDs...")
     max_assay = max(index_ref["ms_run"])
     max_study_variable = max(index_ref["study_variable"])
 
@@ -708,9 +794,29 @@ def mztab_PSH(report, folder, database):
     :return: PSH sub-table
     :rtype: pandas.core.frame.DataFrame
     """
+    logger.info("Constructing PSH sub-table")
+
+    def __find_info(dir, n):
+        # This line matches n="220101_myfile", folder="." to
+        # "myfolder/220101_myfile_mzml_info.tsv"
+        files = list(Path(dir).glob(f"*{n}*_info.tsv"))
+        # Check that it matches one and only one file
+        if not files:
+            raise ValueError(f"Could not find {n} info file in {dir}")
+        if len(files) > 1:
+            raise ValueError(f"Found multiple {n} info files in {dir}: {files}")
+
+        return files[0]
+
     out_mztab_PSH = pd.DataFrame()
     for n, group in report.groupby(["Run"]):
-        file = folder + n + "_mzml_info.tsv"
+        if isinstance(n, tuple) and len(n) == 1:
+            # This is here only to support versions of pandas where the groupby
+            # key is a tuple.
+            # related: https://github.com/pandas-dev/pandas/pull/51817
+            n = n[0]
+
+        file = __find_info(folder, n)
         target = pd.read_csv(file, sep="\t")
         group.sort_values(by="RT.Start", inplace=True)
         target = target[["Retention_Time", "SpectrumID", "Exp_Mass_To_Charge"]]
@@ -774,6 +880,7 @@ def mztab_PSH(report, folder, database):
     for i in null_col:
         out_mztab_PSH.loc[:, i] = "null"
 
+    logger.info("Finding Modifications ...")
     out_mztab_PSH.loc[:, "modifications"] = out_mztab_PSH.apply(
         lambda x: find_modification(x["opt_global_cv_MS:1000889_peptidoform_sequence"]), axis=1, result_type="expand"
     )
@@ -863,16 +970,16 @@ def calculate_protein_coverage(report, target, reference, fasta_df):
         resultlist = findstr(ref, i, resultlist)
     # Sort and merge the interval list
     resultlist.sort()
-    l, r = 0, 1
-    while r < len(resultlist):
-        x1, y1 = resultlist[l][0], resultlist[l][1]
-        x2, y2 = resultlist[r][0], resultlist[r][1]
+    left, right = 0, 1
+    while right < len(resultlist):
+        x1, y1 = resultlist[left][0], resultlist[left][1]
+        x2, y2 = resultlist[right][0], resultlist[right][1]
         if x2 > y1:
-            l += 1
-            r += 1
+            left += 1
+            right += 1
         else:
-            resultlist[l] = [x1, max(y1, y2)]
-            resultlist.pop(r)
+            resultlist[left] = [x1, max(y1, y2)]
+            resultlist.pop(right)
 
     coverage_length = np.array([i[1] - i[0] + 1 for i in resultlist]).sum()
     protein_coverage = format(coverage_length / len(ref), ".3f")
@@ -897,7 +1004,7 @@ def match_in_report(report, target, max_, flag, level):
     :type level: str
     :return: A tuple contains multiple messages
     :rtype: tuple
-    """
+    """  # noqa
     if flag == 1 and level == "pep":
         result = report[report["precursor.Index"] == target]
         PEH_params = []
@@ -926,23 +1033,60 @@ def match_in_report(report, target, max_, flag, level):
         return tuple(PRH_params)
 
 
-def PRH_match_report(report, target):
+class ModScoreLooker:
     """
-    Returns a tuple contains modified sequences and the score at protein level.
+    Class used to cache the lookup table of accessions to best scores and their
+    respective mod sequences.
+
+    Pre-computing the lookup table leverages a lot of speedum and vectortized
+    operations from pandas, and is much faster than doing the lookup on the fly
+    in a loop.
 
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
-    :param target: The value of "accession" column in report
-    :type target: str
-    :return: A tuple contains multiple information to construct PRH sub-table
-    :rtype: tuple
     """
-    match = report[report["Protein.Ids"] == target]
-    modSeq = match["Modified.Sequence"].values[0] if match["Modified.Sequence"].values.size > 0 else np.nan
-    ## Score at protein level: Global.PG.Q.Value (without MBR)
-    score = match["Global.PG.Q.Value"].min()
+    def __init__(self, report: pd.DataFrame) -> None:
+        self.lookup_dict = self.make_lookup_dict(report)
 
-    return modSeq, score
+    def make_lookup_dict(self, report) -> Dict[str, Tuple[str, float]]:
+        grouped_df = (
+            report[["Modified.Sequence", "Protein.Ids", "Global.PG.Q.Value"]]
+            .sort_values("Global.PG.Q.Value", ascending=True)
+            .groupby(["Protein.Ids"])
+            .head(1)
+        )
+        #        Modified.Sequence               Protein.Ids  Global.PG.Q.Value
+        # 78265          LFNEQNFFQR  Q8IV63;Q8IV63-2;Q8IV63-3           0.000252
+        # 103585    NPTIVNFPITNVDLR           Q53GS9;Q53GS9-2           0.000252
+        # 103586          NPTWKPLIR           Q7Z4Q2;Q7Z4Q2-2           0.000252
+        # 103588      NPVGYPLAWQFLR           Q9NZ08;Q9NZ08-2           0.000252
+
+        out = {
+            row["Protein.Ids"]: (row["Global.PG.Q.Value"], row["Modified.Sequence"]) for _, row in grouped_df.iterrows()
+        }
+        return out
+
+    def get_score(self, protein_id: str) -> float:
+        """Returns a tuple contains modified sequences and the score at protein level.
+        
+        Gets the best score and corresponding peptide for a given protein_id
+
+        Note that protein id can be something like 'Q8IV63;Q8IV63-2;Q8IV63-3'
+
+        Note2: This implementation also fixes a bug where the function would
+        return the first peptide in the report, not the best one. (but with the
+        score of the best one for that accession)
+
+        :param protein_id: The value of "accession" column in report
+        :type target: str
+        :return: A tuple that contains (best modified sequence, best score)
+            if the accession is not found, (np.nan, np.nan) is returned.
+        :rtype: tuple
+        """
+        # Q: in what cases can the accession not exist in the table?
+        #    or an accession not have peptides?
+        val = self.lookup_dict.get(protein_id, (np.nan, np.nan))
+        return val
 
 
 def PEH_match_report(report, target):
@@ -966,6 +1110,9 @@ def PEH_match_report(report, target):
 
     return search_score, time, q_score, spec_e, mz
 
+# Pre-compiling the regex makes the next function 2x faster
+# in myu benchmarking - JSPP
+MODIFICATION_PATTERN = re.compile(r"\((.*?)\)")
 
 def find_modification(peptide):
     """
@@ -973,14 +1120,19 @@ def find_modification(peptide):
 
     :param peptide: Sequences of peptides
     :type peptide: str
-    :return: Modification sites
+    :return: Modification sites 
     :rtype: str
+
+    Examples:
+    >>> find_modification("PEPM(UNIMOD:35)IDE")
+    '4-UNIMOD:35'
+    >>> find_modification("SM(UNIMOD:35)EWEIRDS(UNIMOD:21)EPTIDEK")
+    '2-UNIMOD:35,9-UNIMOD:21'
     """
     peptide = str(peptide)
-    pattern = re.compile(r"\((.*?)\)")
-    original_mods = pattern.findall(peptide)
-    peptide = re.sub(r"\(.*?\)", ".", peptide)
-    position = [i.start() for i in re.finditer(r"\.", peptide)]
+    original_mods = MODIFICATION_PATTERN.findall(peptide)
+    peptide = MODIFICATION_PATTERN.sub(".", peptide)
+    position = [i for i, x in enumerate(peptide) if x == "."]
     for j in range(1, len(position)):
         position[j] -= j
 
@@ -988,7 +1140,7 @@ def find_modification(peptide):
         original_mods[k] = str(position[k]) + "-" + original_mods[k].upper()
 
     original_mods = ",".join(str(i) for i in original_mods) if len(original_mods) > 0 else "null"
-
+    
     return original_mods
 
 
@@ -1002,7 +1154,10 @@ def calculate_mz(seq, charge):
     :type charge: int
     :return:
     """
+    # Q: is this faster if we make it a set? and maybe make it a global variable?
     ref = "ARNDBCEQZGHILKMFPSTWYV"
+
+    # Q: Does this mean that all modified peptides will have a wrong m/z?
     seq = "".join([i for i in seq if i in ref])
     if charge == "":
         return None

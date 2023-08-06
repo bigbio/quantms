@@ -1,46 +1,16 @@
 
-// process TDF2MZML {
-//      publishDir "${params.mzml_dir}/${outputDir}", pattern: "*.mzML.gz", failOnError: true
-//      container 'mfreitas/tdf2mzml:latest' // I don't know which stable tag to use...
-//      label 'process_single'
-//      label 'error_retry'
-// 
-//      input:
-//          tuple val(file_id), path(tdf_input), val(outputDir)
-// 
-//      output:
-//      tuple val(file_id), path("${file(tdf_input.baseName).baseName}.mzML.gz")
-// 
-//      script:
-//      """
-//      echo "Unpacking..."
-//      tar -xvf ${tdf_input}
-//      echo "Converting..."
-//      tdf2mzml.py -i *.d # --ms1_type "centroid"
-//      echo "Compressing..."
-//      mv *.mzml ${file(tdf_input.baseName).baseName}.mzML
-//      gzip ${file(tdf_input.baseName).baseName}.mzML
-//      """
-// 
-//      stub:
-//      """
-//      touch ${file(tdf_input.baseName).baseName}.mzML.gz
-//      """
-//  } 
-
-
 process TDF2MZML {
     tag "$meta.mzml_id"
     label 'process_low'
     label 'process_single'
     label 'error_retry'
 
-    // conda "conda-forge::mono bioconda::thermorawfileparser=1.3.4"
+    // for rawfileparser this is conda "conda-forge::mono bioconda::thermorawfileparser=1.3.4"
     // conda is not enabled for DIA so ... disabling anyway
+
     // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
     //    'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0' :
     //    'quay.io/biocontainers/thermorawfileparser:1.3.4--ha8f3691_0' }"
-    // TODO add support for singularity ...
     container 'mfreitas/tdf2mzml:latest' // I don't know which stable tag to use...
 
     stageInMode {
