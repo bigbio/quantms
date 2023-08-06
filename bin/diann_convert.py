@@ -289,6 +289,7 @@ class DiannDirectory:
 
         precursor_list = list(report["Precursor.Id"].unique())
         report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
+        return report
 
 
 def query_expdesign_value(reference, f_table, s_table):
