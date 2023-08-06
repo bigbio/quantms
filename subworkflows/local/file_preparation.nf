@@ -65,9 +65,8 @@ workflow FILE_PREPARATION {
 
     TDF2MZML( ch_branched_input.dotD )
     ch_versions = ch_versions.mix(TDF2MZML.out.version)
-    indexed_mzml_bundle = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
     ch_results = indexed_mzml_bundle.mix(TDF2MZML.out.dotd_files)
-    // todo... evaluate if the .mzml is used explicitly anywhere else downstream
+    indexed_mzml_bundle = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
 
     MZMLSTATISTICS( indexed_mzml_bundle )
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
