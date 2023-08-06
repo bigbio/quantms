@@ -26,7 +26,7 @@ process PMULTIQC {
 
     """
     # TODO remove the next line, it is only for debugging
-    tree results
+    ls -lcth *
 
     # Current hack to attempt matching file stems and not file extensions
     # sed -i -e "s/((.d.tar)|(.d)|(.mzML)|(.mzml))\\t/\\t/g" 
