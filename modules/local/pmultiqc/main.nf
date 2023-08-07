@@ -30,6 +30,7 @@ process PMULTIQC {
 
     # Current hack to attempt matching file stems and not file extensions
     # sed -i -e "s/((.d.tar)|(.d)|(.mzML)|(.mzml))\\t/\\t/g" 
+    sed -i -e "s/.tar\\t/\\t/g"  results/*openms_design.tsv
 
     multiqc \\
         -f \\
