@@ -11,7 +11,7 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Tuple, Dict
+from typing import Any, List, Tuple, Dict, Set
 from functools import lru_cache
 
 import click
@@ -24,8 +24,9 @@ pd.set_option("display.max_columns", 500)
 pd.set_option("display.width", 1000)
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+REVISION = "0.1.1"
 
-logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.DEBUG)
+logging.basicConfig(format="%(asctime)s [%(funcName)s] - %(message)s", level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -64,6 +65,8 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
     :param qvalue_threshold: Threshold for filtering q value
     :type qvalue_threshold: float
     """
+    logger.debug(f"Revision {REVISION}")
+    logger.debug("Reading input files...")
     diann_directory = DiannDirectory(folder, diann_version_file=diann_version)
     report = diann_directory.main_report_df(qvalue_threshold=qvalue_threshold)
     s_DataFrame, f_table = get_exp_design_dfs(exp_design)
@@ -78,6 +81,7 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
         "Run",
     ]
 
+    logger.debug("Converting to MSstats format...")
     out_msstats = report[msstats_columns_keep]
     out_msstats.columns = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Reference", "Run"]
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
@@ -566,6 +570,12 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     :rtype: pandas.core.frame.DataFrame
     """
     logger.info("Constructing PRH sub-table...")
+    logger.debug(
+        f"Input report shape: {report.shape},"
+        f" input pg shape: {pg.shape},"
+        f" input index_ref shape: {index_ref.shape},"
+        f" input fasta_df shape: {fasta_df.shape}"
+    )
     file = list(pg.columns[5:])
     col = {}
     for i in file:
@@ -576,7 +586,8 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     pg.rename(columns=col, inplace=True)
 
     logger.debug("Classifying results type ...")
-    pg.loc[:, "opt_global_result_type"] = pg.apply(classify_result_type, axis=1, result_type="expand")
+    pg["opt_global_result_type"] = "single_protein"
+    pg.loc[pg["Protein.Ids"].str.contains(";"), "opt_global_result_type"] = "indistinguishable_protein_group"
 
     out_mztab_PRH = pd.DataFrame()
     out_mztab_PRH = pg.drop(["Protein.Names"], axis=1)
@@ -613,13 +624,16 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
 
     logger.debug("Calculating protein coverage (bottleneck)...")
     # This is a bottleneck
-    out_mztab_PRH.loc[:, "protein_coverage"] = out_mztab_PRH.apply(
-        lambda x: calculate_protein_coverage(report, x["accession"], x["Protein.Ids"], fasta_df),
-        axis=1,
-        result_type="expand",
+    # reimplementation runs in 67s vs 137s (old) in my data
+    out_mztab_PRH.loc[:, "protein_coverage"] = calculate_protein_coverages(
+        report=report, out_mztab_PRH=out_mztab_PRH, fasta_df=fasta_df
     )
 
     logger.debug("Getting ambiguity members...")
+    # IN THEORY this should be the same as
+    # out_mztab_PRH["ambiguity_members"] = out_mztab_PRH["Protein.Ids"]
+    # out_mztab_PRH.loc[out_mztab_PRH["opt_global_result_type"] == "single_protein", "ambiguity_members"] = "null"
+    # or out_mztab_PRH.loc[out_mztab_PRH["Protein.Ids"] == out_mztab_PRH["accession"], "ambiguity_members"] = "null"
     out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.apply(
         lambda x: x["Protein.Ids"] if x["opt_global_result_type"] == "indistinguishable_protein_group" else "null",
         axis=1,
@@ -682,7 +696,9 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     return out_mztab_PRH
 
 
-def mztab_PEH(report, pr, precursor_list, index_ref, database):
+def mztab_PEH(
+    report: pd.DataFrame, pr: pd.DataFrame, precursor_list: List[str], index_ref: pd.DataFrame, database: os.PathLike
+) -> pd.DataFrame:
     """
     Construct PEH sub-table.
 
@@ -700,6 +716,12 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     :rtype: pandas.core.frame.DataFrame
     """
     logger.info("Constructing PEH sub-table...")
+    logger.debug(
+        f"report.shape: {report.shape}, "
+        f" pr.shape: {pr.shape},"
+        f" len(precursor_list): {len(precursor_list)},"
+        f" index_ref.shape: {index_ref.shape}"
+    )
     out_mztab_PEH = pd.DataFrame()
     out_mztab_PEH = pr.iloc[:, 0:10]
     out_mztab_PEH.drop(
@@ -743,7 +765,6 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     )
     logger.debug("Done Matching precursor IDs...")
     max_assay = max(index_ref["ms_run"])
-    max_study_variable = max(index_ref["study_variable"])
 
     logger.debug("Getting scores per run (bottleneck)")
     ms_run_score = []
@@ -759,17 +780,42 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     out_mztab_PEH = out_mztab_PEH.merge(pep_study_report, on="pr_id", how="left", validate="one_to_one", copy=True)
     del pep_study_report
 
-    logger.debug("Getting peptide properties")
-    out_mztab_PEH[
-        [
-            "best_search_engine_score[1]",
-            "retention_time",
-            "opt_global_q-value",
-            "opt_global_SpecEValue_score",
-            "mass_to_charge",
-        ]
-    ] = out_mztab_PEH.apply(lambda x: PEH_match_report(report, x["pr_id"]), axis=1, result_type="expand")
+    logger.debug("Getting peptide properties...")
+    # Re-implementing this section from apply -> assign to groupby->agg
+    # speeds up the process from 11s to 25ms in my data (~440x faster)
+    # Notably, this changes slightly...
+    # "opt_global_q-value" was the FIRST "Global.Q.Value", now its the min
+    # "opt_global_SpecEValue_score" was the FIRST "Lib.Q.Value" now its the min
+    # I believe picking the first is inconsistent because no sorting is checked
+    # and the first is arbitrary.
 
+    aggtable = (
+        report.groupby(["precursor.Index"])
+        .agg(
+            {
+                "Q.Value": "min",
+                "RT.Start": "mean",
+                "Global.Q.Value": "min",
+                "Lib.Q.Value": "min",
+                "Calculate.Precursor.Mz": "mean",
+            }
+        )
+        .reset_index()
+        .rename(
+            columns={
+                "precursor.Index": "pr_id",
+                "Q.Value": "best_search_engine_score[1]",
+                "RT.Start": "retention_time",
+                "Global.Q.Value": "opt_global_q-value",
+                "Lib.Q.Value": "opt_global_SpecEValue_score",
+                "Calculate.Precursor.Mz": "mass_to_charge",
+            }
+        )
+    )
+    del out_mztab_PEH["mass_to_charge"]
+    out_mztab_PEH = out_mztab_PEH.merge(aggtable, on="pr_id", validate="one_to_one")
+
+    logger.debug("Re-ordering columns...")
     out_mztab_PEH.loc[:, "PEH"] = "PEP"
     out_mztab_PEH.loc[:, "database"] = database
     index = out_mztab_PEH.loc[:, "PEH"]
@@ -780,7 +826,6 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         col for col in out_mztab_PEH.columns if col.startswith("opt_")
     ]
     out_mztab_PEH = out_mztab_PEH[new_cols]
-    # out_mztab_PEH.to_csv("./out_peptide.mztab", sep=",", index=False)
 
     return out_mztab_PEH
 
@@ -946,53 +991,6 @@ def classify_result_type(target):
     return "single_protein"
 
 
-def calculate_protein_coverage(report, target, reference, fasta_df):
-    """
-    Calculate protein coverage.
-
-    :param report: Dataframe for Dia-NN main report
-    :type report: pandas.core.frame.DataFrame
-    :param target: The value of "accession" column in out_mztab_PRH
-    :type target: str
-    :param fasta_df: A dataframe contains protein IDs, sequences and lengths
-    :type fasta_df: pandas.core.frame.DataFrame
-    :return: Protein coverage
-    :rtype: str
-    """
-    peptide_list = report[report["Protein.Ids"] == reference]["Stripped.Sequence"].drop_duplicates().values
-    unique_peptides = [j for i, j in enumerate(peptide_list) if all(j not in k for k in peptide_list[i + 1 :])]
-    resultlist = []
-    ref = fasta_df[fasta_df["id"].str.contains(target)]["seq"].values[0]
-
-    def findstr(basestr, s, resultlist):
-        result = re.finditer(s, basestr)
-        if result:
-            for i in result:
-                resultlist.append([i.span()[0], i.span()[1] - 1])
-
-        return resultlist
-
-    for i in unique_peptides:
-        resultlist = findstr(ref, i, resultlist)
-    # Sort and merge the interval list
-    resultlist.sort()
-    left, right = 0, 1
-    while right < len(resultlist):
-        x1, y1 = resultlist[left][0], resultlist[left][1]
-        x2, y2 = resultlist[right][0], resultlist[right][1]
-        if x2 > y1:
-            left += 1
-            right += 1
-        else:
-            resultlist[left] = [x1, max(y1, y2)]
-            resultlist.pop(right)
-
-    coverage_length = np.array([i[1] - i[0] + 1 for i in resultlist]).sum()
-    protein_coverage = format(coverage_length / len(ref), ".3f")
-
-    return protein_coverage
-
-
 def match_in_report(report, target, max_, flag, level):
     """
     This function is used to match the columns "ms_run" and "study_variable" from the report and
@@ -1096,30 +1094,8 @@ class ModScoreLooker:
         return val
 
 
-def PEH_match_report(report, target):
-    """
-    Returns a tuple contains the score at peptide level, retain time, q_score, spec_e and mz.
-
-    :param report: Dataframe for Dia-NN main report
-    :type report: pandas.core.frame.DataFrame
-    :param target: The value of "pr_id" column in report
-    :type target: str
-    :return: A tuple contains multiple information to construct PEH sub-table
-    :rtype: tuple
-    """
-    match = report[report["precursor.Index"] == target]
-    ## Score at peptide level: the minimum of the respective precursor q-values (minimum of Q.Value per group)
-    search_score = match["Q.Value"].min()
-    time = match["RT.Start"].mean()
-    q_score = match["Global.Q.Value"].values[0] if match["Global.Q.Value"].values.size > 0 else np.nan
-    spec_e = match["Lib.Q.Value"].values[0] if match["Lib.Q.Value"].values.size > 0 else np.nan
-    mz = match["Calculate.Precursor.Mz"].mean()
-
-    return search_score, time, q_score, spec_e, mz
-
-
 # Pre-compiling the regex makes the next function 2x faster
-# in myu benchmarking - JSPP
+# in my benchmarking - JSPP
 MODIFICATION_PATTERN = re.compile(r"\((.*?)\)")
 
 
@@ -1288,6 +1264,91 @@ def per_peptide_study_report(report: pd.DataFrame) -> pd.DataFrame:
     )
 
     return pep_study_grouped
+
+
+def calculate_coverage(ref_sequence: str, sequences: Set[str]):
+    """
+    Calculates the coverage of the reference sequence by the given sequences.
+
+    Examples:
+    >>> calculate_coverage("WATEROVERTHEDUCKSBACK", {"WATER", "DUCK"})
+    0.45
+    >>> calculate_coverage("DUCKDUCKDUCK", {"DUCK"})
+    1.0
+    >>> calculate_coverage("WATEROVERTHEDUCK", {"DUCK"})
+    0.25
+    """
+    starts = []
+    lengths = []
+    for sequence in sequences:
+        local_start = 0
+        while True:
+            local_start = ref_sequence.find(sequence, local_start)
+            if local_start == -1:
+                break
+            starts.append(local_start)
+            lengths.append(len(sequence))
+            local_start += 1
+
+    # merge overlapping intervals
+    starts, lengths = zip(*sorted(zip(starts, lengths)))
+    merged_starts = []
+    merged_lengths = []
+    for start, length in zip(starts, lengths):
+        if merged_starts and merged_starts[-1] + merged_lengths[-1] >= start:
+            merged_lengths[-1] = max(merged_starts[-1] + merged_lengths[-1], start + length) - merged_starts[-1]
+        else:
+            merged_starts.append(start)
+            merged_lengths.append(length)
+
+    # calculate coverage
+    coverage = sum(merged_lengths) / len(ref_sequence)
+    return coverage
+
+
+def calculate_protein_coverages(report: pd.DataFrame, out_mztab_PRH: pd.DataFrame, fasta_df: pd.DataFrame) -> List[str]:
+    """Calculates protein coverages for the PRH table.
+
+    The protein coverage is calculated as the fraction of the protein sequence
+    in the fasta df, covered by the peptides in the report table, for every
+    protein in the PRH table (defined by accession, not protein.ids).
+    """
+    nested_df = (
+        report[["Protein.Ids", "Stripped.Sequence"]]
+        .groupby("Protein.Ids")
+        .agg({"Stripped.Sequence": set})
+        .reset_index()
+    )
+    #                      Protein.Ids                                  Stripped.Sequence
+    # 0     A0A024RBG1;Q9NZJ9;Q9NZJ9-2                                   {SEQEDEVLLVSSSR}
+    # 1        A0A096LP49;A0A096LP49-2                                  {SPWAMTERKHSSLER}
+    # 2                A0AVT1;A0AVT1-2  {EDFTLLDFINAVK, KPDHVPISSEDER, QDVIITALDNVEAR,...
+    ids_to_seqs = dict(zip(nested_df["Protein.Ids"], nested_df["Stripped.Sequence"]))
+    acc_to_ids = dict(zip(out_mztab_PRH["accession"], out_mztab_PRH["Protein.Ids"]))
+    fasta_id_to_seqs = dict(zip(fasta_df["id"], fasta_df["seq"]))
+    acc_to_fasta_ids = {}
+
+    # Since fasta ids are something like sp|P51451|BLK_HUMAN but
+    # accessions are something like Q9Y6V7-2, we need to find a
+    # partial string match between the two (the best one)
+    for acc in acc_to_ids:
+        # I am pretty sure this is the slowest part of the code
+        matches = fasta_df[fasta_df["id"].str.contains(acc)]["id"]
+        if len(matches) == 0:
+            acc_to_fasta_ids[acc] = None
+        elif len(matches) == 1:
+            acc_to_fasta_ids[acc] = matches.iloc[0]
+        else:
+            # If multiple, find best match. ej. Pick Q9Y6V7 over Q9Y6V7-2
+            # This can be acquired by finding the shortest string, since
+            # it entails more un-matched characters.
+            acc_to_fasta_ids[acc] = min(matches, key=len)
+
+    out = [
+        format(calculate_coverage(fasta_id_to_seqs[acc_to_fasta_ids[acc]], ids_to_seqs[acc_to_ids[acc]]), ".03f")
+        for acc in out_mztab_PRH["accession"]
+    ]
+    return out
 
 
 cli.add_command(convert)
