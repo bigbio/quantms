@@ -1335,6 +1335,7 @@ def calculate_protein_coverages(report: pd.DataFrame, out_mztab_PRH: pd.DataFram
         # I am pretty sure this is the slowest part of the code
         matches = fasta_df[fasta_df["id"].str.contains(acc)]["id"]
         if len(matches) == 0:
+            logger.warning(f"Could not find fasta id for accession {acc} in the fasta file.")
             acc_to_fasta_ids[acc] = None
         elif len(matches) == 1:
             acc_to_fasta_ids[acc] = matches.iloc[0]
@@ -1344,10 +1345,18 @@ def calculate_protein_coverages(report: pd.DataFrame, out_mztab_PRH: pd.DataFram
             # it entails more un-matched characters.
             acc_to_fasta_ids[acc] = min(matches, key=len)
 
-    out = [
-        format(calculate_coverage(fasta_id_to_seqs[acc_to_fasta_ids[acc]], ids_to_seqs[acc_to_ids[acc]]), ".03f")
-        for acc in out_mztab_PRH["accession"]
-    ]
+    out = [None] * len(out_mztab_PRH["accession"])
+
+    for i, acc in enumerate(out_mztab_PRH["accession"]):
+        f_id = acc_to_fasta_ids[acc]
+        if f_id is None:
+            out_cov = "null"
+        else:
+            cov = calculate_coverage(fasta_id_to_seqs[f_id], ids_to_seqs[acc_to_ids[acc]])
+            out_cov = format(cov, ".03f")
+
+        out[i] = out_cov
+
     return out
 
 
