@@ -281,14 +281,12 @@ class DiannDirectory:
         fasta_entries = [(e.identifier, e.sequence, len(e.sequence)) for e in entries]
         fasta_df = pd.DataFrame(fasta_entries, columns=["id", "seq", "len"])
 
-        index_ref = f_table
-        index_ref.loc[:, "ms_run"] = index_ref.apply(lambda x: x["Fraction_Group"], axis=1)
-        index_ref.loc[:, "study_variable"] = index_ref.apply(lambda x: x["Sample"], axis=1)
-        index_ref.loc[:, "ms_run"] = index_ref.loc[:, "ms_run"].astype("int")
-        index_ref.loc[:, "study_variable"] = index_ref.loc[:, "study_variable"].astype("int")
-        report[["ms_run", "study_variable"]] = report.apply(
-            lambda x: add_info(x["Run"], index_ref), axis=1, result_type="expand"
-        )
+        logger.info("Mapping run information to report")
+        index_ref = f_table.copy()
+        index_ref.rename(columns={"Fraction_Group": "ms_run", "Sample": "study_variable", "run": "Run"}, inplace=True)
+        index_ref["ms_run"] = index_ref["ms_run"].astype("int")
+        index_ref["study_variable"] = index_ref["study_variable"].astype("int")
+        report = report.merge(index_ref[["ms_run", "Run", "study_variable"]], on="Run", validate="many_to_one")
 
         (MTD, database) = mztab_MTD(index_ref, dia_params, str(self.fasta), charge, missed_cleavages)
         pg = pd.read_csv(
@@ -572,7 +570,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     col = {}
     for i in file:
         col[i] = (
-            "protein_abundance_assay[" + str(index_ref[index_ref["run"] == _true_stem(i)]["ms_run"].values[0]) + "]"
+            "protein_abundance_assay[" + str(index_ref[index_ref["Run"] == _true_stem(i)]["ms_run"].values[0]) + "]"
         )
 
     pg.rename(columns=col, inplace=True)
@@ -638,27 +636,38 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         lambda x: find_modification(x["modifiedSequence"]), axis=1, result_type="expand"
     )
 
+    logger.debug("Matching PRH to protein quantification...")
     ## quantity at protein level: PG.MaxLFQ
-    logger.debug("Matching PRH to protein quantification (bottleneck)...")
-    # TODO optimize this section
-    # This is a second bottleneck
-    max_study_variable = max(index_ref["study_variable"])
-    PRH_params = []
-    for i in range(1, max_study_variable + 1):
-        PRH_params.extend(
-            [
-                "protein_abundance_study_variable[" + str(i) + "]",
-                "protein_abundance_stdev_study_variable[" + str(i) + "]",
-                "protein_abundance_std_error_study_variable[" + str(i) + "]",
-            ]
-        )
-
-    out_mztab_PRH[PRH_params] = out_mztab_PRH.apply(
-        lambda x: match_in_report(report, x["accession"], max_study_variable, 1, "protein"),
-        axis=1,
-        result_type="expand",
+    # This used to be a bottleneck in performance
+    # This implementation drops the run time from 57s to 25ms
+    protein_agg_report = (
+        report[["PG.MaxLFQ", "Protein.Ids", "study_variable"]]
+        .groupby(["study_variable", "Protein.Ids"])
+        .agg({"PG.MaxLFQ": ["mean", "std", "sem"]})
+        .reset_index()
+        .pivot(columns=["study_variable"], index="Protein.Ids")
+        .reset_index()
     )
-    # end TODO
+    protein_agg_report.columns = ["::".join([str(s) for s in col]).strip() for col in protein_agg_report.columns.values]
+    subname_mapper = {
+        "Protein.Ids::::": "Protein.Ids",
+        "PG.MaxLFQ::mean": "protein_abundance_study_variable",
+        "PG.MaxLFQ::std": "protein_abundance_stdev_study_variable",
+        "PG.MaxLFQ::sem": "protein_abundance_std_error_study_variable",
+    }
+    name_mapper = name_mapper_builder(subname_mapper)
+    protein_agg_report.rename(columns=name_mapper, inplace=True)
+    # out_mztab_PRH has columns accession and Protein.Ids; 'Q9NZJ9', 'A0A024RBG1;Q9NZJ9;Q9NZJ9-2']
+    # the report table has 'Protein.Group' and 'Protein.Ids': 'Q9NZJ9', 'A0A024RBG1;Q9NZJ9;Q9NZJ9-2'
+    # Oddly enough the last implementation mapped the the accession (Q9NZJ9) in the mztab
+    # to the Protein.Ids (A0A024RBG1;Q9NZJ9;Q9NZJ9-2), leading to A LOT of missing values.
+    out_mztab_PRH = out_mztab_PRH.merge(
+        protein_agg_report, on="Protein.Ids", how="left", validate="many_to_one", copy=True
+    )
+    del name_mapper
+    del subname_mapper
+    del protein_agg_report
+    # end of (former) bottleneck
 
     out_mztab_PRH.loc[:, "PRH"] = "PRT"
     index = out_mztab_PRH.loc[:, "PRH"]
@@ -726,7 +735,7 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
         out_mztab_PEH.loc[:, i] = "null"
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
 
-    logger.debug("Matching precursor IDs...")
+    logger.debug("Matching precursor IDs... (botleneck)")
     ## average value of each study_variable
     ## quantity at peptide level: Precursor.Normalised
     out_mztab_PEH.loc[:, "pr_id"] = out_mztab_PEH.apply(
@@ -740,27 +749,15 @@ def mztab_PEH(report, pr, precursor_list, index_ref, database):
     ms_run_score = []
     for i in range(1, max_assay + 1):
         ms_run_score.append("search_engine_score[1]_ms_run[" + str(i) + "]")
-    
+
     out_mztab_PEH[ms_run_score] = out_mztab_PEH.apply(
         lambda x: match_in_report(report, x["pr_id"], max_assay, 0, "pep"), axis=1, result_type="expand"
     )
 
-    logger.debug("Getting peptide abundances per study variable (bottleneck)")
-    # TODO optimize this
-    PEH_params = []
-    for i in range(1, max_study_variable + 1):
-        PEH_params.extend(
-            [
-                "peptide_abundance_study_variable[" + str(i) + "]",
-                "peptide_abundance_stdev_study_variable[" + str(i) + "]",
-                "peptide_abundance_std_error_study_variable[" + str(i) + "]",
-                "opt_global_mass_to_charge_study_variable[" + str(i) + "]",
-                "opt_global_retention_time_study_variable[" + str(i) + "]",
-            ]
-        )
-    out_mztab_PEH[PEH_params] = out_mztab_PEH.apply(
-        lambda x: match_in_report(report, x["pr_id"], max_study_variable, 1, "pep"), axis=1, result_type="expand"
-    )
+    logger.debug("Getting peptide abundances per study variable")
+    pep_study_report = per_peptide_study_report(report)
+    out_mztab_PEH = out_mztab_PEH.merge(pep_study_report, on="pr_id", how="left", validate="one_to_one", copy=True)
+    del pep_study_report
 
     logger.debug("Getting peptide properties")
     out_mztab_PEH[
@@ -929,7 +926,7 @@ def add_info(target, index_ref):
     :return: A tuple contains ms_run and study_variable
     :rtype: tuple
     """
-    match = index_ref[index_ref["run"] == target]
+    match = index_ref[index_ref["Run"] == target]
     ms_run = match["ms_run"].values[0]
     study_variable = match["study_variable"].values[0]
 
@@ -1054,6 +1051,7 @@ class ModScoreLooker:
     :param report: Dataframe for Dia-NN main report
     :type report: pandas.core.frame.DataFrame
     """
+
     def __init__(self, report: pd.DataFrame) -> None:
         self.lookup_dict = self.make_lookup_dict(report)
 
@@ -1077,7 +1075,7 @@ class ModScoreLooker:
 
     def get_score(self, protein_id: str) -> float:
         """Returns a tuple contains modified sequences and the score at protein level.
-        
+
         Gets the best score and corresponding peptide for a given protein_id
 
         Note that protein id can be something like 'Q8IV63;Q8IV63-2;Q8IV63-3'
@@ -1119,9 +1117,11 @@ def PEH_match_report(report, target):
 
     return search_score, time, q_score, spec_e, mz
 
+
 # Pre-compiling the regex makes the next function 2x faster
 # in myu benchmarking - JSPP
 MODIFICATION_PATTERN = re.compile(r"\((.*?)\)")
+
 
 def find_modification(peptide):
     """
@@ -1129,7 +1129,7 @@ def find_modification(peptide):
 
     :param peptide: Sequences of peptides
     :type peptide: str
-    :return: Modification sites 
+    :return: Modification sites
     :rtype: str
 
     Examples:
@@ -1149,7 +1149,7 @@ def find_modification(peptide):
         original_mods[k] = str(position[k]) + "-" + original_mods[k].upper()
 
     original_mods = ",".join(str(i) for i in original_mods) if len(original_mods) > 0 else "null"
-    
+
     return original_mods
 
 
@@ -1172,6 +1172,122 @@ def calculate_mz(seq, charge):
         return None
     else:
         return AASequence.fromString(seq).getMZ(int(charge))
+
+
+def name_mapper_builder(subname_mapper):
+    """Returns a function that renames the columns of the grouped table to match the ones
+    in the final table.
+
+    Examples:
+        >>> mapping_dict = {
+        ...     "precursor.Index::::": "pr_id",
+        ...     "Precursor.Normalised::mean": "peptide_abundance_study_variable"
+        ... }
+        >>> name_mapper = name_mapper_builder(mapping_dict)
+        >>> name_mapper("precursor.Index::::")
+        "pr_id"
+        >>> name_mapper("Precursor.Normalised::mean::1")
+        "peptide_abundance_study_variable[1]"
+    """
+    num_regex = re.compile(r"(.*)::(\d+)$")
+
+    def name_mapper(x):
+        """Renames the columns of the grouped table to match the ones
+        in the final table.
+
+        Examples:
+            >>> name_mapper("precursor.Index::::")
+            "pr_id"
+            >>> name_mapper("Precursor.Normalised::mean::1")
+            "peptide_abundance_study_variable[1]"
+        """
+        orig_x = x
+        for k, v in subname_mapper.items():
+            if k in x:
+                x = x.replace(k, v)
+        out = num_regex.sub(r"\1[\2]", x)
+        if out == orig_x:
+            # This should never happen but I am adding it here
+            # to prevent myself from shoting myself in the foot in the future.
+            raise ValueError(f"Column name {x} not found in subname_mapper")
+        return out
+
+    return name_mapper
+
+
+def per_peptide_study_report(report: pd.DataFrame) -> pd.DataFrame:
+    """Summarizes the report at peptide/study level and flattens the columns.
+
+    This function was implemented to replace an 'apply -> filter' approach.
+    In my benchmarking it went from 35.23 seconds for 4 samples, 4 conditions to
+    0.007 seconds.
+
+    This implementation differs in several aspects in the output values:
+    1. in the fact that it actually gets values for the m/z
+    2. always returns a float, whilst the apply version returns an 'object' dtype.
+    3. The original implementation, missing values had the string 'null', here
+       they have the value np.nan.
+    4. The order of the final output is different; the original orders columns by
+       study variables > calculated value, this one is calculated value > study variables.
+
+    Calculates the mean, standard deviation and std error of the precursor
+    abundances, as well as the mean retention time and m/z.
+
+    The names in the end are called "peptide" but thechnically the are at the
+    precursor level. (peptide+charge combinations).
+
+    The columns will look like this in the end:
+    [
+        'pr_id',
+        'peptide_abundance_study_variable[1]',
+        ...
+        'peptide_abundance_stdev_study_variable[1]',
+        ...
+        'peptide_abundance_std_error_study_variable[1]',
+        ...
+        'opt_global_retention_time_study_variable[1]',
+        ...
+        'opt_global_mass_to_charge_study_variable[1]',
+        ...
+    ]
+    """
+    pep_study_grouped = (
+        report.groupby(["study_variable", "precursor.Index"])
+        .agg({"Precursor.Normalised": ["mean", "std", "sem"], "RT.Start": ["mean"], "Calculate.Precursor.Mz": ["mean"]})
+        .reset_index()
+        .pivot(columns=["study_variable"], index="precursor.Index")
+        .reset_index()
+    )
+    pep_study_grouped.columns = ["::".join([str(s) for s in col]).strip() for col in pep_study_grouped.columns.values]
+    # Columns here would be like:
+    # [
+    #     "precursor.Index::::",
+    #     "Precursor.Normalised::mean::1",
+    #     "Precursor.Normalised::mean::2",
+    #     "Precursor.Normalised::std::1",
+    #     "Precursor.Normalised::std::2",
+    #     "Precursor.Normalised::sem::1",
+    #     "Precursor.Normalised::sem::2",
+    #     "RT.Start::mean::1",
+    #     "RT.Start::mean::2",
+    # ]
+    # So the right names need to be given and the table can be joined with the other one
+    subname_mapper = {
+        "precursor.Index::::": "pr_id",
+        "Precursor.Normalised::mean": "peptide_abundance_study_variable",
+        "Precursor.Normalised::std": "peptide_abundance_stdev_study_variable",
+        "Precursor.Normalised::sem": "peptide_abundance_std_error_study_variable",
+        "Calculate.Precursor.Mz::mean": "opt_global_mass_to_charge_study_variable",
+        "RT.Start::mean": "opt_global_retention_time_study_variable",
+    }
+    name_mapper = name_mapper_builder(subname_mapper)
+
+    pep_study_grouped.rename(
+        columns=name_mapper,
+        inplace=True,
+    )
+
+    return pep_study_grouped
 
 
 cli.add_command(convert)
