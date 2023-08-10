@@ -12,7 +12,6 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, List, Tuple, Dict, Set
-from functools import lru_cache
 
 import click
 import numpy as np
@@ -108,11 +107,20 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
     ## END TODO
 
     logger.debug("Adding Fraction, BioReplicate, Condition columns")
-    design_looker = ExpDesignLooker(f_table=f_table, s_table=s_DataFrame)
-    out_msstats[["Fraction", "BioReplicate", "Condition"]] = out_msstats.apply(
-        lambda x: design_looker.query_expdesign_value(x["Run"]), axis=1, result_type="expand"
+    # Changing implementation from apply to merge went from several minutes to
+    # ~50ms
+    tmp = (
+        s_DataFrame[["Sample", "MSstats_Condition", "MSstats_BioReplicate"]]
+        .merge(f_table[["Fraction", "Sample", "run"]], on="Sample")
+        .rename(columns={"run": "Run", "MSstats_BioReplicate": "BioReplicate", "MSstats_Condition": "Condition"})
+        .drop(columns=["Sample"])
     )
-    del design_looker
+    out_msstats = out_msstats.merge(
+        tmp,
+        on="Run",
+        validate="many_to_one",
+    )
+    del tmp
     exp_out_prefix = str(Path(exp_design).stem)
     out_msstats.to_csv(exp_out_prefix + "_msstats_in.csv", sep=",", index=False)
     logger.info(f"MSstats input file is saved as {exp_out_prefix}_msstats_in.csv")
@@ -355,52 +363,6 @@ class DiannDirectory:
         report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
         return report
 
-
-@dataclass
-class ExpDesignLooker:
-    """Caches the lookup of values in the experimetal design table."""
-
-    f_table: pd.DataFrame
-    s_table: pd.DataFrame
-
-    def __hash__(self):
-        # This is not a perfect hash function but it will work
-        # for our use case, since we are not going to change
-        # the content of f_table and s_table
-
-        # I am using this over a strict hash for performance reasons
-        # since the hash is calculated every time a method with cache
-        # is called.
-        hash_v = hash(self.f_table.values.shape) + hash(self.s_table.values.shape)
-        return hash_v
-
-    @lru_cache(maxsize=128)
-    def query_expdesign_value(self, reference):
-        """
-        By matching the "Run" column in f_table or the "Sample" column in s_table, this function
-        returns a tuple containing Fraction, BioReplicate and Condition.
-
-        :param reference: The value of "Run" column in out_msstats
-        :type reference: str
-        :param f_table: A table contains experiment settings(search engine settings etc.)
-        :type f_table: pandas.core.frame.DataFrame
-        :param s_table: A table contains experimental design
-        :type s_table: pandas.core.frame.DataFrame
-        :return: A tuple contains Fraction, BioReplicate and Condition
-        :rtype: tuple
-        """
-        f_table = self.f_table
-        s_table = self.s_table
-        if reference not in f_table["run"].values:
-            raise ValueError(f"Reference {reference} not found in f_table;" f" values are {set(f_table['run'].values)}")
-
-        query_reference = f_table[f_table["run"] == reference]
-        Fraction = query_reference["Fraction"].values[0]
-        row = s_table[s_table["Sample"] == query_reference["Sample"].values[0]]
-        BioReplicate = row["MSstats_BioReplicate"].values[0]
-        Condition = row["MSstats_Condition"].values[0]
-
-        return Fraction, BioReplicate, Condition
 
 
 def MTD_mod_info(fix_mod, var_mod):
@@ -757,16 +719,15 @@ def mztab_PEH(
         out_mztab_PEH.loc[:, i] = "null"
     out_mztab_PEH.loc[:, "opt_global_cv_MS:1002217_decoy_peptide"] = "0"
 
-    logger.debug("Matching precursor IDs... (botleneck)")
-    ## average value of each study_variable
-    ## quantity at peptide level: Precursor.Normalised
-    out_mztab_PEH.loc[:, "pr_id"] = out_mztab_PEH.apply(
-        lambda x: precursor_list.index(x["Precursor.Id"]), axis=1, result_type="expand"
-    )
-    logger.debug("Done Matching precursor IDs...")
-    max_assay = max(index_ref["ms_run"])
+    logger.debug("Matching precursor IDs...")
+    # Pre-calculating the indices and using a lookup table drops run time from
+    # ~6.5s to 11ms
+    precursor_indices = {k:i for i, k in enumerate(precursor_list)}
+    pr_ids = out_mztab_PEH["Precursor.Id"].apply(lambda x: precursor_indices[x])
+    out_mztab_PEH["pr_id"] = pr_ids
 
     logger.debug("Getting scores per run (bottleneck)")
+    max_assay = max(index_ref["ms_run"])
     ms_run_score = []
     for i in range(1, max_assay + 1):
         ms_run_score.append("search_engine_score[1]_ms_run[" + str(i) + "]")
