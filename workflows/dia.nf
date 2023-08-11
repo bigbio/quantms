@@ -43,7 +43,7 @@ workflow DIA {
 
     ch_file_preparation_results.multiMap {
                                 meta: preprocessed_meta(it[0])
-                                mzml: it[1]
+                                ms_file: it[1]
                                 }
                             .set { ch_result }
 
@@ -72,7 +72,7 @@ workflow DIA {
     //
     // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
     //
-    ASSEMBLE_EMPIRICAL_LIBRARY(ch_result.mzml.collect(),
+    ASSEMBLE_EMPIRICAL_LIBRARY(ch_result..collect(),
                                 meta,
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
                                 speclib
@@ -88,7 +88,8 @@ workflow DIA {
     //
     // MODULE: DIANNSUMMARY
     //
-    DIANNSUMMARY(ch_result.mzml.collect(), meta, ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
+    ms_file_names = ch_result.ms_file.map{ msfile -> msfile.getName() }.collect()
+    DIANNSUMMARY(ms_file_names, meta, ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
                     INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), ch_searchdb)
     ch_software_versions = ch_software_versions.mix(DIANNSUMMARY.out.version.ifEmpty(null))
 

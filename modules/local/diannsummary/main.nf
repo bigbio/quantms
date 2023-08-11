@@ -7,11 +7,11 @@ process DIANNSUMMARY {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    file(mzMLs)
+    val(ms_files)
     val(meta)
-    file(empirical_library)
-    file("quant/")
-    file(fasta)
+    path(empirical_library)
+    path("quant/")
+    path(fasta)
 
     output:
     path "diann_report.tsv", emit: main_report
@@ -35,9 +35,16 @@ process DIANNSUMMARY {
     species_genes = params.species_genes ? "--species-genes": ""
 
     """
+    # Adding here for inspection purposes
+    ls -lcth
+    # Notes: if .quant files are passed, mzml/.d files are not accessed, so the name needs to be passed but files
+    # do not need to pe present.
+
+    # end, remove when done inspecting.
+
     diann   --lib ${empirical_library} \\
             --fasta ${fasta} \\
-            --f ${(mzMLs as List).join(' --f ')} \\
+            --f ${(ms_files as List).join(' --f ')} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
             ${scan_window} \\

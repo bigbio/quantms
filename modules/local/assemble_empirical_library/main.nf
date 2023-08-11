@@ -7,7 +7,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    path(mzMLs)
+    val(ms_files)
     val(meta)
     path("quant/*")
     path(lib)
@@ -29,7 +29,10 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
 
     """
-    diann   --f ${(mzMLs as List).join(' --f ')} \\
+
+    ls -lcth
+
+    diann   --f ${(ms_files as List).join(' --f ')} \\
             --lib ${lib} \\
             --threads ${task.cpus} \\
             --out-lib empirical_library.tsv \\
