@@ -72,7 +72,7 @@ workflow DIA {
     //
     // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
     //
-    ASSEMBLE_EMPIRICAL_LIBRARY(ch_result..collect(),
+    ASSEMBLE_EMPIRICAL_LIBRARY(ch_result.ms_file.collect(),
                                 meta,
                                 DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
                                 speclib
