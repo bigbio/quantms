@@ -17,6 +17,7 @@ import click
 import numpy as np
 import pandas as pd
 from pyopenms import AASequence, FASTAFile, ModificationsDB
+from pyopenms.Constants import PROTON_MASS_U
 
 pd.set_option("display.max_rows", 500)
 pd.set_option("display.max_columns", 500)
@@ -355,14 +356,22 @@ class DiannDirectory:
 
         # filter based on qvalue parameter for downstream analysiss
         report = report[report["Q.Value"] < qvalue_threshold]
-        report["Calculate.Precursor.Mz"] = report.apply(
-            lambda x: calculate_mz(x["Stripped.Sequence"], x["Precursor.Charge"]), axis=1
-        )
 
-        precursor_list = list(report["Precursor.Id"].unique())
-        report["precursor.Index"] = report.apply(lambda x: precursor_list.index(x["Precursor.Id"]), axis=1)
+        logger.debug("Calculating Precursor.Mz")
+        # Making the map is 10x faster, and includes the mass of
+        # the modification. with respect to the previous implementation.
+        uniq_masses = {k: AASequence.fromString(k).getMonoWeight() for k in report["Modified.Sequence"].unique()}
+        mass_vector = report["Modified.Sequence"].map(uniq_masses)
+        report["Calculate.Precursor.Mz"] = (mass_vector + (PROTON_MASS_U * report["Precursor.Charge"])) / report[
+            "Precursor.Charge"
+        ]
+
+        logger.debug("Indexing Precursors")
+        # Making the map is 1500x faster
+        precursor_index_map = {k: i for i, k in enumerate(report["Precursor.Id"].unique())}
+        report["precursor.Index"] = report["Precursor.Id"].map(precursor_index_map)
+
         return report
-
 
 
 def MTD_mod_info(fix_mod, var_mod):
@@ -722,19 +731,33 @@ def mztab_PEH(
     logger.debug("Matching precursor IDs...")
     # Pre-calculating the indices and using a lookup table drops run time from
     # ~6.5s to 11ms
-    precursor_indices = {k:i for i, k in enumerate(precursor_list)}
-    pr_ids = out_mztab_PEH["Precursor.Id"].apply(lambda x: precursor_indices[x])
+    precursor_indices = {k: i for i, k in enumerate(precursor_list)}
+    pr_ids = out_mztab_PEH["Precursor.Id"].map(precursor_indices)
     out_mztab_PEH["pr_id"] = pr_ids
+    del precursor_indices
 
-    logger.debug("Getting scores per run (bottleneck)")
-    max_assay = max(index_ref["ms_run"])
-    ms_run_score = []
-    for i in range(1, max_assay + 1):
-        ms_run_score.append("search_engine_score[1]_ms_run[" + str(i) + "]")
-
-    out_mztab_PEH[ms_run_score] = out_mztab_PEH.apply(
-        lambda x: match_in_report(report, x["pr_id"], max_assay, 0, "pep"), axis=1, result_type="expand"
+    logger.debug("Getting scores per run")
+    # This implementation is 422-700x faster than the apply-based one
+    tmp = (
+        report.groupby(["precursor.Index", "ms_run"])
+        .agg({"Q.Value": ["min"]})
+        .reset_index()
+        .pivot(columns=["ms_run"], index="precursor.Index")
+        .reset_index()
     )
+    tmp.columns = ["::".join([str(s) for s in col]).strip() for col in tmp.columns.values]
+    subname_mapper = {
+        "precursor.Index::::": "precursor.Index",
+        "Q.Value::min": "search_engine_score[1]_ms_run",
+    }
+    name_mapper = name_mapper_builder(subname_mapper)
+    tmp.rename(columns=name_mapper, inplace=True)
+    out_mztab_PEH = out_mztab_PEH.merge(
+        tmp.rename(columns={"precursor.Index": "pr_id"}), on="pr_id", validate="one_to_one"
+    )
+    del tmp
+    del subname_mapper
+    del name_mapper
 
     logger.debug("Getting peptide abundances per study variable")
     pep_study_report = per_peptide_study_report(report)

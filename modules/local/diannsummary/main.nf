@@ -7,9 +7,13 @@ process DIANNSUMMARY {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
+    // Note that the files are passed as names and not paths, this prevents them from being staged
+    // in the directory
     val(ms_files)
     val(meta)
     path(empirical_library)
+    // The quant path is passed, and diann will use the files in the quant directory instead
+    // of the ones passed in ms_files.
     path("quant/")
     path(fasta)
 
