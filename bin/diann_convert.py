@@ -85,6 +85,8 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
     out_msstats = report[msstats_columns_keep]
     out_msstats.columns = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Reference", "Run"]
     out_msstats = out_msstats[out_msstats["Intensity"] != 0]
+
+    # Q: What is this line doing?
     out_msstats.loc[:, "PeptideSequence"] = out_msstats.apply(
         lambda x: AASequence.fromString(x["PeptideSequence"]).toString(), axis=1
     )
@@ -370,6 +372,9 @@ class DiannDirectory:
         # Making the map is 1500x faster
         precursor_index_map = {k: i for i, k in enumerate(report["Precursor.Id"].unique())}
         report["precursor.Index"] = report["Precursor.Id"].map(precursor_index_map)
+
+        logger.debug(f"Shape of main report {report.shape}")
+        logger.debug(str(report.head()))
 
         return report
 
