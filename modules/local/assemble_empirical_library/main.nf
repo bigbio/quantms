@@ -7,7 +7,8 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    val(ms_files)
+    // In this step the real files are passed, and not the names
+    path(ms_files)
     val(meta)
     path("quant/*")
     path(lib)

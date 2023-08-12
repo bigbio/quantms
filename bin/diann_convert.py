@@ -90,10 +90,12 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
     out_msstats.loc[:, "PeptideSequence"] = out_msstats.apply(
         lambda x: AASequence.fromString(x["PeptideSequence"]).toString(), axis=1
     )
-    out_msstats.loc[:, "FragmentIon"] = "NA"
-    out_msstats.loc[:, "ProductCharge"] = "0"
-    out_msstats.loc[:, "IsotopeLabelType"] = "L"
-    out_msstats["Reference"] = out_msstats.apply(lambda x: os.path.basename(x["Reference"]), axis=1)
+    out_msstats["FragmentIon"] = "NA"
+    out_msstats["ProductCharge"] = "0"
+    out_msstats["IsotopeLabelType"] = "L"
+    unique_reference_map = {k: os.path.basename(k) for k in out_msstats["Reference"].unique()}
+    out_msstats["Reference"] = out_msstats["Reference"].map(unique_reference_map)
+    del unique_reference_map
 
     # TODO remove this if not debugging
     logger.debug("\n\nReference Column >>>")
@@ -357,7 +359,9 @@ class DiannDirectory:
         report = pd.read_csv(self.report, sep="\t", header=0, usecols=remain_cols)
 
         # filter based on qvalue parameter for downstream analysiss
+        logger.debug(f"Filtering report based on qvalue threshold: {qvalue_threshold}, {len(report)} rows")
         report = report[report["Q.Value"] < qvalue_threshold]
+        logger.debug(f"Report filtered, {len(report)} rows remaining")
 
         logger.debug("Calculating Precursor.Mz")
         # Making the map is 10x faster, and includes the mass of
