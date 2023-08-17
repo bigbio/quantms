@@ -19,8 +19,8 @@ process INDIVIDUAL_FINAL_ANALYSIS {
 
     script:
     def args = task.ext.args ?: ''
-    mass_acc_ms1 = meta.precursor_mass_tolerance_unit == "ppm" ? meta.precursor_mass_tolerance : 5
-    mass_acc_ms2 = meta.fragment_mass_tolerance_unit == "ppm" ? meta.fragment_mass_tolerance : 13
+    mass_acc_ms1 = meta["precursormasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["precursormasstolerance"] : 5
+    mass_acc_ms2 = meta["fragmentmasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["fragmentmasstolerance"] : 13
     scan_window = params.scan_window
 
     if (params.mass_acc_automatic | params.scan_window_automatic){
@@ -30,6 +30,8 @@ process INDIVIDUAL_FINAL_ANALYSIS {
     }
 
     """
+    # Question: why is this using echo? wouldnt just the variable replacement do the same?
+
     diann   --lib ${library} \\
             --f ${mzML} \\
             --fasta ${fasta} \\

@@ -45,15 +45,10 @@ process TDF2MZML {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    tar --version
-    echo "Unpacking..." | tee --append ${rawfile.baseName}_conversion.log
-    tar -xvf ${rawfile} 2>&1 | tee --append ${rawfile.baseName}_conversion.log
     echo "Converting..." | tee --append ${rawfile.baseName}_conversion.log
     tdf2mzml.py -i *.d 2>&1 | tee --append ${rawfile.baseName}_conversion.log
-    echo "Compressing..." | tee --append ${rawfile.baseName}_conversion.log
     mv *.mzml ${file(rawfile.baseName).baseName}.mzML
     mv *.d ${file(rawfile.baseName).baseName}.d
-    # gzip ${file(rawfile.baseName).baseName}.mzML
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -144,6 +144,12 @@
                     "description": "Which MS levels to pick as comma separated list. Leave empty for auto-detection.",
                     "fa_icon": "fas fa-font",
                     "help_text": "Which MS levels to pick as comma separated list, e.g. `--peakpicking_ms_levels 1,2`. Leave empty for auto-detection."
+                },
+                "convert_dotd": {
+                    "type": "boolean",
+                    "description": "Convert bruker .d files to mzML",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Whether to convert raw .d bruker files to .mzML"
                 }
             },
             "fa_icon": "far fa-chart-bar"
