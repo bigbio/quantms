@@ -597,8 +597,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     protein_details_df = (
         protein_details_df.drop("accession", axis=1).join(prh_series).reset_index().drop(columns="index")
     )
-    # Q: how is the next line different from `df.loc[:, "col"] = 'protein_details'` ??
-    protein_details_df.loc[:, "opt_global_result_type"] = protein_details_df.apply(lambda x: "protein_details", axis=1)
+    protein_details_df.loc[:, "col"] = "protein_details"
     # protein_details_df = protein_details_df[-protein_details_df["accession"].str.contains("-")]
     out_mztab_PRH = pd.concat([out_mztab_PRH, protein_details_df]).reset_index(drop=True)
 
@@ -1120,27 +1119,6 @@ def find_modification(peptide):
     original_mods = ",".join(str(i) for i in original_mods) if len(original_mods) > 0 else "null"
 
     return original_mods
-
-
-def calculate_mz(seq, charge):
-    """
-    Calculate the precursor m/z based on the peptide sequence and charge state.
-
-    :param seq: Peptide sequence
-    :type seq: str
-    :param charge: charge state
-    :type charge: int
-    :return:
-    """
-    # Q: is this faster if we make it a set? and maybe make it a global variable?
-    ref = "ARNDBCEQZGHILKMFPSTWYV"
-
-    # Q: Does this mean that all modified peptides will have a wrong m/z?
-    seq = "".join([i for i in seq if i in ref])
-    if charge == "":
-        return None
-    else:
-        return AASequence.fromString(seq).getMZ(int(charge))
 
 
 def name_mapper_builder(subname_mapper):

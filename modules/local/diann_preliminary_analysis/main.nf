@@ -1,5 +1,5 @@
 process DIANN_PRELIMINARY_ANALYSIS {
-    tag "$mzML.baseName"
+    tag "$ms_file.baseName"
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,7 +7,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), path(mzML), path(predict_tsv)
+    tuple val(meta), path(ms_file), path(predict_library)
 
     output:
     path "*.quant", emit: diann_quant
@@ -39,8 +39,8 @@ process DIANN_PRELIMINARY_ANALYSIS {
     # Precursor Tolerance unit was: ${meta['precursormasstoleranceunit']}
     # Fragment Tolerance unit was: ${meta['fragmentmasstoleranceunit']}
 
-    diann   --lib ${predict_tsv} \\
-            --f ${mzML} \\
+    diann   --lib ${predict_library} \\
+            --f ${ms_file} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
             ${scan_window} \\
@@ -50,7 +50,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
             ${mass_acc} \\
             ${time_corr_only} \\
             $args \\
-            2>&1 | tee ${mzML.baseName}_diann.log
+            2>&1 | tee ${ms_file.baseName}_diann.log
 
 
     cat <<-END_VERSIONS > versions.yml

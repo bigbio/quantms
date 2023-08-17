@@ -39,6 +39,10 @@ process SDRFPARSING {
     # remove it here than doing the forensic tracking back of the file.
     sed -i -e "s/((.tar)|(.tar.gz))\\t/\\t/g" ${sdrf.baseName}_openms_design.tsv
     
+    # TODO: since I added support for .gz ... how are we aliasing?
+    # if someone packs a .d in a .gz (not .d.gz or .d.tar.gz), how should we
+    # know what extension to keep?
+    
     # I am almost sure these do need to be as they exist in the file system
     # before execution.
     # sed -i -e "s/((.tar)|(.tar.gz))\\t/\\t/g" ${sdrf.baseName}_config.tsv

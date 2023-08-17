@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
+- [#275 BigBio](https://github.com/bigbio/quantms/pull/275) Added support for bruker data. And speed-up to DIA-NN pipeline.
+
 ### `Changed`
 
 ### `Fixed`
+
+- Fixed bug where modification masses were not calculated correctly in DIA-NN conversion.
 
 ### `Dependencies`
 
