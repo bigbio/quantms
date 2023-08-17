@@ -4,7 +4,6 @@
 // accept different file endings already?
 process PREPROCESS_EXPDESIGN {
     tag "$design.Name"
-    label 'process_low'
     label 'process_single'
 
     conda "bioconda::sdrf-pipelines=0.0.22"
