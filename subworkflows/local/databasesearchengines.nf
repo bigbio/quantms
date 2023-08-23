@@ -4,6 +4,7 @@
 
 include { SEARCHENGINEMSGF  } from '../../modules/local/openms/thirdparty/searchenginemsgf/main'
 include { SEARCHENGINECOMET } from '../../modules/local/openms/thirdparty/searchenginecomet/main'
+include { SEARCHENGINESAGE  } from '../../modules/local/openms/thirdparty/searchenginesage/main'
 
 workflow DATABASESEARCHENGINES {
     take:
@@ -11,7 +12,7 @@ workflow DATABASESEARCHENGINES {
     ch_searchengine_in_db
 
     main:
-    (ch_id_msgf, ch_id_comet, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty() ]
+    (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty(), Channel.empty() ]
 
     if (params.search_engines.contains("msgf")){
         SEARCHENGINEMSGF(ch_mzmls_search.combine(ch_searchengine_in_db))
@@ -25,8 +26,32 @@ workflow DATABASESEARCHENGINES {
         ch_id_comet = ch_id_comet.mix(SEARCHENGINECOMET.out.id_files_comet)
     }
 
+    if (params.search_engines.contains("sage")){
+        ch_meta_mzml_db = ch_mzmls_search.map{ metapart, mzml ->
+            def groupkey = metapart.labelling_type +
+                    metapart.dissociationmethod +
+                    metapart.fixedmodifications +
+                    metapart.variablemodifications +
+                    metapart.precursormasstolerance +
+                    metapart.precursormasstoleranceunit +
+                    metapart.fragmentmasstolerance +
+                    metapart.fragmentmasstoleranceunit +
+                    metapart.enzyme
+            // TODO hash the key to make it shorter?
+            [groupkey, metapart, mzml]
+        }
+        // group into chunks to be processed at the same time on the same node by sage
+        // TODO parameterize batch size
+        c = 1
+        ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(size: 3, remainder: true).map{ it -> it << c++ }.view()
+
+        SEARCHENGINESAGE(ch_meta_mzml_db_chunked.combine(ch_searchengine_in_db))
+        ch_versions = ch_versions.mix(SEARCHENGINESAGE.out.version)
+        ch_id_sage = ch_id_comet.mix(SEARCHENGINESAGE.out.id_files_sage)
+    }
+
     emit:
-    ch_id_files_idx = ch_id_msgf.mix(ch_id_comet)
+    ch_id_files_idx = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
 
     versions        = ch_versions
 }
