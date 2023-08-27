@@ -17,6 +17,12 @@ for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true
 // Check mandatory parameters
 if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
+// Check conflicting parameters
+if (params.decoy_string_position == "suffix" && params.searchengines.contains("sage"))
+{
+    log.error "Sage does not support decoy suffixes. Please change your input database or generate with add_decoys and decoy_string_position 'prefix' (default)."
+}
+
 /*
 ========================================================================================
     CONFIG FILES

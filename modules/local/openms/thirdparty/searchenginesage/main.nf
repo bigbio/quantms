@@ -11,15 +11,15 @@ process SEARCHENGINESAGE {
     tuple val(key), val(metas), path(mzml_files), val(batch), path(database)
 
     output:
-    tuple val(meta), path("${mzml_files.baseName}_sage.idXML"), emit: id_files_sage
-    path "versions.yml"                                       , emit: version
-    path "*.log"                                              , emit: log
+    tuple val(metas), path("*_sage.idXML"), emit: id_files_sage
+    path "versions.yml", emit: version
+    path "*.log"       , emit: log
 
     script:
     def meta   = metas[0] // due to groupTuple they should all be the same (TODO check to use groupBy?)
     def args   = task.ext.args ?: ''
     enzyme     = meta.enzyme
-    outname    = mzml_files.size() > 1 ? "out" : mzml_files[0].baseName
+    outname    = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
 
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
@@ -29,27 +29,37 @@ process SEARCHENGINESAGE {
         -out ${outname}_sage.idXML \\
         -threads $task.cpus \\
         -database "${database}" \\
+        -decoy_prefix $params.decoy_string \\
         -min_len $params.min_peptide_length \\
         -max_len $params.max_peptide_length \\
+        -min_matched_peaks 1 \\
+        -min_peaks 1 \\
+        -max_peaks 500 \\
         -missed_cleavages $params.allowed_missed_cleavages \\
         -enzyme "${enzyme}" \\
-        -precursor_tol_left $meta.precursormasstolerance \\
-        -precursor_tol_right $meta.precursormasstolerance \\
+        -precursor_tol_left ${-meta.precursormasstolerance * 3.0} \\
+        -precursor_tol_right ${meta.precursormasstolerance * 3.0} \\
         -precursor_tol_unit $meta.precursormasstoleranceunit \\
-        -fragment_tol_left $meta.fragmentmasstolerance \\
-        -fragment_tol_right $meta.fragmentmasstolerance \\
+        -fragment_tol_left ${-meta.fragmentmasstolerance * 3.0} \\
+        -fragment_tol_right ${meta.fragmentmasstolerance * 3.0} \\
         -fragment_tol_unit $meta.fragmentmasstoleranceunit \\
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
         -variable_modifications ${meta.variablemodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
         -max_variable_mods $params.max_mods \\
         ${il_equiv} \\
         -PeptideIndexing:unmatched_action ${params.unmatched_action} \\
-        -debug $params.db_debug \\
+        -debug 1000 \\
         $args \\
         2>&1 | tee ${outname}_sage.log
 
-    ## if [[ ${mzml_files.size()} -ge 2 ]]; then
-    ##     IDRipper -in ${mzml_files[0].baseName}_sage.idXML
+    if [[ ${mzml_files.size()} -ge 2 ]]; then
+        IDRipper -in ${outname}_sage.idXML -out . -split_ident_runs
+        rm ${outname}_sage.idXML
+        for f in *.idXML
+        do
+            mv "\$f" "\${f%.*}_sage.idXML"
+        done
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

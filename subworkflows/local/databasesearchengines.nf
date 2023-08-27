@@ -43,11 +43,12 @@ workflow DATABASESEARCHENGINES {
         // group into chunks to be processed at the same time on the same node by sage
         // TODO parameterize batch size
         c = 1
-        ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(size: 3, remainder: true).map{ it -> it << c++ }.view()
+        ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(size: 3, remainder: true).map{ it -> it << c++ }
 
         SEARCHENGINESAGE(ch_meta_mzml_db_chunked.combine(ch_searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINESAGE.out.version)
-        ch_id_sage = ch_id_comet.mix(SEARCHENGINESAGE.out.id_files_sage)
+        // we can safely use merge here since it is the same process
+        ch_id_sage = ch_id_sage.mix(SEARCHENGINESAGE.out.id_files_sage.transpose().view())
     }
 
     emit:
