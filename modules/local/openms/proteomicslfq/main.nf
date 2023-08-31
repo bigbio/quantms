@@ -32,12 +32,14 @@ process PROTEOMICSLFQ {
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
     def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
+    def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
+    def id_sorted = id_files.collect().sort{ a, b -> a.name <=> b.name}
 
     """
     ProteomicsLFQ \\
         -threads ${task.cpus} \\
-        -in ${(mzmls as List).join(' ')} \\
-        -ids ${(id_files as List).join(' ')} \\
+        -in ${mzml_sorted.join(' ')} \\
+        -ids ${id_sorted.join(' ')} \\
         -design ${expdes} \\
         -fasta ${fasta} \\
         -protein_inference ${params.protein_inference_method} \\

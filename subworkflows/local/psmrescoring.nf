@@ -17,9 +17,16 @@ workflow PSMRESCORING {
     ch_fdridpep = Channel.empty()
 
     if (params.posterior_probabilities == 'percolator') {
-        EXTRACTPSMFEATURES(ch_id_files)
+        ch_id_files.branch{ meta, filename ->
+            sage: filename.name.contains('sage')
+                return [meta, filename]
+            nosage: true
+                return [meta, filename]
+        }.set{ch_id_files_branched}
+        EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
+        ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out)
         ch_versions = ch_versions.mix(EXTRACTPSMFEATURES.out.version)
-        PERCOLATOR(EXTRACTPSMFEATURES.out.id_files_feat)
+        PERCOLATOR(ch_id_files_feats)
         ch_versions = ch_versions.mix(PERCOLATOR.out.version)
         ch_results = PERCOLATOR.out.id_files_perc
     }

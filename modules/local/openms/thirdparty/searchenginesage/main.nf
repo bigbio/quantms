@@ -1,6 +1,6 @@
 process SEARCHENGINESAGE {
     tag "${metas.toList().collect{it.mzml_id}}"
-    label 'process_medium'
+    label 'process_high' // we could make it dependent on the number of files
 
     conda "openms::openms-thirdparty=3.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -8,7 +8,7 @@ process SEARCHENGINESAGE {
         'ghcr.io/openms/openms-executables:latest' }"
 
     input:
-    tuple val(key), val(metas), path(mzml_files), val(batch), path(database)
+    tuple val(key), val(batch), val(metas), path(mzml_files), path(database)
 
     output:
     tuple val(metas), path("*_sage.idXML"), emit: id_files_sage
@@ -36,19 +36,21 @@ process SEARCHENGINESAGE {
         -min_peaks 1 \\
         -max_peaks 500 \\
         -missed_cleavages $params.allowed_missed_cleavages \\
+        -report_psms $params.num_hits \\
         -enzyme "${enzyme}" \\
-        -precursor_tol_left ${-meta.precursormasstolerance * 3.0} \\
-        -precursor_tol_right ${meta.precursormasstolerance * 3.0} \\
+        -precursor_tol_left ${-meta.precursormasstolerance} \\
+        -precursor_tol_right ${meta.precursormasstolerance} \\
         -precursor_tol_unit $meta.precursormasstoleranceunit \\
-        -fragment_tol_left ${-meta.fragmentmasstolerance * 3.0} \\
-        -fragment_tol_right ${meta.fragmentmasstolerance * 3.0} \\
+        -fragment_tol_left ${-meta.fragmentmasstolerance} \\
+        -fragment_tol_right ${meta.fragmentmasstolerance} \\
         -fragment_tol_unit $meta.fragmentmasstoleranceunit \\
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
         -variable_modifications ${meta.variablemodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
         -max_variable_mods $params.max_mods \\
+        -isotope_error_range $params.isotope_error_range \\
         ${il_equiv} \\
         -PeptideIndexing:unmatched_action ${params.unmatched_action} \\
-        -debug 1000 \\
+        -debug $params.db_debug \\
         $args \\
         2>&1 | tee ${outname}_sage.log
 

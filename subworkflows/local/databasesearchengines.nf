@@ -27,7 +27,9 @@ workflow DATABASESEARCHENGINES {
     }
 
     if (params.search_engines.contains("sage")){
+        cnt = 0
         ch_meta_mzml_db = ch_mzmls_search.map{ metapart, mzml ->
+            cnt++
             def groupkey = metapart.labelling_type +
                     metapart.dissociationmethod +
                     metapart.fixedmodifications +
@@ -37,18 +39,18 @@ workflow DATABASESEARCHENGINES {
                     metapart.fragmentmasstolerance +
                     metapart.fragmentmasstoleranceunit +
                     metapart.enzyme
+            def batch = cnt % params.sage_processes
             // TODO hash the key to make it shorter?
-            [groupkey, metapart, mzml]
+            [groupkey, batch, metapart, mzml]
         }
         // group into chunks to be processed at the same time on the same node by sage
         // TODO parameterize batch size
-        c = 1
-        ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(size: 3, remainder: true).map{ it -> it << c++ }
+        ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(by: [0,1])
 
         SEARCHENGINESAGE(ch_meta_mzml_db_chunked.combine(ch_searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINESAGE.out.version)
         // we can safely use merge here since it is the same process
-        ch_id_sage = ch_id_sage.mix(SEARCHENGINESAGE.out.id_files_sage.transpose().view())
+        ch_id_sage = ch_id_sage.mix(SEARCHENGINESAGE.out.id_files_sage.transpose())
     }
 
     emit:
