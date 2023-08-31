@@ -144,6 +144,12 @@
                     "description": "Which MS levels to pick as comma separated list. Leave empty for auto-detection.",
                     "fa_icon": "fas fa-font",
                     "help_text": "Which MS levels to pick as comma separated list, e.g. `--peakpicking_ms_levels 1,2`. Leave empty for auto-detection."
+                },
+                "reindex_mzml": {
+                    "type": "boolean",
+                    "description": "Force initial re-indexing of input mzML files.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Force re-indexing in the beginning of the pipeline to make sure that indices are up-to-date and to avoid redundant indexing on-demand in steps that require an index (e.g., Comet)."
                 }
             },
             "fa_icon": "far fa-chart-bar"

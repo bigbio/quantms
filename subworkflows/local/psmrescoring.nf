@@ -24,7 +24,7 @@ workflow PSMRESCORING {
                 return [meta, filename]
         }.set{ch_id_files_branched}
         EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
-        ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out)
+        ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)
         ch_versions = ch_versions.mix(EXTRACTPSMFEATURES.out.version)
         PERCOLATOR(ch_id_files_feats)
         ch_versions = ch_versions.mix(PERCOLATOR.out.version)
