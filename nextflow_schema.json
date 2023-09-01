@@ -147,7 +147,8 @@
                 },
                 "reindex_mzml": {
                     "type": "boolean",
-                    "description": "Force initial re-indexing of input mzML files.",
+                    "default": true,
+                    "description": "Force initial re-indexing of input mzML files. Also fixes some common mistakes in slightly incomplete/outdated mzMLs. (Default: true for safety)",
                     "fa_icon": "far fa-check-square",
                     "help_text": "Force re-indexing in the beginning of the pipeline to make sure that indices are up-to-date and to avoid redundant indexing on-demand in steps that require an index (e.g., Comet)."
                 }
