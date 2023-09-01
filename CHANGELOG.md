@@ -3,7 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.1] nfcore/quantms - [TBD] - Berlin
+## [1.2.0dev] nfcore/quantms - [TBD] - Thimphu
+
+### `Added`
+
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Parameters`
+
+### `Deprecations`
+
+## [1.1.1] nfcore/quantms - [03/27/23] - Berlin-Bern
 
 ### `Added`
 
@@ -17,12 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Fixed`
 
 - [#93](https://github.com/nf-core/quantms/pull/93) Fixed bug in docker vs. singularity container logic in some processes.
-
-### `Dependencies`
-
-### `Parameters`
-
-### `Deprecations`
 
 ## [1.1.0] nfcore/quantms - [03/20/2023] - Berlin
 
