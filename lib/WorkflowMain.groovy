@@ -55,13 +55,6 @@ class WorkflowMain {
             System.exit(1)
         }
 
-        if (params.tracedir == "null/pipeline_info")
-        {
-            Nextflow.error("""Error: Your tracedir is `null/pipeline_info`, this means you probably set outdir in a way that does not affect the default
-            `\$params.outdir/pipeline_info` (e.g., by specifying outdir in a profile instead of the commandline or through a `-params-file`.
-            Either set outdir in a correct way, or redefine tracedir as well (e.g., in your profile).""")
-        }
-
         // check fasta database has been provided
         if (!params.database) {
             Nextflow.error("Please provide an fasta database to the pipeline e.g. '--database *.fasta'")
