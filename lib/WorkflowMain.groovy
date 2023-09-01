@@ -49,12 +49,6 @@ class WorkflowMain {
             Nextflow.error("Please provide an input sdrf to the pipeline e.g. '--input *.sdrf.csv'")
         }
 
-        // Check input has been provided
-        if (!params.outdir) {
-            log.error "Please provide an outdir to the pipeline e.g. '--outdir ./results'"
-            System.exit(1)
-        }
-
         // check fasta database has been provided
         if (!params.database) {
             Nextflow.error("Please provide an fasta database to the pipeline e.g. '--database *.fasta'")
