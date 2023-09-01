@@ -8,7 +8,7 @@ process SEARCHENGINEMSGF {
         'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_1' }"
 
     input:
-    tuple val(meta),  file(mzml_file), file(database)
+    tuple val(meta),  path(mzml_file), path(database)
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
