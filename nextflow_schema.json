@@ -1245,18 +1245,6 @@
                     "default": false,
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "This parameter force singularity to pull the contain from docker instead of using the singularity image",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
-                },
-                "hostnames": {
-                    "type": "string",
-                    "description": "Institutional configs hostname.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
                 }
             }
         }
