@@ -7,11 +7,11 @@ keywords:
 tools:
   - tar:
       description: |
-        Generates and extracts archives. 
+        Generates and extracts archives.
       homepage: https://www.gnu.org/software/tar/
   - gunzip:
       description: |
-        Decompresses using zlib. 
+        Decompresses using zlib.
       homepage: https://www.gnu.org/software/gzip/
 input:
   - meta:
@@ -43,4 +43,3 @@ output:
       pattern: "versions.yml"
 authors:
   - "@jspaezp"
-

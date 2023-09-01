@@ -38,20 +38,20 @@ process DECOMPRESS {
 
     """
     function extract {
-      if [ -z "\$1" ]; then
-          echo "Usage: extract <path/file_name>.<gz|tar|tar.bz2>"
-      else
-          if [ -f \$1 ]; then
-            case \$1 in
-                *.tar.gz)    tar xvzf \$1    ;;
-                *.gz)        gunzip \$1      ;;
-                *.tar)       tar xvf \$1     ;;
-                *)           echo "extract: '\$1' - unknown archive method" ;;
-            esac
-          else
-            echo "\$1 - file does not exist"
-          fi
-      fi
+        if [ -z "\$1" ]; then
+            echo "Usage: extract <path/file_name>.<gz|tar|tar.bz2>"
+        else
+            if [ -f \$1 ]; then
+                case \$1 in
+                    *.tar.gz)    tar xvzf \$1    ;;
+                    *.gz)        gunzip \$1      ;;
+                    *.tar)       tar xvf \$1     ;;
+                    *)           echo "extract: '\$1' - unknown archive method" ;;
+                esac
+            else
+                echo "\$1 - file does not exist"
+            fi
+        fi
     }
 
     tar --help 2>&1 | tee -a ${prefix}_decompression.log
