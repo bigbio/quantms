@@ -43,7 +43,7 @@ def print_error(error, context="Line", context_str=""):
     print(error_str)
     sys.exit(1)
 
-    
+
 def sniff_format(handle):
     """
     Detect the tabular format.

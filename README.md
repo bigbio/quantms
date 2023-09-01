@@ -68,7 +68,6 @@ A graphical overview of suggested routes through the pipeline depending on conte
     <img src="docs/images/quantms_metro.png" alt="nf-core/quantms metro map" width="70%">
 </p>
 
-
 ## Usage
 
 > **Note**
