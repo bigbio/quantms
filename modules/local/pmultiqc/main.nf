@@ -25,9 +25,26 @@ process PMULTIQC {
     def disable_table_plots = (params.enable_pmultiqc) && (params.skip_table_plots) ? "--disable_table" : ""
 
     """
+    set -x
+    set -e
+
     # leaving here to ease debugging
     ls -lcth *
 
+    echo ">>>>>>>>> Experimental Design <<<<<<<<<"
+    cat results/*openms_design.tsv
+
+    # I attempted making this expression match prior
+    # to tabs but that does not seem to work (it might be a groovy escaping issue)
+    # and should be fixed when https://github.com/bigbio/pmultiqc/issues/80
+    # gets solved.
+    # Current hack to attempt matching file stems and not file extensions
+    sed -i -E "s/((\\.tar)|(\\.gz)|(\\.tar\\.gz))//g"  results/*openms_design.tsv
+
+    echo ">>>>>>>>> Experimental Design <<<<<<<<<"
+    cat results/*openms_design.tsv
+
+    echo ">>>>>>>>> Running Multiqc <<<<<<<<<"
     multiqc \\
         -f \\
         --config ./results/multiqc_config.yml \\

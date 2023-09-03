@@ -5,7 +5,8 @@
 include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main'
 include { TDF2MZML            } from '../../modules/local/tdf2mzml/main'
 include { DECOMPRESS          } from '../../modules/local/decompress_dotd/main'
-include { DOTD2MQC            } from '../../modules/local/dotd_to_mqc/main'
+include { DOTD2MQC_INDIVIDUAL } from '../../modules/local/dotd_to_mqc/main'
+include { DOTD2MQC_AGGREGATE  } from '../../modules/local/dotd_to_mqc/main'
 include { MZMLINDEXING        } from '../../modules/local/openms/mzmlindexing/main'
 include { MZMLSTATISTICS      } from '../../modules/local/mzmlstatistics/main'
 include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openmspeakpicker/main'
@@ -79,9 +80,13 @@ workflow FILE_PREPARATION {
     ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
 
     // Exctract qc data from .d files
-    DOTD2MQC( ch_branched_input.dotd )
-    ch_mqc_data = ch_mqc_data.mix(DOTD2MQC.out.dotd_mqc_data.map{ it -> it[1] }.collect())
-    ch_versions = ch_versions.mix(DOTD2MQC.out.version)
+    DOTD2MQC_INDIVIDUAL(ch_branched_input.dotd)
+    // The map extracts the tsv files from the tuple, the other elem is the yml config.
+    ch_mqc_data = ch_mqc_data.mix(DOTD2MQC_INDIVIDUAL.out.dotd_mqc_data.map{ it -> it[1] }.collect())
+    DOTD2MQC_AGGREGATE(DOTD2MQC_INDIVIDUAL.out.general_stats.collect())
+    ch_mqc_data = ch_mqc_data.mix(DOTD2MQC_AGGREGATE.out.dotd_mqc_data.collect())
+    ch_versions = ch_versions.mix(DOTD2MQC_INDIVIDUAL.out.version)
+    ch_versions = ch_versions.mix(DOTD2MQC_AGGREGATE.out.version)
 
     // Convert .d files to mzML
     if (params.convert_dotd) {
@@ -110,6 +115,6 @@ workflow FILE_PREPARATION {
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
     statistics      = ch_statistics     // channel: [ *_mzml_info.tsv ]
-    mqc_custom_data = ch_mqc_data       // channel: [ *.yaml, *.tsv ]
+    mqc_custom_data = ch_mqc_data       // channel: [ *.tsv ]
     version         = ch_versions       // channel: [ *.version.txt ]
 }

@@ -28,7 +28,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
     if (params.mass_acc_automatic) {
         mass_acc = '--quick-mass-acc --individual-mass-acc'
     } else {
-        mass_acc = '--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1'
+        mass_acc = "--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1"
     }
     scan_window = params.scan_window_automatic ? '--individual-windows' : '--window $params.scan_window'
     time_corr_only = params.time_corr_only ? '--time-corr-only' : ''

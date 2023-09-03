@@ -30,7 +30,7 @@ process SDRFPARSING {
     # Context, without --raw, all file name extenssions are changed to mzML.
     # related: https://github.com/bigbio/sdrf-pipelines/issues/145
 
-    parse_sdrf convert-openms --raw -t2 -l -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
+    parse_sdrf convert-openms ${args} --raw -t2 -l -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
 
