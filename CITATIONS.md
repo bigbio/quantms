@@ -47,7 +47,12 @@
   > The M, Käll L. Integrated Identification and Quantification Error Probabilities for Shotgun Proteomics. Mol Cell Proteomics. 2019 Mar;18(3):561-570. doi: 10.1074/mcp.RA118.001018. Epub 2018 Nov 27. PMID: 30482846; PMCID: PMC6398204.
 
 - [luciphor](https://pubmed.ncbi.nlm.nih.gov/23918812/)
+
   > Fermin D, Walmsley SJ, Gingras AC, Choi H, Nesvizhskii AI. LuciPHOr: algorithm for phosphorylation site localization with false localization rate estimation using modified target-decoy approach. Mol Cell Proteomics. 2013 Nov;12(11):3409-19. doi: 10.1074/mcp.M113.028928. Epub 2013 Aug 5. PMID: 23918812; PMCID: PMC3820951.
+
+- [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
+
+  > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
 ## Software packaging/containerisation tools
 
@@ -65,5 +70,8 @@
 
 - [Docker](https://dl.acm.org/doi/10.5555/2600239.2600241)
 
+  > Merkel, D. (2014). Docker: lightweight linux containers for consistent development and deployment. Linux Journal, 2014(239), 2. doi: 10.5555/2600239.2600241.
+
 - [Singularity](https://pubmed.ncbi.nlm.nih.gov/28494014/)
+
   > Kurtzer GM, Sochat V, Bauer MW. Singularity: Scientific containers for mobility of compute. PLoS One. 2017 May 11;12(5):e0177459. doi: 10.1371/journal.pone.0177459. eCollection 2017. PubMed PMID: 28494014; PubMed Central PMCID: PMC5426675.

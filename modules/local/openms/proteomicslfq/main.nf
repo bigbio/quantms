@@ -44,7 +44,7 @@ process PROTEOMICSLFQ {
         -quantification_method ${params.quantification_method} \\
         -targeted_only ${params.targeted_only} \\
         -mass_recalibration ${params.mass_recalibration} \\
-        -transfer_ids ${params.transfer_ids} \\
+        -transfer_ids ${params.transfer_ids == 'off' ? 'false' : params.transfer_ids} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
         ${decoys_present} \\
