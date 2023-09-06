@@ -39,12 +39,21 @@ workflow DATABASESEARCHENGINES {
                     metapart.fragmentmasstolerance +
                     metapart.fragmentmasstoleranceunit +
                     metapart.enzyme
+            // TODO this only works if the metakeys are all the same
+            //  otherwise we need to group by key first and then batch
             def batch = cnt % params.sage_processes
             // TODO hash the key to make it shorter?
             [groupkey, batch, metapart, mzml]
         }
         // group into chunks to be processed at the same time on the same node by sage
-        // TODO parameterize batch size
+        // TODO I guess if we parametrize the nr of files per process, it is more
+        //  efficient (because this process can start as soon as this number of files
+        //  are available and does not need to wait and see how many Channel entries
+        //  belong to batch X). But the problem is groupTuple(size:) cannot be
+        //  specified with an output from a Channel. The only way would be to,
+        //  IN THE VERY BEGINNING, parse
+        //  the number of files (=lines?) in the SDRF/design (outside of a process),
+        //  save this value and pass it along the pipeline.
         ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(by: [0,1])
 
         SEARCHENGINESAGE(ch_meta_mzml_db_chunked.combine(ch_searchengine_in_db))

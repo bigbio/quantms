@@ -11,15 +11,17 @@ process SEARCHENGINESAGE {
     tuple val(key), val(batch), val(metas), path(mzml_files), path(database)
 
     output:
-    tuple val(metas), path("*_sage.idXML"), emit: id_files_sage
-    path "versions.yml", emit: version
-    path "*.log"       , emit: log
+    tuple val(metas), path(meta_order_files), emit: id_files_sage
+    path "versions.yml"                     , emit: version
+    path "*.log"                            , emit: log
 
     script:
-    def meta   = metas[0] // due to groupTuple they should all be the same (TODO check to use groupBy?)
-    def args   = task.ext.args ?: ''
-    enzyme     = meta.enzyme
-    outname    = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
+    def meta             = metas[0] // due to groupTuple they should all be the same (TODO check to use groupBy?)
+    // Make sure that the output order is consistent with the meta ids
+    meta_order_files = metas.collect{ it.mzml_id.toString() + "*_sage.idXML" } 
+    def args             = task.ext.args ?: ''
+    enzyme               = meta.enzyme
+    outname              = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
 
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
@@ -44,8 +46,8 @@ process SEARCHENGINESAGE {
         -fragment_tol_left ${-meta.fragmentmasstolerance} \\
         -fragment_tol_right ${meta.fragmentmasstolerance} \\
         -fragment_tol_unit $meta.fragmentmasstoleranceunit \\
-        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
-        -variable_modifications ${meta.variablemodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
+        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect{ "'${it}'" }.join(" ") } \\
+        -variable_modifications ${meta.variablemodifications.tokenize(',').collect{ "'${it}'" }.join(" ") } \\
         -max_variable_mods $params.max_mods \\
         -isotope_error_range $params.isotope_error_range \\
         ${il_equiv} \\
