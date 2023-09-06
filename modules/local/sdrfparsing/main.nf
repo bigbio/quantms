@@ -5,7 +5,7 @@ process SDRFPARSING {
     conda "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0' :
-        'quay.io/biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0' }"
+        'quay.io/biocontainers/sdrf-pipelines:0.0.23--pyhdfd78af_0' }"
 
     input:
     path sdrf
@@ -25,13 +25,13 @@ process SDRFPARSING {
     ## -l for legacy behavior to always add sample columns
     ## TODO Update the sdrf-pipelines to dynamic print versions
 
-    parse_sdrf convert-openms -t2 -l -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
+    parse_sdrf convert-openms -t2 -l --extension_convert raw:mzML -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(echo "0.0.22")
+        sdrf-pipelines: \$(echo "0.0.23")
     END_VERSIONS
     """
 }
