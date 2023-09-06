@@ -2,9 +2,9 @@ process SDRFPARSING {
     tag "$sdrf.Name"
     label 'process_low'
 
-    conda "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22"
+    conda "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.23"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0' :
+        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.23--pyhdfd78af_0' :
         'quay.io/biocontainers/sdrf-pipelines:0.0.23--pyhdfd78af_0' }"
 
     input:
