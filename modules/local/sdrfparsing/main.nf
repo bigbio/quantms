@@ -23,7 +23,6 @@ process SDRFPARSING {
     """
     ## -t2 since the one-table format parser is broken in OpenMS2.5
     ## -l for legacy behavior to always add sample columns
-    ## TODO Update the sdrf-pipelines to dynamic print versions
 
     parse_sdrf convert-openms -t2 -l --extension_convert raw:mzML -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
     mv openms.tsv ${sdrf.baseName}_config.tsv
@@ -31,7 +30,7 @@ process SDRFPARSING {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(echo "0.0.23")
+        sdrf-pipelines: \$(parse_sdrf --version 2>&1 | awk -F ' ' '{print $2}')
     END_VERSIONS
     """
 }
