@@ -18,7 +18,7 @@ process SEARCHENGINESAGE {
     script:
     def meta             = metas[0] // due to groupTuple they should all be the same (TODO check to use groupBy?)
     // Make sure that the output order is consistent with the meta ids
-    meta_order_files = metas.collect{ it.mzml_id.toString() + "*_sage.idXML" } 
+    meta_order_files     = metas.collect{ it.mzml_id.toString() + "*_sage.idXML" }
     def args             = task.ext.args ?: ''
     enzyme               = meta.enzyme
     outname              = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
