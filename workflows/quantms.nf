@@ -15,6 +15,12 @@ log.info logo + paramsSummaryLog(workflow) + citation
 
 WorkflowQuantms.initialise(params, log)
 
+// Check conflicting parameters
+if (params.decoy_string_position == "suffix" && params.searchengines.contains("sage"))
+{
+    log.error "Sage does not support decoy suffixes. Please change your input database or generate with add_decoys and decoy_string_position 'prefix' (default)."
+}
+
 /*
 ========================================================================================
     CONFIG FILES
