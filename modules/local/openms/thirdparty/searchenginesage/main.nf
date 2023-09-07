@@ -24,6 +24,7 @@ process SEARCHENGINESAGE {
     outname              = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
 
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
+    precursor_left = Double.parseDouble(meta.precursormasstolerance)
 
     """
     SageAdapter \\
@@ -43,7 +44,7 @@ process SEARCHENGINESAGE {
         -precursor_tol_left ${-meta.precursormasstolerance} \\
         -precursor_tol_right ${meta.precursormasstolerance} \\
         -precursor_tol_unit $meta.precursormasstoleranceunit \\
-        -fragment_tol_left ${-meta.fragmentmasstolerance} \\
+        -fragment_tol_left ${-precursor_left} \\
         -fragment_tol_right ${meta.fragmentmasstolerance} \\
         -fragment_tol_unit $meta.fragmentmasstoleranceunit \\
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect{ "'${it}'" }.join(" ") } \\
