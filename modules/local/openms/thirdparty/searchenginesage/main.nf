@@ -26,6 +26,7 @@ process SEARCHENGINESAGE {
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
     """
+    export SAGE_LOG=trace
     SageAdapter \\
         -in ${mzml_files} \\
         -out ${outname}_sage.idXML \\
