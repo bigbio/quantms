@@ -1,6 +1,6 @@
 process SEARCHENGINESAGE {
     tag "${metas.toList().collect{it.mzml_id}}"
-    label 'process_high' // we could make it dependent on the number of files
+    label 'process_medium' // we could make it dependent on the number of files
 
     conda "openms::openms-thirdparty=3.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -26,6 +26,7 @@ process SEARCHENGINESAGE {
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
     """
+    export SAGE_LOG=trace
     SageAdapter \\
         -in ${mzml_files} \\
         -out ${outname}_sage.idXML \\
