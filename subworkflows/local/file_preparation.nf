@@ -44,24 +44,21 @@ workflow FILE_PREPARATION {
         dotd: WorkflowQuantms.hasExtension(it[1], '.d')
     }.set { ch_branched_input }
 
-    //TODO we could also check for outdated mzML versions and try to update them
-    ch_branched_input.mzML
-    .branch {
-        nonIndexedMzML: file(it[1]).withReader {
-            f = it; 1.upto(5) {
-                if (f.readLine().contains("indexedmzML")) return false;
-            }
-                return true;
-        }
-        inputIndexedMzML: file(it[1]).withReader {
-            f = it; 1.upto(5) {
-                if (f.readLine().contains("indexedmzML")) return true;
-            }
-                return false;
-        }
+    // Note: we used to always index mzMLs if not already indexed but due to
+    //  either a bug or limitation in nextflow
+    //  peeking into a remote file consumes a lot of RAM
+    //  See https://github.com/nf-core/quantms/issues/61
+    //  This is now done in the search engines themselves if they need it.
+    //  This means users should pre-index to save time and space, especially
+    //  when re-running.
+
+    if (params.reindex_mzml){
+        MZMLINDEXING( ch_branched_input.mzML )
+        ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
+        ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
+    } else {
+        ch_results = ch_results.mix(ch_branched_input.mzML)
     }
-    .set { ch_branched_input_mzMLs }
-    ch_results = ch_results.mix(ch_branched_input_mzMLs.inputIndexedMzML)
 
     THERMORAWFILEPARSER( ch_branched_input.raw )
     // Output is
@@ -87,6 +84,7 @@ workflow FILE_PREPARATION {
     ch_mqc_data = ch_mqc_data.mix(DOTD2MQC_AGGREGATE.out.dotd_mqc_data.collect())
     ch_versions = ch_versions.mix(DOTD2MQC_INDIVIDUAL.out.version)
     ch_versions = ch_versions.mix(DOTD2MQC_AGGREGATE.out.version)
+
 
     // Convert .d files to mzML
     if (params.convert_dotd) {
