@@ -621,7 +621,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     logger.debug("Matching PRH to best search engine score...")
     score_looker = ModScoreLooker(report)
     out_mztab_PRH[["modifiedSequence", "best_search_engine_score[1]"]] = out_mztab_PRH.apply(
-        lambda x: score_looker.get_score(x["accession"]), axis=1, result_type="expand"
+        lambda x: score_looker.get_score(x["Protein.Ids"]), axis=1, result_type="expand"
     )
 
     logger.debug("Matching PRH to modifications...")
