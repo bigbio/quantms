@@ -1059,7 +1059,7 @@ class ModScoreLooker:
         # 103588      NPVGYPLAWQFLR           Q9NZ08;Q9NZ08-2           0.000252
 
         out = {
-            row["Protein.Ids"]: (row["Global.PG.Q.Value"], row["Modified.Sequence"]) for _, row in grouped_df.iterrows()
+            row["Protein.Ids"]: (row["Modified.Sequence"], row["Global.PG.Q.Value"]) for _, row in grouped_df.iterrows()
         }
         return out
 
