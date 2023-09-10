@@ -70,10 +70,6 @@ workflow FILE_PREPARATION {
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
     ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
 
-    MZMLINDEXING( ch_branched_input_mzMLs.nonIndexedMzML )
-    ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
-    ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
-
     ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
 
     // Exctract qc data from .d files
@@ -84,7 +80,6 @@ workflow FILE_PREPARATION {
     ch_mqc_data = ch_mqc_data.mix(DOTD2MQC_AGGREGATE.out.dotd_mqc_data.collect())
     ch_versions = ch_versions.mix(DOTD2MQC_INDIVIDUAL.out.version)
     ch_versions = ch_versions.mix(DOTD2MQC_AGGREGATE.out.version)
-
 
     // Convert .d files to mzML
     if (params.convert_dotd) {

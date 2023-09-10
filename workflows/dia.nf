@@ -97,8 +97,10 @@ workflow DIA {
     // Order matters in DIANN, This should be sorted for reproducible results.
     // NOTE: I am getting here the names of the ms files, not the path.
     // Since the next step only needs the name (since it uses the cached .quant)
+    // Also note that I am converting to a file object here because when executing
+    // locally, evey element in ch_result is a string, whilst on cloud it is a path.
     ch_result
-        .ms_file.map { msfile -> msfile.getName() }
+        .ms_file.map { msfile -> file(msfile).getName() }
         .collect()
         .set { ms_file_names }
     DIANNSUMMARY(ms_file_names, meta, ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
