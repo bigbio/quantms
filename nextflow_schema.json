@@ -1032,6 +1032,12 @@
                     "description": "Reference channel based normalization between MS runs on protein level data",
                     "fa_icon": "far fa-check-square",
                     "default": true
+                },
+                "msstats_plot_profile_qc": {
+                    "type": "boolean",
+                    "description": "Export MSstats profile QC plots including all proteins",
+                    "fa_icon": "far fa-check-square",
+                    "default": false
                 }
             },
             "fa_icon": "fab fa-r-project"
