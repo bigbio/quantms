@@ -23,20 +23,11 @@ process SDRFPARSING {
     """
     ## -t2 since the one-table format parser is broken in OpenMS2.5
     ## -l for legacy behavior to always add sample columns
-    
+
     parse_sdrf convert-openms -t2 -l --extension_convert raw:mzML -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
 
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
-
-    # Adding here the removal of the .tar, since DIANN takes the .d directly
-    # all logs from the tool match only the .d suffix. so it is easier to
-    # remove it here than doing the forensic tracking back of the file.
-    sed -i -e "s/((.tar)|(.tar.gz))\\t/\\t/g" ${sdrf.baseName}_openms_design.tsv
-
-    # TODO: since I added support for .gz ... how are we aliasing?
-    # if someone packs a .d in a .gz (not .d.gz or .d.tar.gz), how should we
-    # know what extension to keep?
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
