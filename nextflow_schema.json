@@ -14,7 +14,10 @@
             "properties": {
                 "input": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/tsv",
+                    "pattern": "^\\S+\\.(?:tsv|sdrf)$",
                     "description": "URI/path to an [SDRF](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) file (.sdrf.tsv) **OR** [OpenMS-style experimental design](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) with paths to spectra files (.tsv)",
                     "help_text": "Input is specified by using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and\nannotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\nAn OpenMS-style experimental design will be generated based on the factor columns of the SDRF. The settings for the\nfollowing parameters will currently be overwritten by the ones specified in the SDRF:\n\n    * `fixed_mods`,\n    * `variable_mods`,\n    * `precursor_mass_tolerance`,\n    * `precursor_mass_tolerance_unit`,\n    * `fragment_mass_tolerance`,\n    * `fragment_mass_tolerance_unit`,\n    * `fragment_method`,\n    * `enzyme`\n  You can also specify an [OpenMS-style experimental design](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) directly (.tsv ending). In this case, the aforementioned parameters have to be specified or defaults will be used.",
                     "fa_icon": "fas fa-file-csv"
@@ -67,6 +70,10 @@
             "properties": {
                 "database": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/fasta",
+                    "pattern": "^\\S+\\.(?:fasta|fa)$",
                     "description": "The `fasta` protein database used during database search. *Note:* For DIA data, it must not contain decoys.",
                     "fa_icon": "fas fa-file",
                     "help_text": "Since the database is not included in an SDRF, this parameter always needs to be given to specify the input protein database\nwhen you run the pipeline. Remember to include contaminants (and decoys if not in DIA mode and if not added in the pipeline with [`--add_decoys`](#add_decoys))\n\n```bash\n--database '[path to fasta protein database]'\n```"
@@ -144,6 +151,13 @@
                     "description": "Which MS levels to pick as comma separated list. Leave empty for auto-detection.",
                     "fa_icon": "fas fa-font",
                     "help_text": "Which MS levels to pick as comma separated list, e.g. `--peakpicking_ms_levels 1,2`. Leave empty for auto-detection."
+                },
+                "reindex_mzml": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Force initial re-indexing of input mzML files. Also fixes some common mistakes in slightly incomplete/outdated mzMLs. (Default: true for safety)",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Force re-indexing in the beginning of the pipeline to make sure that indices are up-to-date and to avoid redundant indexing on-demand in steps that require an index (e.g., Comet)."
                 }
             },
             "fa_icon": "far fa-chart-bar"
@@ -156,10 +170,17 @@
             "properties": {
                 "search_engines": {
                     "type": "string",
-                    "description": "A comma separated list of search engines. Valid: comet, msgf",
+                    "description": "A comma separated list of search engines to use (and combine). Valid: comet, msgf, sage",
                     "default": "comet",
                     "fa_icon": "fas fa-tasks",
-                    "help_text": "A comma-separated list of search engines to run in parallel on each mzML file. Currently supported: comet and msgf (default: comet)\nIf more than one search engine is given, results are combined based on posterior error probabilities (see the different types\nof estimation procedures under [`--posterior_probabilities`](#posterior_probabilities)). Combination is done with\n[ConsensusID](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_ConsensusID.html).\nSee also its corresponding [`--consensusid_algorithm`](#--consensusid_algorithm) parameter for different combination strategies.\nCombinations may profit from an increased [`--num_hits`](#--num_hits) parameter."
+                    "help_text": "A comma-separated list of search engines to run in parallel on each mzML file. Currently supported: comet, msgf and sage (default: comet)\nIf more than one search engine is given, results are combined based on posterior error probabilities (see the different types\nof estimation procedures under [`--posterior_probabilities`](#posterior_probabilities)). Combination is done with\n[ConsensusID](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_ConsensusID.html).\nSee also its corresponding [`--consensusid_algorithm`](#--consensusid_algorithm) parameter for different combination strategies.\nCombinations may profit from an increased [`--num_hits`](#--num_hits) parameter."
+                },
+                "sage_processes": {
+                    "type": "integer",
+                    "description": "Number of sage processes to be spawned.",
+                    "default": 1,
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "Since sage's runtime benefits from building an index only once per database and processing files in parallel, you can choose the number of sage processes to be spawned here. Input mzMLs will be distributed equally among them in arbitrary order."
                 },
                 "enzyme": {
                     "type": "string",
@@ -171,6 +192,7 @@
                 "num_enzyme_termini": {
                     "type": "string",
                     "description": "Specify the amount of termini matching the enzyme cutting rules for a peptide to be considered. Valid values are `fully` (default), `semi`, or `none`",
+                    "help_text": "Warning: not supported by sage yet.",
                     "default": "fully",
                     "fa_icon": "fas fa-list-ol",
                     "enum": ["fully", "semi", "none"]
@@ -801,9 +823,9 @@
                 },
                 "transfer_ids": {
                     "type": "string",
-                    "description": "Tries a targeted requantification in files where an ID is missing, based on aggregate properties (i.e. RT) of the features in other aligned files (e.g. 'mean' of RT). (**WARNING:** increased memory consumption and runtime). 'false' turns this feature off. (default: 'false')",
-                    "default": "false",
-                    "enum": ["false", "mean"],
+                    "description": "Tries a targeted requantification in files where an ID is missing, based on aggregate properties (i.e. RT) of the features in other aligned files (e.g. 'mean' of RT). (**WARNING:** increased memory consumption and runtime). 'off' turns this feature off. (default: 'off')",
+                    "default": "off",
+                    "enum": ["off", "mean"],
                     "fa_icon": "fas fa-list-ol"
                 },
                 "targeted_only": {
@@ -1212,13 +1234,6 @@
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
                 },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
-                },
                 "validate_params": {
                     "type": "boolean",
                     "description": "Boolean whether to validate parameters against the schema at runtime",
@@ -1233,18 +1248,6 @@
                     "default": false,
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "singularity_pull_docker_container": {
-                    "type": "boolean",
-                    "description": "This parameter force singularity to pull the contain from docker instead of using the singularity image",
-                    "hidden": true,
-                    "fa_icon": "fas fa-bacon"
-                },
-                "hostnames": {
-                    "type": "string",
-                    "description": "Institutional configs hostname.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
                 },
                 "validationFailUnrecognisedParams": {
                     "type": "boolean",

@@ -23,14 +23,11 @@ jobs:
             {
               "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/quantms/results-test-${{ github.sha }}"
             }
-          profiles: test_tmt,aws_tower
+          profiles: test_tmt
+
       - uses: actions/upload-artifact@v3
         with:
           name: Tower debug log file
           path: |
             tower_action_*.log
             tower_action_*.json
-          nextflow_config: |
-            process.errorStrategy = 'retry'
-            process.maxRetries = 3
-

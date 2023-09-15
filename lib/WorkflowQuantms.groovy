@@ -12,8 +12,7 @@ class WorkflowQuantms {
     //
     public static void initialise(params, log) {
         if (!params.database) {
-            log.error "database file not specified with e.g. '--database *.fasta' or via a detectable config file."
-            System.exit(1)
+            Nextflow.error "database file not specified with e.g. '--database *.fasta' or via a detectable config file."
         }
     }
 

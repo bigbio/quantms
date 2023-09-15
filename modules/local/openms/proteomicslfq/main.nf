@@ -32,19 +32,21 @@ process PROTEOMICSLFQ {
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
     def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
+    def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
+    def id_sorted = id_files.collect().sort{ a, b -> a.name <=> b.name}
 
     """
     ProteomicsLFQ \\
         -threads ${task.cpus} \\
-        -in ${(mzmls as List).join(' ')} \\
-        -ids ${(id_files as List).join(' ')} \\
+        -in ${mzml_sorted.join(' ')} \\
+        -ids ${id_sorted.join(' ')} \\
         -design ${expdes} \\
         -fasta ${fasta} \\
         -protein_inference ${params.protein_inference_method} \\
         -quantification_method ${params.quantification_method} \\
         -targeted_only ${params.targeted_only} \\
         -mass_recalibration ${params.mass_recalibration} \\
-        -transfer_ids ${params.transfer_ids} \\
+        -transfer_ids ${params.transfer_ids == 'off' ? 'false' : params.transfer_ids} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
         ${decoys_present} \\
