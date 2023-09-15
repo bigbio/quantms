@@ -25,12 +25,12 @@ workflow FILE_PREPARATION {
     ch_rawfiles
     .branch {
         dottar: WorkflowQuantms.hasExtension(it[1], '.tar')
-        dotgz: WorkflowQuantms.hasExtension(it[1], '.tar')
+        dotzip: WorkflowQuantms.hasExtension(it[1], '.zip')
         gz: WorkflowQuantms.hasExtension(it[1], '.gz')
         uncompressed: true
     }.set { ch_branched_input }
 
-    compressed_files = ch_branched_input.dottar.mix(ch_branched_input.dotgz, ch_branched_input.gz)
+    compressed_files = ch_branched_input.dottar.mix(ch_branched_input.dotzip, ch_branched_input.gz)
     DECOMPRESS(compressed_files)
     ch_versions = ch_versions.mix(DECOMPRESS.out.version)
     ch_rawfiles = ch_branched_input.uncompressed.mix(DECOMPRESS.out.decompressed_files)
@@ -91,7 +91,7 @@ workflow FILE_PREPARATION {
         ch_results = indexed_mzml_bundle.mix(ch_branched_input.dotd)
     }
 
-    MZMLSTATISTICS( indexed_mzml_bundle )
+    MZMLSTATISTICS(indexed_mzml_bundle)
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.mzml_statistics.collect())
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
 

@@ -1,11 +1,11 @@
 process PMULTIQC {
     label 'process_high'
 
-    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.19"
+    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.20"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.19--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.20--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/pmultiqc:0.0.19--pyhdfd78af_0"
+        container "quay.io/biocontainers/pmultiqc:0.0.20--pyhdfd78af_0"
     }
 
     input:
@@ -33,13 +33,6 @@ process PMULTIQC {
 
     echo ">>>>>>>>> Experimental Design <<<<<<<<<"
     cat results/*openms_design.tsv
-
-    # I attempted making this expression match prior
-    # to tabs but that does not seem to work (it might be a groovy escaping issue)
-    # and should be fixed when https://github.com/bigbio/pmultiqc/issues/80
-    # gets solved.
-    # Current hack to attempt matching file stems and not file extensions
-    sed -i -E "s/((\\.tar)|(\\.gz)|(\\.tar\\.gz))//g"  results/*openms_design.tsv
 
     echo ">>>>>>>>> Experimental Design <<<<<<<<<"
     cat results/*openms_design.tsv
