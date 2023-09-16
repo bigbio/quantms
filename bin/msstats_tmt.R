@@ -848,8 +848,6 @@ if (plot_profile_all) {
     dataProcessPlotsTMT(processed.quant, "QCPlot", width=12, height=12, which.Protein="allonly")
 }
 
-
-
 lvls <- levels(as.factor(processed.quant$ProteinLevelData$Condition))
 l <- length(lvls)
 
