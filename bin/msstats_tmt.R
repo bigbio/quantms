@@ -845,9 +845,8 @@ processed.quant <- proteinSummarization(quant, method=args[8],remove_empty_chann
 
 if (plot_profile_all) {
     dataProcessPlotsTMT(processed.quant, "ProfilePlot", width=12, height=12, which.Protein="all")
+    dataProcessPlotsTMT(processed.quant, "QCPlot", width=12, height=12, which.Protein="allonly")
 }
-
-dataProcessPlotsTMT(processed.quant, "QCPlot", width=12, height=12, which.Protein="allonly")
 
 lvls <- levels(as.factor(processed.quant$ProteinLevelData$Condition))
 l <- length(lvls)
