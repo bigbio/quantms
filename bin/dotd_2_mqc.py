@@ -177,7 +177,7 @@ class DotDFile:
             raise RuntimeError("More than one acquisition datetime found.")
 
         return out[0][0]
-    
+
     def get_tot_current(self) -> float:
         """Gets the total current from the ms1 scans.
 
@@ -198,7 +198,7 @@ class DotDFile:
             raise RuntimeError("More than one total current found.")
 
         return out[0][0]
-    
+
     def get_dia_scan_current(self) -> float:
         """Gets the total current from the ms2 scans.
 
@@ -294,26 +294,26 @@ def main_single(input_path, output_path):
         main_aggregate(output_path, output_path)
 
     logger.info("Done.")
-        
+
 
 def main_aggregate(input_path, output_path):
     # Find the general stats files
     if not input_path.is_dir():
         logger.error(f"Input path {input_path} is not a directory.")
         raise ValueError("Input path must be a directory.")
-    
+
     general_stats_files = list(input_path.glob("general_stats_*.tsv"))
     if not general_stats_files:
         logger.error(f"No general stats files found in {input_path}.")
         raise ValueError("No general stats files found.")
-    
+
     # Merge them to a single table
     # Effectively transposing the columns and adding column called file,
     # which contains the file name from which the stats were acquired.
     logger.info("Merging general stats files.")
     general_stats = []
     for f in general_stats_files:
-        curr_stats = {'file': f.stem.replace("general_stats_", "")}
+        curr_stats = {"file": f.stem.replace("general_stats_", "")}
         with f.open("r") as fh:
             for line in fh:
                 line = line.strip()
@@ -323,7 +323,7 @@ def main_aggregate(input_path, output_path):
                 curr_stats[k] = v
 
         general_stats.append(curr_stats)
-    
+
     # Write the general stats file
     logger.info("Writing general stats file.")
     with (output_path / "general_stats.tsv").open("w") as f:
@@ -337,19 +337,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(add_help=True, usage=GENERAL_HELP)
     parser.add_argument("--version", action="version", version=f"%(prog)s {VERSION}")
     subparsers = parser.add_subparsers(required=True)
-    
+
     # create the parser for the "single" command
-    parser_foo = subparsers.add_parser('single')
+    parser_foo = subparsers.add_parser("single")
     parser_foo.add_argument("input", help="Input .d file or directory of .d files.")
     parser_foo.add_argument("output", help="Output directory.")
     parser_foo.set_defaults(func=main_single)
-    
+
     # create the parser for the "aggregate" command
-    parser_bar = subparsers.add_parser('aggregate')
+    parser_bar = subparsers.add_parser("aggregate")
     parser_bar.add_argument("input", help="Directory that contains the general stats files to aggregate.")
     parser_bar.add_argument("output", help="Output directory.")
     parser_bar.set_defaults(func=main_aggregate)
-    
+
     # parse the args and call whatever function was selected
     args, unkargs = parser.parse_known_args()
     if unkargs:

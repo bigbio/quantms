@@ -34,9 +34,6 @@ process PMULTIQC {
     echo ">>>>>>>>> Experimental Design <<<<<<<<<"
     cat results/*openms_design.tsv
 
-    echo ">>>>>>>>> Experimental Design <<<<<<<<<"
-    cat results/*openms_design.tsv
-
     echo ">>>>>>>>> Running Multiqc <<<<<<<<<"
     multiqc \\
         -f \\

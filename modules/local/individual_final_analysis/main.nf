@@ -1,5 +1,5 @@
 process INDIVIDUAL_FINAL_ANALYSIS {
-    tag "$mzML.baseName"
+    tag "$ms_file.baseName"
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -7,7 +7,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
         'biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    tuple val(meta), file(mzML), file(fasta), file(diann_log), file(library)
+    tuple val(meta), path(ms_file), path(fasta), path(diann_log), path(library)
 
     output:
     path "*.quant", emit: diann_quant
@@ -30,23 +30,21 @@ process INDIVIDUAL_FINAL_ANALYSIS {
     }
 
     """
-    # Question: why is this using echo? wouldnt just the variable replacement do the same?
-
     diann   --lib ${library} \\
-            --f ${mzML} \\
+            --f ${ms_file} \\
             --fasta ${fasta} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
             --temp ./ \\
-            --mass-acc \$(echo ${mass_acc_ms2}) \\
-            --mass-acc-ms1 \$(echo ${mass_acc_ms1}) \\
-            --window \$(echo ${scan_window}) \\
+            --mass-acc ${mass_acc_ms2} \\
+            --mass-acc-ms1 ${mass_acc_ms1} \\
+            --window ${scan_window} \\
             --no-ifs-removal \\
             --no-main-report \\
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
             $args \\
-            2>&1 | tee ${mzML.baseName}_final_diann.log
+            2>&1 | tee ${ms_file.baseName}_final_diann.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
