@@ -17,7 +17,7 @@ process LUCIPHORADAPTER {
     path "*.log", emit: log
 
     script:
-    // The OpenMS adapters need the actuall jar file, not the executable/shell wrapper that (bio)conda creates
+    // The OpenMS adapters need the actual jar file, not the executable/shell wrapper that (bio)conda creates
     luciphor_jar = ''
     if (workflow.containerEngine || (task.executor == "awsbatch")) {
         luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"

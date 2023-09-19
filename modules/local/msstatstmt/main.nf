@@ -39,6 +39,7 @@ process MSSTATSTMT {
         ${params.msstatsiso_reference_normalization} \\
         ${msstatstmt_csv_input.baseName} \\
         ${params.msstats_threshold} \\
+        ${params.msstats_plot_profile_qc} \\
         $args \\
         2>&1 | tee msstats_tmt.log
 
