@@ -1048,19 +1048,14 @@
             "description": "",
             "default": "",
             "properties": {
-                "enable_qc": {
-                    "type": "boolean",
-                    "description": "Enable generation of quality control report by PTXQC? default: 'false' since it is still unstable",
-                    "fa_icon": "fas fa-toggle-on"
-                },
-                "ptxqc_report_layout": {
-                    "type": "string",
-                    "description": "Specify a yaml file for the report layout (see PTXQC documentation) (TODO not yet fully implemented)",
-                    "fa_icon": "far fa-file"
-                },
                 "enable_pmultiqc": {
                     "type": "boolean",
                     "description": "Enable generation of pmultiqc report? default: 'false'",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "pmultiqc_idxml_skip": {
+                    "type": "boolean",
+                    "description": "Skip idXML files (do not generate search engine scores) in pmultiqc report? default: 'true'",
                     "fa_icon": "fas fa-toggle-on"
                 }
             },

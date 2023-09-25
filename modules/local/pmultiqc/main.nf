@@ -23,6 +23,7 @@ process PMULTIQC {
     def args = task.ext.args ?: ''
     def disable_pmultiqc = (params.enable_pmultiqc) && (params.export_mztab) ? "" : "--disable_plugin"
     def disable_table_plots = (params.enable_pmultiqc) && (params.skip_table_plots) ? "--disable_table" : ""
+    def disable_idxml_index = (params.enable_pmultiqc) && (params.pmultiqc_idxml_skip) ? "--ignored_idxml" : ""
 
     """
     multiqc \\
@@ -31,6 +32,7 @@ process PMULTIQC {
         ${args} \\
         ${disable_pmultiqc} \\
         ${disable_table_plots} \\
+        ${disable_idxml_index} \\
         --quantification_method $params.quantification_method \\
         ./results \\
         -o .
