@@ -30,7 +30,7 @@ process PROTEOMICSLFQ {
     script:
     def args = task.ext.args ?: ''
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
-    def id_transfer_threshold = (params.quantification_method == "feature_intensity") && (transfer_ids != "off") ? "-id_transfer_threshold ${params.id_transfer_threshold}" : ""
+    def id_transfer_threshold = (params.quantification_method == "feature_intensity") && (params.transfer_ids != "off") ? "-id_transfer_threshold ${params.id_transfer_threshold}" : ""
     def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
     def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
