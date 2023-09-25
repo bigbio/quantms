@@ -834,6 +834,12 @@
                     "default": true,
                     "fa_icon": "far fa-check-square"
                 },
+                "id_transfer_threshold": {
+                    "type": "number",
+                    "description": "The maximum percentage of samples that will be accepted for matching between runs (default: 0.5)",
+                    "default": 0.5,
+                    "fa_icon": "fas fa-filter"
+                },
                 "alignment_order": {
                     "type": "string",
                     "description": "The order in which maps are aligned. Star = all vs. the reference with most IDs (default). TreeGuided = an alignment tree is calculated first based on similarity measures of the IDs in the maps.",
