@@ -2,11 +2,11 @@ process MSSTATSTMT {
     tag "$msstatstmt_csv_input.Name"
     label 'process_medium'
 
-    conda "bioconda::bioconductor-msstatstmt=2.2.0"
+    conda "bioconda::bioconductor-msstatstmt=2.8.0"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-msstatstmt:2.2.0--r41hdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/bioconductor-msstatstmt:2.8.0--r43hdfd78af_0"
     } else {
-        container "quay.io/biocontainers/bioconductor-msstatstmt:2.2.0--r41hdfd78af_0"
+        container "quay.io/biocontainers/bioconductor-msstatstmt:2.8.0--r43hdfd78af_0"
     }
 
     input:

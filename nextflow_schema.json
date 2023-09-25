@@ -834,6 +834,12 @@
                     "default": true,
                     "fa_icon": "far fa-check-square"
                 },
+                "id_transfer_threshold": {
+                    "type": "number",
+                    "description": "The maximum percentage of samples that will be accepted for matching between runs (default: 0.5)",
+                    "default": 0.5,
+                    "fa_icon": "fas fa-filter"
+                },
                 "alignment_order": {
                     "type": "string",
                     "description": "The order in which maps are aligned. Star = all vs. the reference with most IDs (default). TreeGuided = an alignment tree is calculated first based on similarity measures of the IDs in the maps.",
@@ -1048,19 +1054,14 @@
             "description": "",
             "default": "",
             "properties": {
-                "enable_qc": {
-                    "type": "boolean",
-                    "description": "Enable generation of quality control report by PTXQC? default: 'false' since it is still unstable",
-                    "fa_icon": "fas fa-toggle-on"
-                },
-                "ptxqc_report_layout": {
-                    "type": "string",
-                    "description": "Specify a yaml file for the report layout (see PTXQC documentation) (TODO not yet fully implemented)",
-                    "fa_icon": "far fa-file"
-                },
                 "enable_pmultiqc": {
                     "type": "boolean",
                     "description": "Enable generation of pmultiqc report? default: 'false'",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "pmultiqc_idxml_skip": {
+                    "type": "boolean",
+                    "description": "Skip idXML files (do not generate search engine scores) in pmultiqc report? default: 'true'",
                     "fa_icon": "fas fa-toggle-on"
                 }
             },
