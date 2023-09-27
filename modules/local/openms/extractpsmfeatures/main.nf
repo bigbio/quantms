@@ -4,10 +4,10 @@ process EXTRACTPSMFEATURES {
     label 'process_single'
     label 'openms'
 
-    conda "bioconda::openms=2.9.1"
+    conda "openms::openms-thirdparty=3.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
-        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
+        'ghcr.io/openms/openms-executables-sif:latest' :
+        'ghcr.io/openms/openms-executables:latest' }"
 
     input:
     tuple val(meta), path(id_file)
