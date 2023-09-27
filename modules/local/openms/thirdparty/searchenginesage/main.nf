@@ -1,11 +1,12 @@
 process SEARCHENGINESAGE {
     tag "${metas.toList().collect{it.mzml_id}}"
     label 'process_medium' // we could make it dependent on the number of files
+    label 'openms'
 
-    conda "openms::openms-thirdparty=3.1.0"
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/openms/openms-executables-sif:latest' :
-        'ghcr.io/openms/openms-executables:latest' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     tuple val(key), val(batch), val(metas), path(mzml_files), path(database)

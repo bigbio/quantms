@@ -1,6 +1,7 @@
 process ISOBARICANALYZER {
     tag "$meta.mzml_id"
     label 'process_medium'
+    label 'openms'
 
     conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

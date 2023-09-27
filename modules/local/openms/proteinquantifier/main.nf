@@ -1,11 +1,12 @@
 process PROTEINQUANTIFIER {
     tag "${pro_quant_exp.baseName}"
     label 'process_medium'
+    label 'openms'
 
-    conda "openms::openms-thirdparty=3.1.0"
+    conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/openms/openms-executables-sif:latest' :
-        'ghcr.io/openms/openms-executables:latest' }"
+        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
+        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     path epi_filt_resolve
