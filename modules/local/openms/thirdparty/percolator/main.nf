@@ -33,7 +33,7 @@ process PERCOLATOR {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        PercolatorAdapter: \$(PercolatorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        PercolatorAdapter: \$(PercolatorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
         percolator: \$(percolator -h 2>&1 | grep -E '^Percolator version(.*)' | sed 's/Percolator version //g')
     END_VERSIONS
     """
