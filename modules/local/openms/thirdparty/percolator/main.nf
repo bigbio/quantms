@@ -2,10 +2,10 @@ process PERCOLATOR {
     tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda "bioconda::openms-thirdparty=2.9.1"
+    conda "openms::openms-thirdparty=3.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_1' :
-        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_1' }"
+        'ghcr.io/openms/openms-executables-sif:latest' :
+        'ghcr.io/openms/openms-executables:latest' }"
 
     input:
     tuple val(meta), path(id_file)
@@ -33,7 +33,7 @@ process PERCOLATOR {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        PercolatorAdapter: \$(PercolatorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        PercolatorAdapter: \$(PercolatorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
         percolator: \$(percolator -h 2>&1 | grep -E '^Percolator version(.*)' | sed 's/Percolator version //g')
     END_VERSIONS
     """
