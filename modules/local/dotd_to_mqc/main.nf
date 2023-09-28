@@ -4,7 +4,12 @@ process DOTD2MQC_INDIVIDUAL {
     label 'process_single'
 
     conda "base::python=3.10"
-    container "continuumio/miniconda3:23.5.2-0-alpine"
+    conda "conda-forge::python=3.10"
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/python:3.10"
+    } else {
+        container "quay.io/biocontainers/python:3.10"
+    }
 
     input:
     // Note: This step can be optimized by staging only the
