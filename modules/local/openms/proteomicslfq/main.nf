@@ -1,11 +1,12 @@
 process PROTEOMICSLFQ {
     tag "${expdes.baseName}"
     label 'process_high'
+    label 'openms'
 
     conda "bioconda::openms=2.9.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
-        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
+        'biocontainers/openms:2.9.1--h135471a_0' }"
 
     input:
     path(mzmls)
@@ -30,6 +31,7 @@ process PROTEOMICSLFQ {
     script:
     def args = task.ext.args ?: ''
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
+    def id_transfer_threshold = (params.quantification_method == "feature_intensity") && (params.transfer_ids != "off") ? "-id_transfer_threshold ${params.id_transfer_threshold}" : ""
     def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
     def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
@@ -47,6 +49,7 @@ process PROTEOMICSLFQ {
         -targeted_only ${params.targeted_only} \\
         -mass_recalibration ${params.mass_recalibration} \\
         -transfer_ids ${params.transfer_ids == 'off' ? 'false' : params.transfer_ids} \\
+        ${id_transfer_threshold} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
         ${decoys_present} \\

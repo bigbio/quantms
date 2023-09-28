@@ -1,6 +1,7 @@
 process IDPEP {
     tag "$meta.mzml_id"
     label 'process_very_low'
+    label 'openms'
 
     conda "openms::openms-thirdparty=3.1.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

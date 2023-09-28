@@ -7,7 +7,7 @@ process MZMLSTATISTICS {
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
     } else {
-        container "quay.io/biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
+        container "biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
     }
 
     input:
