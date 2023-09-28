@@ -1,11 +1,12 @@
 process LUCIPHORADAPTER {
     tag "$meta.mzml_id"
     label 'process_medium'
+    label 'openms'
 
-    conda "bioconda::openms-thirdparty=2.9.1"
+    conda "bioconda::openms-thirdparty=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_1' :
-        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_1' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.0.0--h9ee0642_1' :
+        'biocontainers/openms-thirdparty:3.0.0--h9ee0642_1' }"
 
     input:
     tuple val(meta), path(mzml_file), path(id_file)
@@ -19,7 +20,7 @@ process LUCIPHORADAPTER {
     script:
     // The OpenMS adapters need the actual jar file, not the executable/shell wrapper that (bio)conda creates
     luciphor_jar = ''
-    if (workflow.containerEngine || (task.executor == "awsbatch")) {
+    if ((workflow.containerEngine || (task.executor == "awsbatch")) && task.container.indexOf("biocontainers") > -1) {
         luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
     } else if (session.config.conda && session.config.conda.enabled) {
         luciphor_jar = "-executable \$(find \$CONDA_PREFIX/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
@@ -52,7 +53,7 @@ process LUCIPHORADAPTER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        LuciphorAdapter: \$(LuciphorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
+        LuciphorAdapter: \$(LuciphorAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
         Luciphor: \$(luciphor2 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g')
     END_VERSIONS
     """

@@ -70,10 +70,11 @@ A graphical overview of suggested routes through the pipeline depending on conte
 
 ## Usage
 
-> **Note**
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
-> to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-> with `-profile test` before running the workflow on actual data.
+:::note
+If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
+to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
+with `-profile test` before running the workflow on actual data.
+:::
 
 First, find or create a sample-to-data relationship file ([SDRF](https://github.com/bigbio/proteomics-sample-metadata)).
 Have a look at public datasets that were already annotated [here](https://github.com/bigbio/proteomics-sample-metadata/tree/master/annotated-projects).
@@ -93,10 +94,11 @@ nextflow run nf-core/quantms \
    --outdir <OUTDIR>
 ```
 
-> **Warning:**
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
-> provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+:::warning
+Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
+provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
+see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+:::
 
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/quantms/usage) and the [parameter documentation](https://nf-co.re/quantms/parameters).
 
