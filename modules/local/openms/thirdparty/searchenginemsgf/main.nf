@@ -3,10 +3,10 @@ process SEARCHENGINEMSGF {
     label 'process_medium'
 //  label 'openms'
 
-    conda "bioconda::openms=2.9.1"
+    conda "bioconda::openms=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
-        'quay.io/biocontainers/openms:2.9.1--h135471a_0' }"
+        'https://depot.galaxyproject.org/singularity/openms:3.0.0--h9ee0642_1' :
+        'quay.io/biocontainers/openms:3.0.0--h9ee0642_1' }"
 
     input:
     tuple val(meta),  path(mzml_file), path(database)
