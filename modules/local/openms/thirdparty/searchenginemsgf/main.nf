@@ -1,7 +1,7 @@
 process SEARCHENGINEMSGF {
     tag "$meta.mzml_id"
     label 'process_medium'
-//  label 'openms'
+    label 'openms'
 
     conda "bioconda::openms-thirdparty=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -19,7 +19,7 @@ process SEARCHENGINEMSGF {
     script:
     // The OpenMS adapters need the actual jar file, not the executable/shell wrapper that (bio)conda creates
     msgf_jar = ''
-    if (workflow.containerEngine || (task.executor == "awsbatch")) {
+    if (workflow.containerEngine || (task.executor == "awsbatch") && container != "openms*") {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     } else if (session.config.conda && session.config.conda.enabled) {
         msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
