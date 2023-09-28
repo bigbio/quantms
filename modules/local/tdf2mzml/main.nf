@@ -1,35 +1,10 @@
 
 process TDF2MZML {
     tag "$meta.mzml_id"
-    label 'process_low'
     label 'process_single'
     label 'error_retry'
 
-    // for rawfileparser this is conda "conda-forge::mono bioconda::thermorawfileparser=1.3.4"
-    // conda is not enabled for DIA so ... disabling anyway
-
-    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //    'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0' :
-    //    'quay.io/biocontainers/thermorawfileparser:1.3.4--ha8f3691_0' }"
     container 'mfreitas/tdf2mzml:latest' // I don't know which stable tag to use...
-
-    stageInMode {
-        if (task.attempt == 1) {
-            if (executor == "awsbatch") {
-                'symlink'
-            } else {
-                'link'
-            }
-        } else if (task.attempt == 2) {
-            if (executor == "awsbatch") {
-                'copy'
-            } else {
-                'symlink'
-            }
-        } else {
-            'copy'
-        }
-    }
 
     input:
     tuple val(meta), path(rawfile)

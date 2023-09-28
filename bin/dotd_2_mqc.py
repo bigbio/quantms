@@ -2,6 +2,14 @@
 GENERAL_HELP = """
 Converts .d files to multiqc compatible files.
 
+This script can be used either as standalone or as part of a larger workflow
+with pmultiqc as a plugin.
+
+For the standalone usage follow the instructions in the usage section.
+If you want to use the output of this script as part of a larger workflow
+you will have to modify the `multiqc_config.yaml` file used as te input
+for multiqc. Please refer to the multiqc documentation for more information.
+
 Generates the following files:
     - tic_<basename>.tsv
     - bpc_<basename>.tsv
@@ -35,7 +43,13 @@ VERSION = "0.0.2"
 logging.basicConfig(level=logging.DEBUG)
 logger = getLogger(__name__)
 
+# The time resulution in seconds.
+# Larger values will result in smaller data files as outputs
+# and will slightly smooth the data. 5 seconds seems to be
+# a good value for qc purposes.
 SECOND_RESOLUTION = 5
+# This string is used as a template for the multiqc config file.
+# Check the module docstring for more information.
 MQC_YML = """
 custom_data:
     total_ion_chromatograms:

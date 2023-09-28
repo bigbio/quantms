@@ -39,12 +39,8 @@ process DIANNSUMMARY {
     species_genes = params.species_genes ? "--species-genes": ""
 
     """
-    # Adding here for inspection purposes
-    ls -lcth
     # Notes: if .quant files are passed, mzml/.d files are not accessed, so the name needs to be passed but files
     # do not need to pe present.
-
-    # end, remove when done inspecting.
 
     diann   --lib ${empirical_library} \\
             --fasta ${fasta} \\
