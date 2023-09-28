@@ -184,7 +184,7 @@ The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementatio
      ```nextflow
      process {
          withName: PANGOLIN {
-             container = 'quay.io/biocontainers/pangolin:3.0.5--pyhdfd78af_0'
+             container = 'biocontainers/pangolin:3.0.5--pyhdfd78af_0'
          }
      }
      ```
