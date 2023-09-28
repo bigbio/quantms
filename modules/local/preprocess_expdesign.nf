@@ -10,7 +10,7 @@ process PREPROCESS_EXPDESIGN {
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.24--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/sdrf-pipelines:0.0.24--pyhdfd78af_0"
+        container "biocontainers/sdrf-pipelines:0.0.24--pyhdfd78af_0"
     }
 
     input:

@@ -6,7 +6,7 @@ process MSSTATSTMT {
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/bioconductor-msstatstmt:2.8.0--r43hdfd78af_0"
     } else {
-        container "quay.io/biocontainers/bioconductor-msstatstmt:2.8.0--r43hdfd78af_0"
+        container "biocontainers/bioconductor-msstatstmt:2.8.0--r43hdfd78af_0"
     }
 
     input:
