@@ -12,3 +12,4 @@ testing*
 /build/
 results*/
 venv/
+lint_log.txt
