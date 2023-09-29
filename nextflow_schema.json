@@ -152,6 +152,12 @@
                     "fa_icon": "fas fa-font",
                     "help_text": "Which MS levels to pick as comma separated list, e.g. `--peakpicking_ms_levels 1,2`. Leave empty for auto-detection."
                 },
+                "convert_dotd": {
+                    "type": "boolean",
+                    "description": "Convert bruker .d files to mzML",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Whether to convert raw .d bruker files to .mzML"
+                },
                 "reindex_mzml": {
                     "type": "boolean",
                     "default": true,
@@ -918,6 +924,13 @@
                     "description": "Instructs DIA-NN to add the organism identifier to the gene names",
                     "fa_icon": "far fa-check-square",
                     "default": false
+                },
+                "diann_speclib": {
+                    "type": "string",
+                    "description": "The spectral library to use for DIA-NN",
+                    "fa_icon": "fas fa-file",
+                    "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
+                    "hidden": false
                 },
                 "diann_debug": {
                     "type": "integer",

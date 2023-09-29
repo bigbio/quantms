@@ -26,6 +26,16 @@ process PMULTIQC {
     def disable_idxml_index = (params.enable_pmultiqc) && (params.pmultiqc_idxml_skip) ? "--ignored_idxml" : ""
 
     """
+    set -x
+    set -e
+
+    # leaving here to ease debugging
+    ls -lcth *
+
+    echo ">>>>>>>>> Experimental Design <<<<<<<<<"
+    cat results/*openms_design.tsv
+
+    echo ">>>>>>>>> Running Multiqc <<<<<<<<<"
     multiqc \\
         -f \\
         --config ./results/multiqc_config.yml \\

@@ -23,6 +23,7 @@ process DIANNCONVERT {
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
     path "*.mzTab", emit: out_mztab
+    path "*.log", emit: log
     path "versions.yml", emit: version
 
     exec:
@@ -36,6 +37,7 @@ process DIANNCONVERT {
     """
     diann_convert.py convert \\
         --folder ./ \\
+        --exp_design ${exp_design} \\
         --diann_version ./version/versions.yml \\
         --dia_params "${dia_params}" \\
         --charge $params.max_precursor_charge \\

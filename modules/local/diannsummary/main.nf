@@ -7,11 +7,15 @@ process DIANNSUMMARY {
         'docker.io/biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    file(mzMLs)
+    // Note that the files are passed as names and not paths, this prevents them from being staged
+    // in the directory
+    val(ms_files)
     val(meta)
-    file(empirical_library)
-    file("quant/")
-    file(fasta)
+    path(empirical_library)
+    // The quant path is passed, and diann will use the files in the quant directory instead
+    // of the ones passed in ms_files.
+    path("quant/")
+    path(fasta)
 
     output:
     path "diann_report.tsv", emit: main_report
@@ -27,17 +31,20 @@ process DIANNSUMMARY {
 
     script:
     def args = task.ext.args ?: ''
-    mass_acc_ms1 = meta.precursor_mass_tolerance_unit == "ppm" ? meta.precursor_mass_tolerance : 5
-    mass_acc_ms2 = meta.fragment_mass_tolerance_unit == "ppm" ? meta.fragment_mass_tolerance : 13
+    mass_acc_ms1 = meta["precursormasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["precursormasstolerance"] : 5
+    mass_acc_ms2 = meta["fragmentmasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["fragmentmasstolerance"] : 13
 
     mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1"
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     species_genes = params.species_genes ? "--species-genes": ""
 
     """
+    # Notes: if .quant files are passed, mzml/.d files are not accessed, so the name needs to be passed but files
+    # do not need to pe present.
+
     diann   --lib ${empirical_library} \\
             --fasta ${fasta} \\
-            --f ${(mzMLs as List).join(' --f ')} \\
+            --f ${(ms_files as List).join(' --f ')} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
             ${scan_window} \\

@@ -7,7 +7,8 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
         'docker.io/biocontainers/diann:v1.8.1_cv1' }"
 
     input:
-    path(mzMLs)
+    // In this step the real files are passed, and not the names
+    path(ms_files)
     val(meta)
     path("quant/*")
     path(lib)
@@ -22,14 +23,25 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
 
     script:
     def args = task.ext.args ?: ''
-    mass_acc_ms1 = meta.precursor_mass_tolerance_unit == "ppm" ? meta.precursor_mass_tolerance : 5
-    mass_acc_ms2 = meta.fragment_mass_tolerance_unit == "ppm" ? meta.fragment_mass_tolerance : 13
+    mass_acc_ms1 = meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') ? meta['precursormasstolerance'] : 5
+    mass_acc_ms2 = meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm') ? meta['fragmentmasstolerance'] : 13
 
-    mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1"
-    scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
+    if (params.mass_acc_automatic) {
+        mass_acc = "--quick-mass-acc --individual-mass-acc"
+    } else {
+        mass_acc = "--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1"
+    }
+    scan_window = params.scan_window_automatic ? '--individual-windows' : "--window $params.scan_window"
 
     """
-    diann   --f ${(mzMLs as List).join(' --f ')} \\
+    # Precursor Tolerance value was: ${meta['precursormasstolerance']}
+    # Fragment Tolerance value was: ${meta['fragmentmasstolerance']}
+    # Precursor Tolerance unit was: ${meta['precursormasstoleranceunit']}
+    # Fragment Tolerance unit was: ${meta['fragmentmasstoleranceunit']}
+
+    ls -lcth
+
+    diann   --f ${(ms_files as List).join(' --f ')} \\
             --lib ${lib} \\
             --threads ${task.cpus} \\
             --out-lib empirical_library.tsv \\
