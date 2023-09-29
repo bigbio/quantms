@@ -39,7 +39,6 @@ process DOTD2MQC_INDIVIDUAL {
     """
 }
 
-
 process DOTD2MQC_AGGREGATE {
     label 'process_single'
 
