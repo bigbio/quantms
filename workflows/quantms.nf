@@ -1,21 +1,25 @@
 /*
-========================================================================================
-    VALIDATE INPUTS
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    PRINT PARAMS SUMMARY
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
+include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
 
-// Validate input parameters
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
+
+// Print parameter summary log to screen
+log.info logo + paramsSummaryLog(workflow) + citation
+
 WorkflowQuantms.initialise(params, log)
 
-// TODO nf-core: Add all file path parameters for the pipeline to the list below
-// Check input path parameters to see if they exist
-def checkPathParamList = [ params.input ]
-for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
-
-// Check mandatory parameters
-if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
+// Check conflicting parameters
+if (params.decoy_string_position == "suffix" && params.searchengines.contains("sage"))
+{
+    log.error "Sage does not support decoy suffixes. Please change your input database or generate with add_decoys and decoy_string_position 'prefix' (default)."
+}
 
 /*
 ========================================================================================
@@ -80,9 +84,12 @@ workflow QUANTMS {
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
     INPUT_CHECK (
-        ch_input
+        file(params.input)
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
+    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
+    // ! There is currently no tooling to help you write a sample sheet schema
 
     //
     // SUBWORKFLOW: Create input channel
@@ -173,13 +180,14 @@ workflow QUANTMS {
     workflow_summary    = WorkflowQuantms.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowQuantms.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    methods_description    = WorkflowQuantms.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
 
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)
+    ch_multiqc_files = ch_multiqc_files.mix(FILE_PREPARATION.out.mqc_custom_data)
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
     ch_multiqc_quantms_logo = file("$projectDir/assets/nf-core-quantms_logo_light.png")
@@ -206,6 +214,7 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
+    NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log)
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)

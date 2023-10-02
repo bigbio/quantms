@@ -40,6 +40,10 @@ workflow CREATE_INPUT_CHANNEL {
     wrapper.acquisition_method = ""
     wrapper.experiment_id      = ch_sdrf_or_design
 
+    if(is_sdrf.toString().toLowerCase().contains("false")) {
+        log.info "No SDRF given. Using parameters to determine tolerance, enzyme, mod. and labelling settings"
+    }
+
     ch_config.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .branch {
@@ -96,7 +100,6 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
 
     // for sdrf read from config file, without it, read from params
     if (is_sdrf.toString().toLowerCase().contains("false")) {
-        log.info "No SDRF given. Using parameters to determine tolerance, enzyme, mod. and labelling settings"
         meta.labelling_type             = params.labelling_type
         meta.dissociationmethod         = params.fragment_method
         meta.fixedmodifications         = params.fixed_mods
@@ -134,9 +137,9 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.labelling_type             = row.Label
         meta.fixedmodifications         = row.FixedModifications
         meta.variablemodifications      = row.VariableModifications
-        meta.precursormasstolerance     = row.PrecursorMassTolerance
+        meta.precursormasstolerance     = Double.parseDouble(row.PrecursorMassTolerance)
         meta.precursormasstoleranceunit = row.PrecursorMassToleranceUnit
-        meta.fragmentmasstolerance      = row.FragmentMassTolerance
+        meta.fragmentmasstolerance      = Double.parseDouble(row.FragmentMassTolerance)
         meta.fragmentmasstoleranceunit  = row.FragmentMassToleranceUnit
         meta.enzyme                     = row.Enzyme
 

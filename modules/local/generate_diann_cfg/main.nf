@@ -2,20 +2,20 @@ process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
     label 'process_low'
 
-    conda "conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22"
+    conda 'conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22'
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0"
+        container 'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0'
     } else {
-        container "quay.io/biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0"
+        container "biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0"
     }
 
     input:
     val(meta)
 
     output:
-    path "diann_config.cfg", emit: diann_cfg
-    path "versions.yml", emit: version
-    path "*.log"
+    path 'diann_config.cfg', emit: diann_cfg
+    path 'versions.yml', emit: version
+    path '*.log'
 
     script:
     def args = task.ext.args ?: ''
