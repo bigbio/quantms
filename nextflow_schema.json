@@ -847,6 +847,13 @@
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
+                "lfq_intensity_threshold": {
+                    "type": "number",
+                    "description": "The minimum intensity for a feature to be considered for quantification. (default: '10000')",
+                    "default": 10000,
+                    "fa_icon": "fas fa-filter",
+                    "help_text": "The minimum intensity for a feature to be considered for quantification. (default: '10000')"
+                },
                 "alignment_order": {
                     "type": "string",
                     "description": "The order in which maps are aligned. Star = all vs. the reference with most IDs (default). TreeGuided = an alignment tree is calculated first based on similarity measures of the IDs in the maps.",
