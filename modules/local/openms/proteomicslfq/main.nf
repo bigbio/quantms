@@ -35,7 +35,7 @@ process PROTEOMICSLFQ {
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
     def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
     def id_sorted = id_files.collect().sort{ a, b -> a.name <=> b.name}
-    def feature_with_id_min_score = params.targeted_only == false ? "-feature_with_id_min_score ${params.feature_with_id_min_score}" : ""
+    def feature_with_id_min_score =  "-feature_with_id_min_score ${params.feature_with_id_min_score}"
     def feature_without_id_min_score = params.targeted_only == false ? "-feature_without_id_min_score ${params.feature_without_id_min_score}" : ""
 
     """
