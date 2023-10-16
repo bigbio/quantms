@@ -4,6 +4,20 @@
 
 > Chengxin Dai, Julianus Pfeuffer, Hong Wang et al. quantms: A cloud-based pipeline for proteomics reanalysis enables the quantification of 17521 proteins in 9,502 human samples., 01 June 2023, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-3002027/v1]
 
+## Pipeline research manuscripts
+
+- [proteogenomics](https://pubmed.ncbi.nlm.nih.gov/34904638/)
+
+  > Umer HM, Audain E, Zhu Y, Pfeuffer J, Sachsenberg T, Lehtiö J, Branca RM, Perez-Riverol Y. Generation of ENSEMBL-based proteogenomics databases boosts the identification of non-canonical peptides. Bioinformatics. 2022 Feb 7;38(5):1470-1472. doi: 10.1093/bioinformatics/btab838. PMID: 34904638; PMCID: PMC8825679.
+
+- [lfq dda benchmark](https://pubmed.ncbi.nlm.nih.gov/37220883/)
+
+  > Bai M, Deng J, Dai C, Pfeuffer J, Sachsenberg T, Perez-Riverol Y. LFQ-Based Peptide and Protein Intensity Differential Expression Analysis. J Proteome Res. 2023 Jun 2;22(6):2114-2123. doi: 10.1021/acs.jproteome.2c00812. Epub 2023 May 23. PMID: 37220883; PMCID: PMC10243145.
+
+- [tissue absolute expression](https://pubmed.ncbi.nlm.nih.gov/37488995/)
+
+  > Wang H, Dai C, Pfeuffer J, Sachsenberg T, Sanchez A, Bai M, Perez-Riverol Y. Tissue-based absolute quantification using large-scale TMT and LFQ experiments. Proteomics. 2023 Jul 24:e2300188. doi: 10.1002/pmic.202300188. Epub ahead of print. PMID: 37488995.
+
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 
 > Ewels PA, Peltzer A, Fillinger S, Patel H, Alneberg J, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. The nf-core framework for community-curated bioinformatics pipelines. Nat Biotechnol. 2020 Mar;38(3):276-278. doi: 10.1038/s41587-020-0439-x. PubMed PMID: 32055031.
