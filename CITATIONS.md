@@ -1,5 +1,9 @@
 # nf-core/quantms: Citations
 
+## [Pipeline](https://www.researchsquare.com/article/rs-3002027/v1)
+
+> Chengxin Dai, Julianus Pfeuffer, Hong Wang et al. quantms: A cloud-based pipeline for proteomics reanalysis enables the quantification of 17521 proteins in 9,502 human samples., 01 June 2023, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-3002027/v1]
+
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 
 > Ewels PA, Peltzer A, Fillinger S, Patel H, Alneberg J, Wilm A, Garcia MU, Di Tommaso P, Nahnsen S. The nf-core framework for community-curated bioinformatics pipelines. Nat Biotechnol. 2020 Mar;38(3):276-278. doi: 10.1038/s41587-020-0439-x. PubMed PMID: 32055031.
@@ -37,6 +41,10 @@
 - [MS-GF+](https://www.ncbi.nlm.nih.gov/pubmed/25358478/)
 
   > Kim S., Pevzner PA. (2014). MS-GF+ makes progress towards a universal database search tool for proteomics. Nature communications, 5, 5277. doi: 10.1038/ncomms6277. PubMed PMID: 25358478; PubMed Central PMCID: PMC5036525
+
+- [Sage](https://pubmed.ncbi.nlm.nih.gov/37819886/)
+
+  > Lazear MR. Sage: An Open-Source Tool for Fast Proteomics Searching and Quantification at Scale. J Proteome Res. 2023 Oct 11. doi: 10.1021/acs.jproteome.3c00486. Epub ahead of print. PMID: 37819886.
 
 - [Epifany](https://pubmed.ncbi.nlm.nih.gov/31975601/)
 
