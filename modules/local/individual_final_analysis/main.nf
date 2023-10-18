@@ -19,11 +19,16 @@ process INDIVIDUAL_FINAL_ANALYSIS {
 
     script:
     def args = task.ext.args ?: ''
-    mass_acc_ms1 = meta["precursormasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["precursormasstolerance"] : 5
-    mass_acc_ms2 = meta["fragmentmasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["fragmentmasstolerance"] : 13
     scan_window = params.scan_window
 
     if (params.mass_acc_automatic | params.scan_window_automatic){
+        mass_acc_ms2 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 11 | tr -cd \"[0-9]\")"
+        scan_window = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 19 | tr -cd \"[0-9]\")"
+        mass_acc_ms1 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 15 | tr -cd \"[0-9]\")"
+    } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
+        mass_acc_ms1 = meta["precursormasstolerance"]
+        mass_acc_ms2 = meta["fragmentmasstolerance"]
+    } else {
         mass_acc_ms2 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 11 | tr -cd \"[0-9]\")"
         scan_window = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 19 | tr -cd \"[0-9]\")"
         mass_acc_ms1 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 15 | tr -cd \"[0-9]\")"

@@ -53,7 +53,7 @@ workflow DIA {
     {
         if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da') || meta['precursormasstoleranceunit'].toLowerCase().endsWith('da'))
         {
-            log.warning "DIA-NN only supports ppm unit tolerance for MS1 and MS2. Set `mass_acc_automatic` as `True` to automatically determine the tolerance by DIA-NN!"
+            log.info "Warning: DIA-NN only supports ppm unit tolerance for MS1 and MS2. Set `mass_acc_automatic` as `True` to automatically determine the tolerance by DIA-NN!"
         }
     }
 
