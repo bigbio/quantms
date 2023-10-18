@@ -152,6 +152,12 @@
                     "fa_icon": "fas fa-font",
                     "help_text": "Which MS levels to pick as comma separated list, e.g. `--peakpicking_ms_levels 1,2`. Leave empty for auto-detection."
                 },
+                "convert_dotd": {
+                    "type": "boolean",
+                    "description": "Convert bruker .d files to mzML",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Whether to convert raw .d bruker files to .mzML"
+                },
                 "reindex_mzml": {
                     "type": "boolean",
                     "default": true,
@@ -821,18 +827,32 @@
                     "description": "Recalibrates masses based on precursor mass deviations to correct for instrument biases. (default: 'false')",
                     "fa_icon": "far fa-check-square"
                 },
-                "transfer_ids": {
-                    "type": "string",
-                    "description": "Tries a targeted requantification in files where an ID is missing, based on aggregate properties (i.e. RT) of the features in other aligned files (e.g. 'mean' of RT). (**WARNING:** increased memory consumption and runtime). 'off' turns this feature off. (default: 'off')",
-                    "default": "off",
-                    "enum": ["off", "mean"],
-                    "fa_icon": "fas fa-list-ol"
-                },
                 "targeted_only": {
                     "type": "boolean",
                     "description": "Only looks for quantifiable features at locations with an identified spectrum. Set to false to include unidentified features so they can be linked and matched to identified ones (= match between runs). (default: 'true')",
                     "default": true,
                     "fa_icon": "far fa-check-square"
+                },
+                "feature_with_id_min_score": {
+                    "type": "number",
+                    "description": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter).",
+                    "default": 0.0,
+                    "fa_icon": "fas fa-filter",
+                    "help_text": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
+                },
+                "feature_without_id_min_score": {
+                    "type": "number",
+                    "description": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter).",
+                    "default": 0.0,
+                    "fa_icon": "fas fa-filter",
+                    "help_text": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
+                },
+                "lfq_intensity_threshold": {
+                    "type": "number",
+                    "description": "The minimum intensity for a feature to be considered for quantification. (default: '10000')",
+                    "default": 10000,
+                    "fa_icon": "fas fa-filter",
+                    "help_text": "The minimum intensity for a feature to be considered for quantification. (default: '10000')"
                 },
                 "alignment_order": {
                     "type": "string",
@@ -912,6 +932,13 @@
                     "description": "Instructs DIA-NN to add the organism identifier to the gene names",
                     "fa_icon": "far fa-check-square",
                     "default": false
+                },
+                "diann_speclib": {
+                    "type": "string",
+                    "description": "The spectral library to use for DIA-NN",
+                    "fa_icon": "fas fa-file",
+                    "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
+                    "hidden": false
                 },
                 "diann_debug": {
                     "type": "integer",
@@ -1032,6 +1059,12 @@
                     "description": "Reference channel based normalization between MS runs on protein level data",
                     "fa_icon": "far fa-check-square",
                     "default": true
+                },
+                "msstats_plot_profile_qc": {
+                    "type": "boolean",
+                    "description": "Export MSstats profile QC plots including all proteins",
+                    "fa_icon": "far fa-check-square",
+                    "default": false
                 }
             },
             "fa_icon": "fab fa-r-project"
@@ -1042,19 +1075,14 @@
             "description": "",
             "default": "",
             "properties": {
-                "enable_qc": {
-                    "type": "boolean",
-                    "description": "Enable generation of quality control report by PTXQC? default: 'false' since it is still unstable",
-                    "fa_icon": "fas fa-toggle-on"
-                },
-                "ptxqc_report_layout": {
-                    "type": "string",
-                    "description": "Specify a yaml file for the report layout (see PTXQC documentation) (TODO not yet fully implemented)",
-                    "fa_icon": "far fa-file"
-                },
                 "enable_pmultiqc": {
                     "type": "boolean",
                     "description": "Enable generation of pmultiqc report? default: 'false'",
+                    "fa_icon": "fas fa-toggle-on"
+                },
+                "pmultiqc_idxml_skip": {
+                    "type": "boolean",
+                    "description": "Skip idXML files (do not generate search engine scores) in pmultiqc report? default: 'true'",
                     "fa_icon": "fas fa-toggle-on"
                 }
             },
@@ -1154,14 +1182,12 @@
                     "type": "boolean",
                     "description": "Display help text.",
                     "fa_icon": "fas fa-question-circle",
-                    "default": false,
                     "hidden": true
                 },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
                     "fa_icon": "fas fa-question-circle",
-                    "default": false,
                     "hidden": true
                 },
                 "publish_dir_mode": {
@@ -1185,7 +1211,6 @@
                     "type": "boolean",
                     "description": "Send plain-text email instead of HTML.",
                     "fa_icon": "fas fa-remove-format",
-                    "default": false,
                     "hidden": true
                 },
                 "max_multiqc_email_size": {
@@ -1200,7 +1225,6 @@
                     "type": "boolean",
                     "description": "Do not use coloured log outputs.",
                     "fa_icon": "fas fa-palette",
-                    "default": false,
                     "hidden": true
                 },
                 "hook_url": {
@@ -1245,7 +1269,6 @@
                     "type": "boolean",
                     "fa_icon": "far fa-eye-slash",
                     "description": "Show all params when using `--help`",
-                    "default": false,
                     "hidden": true,
                     "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
                 },
@@ -1253,7 +1276,6 @@
                     "type": "boolean",
                     "fa_icon": "far fa-check-circle",
                     "description": "Validation of parameters fails when an unrecognised parameter is found.",
-                    "default": false,
                     "hidden": true,
                     "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
                 },
@@ -1261,7 +1283,6 @@
                     "type": "boolean",
                     "fa_icon": "far fa-check-circle",
                     "description": "Validation of parameters in lenient more.",
-                    "default": false,
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 }

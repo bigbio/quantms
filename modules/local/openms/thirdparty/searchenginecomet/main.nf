@@ -1,11 +1,12 @@
 process SEARCHENGINECOMET {
     tag "$meta.mzml_id"
     label 'process_medium'
+    label 'openms'
 
-    conda "bioconda::openms-thirdparty=2.9.1"
+    conda "bioconda::openms-thirdparty=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:2.9.1--h9ee0642_1' :
-        'quay.io/biocontainers/openms-thirdparty:2.9.1--h9ee0642_1' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.0.0--h9ee0642_1' :
+        'biocontainers/openms-thirdparty:3.0.0--h9ee0642_1' }"
 
     input:
     tuple val(meta), path(mzml_file), path(database)

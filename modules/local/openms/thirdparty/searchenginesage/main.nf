@@ -1,11 +1,12 @@
 process SEARCHENGINESAGE {
     tag "${metas.toList().collect{it.mzml_id}}"
-    label 'process_high' // we could make it dependent on the number of files
+    label 'process_medium' // we could make it dependent on the number of files
+    label 'openms'
 
-    conda "openms::openms-thirdparty=3.1.0"
+    conda "bioconda::openms-thirdparty=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/openms/openms-executables-sif:latest' :
-        'ghcr.io/openms/openms-executables:latest' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.0.0--h9ee0642_1' :
+        'biocontainers/openms-thirdparty:3.0.0--h9ee0642_1' }"
 
     input:
     tuple val(key), val(batch), val(metas), path(mzml_files), path(database)
@@ -26,6 +27,7 @@ process SEARCHENGINESAGE {
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
     """
+    export SAGE_LOG=trace
     SageAdapter \\
         -in ${mzml_files} \\
         -out ${outname}_sage.idXML \\

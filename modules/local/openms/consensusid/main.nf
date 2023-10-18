@@ -3,10 +3,10 @@ process CONSENSUSID {
     label 'process_single'
     label 'openms'
 
-    conda "openms::openms-thirdparty=3.1.0"
+    conda "bioconda::openms-thirdparty=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'ghcr.io/openms/openms-executables-sif:latest' :
-        'ghcr.io/openms/openms-executables:latest' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.0.0--h9ee0642_1' :
+        'biocontainers/openms-thirdparty:3.0.0--h9ee0642_1' }"
 
     input:
     tuple val(meta), path(id_file), val(qval_score)
