@@ -47,7 +47,7 @@ workflow DIA {
         }
         .set { ch_result }
 
-    meta = ch_result.meta.unique { it[0] 
+    meta = ch_result.meta.unique { it[0] }
 
     DIANNCFG(meta)
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
