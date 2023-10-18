@@ -3,10 +3,10 @@ process PROTEOMICSLFQ {
     label 'process_high'
     label 'openms'
 
-    conda "bioconda::openms=2.9.1"
+    conda "bioconda::openms-thirdparty=3.0.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms:2.9.1--h135471a_0' :
-        'biocontainers/openms:2.9.1--h135471a_0' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.0.0--h9ee0642_1' :
+        'biocontainers/openms-thirdparty:3.0.0--h9ee0642_1' }"
 
     input:
     path(mzmls)
@@ -31,11 +31,12 @@ process PROTEOMICSLFQ {
     script:
     def args = task.ext.args ?: ''
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
-    def id_transfer_threshold = (params.quantification_method == "feature_intensity") && (params.transfer_ids != "off") ? "-id_transfer_threshold ${params.id_transfer_threshold}" : ""
     def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
     def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
     def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
     def id_sorted = id_files.collect().sort{ a, b -> a.name <=> b.name}
+    def feature_with_id_min_score =  "-feature_with_id_min_score ${params.feature_with_id_min_score}"
+    def feature_without_id_min_score = params.targeted_only == false ? "-feature_without_id_min_score ${params.feature_without_id_min_score}" : ""
 
     """
     ProteomicsLFQ \\
@@ -47,9 +48,10 @@ process PROTEOMICSLFQ {
         -protein_inference ${params.protein_inference_method} \\
         -quantification_method ${params.quantification_method} \\
         -targeted_only ${params.targeted_only} \\
+        ${feature_with_id_min_score} \\
+        ${feature_without_id_min_score} \\
         -mass_recalibration ${params.mass_recalibration} \\
-        -transfer_ids ${params.transfer_ids == 'off' ? 'false' : params.transfer_ids} \\
-        ${id_transfer_threshold} \\
+        -Seeding:intThreshold ${params.lfq_intensity_threshold} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
         ${decoys_present} \\

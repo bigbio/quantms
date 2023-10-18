@@ -7,17 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#275 BigBio](https://github.com/bigbio/quantms/pull/275) Added support for bruker data. And speed-up to DIA-NN pipeline.
+- [#275 BigBio](https://github.com/bigbio/quantms/pull/275) Added support for bruker data.
+- [#275 BigBio](https://github.com/bigbio/quantms/pull/275) And speed-up to DIA-NN pipeline.
+- [#275 BigBio](https://github.com/bigbio/quantms/pull/275) Support for library-base search in DIA-NN pipeline.
+- [#300 BigBio](https://github.com/bigbio/quantms/pull/300) Major refactoring of LFQ-DDA MBR algorithm.
+- [#279 BigBio](https://github.com/bigbio/quantms/pull/279) Support for SAGE search engine.
 
 ### `Changed`
+
+- Update for pmultiqc to pmultiqc=0.0.21
+- Update for openms to openms=3.1.0
+- Update for sdrf-pipelines to sdrf-pipelines=0.0.24
+- Update for msstats to msstats=4.2.1
 
 ### `Fixed`
 
 - Fixed bug where modification masses were not calculated correctly in DIA-NN conversion.
+- Fixed multiple bugs Pull Request [#293 BigBio](https://github.com/bigbio/quantms/pull/293), [#279 BigBio](https://github.com/bigbio/quantms/pull/279), [#265 BigBio](https://github.com/bigbio/quantms/pull/265), [#260 BigBio](https://github.com/bigbio/quantms/pull/260), [#257 BigBio](https://github.com/bigbio/quantms/pull/257)
 
 ### `Dependencies`
 
+- New dependency on `sage` search engine.
+
 ### `Parameters`
+
+- feature_with_id_min_score: Minimum score of a feature with a peptide identification (default: 0.10)
+- feature_without_id_min_score: Minimum score of a feature without peptide identification (transfer feature, default: 0.75)
+- lfq_intensity_threshold: Minimum intensity of a feature to be considered in the MBR algorithm (default: 1000)
+- sage_processes: Number of processes to use in SAGE search engine (default: 1)
+- diann_speclib: Path to the spectral library to use in DIA-NN (default: null)
 
 ### `Deprecations`
 
