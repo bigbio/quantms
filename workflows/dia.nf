@@ -49,6 +49,14 @@ workflow DIA {
 
     meta = ch_result.meta.unique { it[0] }
 
+    if (!params.mass_acc_automatic)
+    {
+        if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da') || meta['precursormasstoleranceunit'].toLowerCase().endsWith('da'))
+        {
+            log.info "Warning: DIA-NN only supports ppm unit tolerance for MS1 and MS2. Falling back to `mass_acc_automatic`=`true` to automatically determine the tolerance by DIA-NN!"
+        }
+    }
+
     DIANNCFG(meta)
     ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
 

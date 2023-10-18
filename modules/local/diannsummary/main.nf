@@ -31,10 +31,15 @@ process DIANNSUMMARY {
 
     script:
     def args = task.ext.args ?: ''
-    mass_acc_ms1 = meta["precursormasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["precursormasstolerance"] : 5
-    mass_acc_ms2 = meta["fragmentmasstoleranceunit"].toLowerCase().endsWith("ppm") ? meta["fragmentmasstolerance"] : 13
 
-    mass_acc = params.mass_acc_automatic ? "--quick-mass-acc --individual-mass-acc" : "--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1"
+    if (params.mass_acc_automatic) {
+        mass_acc = '--quick-mass-acc --individual-mass-acc'
+    } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
+        mass_acc = "--mass-acc ${meta['fragmentmasstolerance']} --mass-acc-ms1 ${meta['precursormasstolerance']}"
+    } else {
+        mass_acc = '--quick-mass-acc --individual-mass-acc'
+    }
+
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     species_genes = params.species_genes ? "--species-genes": ""
 
