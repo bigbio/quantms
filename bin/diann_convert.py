@@ -97,7 +97,6 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
     out_msstats["Reference"] = out_msstats["Reference"].map(unique_reference_map)
     del unique_reference_map
 
-    # TODO remove this if not debugging
     logger.debug("\n\nReference Column >>>")
     logger.debug(out_msstats["Reference"])
 
@@ -109,30 +108,27 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
 
     logger.debug(f"\n\ns_DataFrame ({s_DataFrame.shape})>>>")
     logger.debug(s_DataFrame.head(5))
-    ## END TODO
 
     logger.debug("Adding Fraction, BioReplicate, Condition columns")
     # Changing implementation from apply to merge went from several minutes to
     # ~50ms
-    tmp = (
-        s_DataFrame[["Sample", "MSstats_Condition", "MSstats_BioReplicate"]]
-        .merge(f_table[["Fraction", "Sample", "run"]], on="Sample")
-        .rename(columns={"run": "Run", "MSstats_BioReplicate": "BioReplicate", "MSstats_Condition": "Condition"})
-        .drop(columns=["Sample"])
-    )
     out_msstats = out_msstats.merge(
-        tmp,
+        (
+            s_DataFrame[["Sample", "MSstats_Condition", "MSstats_BioReplicate"]]
+            .merge(f_table[["Fraction", "Sample", "run"]], on="Sample")
+            .rename(columns={"run": "Run", "MSstats_BioReplicate": "BioReplicate", "MSstats_Condition": "Condition"})
+            .drop(columns=["Sample"])
+        ),
         on="Run",
-        validate="many_to_one",
+        validate="many_to_one"
     )
-    del tmp
-    exp_out_prefix = str(Path(exp_design).stem)
+    exp_out_prefix = Path(exp_design).stem
     out_msstats.to_csv(exp_out_prefix + "_msstats_in.csv", sep=",", index=False)
     logger.info(f"MSstats input file is saved as {exp_out_prefix}_msstats_in.csv")
 
     # Convert to Triqler
-    trinqler_cols = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Run", "Condition"]
-    out_triqler = out_msstats[trinqler_cols]
+    triqler_cols = ["ProteinName", "PeptideSequence", "PrecursorCharge", "Intensity", "Run", "Condition"]
+    out_triqler = out_msstats[triqler_cols]
     del out_msstats
     out_triqler.columns = ["proteins", "peptide", "charge", "intensity", "run", "condition"]
     out_triqler = out_triqler[out_triqler["intensity"] != 0]
@@ -143,7 +139,7 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
     logger.info(f"Triqler input file is saved as {exp_out_prefix}_triqler_in.tsv")
     del out_triqler
 
-    mztab_out = f"{str(Path(exp_design).stem)}_out.mzTab"
+    mztab_out = f"{Path(exp_design).stem}_out.mzTab"
     # Convert to mzTab
     diann_directory.convert_to_mztab(
         report=report,
