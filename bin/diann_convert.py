@@ -120,7 +120,7 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_c
             .drop(columns=["Sample"])
         ),
         on="Run",
-        validate="many_to_one"
+        validate="many_to_one",
     )
     exp_out_prefix = Path(exp_design).stem
     out_msstats.to_csv(exp_out_prefix + "_msstats_in.csv", sep=",", index=False)
