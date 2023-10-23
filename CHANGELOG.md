@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#275 BigBio](https://github.com/bigbio/quantms/pull/275) Added support for bruker data.
+- [#275 BigBio](https://github.com/bigbio/quantms/pull/275) Added support for bruker data in DIA branch.
 - [#275 BigBio](https://github.com/bigbio/quantms/pull/275) And speed-up to DIA-NN pipeline.
 - [#275 BigBio](https://github.com/bigbio/quantms/pull/275) Support for library-base search in DIA-NN pipeline.
 - [#300 BigBio](https://github.com/bigbio/quantms/pull/300) Major refactoring of LFQ-DDA MBR algorithm.
