@@ -22,15 +22,18 @@ process DIANN_PRELIMINARY_ANALYSIS {
 
     // I am using here the ["key"] syntax, since the preprocessed meta makes
     // was evaluating to null when using the dot notation.
-    mass_acc_ms1 = meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') ? meta['precursormasstolerance'] : 5
-    mass_acc_ms2 = meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm') ? meta['fragmentmasstolerance'] : 13
 
     if (params.mass_acc_automatic) {
         mass_acc = '--quick-mass-acc --individual-mass-acc'
+    } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
+        mass_acc = "--mass-acc ${meta['fragmentmasstolerance']} --mass-acc-ms1 ${meta['precursormasstolerance']}"
     } else {
-        mass_acc = "--mass-acc $mass_acc_ms2 --mass-acc-ms1 $mass_acc_ms1"
+        log.info "Warning: DIA-NN only supports ppm unit tolerance for MS1 and MS2. Falling back to `mass_acc_automatic`=`true` to automatically determine the tolerance by DIA-NN!"
+        mass_acc = '--quick-mass-acc --individual-mass-acc'
     }
-    scan_window = params.scan_window_automatic ? '--individual-windows' : '--window $params.scan_window'
+
+    // Notes: Use double quotes for params, so that it is escaped in the shell.
+    scan_window = params.scan_window_automatic ? '--individual-windows' : "--window $params.scan_window"
     time_corr_only = params.time_corr_only ? '--time-corr-only' : ''
 
     """

@@ -73,7 +73,7 @@ process DECOMPRESS {
     "${task.process}":
         gunzip: \$(gunzip --help 2>&1 | head -1 | grep -oE "\\d+\\.\\d+(\\.\\d+)?")
         tar: \$(tar --help 2>&1 | head -1 | grep -oE "\\d+\\.\\d+(\\.\\d+)?")
-        zip: \$((unzip --help 2>&1 || zip --help 2>&1) | head -2 | tail -1 | grep -oE "\\d+\\.\\d+")
+        unzip: \$((unzip --help 2>&1 || zip --help 2>&1) | head -2 | tail -1 | grep -oE "\\d+\\.\\d+")
     END_VERSIONS
     """
 }

@@ -39,11 +39,10 @@ process DOTD2MQC_INDIVIDUAL {
     """
 }
 
-
 process DOTD2MQC_AGGREGATE {
     label 'process_single'
 
-    conda 'base::python=3.10'
+    conda "conda-forge::python=3.10"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/python:3.10"
     } else {
