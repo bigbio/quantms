@@ -33,7 +33,7 @@ workflow DIA {
     take:
     ch_file_preparation_results
     ch_expdesign
-    ch_mzml_info
+    ch_ms_info
 
     main:
 
@@ -113,7 +113,7 @@ workflow DIA {
     DIANNCONVERT(
         DIANNSUMMARY.out.main_report, ch_expdesign,
         DIANNSUMMARY.out.pg_matrix,
-        DIANNSUMMARY.out.pr_matrix, ch_mzml_info,
+        DIANNSUMMARY.out.pr_matrix, ch_ms_info,
         meta,
         ch_searchdb,
         DIANNSUMMARY.out.version
