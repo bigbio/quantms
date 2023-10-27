@@ -92,13 +92,23 @@ def ms_dataframe(ms_path: str) -> None:
             df[["Charge", "Exp_Mass_To_Charge"]] = None, None
 
         df = df[
-            ["Id", "MsMsType", "Charge", "NumPeaks", "MaxIntensity", "SummedIntensities", "Time", "Exp_Mass_To_Charge",
-            "AcquisitionDateTime"]]
+            [
+                "Id",
+                "MsMsType",
+                "Charge",
+                "NumPeaks",
+                "MaxIntensity",
+                "SummedIntensities",
+                "Time",
+                "Exp_Mass_To_Charge",
+                "AcquisitionDateTime",
+            ]
+        ]
         df.columns = file_columns
 
         return df
 
-    if Path(ms_path).suffix == '.d' and Path(ms_path).is_dir:
+    if Path(ms_path).suffix == ".d" and Path(ms_path).is_dir:
         ms_df = parse_bruker_d(ms_path, file_columns)
     elif Path(ms_path).suffix in [".mzML", ".mzml"]:
         ms_df = parse_mzml(ms_path, file_columns)
