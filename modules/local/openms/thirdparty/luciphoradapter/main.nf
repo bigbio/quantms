@@ -20,7 +20,7 @@ process LUCIPHORADAPTER {
     script:
     // The OpenMS adapters need the actual jar file, not the executable/shell wrapper that (bio)conda creates
     luciphor_jar = ''
-    if ((workflow.containerEngine || (task.executor == "awsbatch")) && task.container.indexOf("biocontainers") > -1) {
+    if ((workflow.containerEngine || (task.executor == "awsbatch")) && (task.container.indexOf("biocontainers") > -1 || task.container.indexOf("depot.galaxyproject.org") > -1)) {
         luciphor_jar = "-executable \$(find /usr/local/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
     } else if (session.config.conda && session.config.conda.enabled) {
         luciphor_jar = "-executable \$(find \$CONDA_PREFIX/share/luciphor2-*/luciphor2.jar -maxdepth 0)"
