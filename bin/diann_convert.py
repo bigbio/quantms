@@ -860,6 +860,12 @@ def mztab_PSH(report, folder, database):
         group.sort_values(by="RT.Start", inplace=True)
         target = target[["Retention_Time", "SpectrumID", "Exp_Mass_To_Charge"]]
         target.columns = ["RT.Start", "opt_global_spectrum_reference", "exp_mass_to_charge"]
+        # Standardize spectrum identifier format for bruker data
+        if type(target.loc[0, "opt_global_spectrum_reference"]) != str:
+            target.loc[:, "opt_global_spectrum_reference"] = "scan=" + target.loc[
+                :, "opt_global_spectrum_reference"
+            ].astype(str)
+
         # TODO seconds returned from precursor.getRT()
         target.loc[:, "RT.Start"] = target.apply(lambda x: x["RT.Start"] / 60, axis=1)
         out_mztab_PSH = pd.concat([out_mztab_PSH, pd.merge_asof(group, target, on="RT.Start", direction="nearest")])
