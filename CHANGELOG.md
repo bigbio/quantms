@@ -15,13 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- Update for pmultiqc to pmultiqc=0.0.21
-- Update for openms to openms=3.1.0
+- [#314](https://github.com/bigbio/quantms/pull/314) Update for pmultiqc to pmultiqc=0.0.23
+- [#308](https://github.com/bigbio/quantms/pull/308) Update for openms to openms=3.1.0
 - Update for sdrf-pipelines to sdrf-pipelines=0.0.24
 - Update for msstats to msstats=4.2.1
 
 ### `Fixed`
 
+- [#316](https://github.com/bigbio/quantms/pull/316) Fixed jar path selection of luciphoradapter and msgf+
 - Fixed bug where modification masses were not calculated correctly in DIA-NN conversion.
 - Fixed multiple bugs Pull Request [#293 BigBio](https://github.com/bigbio/quantms/pull/293), [#279 BigBio](https://github.com/bigbio/quantms/pull/279), [#265 BigBio](https://github.com/bigbio/quantms/pull/265), [#260 BigBio](https://github.com/bigbio/quantms/pull/260), [#257 BigBio](https://github.com/bigbio/quantms/pull/257)
 
