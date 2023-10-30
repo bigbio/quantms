@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - lfq_intensity_threshold: Minimum intensity of a feature to be considered in the MBR algorithm (default: 1000)
 - sage_processes: Number of processes to use in SAGE search engine (default: 1)
 - diann_speclib: Path to the spectral library to use in DIA-NN (default: null)
+- convert_dotd: if convert .d file to mzml (default: false)
 
 ### `Deprecations`
 

@@ -55,10 +55,11 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ### DIA-LFQ (data-independent label-free quantification)
 
-1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
-2. DIA-NN analysis [`dia-nn`](https://github.com/vdemichev/DiaNN/)
-3. Generation of output files (msstats)
-4. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+1. RAW file conversion to mzML when RAW as input([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. Performing an [optional step](https://github.com/bigbio/quantms/blob/dev/modules/local/tdf2mzml/main.nf): Converting .d to mzML when bruker data as input and set `convert_dotd` to true
+3. DIA-NN analysis [`dia-nn`](https://github.com/vdemichev/DiaNN/)
+4. Generation of output files (msstats)
+5. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 
 ### Functionality overview
 
