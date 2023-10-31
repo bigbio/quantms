@@ -1250,6 +1250,10 @@ def calculate_coverage(ref_sequence: str, sequences: Set[str]):
     1.0
     >>> calculate_coverage("WATEROVERTHEDUCK", {"DUCK"})
     0.25
+    >>> calculate_coverage("WATER", {"WAT", "TER"})
+    1.0
+    >>> calculate_coverage("WATERGLASS", {"WAT", "TER"})
+    0.5
     """
     starts = []
     lengths = []
