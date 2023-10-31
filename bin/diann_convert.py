@@ -271,7 +271,7 @@ class DiannDirectory:
             return diann_version_id
         else:
             # Maybe this error should be detected beforehand to save time ...
-            raise ValueError(f"Unsupported DIANN version {self.diann_version}")
+            raise ValueError(f"Unsupported DIANN version {diann_version_id}")
 
     def convert_to_mztab(
         self, report, f_table, charge: int, missed_cleavages: int, dia_params: List[Any], out: os.PathLike
