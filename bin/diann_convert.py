@@ -205,7 +205,7 @@ class DiannDirectory:
         if not self.diann_version_file.is_file():
             raise FileNotFoundError(f"Path {self.diann_version_file} does not exist")
 
-    def find_suffix_file(self, suffix: str) -> os.PathLike:
+    def find_first_file_with_suffix(self, suffix: str) -> os.PathLike:
         """Finds a file with a given suffix in the directory.
 
         :param suffix: The suffix to search for
@@ -220,26 +220,26 @@ class DiannDirectory:
 
     @property
     def report(self) -> os.PathLike:
-        return self.find_suffix_file("report.tsv")
+        return self.find_first_file_with_suffix("report.tsv")
 
     @property
     def pg_matrix(self) -> os.PathLike:
-        return self.find_suffix_file("pg_matrix.tsv")
+        return self.find_first_file_with_suffix("pg_matrix.tsv")
 
     @property
     def pr_matrix(self) -> os.PathLike:
-        return self.find_suffix_file("pr_matrix.tsv")
+        return self.find_first_file_with_suffix("pr_matrix.tsv")
 
     @property
     def fasta(self) -> os.PathLike:
         try:
-            return self.find_suffix_file(".fasta")
+            return self.find_first_file_with_suffix(".fasta")
         except FileNotFoundError:
-            return self.find_suffix_file(".fa")
+            return self.find_first_file_with_suffix(".fa")
 
     @property
     def ms_info(self) -> os.PathLike:
-        return self.find_suffix_file("ms_info.tsv")
+        return self.find_first_file_with_suffix("ms_info.tsv")
 
     @property
     def validate_diann_version(self) -> str:
