@@ -104,7 +104,7 @@ def ms_dataframe(ms_path: str) -> None:
                 "AcquisitionDateTime",
             ]
         ]
-        df.columns = file_columns
+        df.columns = pd.Index(file_columns)
 
         return df
 
