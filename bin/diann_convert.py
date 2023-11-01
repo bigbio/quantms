@@ -242,7 +242,7 @@ class DiannDirectory:
         return self.find_first_file_with_suffix("ms_info.tsv")
 
     @property
-    def validate_diann_version(self) -> str:
+    def diann_version(self) -> str:
         logger.debug("Validating DIANN version")
         diann_version_id = None
         with open(self.diann_version_file) as f:
@@ -254,18 +254,18 @@ class DiannDirectory:
         if diann_version_id is None:
             raise ValueError(f"Could not find DIA-NN version in file {self.diann_version_file}")
 
-        supported_diann_versions = ["1.8.1"]
-        if diann_version_id not in supported_diann_versions:
-            raise ValueError(f"Unsupported DIANN version {diann_version_id}")
-
         return diann_version_id
+
+    def validate_diann_version(self) -> None:
+        supported_diann_versions = ["1.8.1"]
+        if self.diann_version not in supported_diann_versions:
+            raise ValueError(f"Unsupported DIANN version {self.diann_version}")
 
     def convert_to_mztab(
         self, report, f_table, charge: int, missed_cleavages: int, dia_params: List[Any], out: os.PathLike
     ) -> None:
         logger.info("Converting to mzTab")
-        # Convert to mzTab
-        self.validate_diann_version
+        self.validate_diann_version()
 
         # This could be a branching point if we want to support other versions
         # of DIA-NN, maybe something like this:
