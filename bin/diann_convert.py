@@ -196,16 +196,12 @@ def get_exp_design_dfs(exp_design_file):
     return s_DataFrame, f_table
 
 
-@dataclass
 class DiannDirectory:
-    base_path: os.PathLike
-    diann_version_file: str
-
-    def __post_init__(self):
-        self.base_path = Path(self.base_path)
+    def __init__(self, base_path, diann_version_file):
+        self.base_path = Path(base_path)
         if not self.base_path.exists() and not self.base_path.is_dir():
             raise NotADirectoryError(f"Path {self.base_path} does not exist")
-        self.diann_version_file = Path(self.diann_version_file)
+        self.diann_version_file = Path(diann_version_file)
         if not self.diann_version_file.is_file():
             raise FileNotFoundError(f"Path {self.diann_version_file} does not exist")
 
