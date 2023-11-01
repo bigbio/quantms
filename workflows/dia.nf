@@ -95,7 +95,7 @@ workflow DIA {
     // MODULE: DIANNSUMMARY
     //
     // Order matters in DIANN, This should be sorted for reproducible results.
-    // NOTE: I am getting here the names of the ms files, not the path.
+    // NOTE: ch_results.ms_file contains the name of the ms file, not the path.
     // The next step only needs the name (since it uses the cached .quant)
     // Converting to a file object and using its name is necessary because ch_result.ms_file contains
     // locally, evey element in ch_result is a string, whilst on cloud it is a path.
