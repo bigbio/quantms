@@ -271,7 +271,7 @@ class DiannDirectory:
             return diann_version_id
         else:
             # Maybe this error should be detected beforehand to save time ...
-            raise ValueError(f"Unsupported DIANN version {self.diann_version}")
+            raise ValueError(f"Unsupported DIANN version {diann_version_id}")
 
     def convert_to_mztab(
         self, report, f_table, charge: int, missed_cleavages: int, dia_params: List[Any], out: os.PathLike
@@ -1250,6 +1250,10 @@ def calculate_coverage(ref_sequence: str, sequences: Set[str]):
     1.0
     >>> calculate_coverage("WATEROVERTHEDUCK", {"DUCK"})
     0.25
+    >>> calculate_coverage("WATER", {"WAT", "TER"})
+    1.0
+    >>> calculate_coverage("WATERGLASS", {"WAT", "TER"})
+    0.5
     """
     starts = []
     lengths = []
