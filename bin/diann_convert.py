@@ -287,7 +287,7 @@ class DiannDirectory:
         index_ref["study_variable"] = index_ref["study_variable"].astype("int")
         report = report.merge(index_ref[["ms_run", "Run", "study_variable"]], on="Run", validate="many_to_one")
 
-        (MTD, database) = mztab_MTD(index_ref, dia_params, str(self.fasta), charge, missed_cleavages)
+        MTD, database = mztab_MTD(index_ref, dia_params, str(self.fasta), charge, missed_cleavages)
         pg = pd.read_csv(
             self.pg_matrix,
             sep="\t",
