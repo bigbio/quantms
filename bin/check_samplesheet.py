@@ -44,28 +44,6 @@ def print_error(error, context="Line", context_str=""):
     sys.exit(1)
 
 
-def sniff_format(handle):
-    """
-    Detect the tabular format.
-
-    Args:
-        handle (text file): A handle to a `text file`_ object. The read position is
-        expected to be at the beginning (index 0).
-
-    Returns:
-        csv.Dialect: The detected tabular format.
-
-    .. _text file:
-        https://docs.python.org/3/glossary.html#term-text-file
-
-    """
-    peek = read_head(handle)
-    handle.seek(0)
-    sniffer = csv.Sniffer()
-    dialect = sniffer.sniff(peek)
-    return dialect
-
-
 def check_sdrf(check_ms, sdrf):
     df = SdrfDataFrame.parse(sdrf)
     errors = df.validate(DEFAULT_TEMPLATE)

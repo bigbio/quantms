@@ -21,11 +21,11 @@ process INDIVIDUAL_FINAL_ANALYSIS {
     def args = task.ext.args ?: ''
     scan_window = params.scan_window
 
-    if (params.mass_acc_automatic | params.scan_window_automatic){
+    if (params.mass_acc_automatic | params.scan_window_automatic) {
         mass_acc_ms2 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 11 | tr -cd \"[0-9]\")"
         scan_window = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 19 | tr -cd \"[0-9]\")"
         mass_acc_ms1 = "\$(cat ${diann_log} | grep \"Averaged recommended settings\" | cut -d ' ' -f 15 | tr -cd \"[0-9]\")"
-    } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
+    } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')) {
         mass_acc_ms1 = meta["precursormasstolerance"]
         mass_acc_ms2 = meta["fragmentmasstolerance"]
     } else {
