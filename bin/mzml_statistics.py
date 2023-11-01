@@ -104,11 +104,11 @@ def ms_dataframe(ms_path: str) -> None:
                 "AcquisitionDateTime",
             ]
         ]
-        df.columns = file_columns
+        df.columns = pd.Index(file_columns)
 
         return df
 
-    if Path(ms_path).suffix == ".d" and Path(ms_path).is_dir:
+    if Path(ms_path).suffix == ".d" and Path(ms_path).is_dir():
         ms_df = parse_bruker_d(ms_path, file_columns)
     elif Path(ms_path).suffix in [".mzML", ".mzml"]:
         ms_df = parse_mzml(ms_path, file_columns)
