@@ -11,7 +11,7 @@ import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, List, Tuple, Dict, Set
+from typing import Any, List, Tuple, Dict, Set, Union
 
 import click
 import numpy as np
@@ -274,7 +274,7 @@ class DiannDirectory:
         #     raise ValueError(f"Unsupported DIANN version {diann_version_id}, supported versions are 1.8.1 ...")
 
         logger.info(f"Reading fasta file: {self.fasta}")
-        entries = []
+        entries: list = []
         f = FASTAFile()
         f.load(str(self.fasta), entries)
         fasta_entries = [(e.identifier, e.sequence, len(e.sequence)) for e in entries]
@@ -735,7 +735,7 @@ def mztab_PEH(
         .pivot(columns=["ms_run"], index="precursor.Index")
         .reset_index()
     )
-    tmp.columns = ["::".join([str(s) for s in col]).strip() for col in tmp.columns.values]
+    tmp.columns = pd.Index(["::".join([str(s) for s in col]).strip() for col in tmp.columns.values])
     subname_mapper = {
         "precursor.Index::::": "precursor.Index",
         "Q.Value::min": "search_engine_score[1]_ms_run",
@@ -791,7 +791,7 @@ def mztab_PEH(
 
     logger.debug("Re-ordering columns...")
     out_mztab_PEH.loc[:, "PEH"] = "PEP"
-    out_mztab_PEH.loc[:, "database"] = database
+    out_mztab_PEH.loc[:, "database"] = str(database)
     index = out_mztab_PEH.loc[:, "PEH"]
     out_mztab_PEH.drop(["PEH", "Precursor.Id", "Genes", "pr_id"], axis=1, inplace=True)
     out_mztab_PEH.insert(0, "PEH", index)
@@ -1051,7 +1051,7 @@ class ModScoreLooker:
         }
         return out
 
-    def get_score(self, protein_id: str) -> float:
+    def get_score(self, protein_id: str) -> Tuple[Union[str, float], float]:
         """Returns a tuple contains modified sequences and the score at protein level.
 
         Gets the best score and corresponding peptide for a given protein_id
@@ -1193,7 +1193,9 @@ def per_peptide_study_report(report: pd.DataFrame) -> pd.DataFrame:
         .pivot(columns=["study_variable"], index="precursor.Index")
         .reset_index()
     )
-    pep_study_grouped.columns = ["::".join([str(s) for s in col]).strip() for col in pep_study_grouped.columns.values]
+    pep_study_grouped.columns = pd.Index(
+        ["::".join([str(s) for s in col]).strip() for col in pep_study_grouped.columns.values]
+    )
     # Columns here would be like:
     # [
     #     "precursor.Index::::",
@@ -1262,8 +1264,8 @@ def calculate_coverage(ref_sequence: str, sequences: Set[str]):
             local_start += 1
 
     # merge overlapping intervals
-    merged_starts = []
-    merged_lengths = []
+    merged_starts: list = []
+    merged_lengths: list = []
     for start, length in zip(*sorted(zip(starts, lengths))):
         if merged_starts and merged_starts[-1] + merged_lengths[-1] >= start:
             merged_lengths[-1] = max(merged_starts[-1] + merged_lengths[-1], start + length) - merged_starts[-1]
@@ -1296,7 +1298,7 @@ def calculate_protein_coverages(report: pd.DataFrame, out_mztab_PRH: pd.DataFram
     ids_to_seqs = dict(zip(nested_df["Protein.Ids"], nested_df["Stripped.Sequence"]))
     acc_to_ids = dict(zip(out_mztab_PRH["accession"], out_mztab_PRH["Protein.Ids"]))
     fasta_id_to_seqs = dict(zip(fasta_df["id"], fasta_df["seq"]))
-    acc_to_fasta_ids = {}
+    acc_to_fasta_ids: dict = {}
 
     # Since fasta ids are something like sp|P51451|BLK_HUMAN but
     # accessions are something like Q9Y6V7-2, we need to find a
@@ -1315,7 +1317,7 @@ def calculate_protein_coverages(report: pd.DataFrame, out_mztab_PRH: pd.DataFram
             # it entails more un-matched characters.
             acc_to_fasta_ids[acc] = min(matches, key=len)
 
-    out = [None] * len(out_mztab_PRH["accession"])
+    out: List[str] = [''] * len(out_mztab_PRH["accession"])
 
     for i, acc in enumerate(out_mztab_PRH["accession"]):
         f_id = acc_to_fasta_ids[acc]
