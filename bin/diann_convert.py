@@ -253,11 +253,12 @@ class DiannDirectory:
 
         if diann_version_id is None:
             raise ValueError(f"Could not find DIA-NN version in file {self.diann_version_file}")
-        elif diann_version_id == "1.8.1":
-            return diann_version_id
-        else:
-            # Maybe this error should be detected beforehand to save time ...
+        
+        supported_diann_versions = ["1.8.1"]
+        if diann_version_id not in supported_diann_versions:
             raise ValueError(f"Unsupported DIANN version {diann_version_id}")
+        
+        return diann_version_id
 
     def convert_to_mztab(
         self, report, f_table, charge: int, missed_cleavages: int, dia_params: List[Any], out: os.PathLike
