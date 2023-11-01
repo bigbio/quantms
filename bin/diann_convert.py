@@ -253,11 +253,11 @@ class DiannDirectory:
 
         if diann_version_id is None:
             raise ValueError(f"Could not find DIA-NN version in file {self.diann_version_file}")
-        
+
         supported_diann_versions = ["1.8.1"]
         if diann_version_id not in supported_diann_versions:
             raise ValueError(f"Unsupported DIANN version {diann_version_id}")
-        
+
         return diann_version_id
 
     def convert_to_mztab(
@@ -1318,7 +1318,7 @@ def calculate_protein_coverages(report: pd.DataFrame, out_mztab_PRH: pd.DataFram
             # it entails more un-matched characters.
             acc_to_fasta_ids[acc] = min(matches, key=len)
 
-    out: List[str] = [''] * len(out_mztab_PRH["accession"])
+    out: List[str] = [""] * len(out_mztab_PRH["accession"])
 
     for i, acc in enumerate(out_mztab_PRH["accession"]):
         f_id = acc_to_fasta_ids[acc]
