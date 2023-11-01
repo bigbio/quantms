@@ -1259,7 +1259,7 @@ def calculate_coverage(ref_sequence: str, sequences: Set[str]):
     # merge overlapping intervals
     merged_starts: list = []
     merged_lengths: list = []
-    for start, length in zip(*sorted(zip(starts, lengths))):
+    for start, length in sorted(zip(starts, lengths)):
         if merged_starts and merged_starts[-1] + merged_lengths[-1] >= start:
             merged_lengths[-1] = max(merged_starts[-1] + merged_lengths[-1], start + length) - merged_starts[-1]
         else:
