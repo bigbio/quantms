@@ -205,28 +205,18 @@ class DiannDirectory:
         if not self.diann_version_file.is_file():
             raise FileNotFoundError(f"Path {self.diann_version_file} does not exist")
 
-    def find_suffix_file(self, suffix: str, only_first=True) -> os.PathLike:
+    def find_suffix_file(self, suffix: str) -> os.PathLike:
         """Finds a file with a given suffix in the directory.
 
         :param suffix: The suffix to search for
         :type suffix: str
-        :param only_first: Whether to return only the first file found, if false returns all, defaults to True
-        :type only_first: bool, optional
 
         :raises FileNotFoundError: If no file with the given suffix is found
         """
-        matching = self.base_path.glob(f"**/*{suffix}")
-        if only_first:
-            try:
-                return next(matching)
-            except StopIteration:
-                raise FileNotFoundError(f"Could not find file with suffix {suffix}")
-        else:
-            out = list(matching)
-            if len(out) == 0:
-                raise FileNotFoundError(f"Could not find file with suffix {suffix}")
-            else:
-                return out
+        try:
+            return next(self.base_path.glob(f"**/*{suffix}"))
+        except StopIteration:
+            raise FileNotFoundError(f"Could not find file with suffix {suffix}")
 
     @property
     def report(self) -> os.PathLike:
