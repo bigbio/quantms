@@ -821,15 +821,15 @@ def mztab_PSH(report, folder, database):
     """
     logger.info("Constructing PSH sub-table")
 
-    def __find_info(dir, n):
+    def __find_info(directory, n):
         # This line matches n="220101_myfile", folder="." to
         # "myfolder/220101_myfile_ms_info.tsv"
-        files = list(Path(dir).glob(f"*{n}*_info.tsv"))
+        files = list(Path(directory).glob(f"*{n}*_info.tsv"))
         # Check that it matches one and only one file
         if not files:
-            raise ValueError(f"Could not find {n} info file in {dir}")
+            raise ValueError(f"Could not find {n} info file in {directory}")
         if len(files) > 1:
-            raise ValueError(f"Found multiple {n} info files in {dir}: {files}")
+            raise ValueError(f"Found multiple {n} info files in {directory}: {files}")
 
         return files[0]
 
