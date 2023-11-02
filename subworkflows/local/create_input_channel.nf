@@ -40,6 +40,10 @@ workflow CREATE_INPUT_CHANNEL {
     wrapper.acquisition_method = ""
     wrapper.experiment_id      = ch_sdrf_or_design
 
+    if(is_sdrf.toString().toLowerCase().contains("false")) {
+        log.info "No SDRF given. Using parameters to determine tolerance, enzyme, mod. and labelling settings"
+    }
+
     ch_config.splitCsv(header: true, sep: '\t')
             .map { create_meta_channel(it, is_sdrf, enzymes, files, wrapper) }
             .branch {
@@ -96,7 +100,6 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
 
     // for sdrf read from config file, without it, read from params
     if (is_sdrf.toString().toLowerCase().contains("false")) {
-        log.info "No SDRF given. Using parameters to determine tolerance, enzyme, mod. and labelling settings"
         meta.labelling_type             = params.labelling_type
         meta.dissociationmethod         = params.fragment_method
         meta.fixedmodifications         = params.fixed_mods
@@ -126,7 +129,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             meta.dissociationmethod     = "ETD"
         } else if (row.DissociationMethod == "ELECTRON CAPTURE DISSOCIATION"){
             meta.dissociationmethod     = "ECD"
-        } else{
+        } else {
             meta.dissociationmethod         = row.DissociationMethod
         }
 
@@ -134,15 +137,14 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.labelling_type             = row.Label
         meta.fixedmodifications         = row.FixedModifications
         meta.variablemodifications      = row.VariableModifications
-        meta.precursormasstolerance     = row.PrecursorMassTolerance
+        meta.precursormasstolerance     = Double.parseDouble(row.PrecursorMassTolerance)
         meta.precursormasstoleranceunit = row.PrecursorMassToleranceUnit
-        meta.fragmentmasstolerance      = row.FragmentMassTolerance
+        meta.fragmentmasstolerance      = Double.parseDouble(row.FragmentMassTolerance)
         meta.fragmentmasstoleranceunit  = row.FragmentMassToleranceUnit
         meta.enzyme                     = row.Enzyme
 
         enzymes += row.Enzyme
-        if (enzymes.size() > 1)
-        {
+        if (enzymes.size() > 1) {
             log.error "Currently only one enzyme is supported for the whole experiment. Specified was '${enzymes}'. Check or split your SDRF."
             log.error filestr
             exit 1
@@ -163,7 +165,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
                 exit 1
             }
         }
-    }else if(session.config.conda && session.config.conda.enabled){
+    } else if (session.config.conda && session.config.conda.enabled) {
         log.error "File in DIA mode found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
         exit 1
     }

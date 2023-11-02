@@ -8,3 +8,6 @@ target_version = ["py37", "py38", "py39", "py310"]
 profile = "black"
 known_first_party = ["nf_core"]
 multi_line_output = 3
+
+[tool.ruff]
+line-length = 120
