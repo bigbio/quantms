@@ -12,3 +12,9 @@ testing*
 /build/
 results*/
 venv/
+node_modules
+conversion_inputs
+debug_dir
+test_out
+
+lint_log.txt

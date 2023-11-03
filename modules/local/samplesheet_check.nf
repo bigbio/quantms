@@ -3,10 +3,12 @@ process SAMPLESHEET_CHECK {
     tag "$input_file"
     label 'process_single'
 
-    conda "bioconda::sdrf-pipelines=0.0.22"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0' :
-        'quay.io/biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0' }"
+    conda "bioconda::sdrf-pipelines=0.0.24"
+    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.24--pyhdfd78af_0"
+    } else {
+        container "biocontainers/sdrf-pipelines:0.0.24--pyhdfd78af_0"
+    }
 
     input:
     path input_file
@@ -29,7 +31,7 @@ process SAMPLESHEET_CHECK {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(echo "0.0.22")
+        sdrf-pipelines: \$(parse_sdrf --version 2>&1 | awk -F ' ' '{print \$2}')
     END_VERSIONS
     """
 }

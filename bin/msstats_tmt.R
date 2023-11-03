@@ -4,6 +4,26 @@
 # License: Apache 2.0
 # Author: Dai Chengxin, Julianus Pfeuffer, Yasset Perez-Riverol
 
+# Rscript bin/msstats_tmt.R  PDC000114.sdrf_openms_design_msstats_in.csv "pairwise" "" true true true \
+#                            sum msstats true true true PDC000114.sdrf_openms_design_msstats_in 0.05 false
+# Parameters:
+# 1. input csv file
+# 2. contrast type: pairwise
+# 3. control condition: ""
+# 4. rmProtein_with1Feature: true or false
+# 5. useUniquePeptide: true or false
+# 6. rmPSM_withfewMea_withinRun: true or false
+# 7. summarization method: sum or max
+# 8. summarization method to protein-level: msstats(default)
+# 9. global median normalization on peptide level data: true or false
+# 10. remove norm channel: true or false
+# 11. reference norm channel: true or false
+# 12. output prefix: PDC000114.sdrf_openms_design_msstats_in
+# 13. adjusted p-value threshold: 0.05
+# 14. generate profile plot: true or false (default)
+
+
+
 require(MSstatsTMT)
 require(stats)
 require(gplots)
@@ -799,6 +819,15 @@ if (length(args)<13) {
     args[13] <- 0.05
 }
 
+if (length(args) < 14) {
+    # Plot profile plot for all proteins
+    args[14] <- FALSE
+}
+plot_profile_all <- args[14]
+if(typeof(plot_profile_all) == 'character'){
+    plot_profile_all <- char_to_boolean[plot_profile_all]
+}
+
 csv_input <- args[1]
 contrast_str <- args[2]
 control_str <- args[3]
@@ -814,8 +843,10 @@ processed.quant <- proteinSummarization(quant, method=args[8],remove_empty_chann
     reference_norm=reference_norm, remove_norm_channel=remove_norm_channel
 )
 
-dataProcessPlotsTMT(processed.quant, "ProfilePlot", width=12, height=12, which.Protein="all")
-dataProcessPlotsTMT(processed.quant, "QCPlot", width=12, height=12, which.Protein="allonly")
+if (plot_profile_all) {
+    dataProcessPlotsTMT(processed.quant, "ProfilePlot", width=12, height=12, which.Protein="all")
+    dataProcessPlotsTMT(processed.quant, "QCPlot", width=12, height=12, which.Protein="allonly")
+}
 
 lvls <- levels(as.factor(processed.quant$ProteinLevelData$Condition))
 l <- length(lvls)

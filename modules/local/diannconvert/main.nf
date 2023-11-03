@@ -2,11 +2,11 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.19"
+    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.21"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.19--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.22--pyhdfd78af_0"
     } else {
-        container "quay.io/biocontainers/pmultiqc:0.0.19--pyhdfd78af_0"
+        container "biocontainers/pmultiqc:0.0.22--pyhdfd78af_0"
     }
 
     input:
@@ -14,7 +14,7 @@ process DIANNCONVERT {
     path(exp_design)
     path(report_pg)
     path(report_pr)
-    path(mzml_information)
+    path(ms_information)
     val(meta)
     path(fasta)
     path("version/versions.yml")
@@ -23,6 +23,7 @@ process DIANNCONVERT {
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
     path "*.mzTab", emit: out_mztab
+    path "*.log", emit: log
     path "versions.yml", emit: version
 
     exec:
@@ -36,6 +37,7 @@ process DIANNCONVERT {
     """
     diann_convert.py convert \\
         --folder ./ \\
+        --exp_design ${exp_design} \\
         --diann_version ./version/versions.yml \\
         --dia_params "${dia_params}" \\
         --charge $params.max_precursor_charge \\

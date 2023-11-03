@@ -7,14 +7,14 @@ process MZMLSTATISTICS {
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
     } else {
-        container "quay.io/biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
+        container "biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
     }
 
     input:
-    tuple val(meta), path(mzml)
+    tuple val(meta), path(ms_file)
 
     output:
-    path "*_mzml_info.tsv", emit: mzml_statistics
+    path "*_ms_info.tsv", emit: ms_statistics
     path "versions.yml", emit: version
     path "*.log", emit: log
 
@@ -23,7 +23,7 @@ process MZMLSTATISTICS {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    mzml_statistics.py "${mzml}" \\
+    mzml_statistics.py "${ms_file}" \\
         2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
