@@ -8,3 +8,6 @@ testing*
 *.pyc
 .idea/
 .idea/*
+*.log
+/build/
+results*/
