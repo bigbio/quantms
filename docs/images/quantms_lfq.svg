@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1"
+	 id="svg176769" inkscape:version="1.1.1 (c3084ef, 2021-09-22)" sodipodi:docname="full-DDA.svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 284 908"
+	 style="enable-background:new 0 0 284 908;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#000000;stroke-miterlimit:10;}
+	.st1{stroke:#000000;stroke-miterlimit:10;}
+	.st2{fill:#FFFFFF;stroke:#000000;}
+	.st3{font-family:'ArialMT';}
+	.st4{font-size:12px;}
+	.st5{fill:#24AD62;stroke:#000000;stroke-miterlimit:10;}
+	.st6{fill:#FFFFFF;}
+	.st7{font-size:11px;}
+	.st8{fill:#FFFFFF;stroke:#000000;stroke-dasharray:3,3;}
+	.st9{fill:none;}
+	.st10{font-size:10px;}
+	.st11{font-size:9px;}
+	.st12{fill:#FFFFFF;stroke:#000000;stroke-dasharray:1,1;}
+	.st13{font-family:'Arial-BoldMT';}
+	.st14{font-size:14px;}
+	.st15{font-size:9.1684px;}
+</style>
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1.0" id="namedview176771" inkscape:current-layer="g176759" inkscape:cx="74.518027" inkscape:cy="689.6148" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:window-height="755" inkscape:window-maximized="0" inkscape:window-width="1280" inkscape:window-x="0" inkscape:window-y="23" inkscape:zoom="1.160793" pagecolor="#ffffff" showgrid="false">
+	</sodipodi:namedview>
+<g id="g176759">
+	<path id="path176427" pointer-events="stroke" class="st0" d="M62.5,256.5v10h80v12.1"/>
+	<path id="path176429" pointer-events="all" class="st1" d="M142.5,285.4l-4.5-9l4.5,2.3l4.5-2.3L142.5,285.4z"/>
+	<path id="path176431" pointer-events="stroke" class="st0" d="M62.5,210.1c0,0,0-13.9,0-41.6"/>
+	<path id="path176433" pointer-events="all" class="st1" d="M62.5,215.4l-3.5-7l3.5,1.8l3.5-1.8L62.5,215.4z"/>
+	<path id="rect176435" pointer-events="all" class="st2" d="M27.9,216.5h70.5c2.2,0,3.9,2.7,3.9,6v28c0,3.3-1.8,6-3.9,6H27.9
+		c-2.2,0-3.9-2.7-3.9-6v-28C24,219.2,25.7,216.5,27.9,216.5z"/>
+	<g id="g176441" transform="translate(-0.5 -0.5)">
+		<text id="text176437" transform="matrix(1 0 0 1 37.1611 240.5)" class="st3 st4">ID Comet</text>
+	</g>
+	<path id="path176443" pointer-events="stroke" class="st0" d="M142.5,316.5v10h-80v41.6"/>
+	<path id="path176445" pointer-events="all" class="st1" d="M62.5,373.4l-3.5-7l3.5,1.8l3.5-1.8L62.5,373.4z"/>
+	<path id="path176447" pointer-events="all" class="st5" d="M142.5,286.5l22.5,15l-22.5,15l-22.5-15L142.5,286.5z"/>
+	<g id="g176453" transform="translate(-0.5 -0.5)">
+		<text id="text176449" transform="matrix(1 0 0 1 133.1689 303.5)" class="st6 st3 st4">mix</text>
+	</g>
+	<path id="path176455" pointer-events="stroke" class="st0" d="M142.5,502.5v24h-82v12.6"/>
+	<path id="path176457" pointer-events="all" class="st1" d="M60.5,544.4l-3.5-7l3.5,1.8l3.5-1.8L60.5,544.4z"/>
+	<g id="g176463" transform="translate(-8.5,-6.5)">
+		<text id="text176459" transform="matrix(1 0 0 1 69.262 527.4999)" class="st3 st7">if multi-engine</text>
+	</g>
+	<path id="path176465" pointer-events="stroke" class="st0" d="M142.5,502.5v24h80v43.6"/>
+	<path id="path176467" pointer-events="all" class="st1" d="M222.5,575.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,575.4z"/>
+	<g id="g176473" transform="translate(9.5,-6.5)">
+		<text id="text176469" transform="matrix(1 0 0 1 145.5039 528.4999)" class="st3 st7">if single-engine</text>
+	</g>
+	<path id="path176475" pointer-events="all" class="st5" d="M142.5,466.5l27.5,18l-27.5,18l-27.5-18L142.5,466.5z"/>
+	<g id="g176481" transform="translate(-0.5 -0.5)">
+		<text id="text176477" transform="matrix(1 0 0 1 125.4932 488.5)" class="st6 st3 st4">merge</text>
+	</g>
+	<path id="path176483" pointer-events="stroke" class="st0" d="M62.5,414.5v42h80v3.6"/>
+	<path id="path176485" pointer-events="all" class="st1" d="M142.5,465.4l-3.5-7l3.5,1.8l3.5-1.8L142.5,465.4z"/>
+	<path id="rect176487" pointer-events="all" class="st2" d="M8.5,374.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H8.5
+		c-3.3,0-6-2.7-6-6v-28C2.5,377.2,5.2,374.5,8.5,374.5z"/>
+	<g id="g176493" transform="translate(-0.5 -0.5)">
+		<text id="text176489" transform="matrix(1 0 0 1 35.1543 398.5)" class="st3 st4">Percolator</text>
+	</g>
+	<path id="path176495" pointer-events="stroke" class="st0" d="M222.5,256.5v10h-80v13.6"/>
+	<path id="path176497" pointer-events="all" class="st1" d="M142.5,285.4l-3.5-7l3.5,1.8l3.5-1.8L142.5,285.4z"/>
+	<path id="rect176499" pointer-events="all" class="st2" d="M191.8,216.5h61.8c1.9,0,3.4,2.7,3.4,6v28c0,3.3-1.5,6-3.4,6h-61.8
+		c-1.9,0-3.4-2.7-3.4-6v-28C188.3,219.2,189.9,216.5,191.8,216.5z"/>
+	<g id="g176505" transform="translate(-0.5 -0.5)">
+		<text id="text176501" transform="matrix(1 0 0 1 197.501 240.5)" class="st3 st4">ID MSGF</text>
+	</g>
+	<path id="path176507" pointer-events="stroke" class="st0" d="M222.5,384.5v20v-23v13.6"/>
+	<path id="path176509" pointer-events="all" class="st1" d="M222.5,400.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,400.4z"/>
+	<path id="rect176511" pointer-events="all" class="st8" d="M168.5,344.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C162.5,347.2,165.2,344.5,168.5,344.5z"/>
+	<g id="g176517" transform="translate(-0.5 -0.5)">
+		<text id="text176513" transform="matrix(1 0 0 1 210.1689 368.5)" class="st3 st4">FDR</text>
+	</g>
+	<path id="path176519" pointer-events="stroke" class="st0" d="M222.5,441.5v15h-80v3.6"/>
+	<path id="path176521" pointer-events="all" class="st1" d="M142.5,465.4l-3.5-7l3.5,1.8l3.5-1.8L142.5,465.4z"/>
+	<path id="rect176523" pointer-events="all" class="st2" d="M168.5,401.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C162.5,404.2,165.2,401.5,168.5,401.5z"/>
+	<g id="g176529" transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 175.004 419.4696)" class="st3 st4">Distribution-based</text>
+		<text transform="matrix(1 0 0 1 211.3556 434.4696)" class="st3 st4">PEP</text>
+	</g>
+	<path id="path176531" pointer-events="stroke" class="st0" d="M60,585.5v15.6"/>
+	<path id="path176533" pointer-events="all" class="st1" d="M60,606.4l-3.5-7l3.5,1.8l3.5-1.8L60,606.4z"/>
+	<path id="rect176535" pointer-events="all" class="st2" d="M6,545.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H6c-3.3,0-6-2.7-6-6
+		v-28C0,548.2,2.7,545.5,6,545.5z"/>
+	<g id="g176541" transform="translate(-0.5 -0.5)">
+		<text id="text176537" transform="matrix(1 0 0 1 24.4824 569.4999)" class="st3 st4">ConsensusID</text>
+	</g>
+	<path id="path176543" pointer-events="stroke" class="st0" d="M141.5,764.5v20v-28v13.6"/>
+	<path id="path176545" pointer-events="all" class="st1" d="M141.5,775.4l-3.5-7l3.5,1.8l3.5-1.8L141.5,775.4z"/>
+	<path id="rect176547" pointer-events="all" class="st8" d="M87.5,724.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C81.5,727.2,84.2,724.5,87.5,724.5z"/>
+	<g id="g176553" transform="translate(-0.5 -0.5)">
+		<text id="text176549" transform="matrix(1 0 0 1 118.4844 748.4999)" class="st3 st4">Luciphor</text>
+	</g>
+	<path id="path176555" pointer-events="stroke" class="st0" d="M60,647.5v9h81.5v6.6"/>
+	<path id="path176557" pointer-events="all" class="st1" d="M141.5,668.4l-3.5-7l3.5,1.8l3.5-1.8L141.5,668.4z"/>
+	<path id="rect176559" pointer-events="all" class="st2" d="M6,607.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H6c-3.3,0-6-2.7-6-6
+		v-28C0,610.2,2.7,607.5,6,607.5z"/>
+	<g id="g176565" transform="translate(-0.5 -0.5)">
+		<text id="text176561" transform="matrix(1 0 0 1 20.4863 631.4999)" class="st3 st4">combined FDR</text>
+	</g>
+	<path id="path176567" pointer-events="stroke" class="st0" d="M141.5,836.5v10h-79v13.6"/>
+	<path id="path176569" pointer-events="all" class="st1" d="M62.5,865.4l-3.5-7l3.5,1.8l3.5-1.8L62.5,865.4z"/>
+	<path id="path176571" pointer-events="stroke" class="st0" d="M141.5,836.5v10h81v13.6"/>
+	<path id="path176573" pointer-events="all" class="st1" d="M222.5,865.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,865.4z"/>
+	<path id="rect176575" pointer-events="all" class="st2" d="M80.5,776.5h122c5,0,9,4,9,9v42c0,5-4,9-9,9h-122c-5,0-9-4-9-9v-42
+		C71.5,780.5,75.5,776.5,80.5,776.5z"/>
+	<g id="g176581" transform="translate(-0.5 -0.5)">
+		<text id="text176577" transform="matrix(1 0 0 1 94.6396 810.4999)" class="st3 st4">Quantification +...</text>
+	</g>
+	<path id="path176583" pointer-events="stroke" class="st0" d="M222.5,616.5v40h-81v6.6"/>
+	<path id="path176585" pointer-events="all" class="st1" d="M141.5,668.4l-3.5-7l3.5,1.8l3.5-1.8L141.5,668.4z"/>
+	<path id="rect176587" pointer-events="all" class="st2" d="M168.5,576.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C162.5,579.2,165.2,576.5,168.5,576.5z"/>
+	<g id="g176593" transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 198.1572 595.3311)" class="st3 st4">Switch to</text>
+		<text transform="matrix(1 0 0 1 188.8232 610.3311)" class="st3 st4">q-value/FDR</text>
+	</g>
+	<path id="path176595" pointer-events="stroke" class="st0" d="M141.5,709.5v8.6"/>
+	<path id="path176597" pointer-events="all" class="st1" d="M141.5,723.4l-3.5-7l3.5,1.8l3.5-1.8L141.5,723.4z"/>
+	<path id="rect176599" pointer-events="all" class="st2" d="M87.5,669.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C81.5,672.2,84.2,669.5,87.5,669.5z"/>
+	<g id="g176605" transform="translate(-0.5 -0.5)">
+		<text id="text176601" transform="matrix(1 0 0 1 122.167 693.4999)" class="st3 st4">IDFilter</text>
+	</g>
+	<path id="rect176607" pointer-events="all" class="st2" d="M8.5,866.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H8.5
+		c-3.3,0-6-2.7-6-6v-28C2.5,869.2,5.2,866.5,8.5,866.5z"/>
+	<g id="g176613" transform="translate(-0.5 -0.5)">
+		<text id="text176609" transform="matrix(1 0 0 1 40.8291 890.4999)" class="st3 st4">MSstats</text>
+	</g>
+	<path id="rect176615" pointer-events="all" class="st2" d="M168.5,866.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C162.5,869.2,165.2,866.5,168.5,866.5z"/>
+	<g id="g176621" transform="translate(-0.5 -0.5)">
+		<text id="text176617" transform="matrix(1 0 0 1 196.8301 890.4999)" class="st3 st4">PMultiQC</text>
+	</g>
+	<path id="path176623" pointer-events="stroke" class="st0" d="M62.5,168.5c0,16,21.7,24,65,24s65,5.9,65,17.6"/>
+	<path id="path176625" pointer-events="all" class="st1" d="M192.5,215.4l-3.5-7l3.5,1.8l3.5-1.8L192.5,215.4z"/>
+	<path id="rect176627" pointer-events="all" class="st8" d="M8.5,128.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H8.5
+		c-3.3,0-6-2.7-6-6v-28C2.5,131.2,5.2,128.5,8.5,128.5z"/>
+	<g id="g176633" transform="translate(-0.5 -0.5)">
+		<text transform="matrix(1 0 0 1 41.1602 145.6081)" class="st3 st4">Raw file</text>
+		<text transform="matrix(1 0 0 1 26.8164 160.6081)" class="st3 st4">conversion/...</text>
+	</g>
+	<path id="path176635" pointer-events="stroke" class="st0" d="M222.5,168.5c0,0,0,13.9,0,41.6"/>
+	<path id="path176637" pointer-events="all" class="st1" d="M222.5,215.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,215.4z"/>
+	<path id="path176639" pointer-events="stroke" class="st0" d="M222.5,168.5c0,16-21.7,24-65,24s-65,5.9-65,17.6"/>
+	<path id="path176641" pointer-events="all" class="st1" d="M92.5,215.4l-3.5-7l3.5,1.8l3.5-1.8L92.5,215.4z"/>
+	<path id="path176643" pointer-events="stroke" class="st0" d="M102.5,102.5c-26.7,0-40,4-40,12s0,10.2,0,6.6"/>
+	<path id="path176645" pointer-events="all" class="st1" d="M62.5,126.4l-3.5-7l3.5,1.8l3.5-1.8L62.5,126.4z"/>
+	<path id="path176647" pointer-events="stroke" class="st0" d="M247.5,103c-16.7,0-25,2.3-25,6.8s0,8.6,0,12.4"/>
+	<path id="path176649" pointer-events="all" class="st1" d="M222.5,127.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,127.4z"/>
+	<rect id="rect176651" x="153.5" y="338.5" pointer-events="all" class="st9" width="81" height="6"/>
+	<g id="g176657" transform="translate(-0.5,-4.5)">
+		<text id="text176653" transform="matrix(1 0 0 1 161.9854 344.5)" class="st3 st10">if !multi-engine</text>
+	</g>
+	<path id="path176659" pointer-events="stroke" class="st0" d="M142.5,316.5v10h80v11.6"/>
+	<path id="path176661" pointer-events="all" class="st1" d="M222.5,343.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,343.4z"/>
+	<rect id="rect176663" x="78.5" y="716.5" pointer-events="all" class="st9" width="60" height="10"/>
+	<g id="g176669" transform="translate(-0.5,-4.5)">
+		<text id="text176665" transform="matrix(1 0 0 1 87.936 724.4999)" class="st3 st10">if localize</text>
+	</g>
+	<rect id="rect176671" x="2.5" y="117.5" pointer-events="all" class="st9" width="60" height="20"/>
+	<g id="g176677" transform="translate(-0.5,-6.5)">
+		<text id="text176673" transform="matrix(1 0 0 1 8.4905 130.5)" class="st3 st11">if necessary</text>
+	</g>
+	<path id="rect176679" pointer-events="all" class="st8" d="M168.5,128.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C162.5,131.2,165.2,128.5,168.5,128.5z"/>
+	<g id="g176685" transform="translate(-0.5 -0.5)">
+		<text id="text176681" transform="matrix(1 0 0 1 175.4697 152.5)" class="st3 st4">Decoy generation</text>
+	</g>
+	<rect id="rect176687" x="162.5" y="117.5" pointer-events="all" class="st9" width="60" height="20"/>
+	<g id="g176693" transform="translate(-0.5,-6.5)">
+		<text id="text176689" transform="matrix(1 0 0 1 168.9849 130.5)" class="st3 st11">if requested</text>
+	</g>
+	<path id="rect176695" pointer-events="all" class="st2" d="M223,17h49c5.8,0,10.5,4.7,10.5,10.5v65c0,5.8-4.7,10.5-10.5,10.5h-49
+		c-5.8,0-10.5-4.7-10.5-10.5v-65C212.5,21.7,217.2,17,223,17z"/>
+	<g id="g176701" transform="translate(-0.5 -0.5)">
+		<text id="text176697" transform="matrix(1 0 0 1 221.8154 14.5)" class="st3 st4">Database</text>
+	</g>
+	<path id="rect176705" pointer-events="all" class="st2" d="M15.4,16.5h174.2c7.1,0,12.9,5.8,12.9,12.9v60.2
+		c0,7.1-5.8,12.9-12.9,12.9H15.4c-7.1,0-12.9-5.8-12.9-12.9V29.4C2.5,22.3,8.3,16.5,15.4,16.5z"/>
+	<g id="g176711" transform="translate(-0.5 -0.5)">
+		<text id="text176707" transform="matrix(1 0 0 1 89.1553 13.5)" class="st3 st4">Input</text>
+	</g>
+	<rect id="rect176715" x="91.7" y="56" pointer-events="all" class="st9" width="12.8" height="13.6"/>
+	<g id="g176721" transform="translate(27.006641,0.36148008)">
+		<text id="text176717" transform="matrix(1 0 0 1 94.9961 66.4999)" class="st3 st4">+</text>
+	</g>
+	<g id="g176727" transform="translate(44.705882,-3.7229602)">
+		<text id="text176725" transform="matrix(1 0 0 1 98.3332 42)" class="st3 st4">Design</text>
+	</g>
+	<rect id="rect176729" x="24.2" y="41.8" pointer-events="all" class="st12" width="77.9" height="46.7"/>
+	<g id="g176735" transform="translate(9.5,-0.5)">
+		<text id="text176731" transform="matrix(1 0 0 1 32.8223 38.5)" class="st3 st4">Spectra</text>
+	</g>
+	<rect id="rect176739" x="46.1" y="58.6" pointer-events="all" class="st9" width="14.2" height="12.3"/>
+	<g id="g176745" transform="translate(9.5,-0.5)">
+		<text id="text176741" transform="matrix(1 0 0 1 48.165 68.5)" class="st3 st4">or</text>
+	</g>
+	<rect id="rect176749" x="138.9" y="52.5" pointer-events="all" class="st9" width="18.2" height="15"/>
+	<path id="rect176499_1_" pointer-events="all" class="st2" d="M112.1,216.5h61.8c1.9,0,3.4,2.7,3.4,6v28c0,3.3-1.5,6-3.4,6h-61.8
+		c-1.9,0-3.4-2.7-3.4-6v-28C108.7,219.2,110.2,216.5,112.1,216.5z"/>
+	<text transform="matrix(1 0 0 1 123.383 240.0014)" class="st3 st4">ID Sage</text>
+</g>
+<a id="a176765" xlink:href="https://desk.draw.io/support/solutions/articles/16000042487"  transform="translate(0,-5)">
+</a>
+<path id="path5774-0-8" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+	M267.8,48.9h-1.3v-6.6c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.5-0.3-0.7L256.2,29l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+	c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.3,0h-25c-1.1,0-2.1,1-2.1,2.2V49h-1.3c-1.6,0-3,1.4-3,3.2v16.5c0,1.8,1.3,3.2,3,3.2
+	h1.3v11.3c0,1.2,0.9,2.2,2.1,2.2h34c1.1,0,2.1-1,2.1-2.2V71.9h1.3c1.6,0,3-1.4,3-3.2V52.1C270.8,50.3,269.5,48.9,267.8,48.9
+	L267.8,48.9z M230.5,30.9h23.9v11.4c0,0.6,0.4,1.1,1,1.1h9.1v5.6h-34V30.9z M264.5,82.5h-34V71.8h34V82.5L264.5,82.5z"/>
+<text transform="matrix(0.892 0 0 1 232.8925 66.8615)" class="st6 st13 st14">fasta</text>
+<path id="path5774-0-8_1_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+	M54.5,61.6h-0.7V58c0,0,0,0,0-0.1c0-0.1,0-0.3-0.1-0.4l-5.6-6.9l0,0c0,0-0.1-0.1-0.1-0.1c0,0,0,0,0,0c0,0-0.1,0-0.1,0h0
+	c0,0-0.1,0-0.1,0H33.9c-0.6,0-1.1,0.6-1.1,1.2v10h-0.7c-0.9,0-1.6,0.8-1.6,1.8v9.1c0,1,0.7,1.8,1.6,1.8h0.7v6.2
+	c0,0.7,0.5,1.2,1.1,1.2h18.7c0.6,0,1.1-0.6,1.1-1.2v-6.2h0.7c0.9,0,1.6-0.8,1.6-1.8v-9.1C56.1,62.4,55.4,61.6,54.5,61.6L54.5,61.6z
+	 M33.9,51.7H47V58c0,0.3,0.2,0.6,0.6,0.6h5v3.1H33.9V51.7z M33.4,78.1h19.8v6.2l0,0H33.4"/>
+<text transform="matrix(0.8919 0 0 1 30.8169 71.3161)" class="st6 st13 st15">mzML</text>
+<polyline id="rect176739_1_" pointer-events="all" class="st9" points="102.4,70.3 88.2,70.3 88.2,58 102.4,58 102.4,70.3 "/>
+<path id="path5774-0-8_2_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+	M96.5,61.1h-0.7v-3.6c0,0,0,0,0-0.1c0-0.1,0-0.3-0.1-0.4l-5.6-6.9l0,0c0,0-0.1-0.1-0.1-0.1c0,0,0,0,0,0c0,0-0.1,0-0.1,0h0
+	c0,0-0.1,0-0.1,0H76c-0.6,0-1.1,0.6-1.1,1.2v10h-0.7c-0.9,0-1.6,0.8-1.6,1.8V72c0,1,0.7,1.8,1.6,1.8h0.7V80c0,0.7,0.5,1.2,1.1,1.2
+	h18.7c0.6,0,1.1-0.6,1.1-1.2v-6.2h0.7c0.9,0,1.6-0.8,1.6-1.8v-9.1C98.2,61.9,97.4,61.1,96.5,61.1L96.5,61.1z M76,51.2h13.1v6.3
+	c0,0.3,0.2,0.6,0.6,0.6h5v3.1H76V51.2z M75.4,77.5h19.8v6.2l0,0H75.4"/>
+<text transform="matrix(0.8919 0 0 1 77.42 70.7647)" class="st6 st13 st15">raw</text>
+<polyline id="rect176715_1_" pointer-events="all" class="st9" points="179.7,67.6 166.9,67.6 166.9,54 179.7,54 "/>
+<polyline id="rect176739_2_" pointer-events="all" class="st9" points="177.6,68.4 163.4,68.4 163.4,56.1 177.6,56.1 "/>
+<path id="path5774-0-8_3_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+	M171.7,59.1H171v-3.6c0,0,0,0,0-0.1c0-0.1,0-0.3-0.1-0.4l-5.6-6.9l0,0c0,0-0.1-0.1-0.1-0.1c0,0,0,0,0,0c0,0-0.1,0-0.1,0h0
+	c0,0-0.1,0-0.1,0h-13.8c-0.6,0-1.1,0.6-1.1,1.2v10h-0.7c-0.9,0-1.6,0.8-1.6,1.8V70c0,1,0.7,1.8,1.6,1.8h0.7V78
+	c0,0.7,0.5,1.2,1.1,1.2h18.7c0.6,0,1.1-0.6,1.1-1.2v-6.2h0.7c0.9,0,1.6-0.8,1.6-1.8v-9.1C173.4,59.9,172.6,59.1,171.7,59.1
+	L171.7,59.1z M151.2,49.2h13.1v6.3c0,0.3,0.2,0.6,0.6,0.6h5v3.1h-18.7V49.2z M150.6,75.6h19.8v6.2l0,0h-19.8"/>
+<text transform="matrix(0.8919 0 0 1 151.9519 68.7836)" class="st6 st13 st15">sdrf</text>
+<path id="path176639_1_" pointer-events="stroke" class="st0" d="M223.3,173.8c-14.3,28.6-81.2,29.7-81.2,41.4"/>
+<path id="path176641_1_" pointer-events="all" class="st1" d="M136.6,212.9l5.5,2.8l5.5-2.8"/>
+<path id="path176623_2_" pointer-events="stroke" class="st0" d="M59.2,147.4"/>
+<path id="path176623_1_" pointer-events="stroke" class="st0" d="M62.5,168.5c9.2,39.5,79.6,35,79.6,46.7"/>
+<line class="st0" x1="142.7" y1="256" x2="142.5" y2="278.6"/>
+</svg>
