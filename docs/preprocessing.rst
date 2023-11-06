@@ -12,3 +12,19 @@ The RAW data (files from the instrument) can be provided to quantms pipeline in 
 .. important:: Automatic RAW file conversion is only supported from Thermo Scientific.
 
 Additionally to file conversion, the Raw conversion step allows the users to perform an extra peak-picking step ``openmspeakpicker true`` for those datasets/projects where peaks can be extracted using the Thermo RAW API. Read more about the OpenMS peak picker algorithm `here <https://abibuilder.informatik.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_PeakPickerWavelet.html>`_ .
+When bruker .d files are provided, quantms provides an optional parameter `convert_dotd` to convert .d to mzML (default false).
+
+Mass spectra statistics: Quality metrics extraction
+---------------------------------------
+
+The mass spectrum file can be parsed and generates a set of statistics about the file by `script <https://github.com/bigbio/quantms/blob/dev/bin/mzml_statistics.py>`_ , and then passed to the pmultiqc module to perform quality control visualization.
+including as follow columns:
+
+- ``SpectrumID``
+- ``MSLevel``
+- ``Charge``
+- ``MS_peaks``
+- ``Base_Peak_Intensity``
+- ``Retention_Time``
+- ``Exp_Mass_To_Charge``
+- ``AcquisitionDateTime``

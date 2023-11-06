@@ -14,7 +14,7 @@ Apart of this three main file formats, additionally, multiple file formats are u
 Input formats
 ---------------------------
 
-The quantms should receive three main inputs: Experimental design (SDRF); Spectra data files (RAW or mzML); Protein database (Fasta).
+The quantms should receive three main inputs: Experimental design (SDRF); Spectra data files (RAW, mzML or .d); Protein database (Fasta).
 
 SDRF: experimental design
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,6 +77,7 @@ Spectra Data
 The spectra data can be provided in RAW files (for Thermo-Fisher instruments only) or preferably in mzML.
 If RAW files are provided, the first step of the identification pipeline
 `converts them into mzML <https://quantms.readthedocs.io/en/latest/identification.html#mass-spectra-processing-raw-conversion>`_.
+In addition, bruker ``.d`` data format is also supported in DIA subworkflow.
 
 .. important:: If you want to load local input spectra files instead of from SDRF or Experimental Design file. Please set `--root_dir` and `--local_input_type` (default mzML) parameters.
 
@@ -100,7 +101,7 @@ The main output of the quantms is the standard HUPO-PSI format `mzTab <https://w
 The mzTab allows quantms to store quantification/identification information from proteomics experiments in a single file.
 If MSstats was activated, the workflow outputs two mzTab:
 
- - one in the proteomicslfq or proteininferencer folder, containing raw intensities from OpenMS for each feature/channel
+ - one in the proteomicslfq or proteinquantifier folder, containing raw intensities from OpenMS for each feature/channel
  - one in the msstats folder, with intensities replaced by the output from MSstats(TMT). This contains normalized and
     potentially imputed quantities.
 
