@@ -26,12 +26,14 @@ You can get the pipeline in two different ways:
 Manual download with git directly from github:
 
 .. code-block:: bash
+   
    git clone https://github.com/bigbio/quantms
    cd quantms
 
 This will store a local copy of the pipeline, in order to be able to run it you should run the following command:
 
 .. code-block:: bash
+
    nextflow run main.nf -c nextflow.config -profile test_lfq,<docker/singularity/conda/institute>
 
 You can use nextflow to directly pull from the github:

@@ -41,24 +41,24 @@ very reproducible chromatography.
 Workflow-based analysis
 -----------------------
 
-While there exist tools for the analysis of shotgun proteomics data (like MaxQuant TODO cite), most of these
+While there exist tools for the analysis of shotgun proteomics data like MaxQuant [Cox2008]_, most of these
 tools are designed as single-tiered/monolithic software application where tasks cannot be distributed or evaluated
 separately, therefore limiting the scalability and reproducibility of the data analysis [RIVEROL2020]_.
 The different sub-workflows of the `quantms workflow <https://github.com/bigbio/quantms>`_ on the other hand
 enable the distribution of all the different steps of a peptide identification and quantification workflow in
-cloud or HPC environments through the usage of nextflow (TODO cite). It also features rich quality control
+cloud or HPC environments through the usage of nextflow [DI2017]_. It also features rich quality control
 reports and different methods for automated downstream statistical post-processing including reports on
 significance analysis for differential expression which all can be emailed to you after successful completion of
 the pipeline.
 The workflow can be configured solely by an SDRF input file for easy one-command-reanalyses of PRIDE datasets
 but also offers extensive configurability on either a web-based or a guided command-line interface provided
-through its integration into nf-core (TODO cite). The membership in nf-core additionally secures best practices
+through its integration into nf-core [EWELS2020]_. The membership in nf-core additionally secures best practices
 of open and collaborative development of the pipeline including continuous testing after every contribution.
-The used software is strictly versioned through the exclusive usage of (bio-)conda packages (TODO cite) whose
-association with the biocontainer ecosystem (TODO cite) also
+The used software is strictly versioned through the exclusive usage of (bio-)conda packages whose
+association with the biocontainer ecosystem [DA2017]_ also
 allows us to provide a workflow profile for several containerization software's (like docker, singularity, podman, etc.).
 Containerization ensures an even more reproducible environment for your analyses.
-The pipeline can easily be supervised on-the-fly via nf-tower (TODO link). Failed runs can be debugged by investigating
+The pipeline can easily be supervised on-the-fly `via nf-tower <https://cloud.tower.nf/>`_. Failed runs can be debugged by investigating
 the rich pipeline execution reports.
 
 |
@@ -72,6 +72,7 @@ the rich pipeline execution reports.
         - :doc:`Peptide identification <identification>`
             - :doc:`Comet <comet>`
             - :doc:`MSGF+ <msgf>`
+            - :doc:`Sage` <sage>`
             - PSM re-scoring
                 - :doc:`Distribution-based <idpep>`
                 - :doc:`Percolator <percolator>`
@@ -133,7 +134,8 @@ details of specific steps in the pipeline.
               testing of those peak group to classify them correctly |In development|
             - With diaNN (:doc:`dia`) |Implemented|
 
-        - with predefined transition libraries |Unsupported|
+        - (transition) library-based
+            - with predefined transition libraries |Implemented|
 
 - Protein inference and quantification
     This is done to map ambiguous peptides to the mostly likely proteins of origin
@@ -164,10 +166,22 @@ References
 --------------------------------
 
 .. [AEBERSOLD2003]
-    Aebersold, R., Mann, M. Mass spectrometry-based proteomics. Nature 422, 198–207 (2003). https://doi.org/10.1038/nature01511
+    Aebersold, R., Mann, M. Mass spectrometry-based proteomics. Nature 422, 198–207 (2003). https://doi.org/10.1038/nature01511.
+
+.. [Cox2008]
+    Cox J, Mann M. MaxQuant enables high peptide identification rates, individualized p.p.b.-range mass accuracies and proteome-wide protein quantification. Nat Biotechnol. 2008;26(12):1367-1372. doi:10.1038/nbt.1511.
 
 .. [RIVEROL2020]
     Perez-Riverol Y, Moreno P. Scalable Data Analysis in Proteomics and Metabolomics Using BioContainers and Workflows Engines. Proteomics. 2020 May;20(9):e1900147. doi: 10.1002/pmic.201900147. Epub 2019 Dec 18. PMID: 31657527.
+
+.. [DI2017]
+    Di Tommaso, Paolo et al. Nextflow enables reproducible computational workflows. Nature biotechnology vol. 35,4 (2017): 316-319. doi:10.1038/nbt.3820.
+
+.. [EWELS2020]
+    Ewels, Philip A et al. The nf-core framework for community-curated bioinformatics pipelines. Nature biotechnology vol. 38,3 (2020): 276-278. doi:10.1038/s41587-020-0439-x.
+
+.. [DA2017]
+    da Veiga Leprevost, Felipe et al. BioContainers: an open-source and community-driven framework for software standardization. Bioinformatics (Oxford, England) vol. 33,16 (2017): 2580-2582. doi:10.1093/bioinformatics/btx192.
 
 .. |Unsupported| image:: https://img.shields.io/badge/feature-unsupported-red?logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaWQ9IlNpcmVuIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMiAzMjsiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWw6c3BhY2U9InByZXNlcnZlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOiNGMjU5NDk7fQoJLnN0MXtmaWxsOiNGRkZGRkY7fQoJLnN0MntmaWxsOiM4QjlDQTU7fQoJLnN0M3tmaWxsOiNGQkMzNEU7fQo8L3N0eWxlPjxnPjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yMy41NzgsMjZ2LTkuMDAxYzAtNC4xNzktMy4zOTktNy41NzgtNy41NzgtNy41NzhzLTcuNTc4LDMuMzk5LTcuNTc4LDcuNTc4VjI2SDIzLjU3OHogTTE2LDE0LjkyICAgYy0xLjE0NiwwLTIuMDc4LDAuOTMyLTIuMDc4LDIuMDc4YzAsMC41NTItMC40NDgsMS0xLDFzLTEtMC40NDctMS0xYzAtMi4yNDksMS44My00LjA3OCw0LjA3OC00LjA3OGMwLjU1MiwwLDEsMC40NDgsMSwxICAgUzE2LjU1MiwxNC45MiwxNiwxNC45MnoiLz48cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTYsMTIuOTJjLTIuMjQ5LDAtNC4wNzgsMS44My00LjA3OCw0LjA3OGMwLDAuNTUyLDAuNDQ4LDEsMSwxczEtMC40NDcsMS0xYzAtMS4xNDYsMC45MzItMi4wNzgsMi4wNzgtMi4wNzggICBjMC41NTIsMCwxLTAuNDQ4LDEtMVMxNi41NTIsMTIuOTIsMTYsMTIuOTJ6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTI1LDI2aC0xLjQyMkg4LjQyMkg3Yy0wLjU1MiwwLTEsMC40NDctMSwxczAuNDQ4LDEsMSwxaDE4YzAuNTUzLDAsMS0wLjQ0NywxLTFTMjUuNTUzLDI2LDI1LDI2eiIvPjxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0xNiw4LjU1MWMwLjU1MiwwLDEtMC40NDgsMS0xVjVjMC0wLjU1Mi0wLjQ0OC0xLTEtMXMtMSwwLjQ0OC0xLDF2Mi41NTFDMTUsOC4xMDMsMTUuNDQ4LDguNTUxLDE2LDguNTUxeiIvPjxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0yOSwxNy4yMzFoLTIuNTA2Yy0wLjU1MywwLTEsMC40NDctMSwxczAuNDQ3LDEsMSwxSDI5YzAuNTUzLDAsMS0wLjQ0NywxLTFTMjkuNTUzLDE3LjIzMSwyOSwxNy4yMzF6Ii8+PHBhdGggY2xhc3M9InN0MyIgZD0iTTYuNTA2LDE4LjIzMWMwLTAuNTUzLTAuNDQ4LTEtMS0xSDNjLTAuNTUyLDAtMSwwLjQ0Ny0xLDFzMC40NDgsMSwxLDFoMi41MDYgICBDNi4wNTgsMTkuMjMxLDYuNTA2LDE4Ljc4NCw2LjUwNiwxOC4yMzF6Ii8+PHBhdGggY2xhc3M9InN0MyIgZD0iTTcuODY2LDExLjM4YzAuMTk2LDAuMTk5LDAuNDU1LDAuMjk5LDAuNzEzLDAuMjk5YzAuMjUzLDAsMC41MDYtMC4wOTUsMC43MDEtMC4yODcgICBjMC4zOTQtMC4zODcsMC40LTEuMDIsMC4wMTMtMS40MTRMNy41MjEsOC4xNzVDNy4xMzMsNy43OCw2LjUsNy43NzUsNi4xMDcsOC4xNjJjLTAuMzk0LDAuMzg3LTAuNCwxLjAyLTAuMDEzLDEuNDE0TDcuODY2LDExLjM4eiIvPjxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0yMy40MiwxMS42NzljMC4yNTksMCwwLjUxOC0wLjEsMC43MTMtMC4yOTlsMS43NzItMS44MDRjMC4zODgtMC4zOTQsMC4zODItMS4wMjctMC4wMTItMS40MTQgICBjLTAuMzk2LTAuMzg3LTEuMDI4LTAuMzgyLTEuNDE0LDAuMDEzbC0xLjc3MiwxLjgwNGMtMC4zODgsMC4zOTQtMC4zODIsMS4wMjcsMC4wMTIsMS40MTQgICBDMjIuOTE0LDExLjU4NCwyMy4xNjcsMTEuNjc5LDIzLjQyLDExLjY3OXoiLz48L2c+PC9zdmc+
 

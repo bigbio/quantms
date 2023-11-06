@@ -32,6 +32,12 @@ can pass the following option `quantification_method 'spectral_counting'`.
 
 **Quantify Decoys**: By default, the quantms do not quantified decoy peptide hits, this behaviour can be changed by using the parameter `quantify_decoys` and is auto-enabled when triqler output is enable (:doc:`triqler`).
 
+**feature_with_id_min_score**: The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter).
+
+**feature_without_id_min_score**: The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter).
+
+**lfq_intensity_threshold**: Peak intensity threshold applied in seed detection.
+
 Match between runs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

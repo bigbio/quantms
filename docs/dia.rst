@@ -25,7 +25,7 @@ Additionally to library-based algorithms, several library-free approaches exist,
 DIANN data analysis
 --------------------
 
-quantms, uses `DIANN <https://github.com/vdemichev/DiaNN>`_ for DIA library-free data processing. DIA-NN [DEMI2019]_ is a universal software for data-independent acquisition (DIA) proteomics data processing. In 2018, DIA-NN opened a new chapter in proteomics, introducing a number of algorithms which enabled reliable, robust and quantitatively accurate large-scale experiments using high-throughput methods.
+quantms, uses `DIANN <https://github.com/vdemichev/DiaNN>`_ for DIA library-based and library-free data processing. DIA-NN [DEMI2019]_ is a universal software for data-independent acquisition (DIA) proteomics data processing. In 2018, DIA-NN opened a new chapter in proteomics, introducing a number of algorithms which enabled reliable, robust and quantitatively accurate large-scale experiments using high-throughput methods.
 
 In order to analyze the DIA dataset the pipeline needs the acquisition method properly annotated in the SDRF:  `comment[proteomics data acquisition method]` with value for each sample `NT=Data-Independent Acquisition;AC=NCIT:C161786`:
 
@@ -38,7 +38,7 @@ Similarly to the DDA workflow (see :doc:`lfq`, :doc:`iso`), we aim to make DIA-N
 
 The first step of the workflow, translate the SDRF parameters into DIA-NN configuration parameters, including port-translation modification, enzyme, etc. For the developers and bioinformaticians, the details can be found in `diann to parameters <https://github.com/bigbio/quantms/blob/dev/bin/prepare_diann_parameters.py>`_ .
 
-The second step of the workflow, generate an in-silico spectral library from a FASTA sequence database.
+The second step of the workflow, generate an in-silico spectral library from a FASTA sequence database if predefined transition libraries are not provided.
 The current step is run with the following parameters than can be changed in the commandline:
 
 - `--min_pr_mz & --max_pr_mz`: Minimum & Maximum precursor mz.
@@ -48,7 +48,7 @@ The current step is run with the following parameters than can be changed in the
 - `--min_precursor_charge & --max_precursor_charge`: Minimum & Maximum charge states.
 - `--max_mods`: Maximum number of modifications allows for a peptide.
 
-The third step of the workflow, preliminary analysis of individual raw file based on in-silico predicted library. The .quant files for each raw file that contains IDs and quant info will be saved. This step is run with the following
+The third step of the workflow, preliminary analysis of individual raw file based on in-silico predicted or predefined transition library. The .quant files for each raw file that contains IDs and quant info will be saved. This step is run with the following
 parameters that can be changed in the commandline:
 
 - `--mass_acc_automatic`: Mass accuracies are set to automatic, will be determined independently for different runs and enable `quick-mass-acc` algorithm.
@@ -57,6 +57,9 @@ parameters that can be changed in the commandline:
 - `--scan_window_automatic`: Scan window is set to automatic.
 - `--scan_window`: Sets the scan window radius.
 - `-time_corr_only`: Low RAM & high speed mode enabled.
+- `diann_speclib`: Predefined transition library. DIA-NN supports comma-separated (.csv) or tab-separated (.tsv, .xls or .txt), .speclib (compact format used by DIA-NN), .sptxt (SpectraST, experimental) and .msp (NIST, experimental) library files. Important: the library must not contain non-fragmented precursor ions as 'fragments': each fragment ion must actually be produced by the peptide backbone fragmentation.
+
+.. Note:: The MS1 and MS2 mass accuracy only support ppm unit in DIA branch. quantms will automatically enable `--mass_acc_automatic=true` to determine accuracy by DIA-NN if Da unit is provided.
 
 The fourth step of the workflow, assemble an empirical spectral library from .quant files. The `IDs RT & IM profiling` mode is enabled. The following parameters are used that can be changed in the commandline:
 

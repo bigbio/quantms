@@ -6,6 +6,7 @@ Peptide identification from fragment spectra
 
    comet
    msgf
+   sage
    percolator
    idpep
    fdr
@@ -41,7 +42,7 @@ Peptide Identification
 ------------------------------------
 
 The peptide identification step in the quantms pipeline can be performed (**independently** or **combined**) with two
-different open-source tools : :doc:`comet` or :doc:`msgf`. The parameters for the search engine Comet or MS-GF+ are
+different open-source tools : :doc:`comet`, :doc:`msgf` or :doc:`sage`. The parameters for the search engines Comet, MS-GF+ or Sage are
 read from the SDRF input parameters including the post-translation modifications (annotated with UNIMOD accessions),
 precursor and fragment ion mass tolerances, etc. The only parameter that MUST be provided by commandline to the
 quantms workflow is the psm and peptide FDR threshold ``psm_pep_fdr_cutoff`` (default value ``0.01``).

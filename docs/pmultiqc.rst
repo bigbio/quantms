@@ -37,6 +37,16 @@ The Summary Table and Pipeline Results Statistics describe the identification re
    :width: 800
    :align: center
 
+The MS1 subsection displays the total ion chromatograms curve, base peak chromatograms curve, distribution of peaks and general stats.
+
+.. image:: images/pmultiqc-ms1-tic.png
+   :width: 800
+   :align: center
+
+.. image:: images/pmultiqc-ms1-general_stats.png
+   :width: 800
+   :align: center
+
 In addition, the **Spectra-Tracking** table reports the number of identified peptides and proteins by search engines comet (:doc:`comet`) or msgf (:doc:`msgf`).
 
 .. image:: images/pmultiqc-track.png
@@ -49,6 +59,19 @@ Number of peptides per protein
 The Number of peptides per protein, displays the distribution of peptides per protein in the experiment. Proteins supported by more peptide identifications can constitute more confident results.
 
 .. image:: images/pmultiqc-pep-prot.png
+   :width: 800
+   :align: center
+
+Summary of search engines scores
+---------------------------------
+
+These plots contain search scores and PEPs counts for different search engines in different files, and they also contain a summary of the consensus PSMs if two or more search engines are used.
+
+.. image:: images/pmultiqc-search_scores_summary.png
+   :width: 800
+   :align: center
+
+.. image:: images/pmultiqc-consensus_summary.png
    :width: 800
    :align: center
 
