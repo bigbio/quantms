@@ -33,7 +33,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
 2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
 3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
-4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
+4. Peptide identification FDR [`openms fdr tool`](https://github.com/nf-core/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
 5. Modification localization [`luciphor`](https://github.com/dfermin/lucXor)
 6. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
 7. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_ProteomicsLFQ.html)
@@ -45,7 +45,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
 2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
 3. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
-4. Peptide identification FDR [`openms fdr tool`](https://github.com/ypriverol/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
+4. Peptide identification FDR [`openms fdr tool`](https://github.com/nf-core/quantms/blob/dev/modules/local/openms/falsediscoveryrate/main.nf)
 5. Modification localization [`luciphor`](https://github.com/dfermin/lucXor)
 6. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
 7. Protein inference [`ProteinInference`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html) or [`Epifany`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/UTILS_Epifany.html) for bayesian inference.
@@ -56,7 +56,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 ### DIA-LFQ (data-independent label-free quantification)
 
 1. RAW file conversion to mzML when RAW as input([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
-2. Performing an [optional step](https://github.com/bigbio/quantms/blob/dev/modules/local/tdf2mzml/main.nf): Converting .d to mzML when bruker data as input and set `convert_dotd` to true
+2. Performing an [optional step](https://github.com/nf-core/quantms/blob/dev/modules/local/tdf2mzml/main.nf): Converting .d to mzML when bruker data as input and set `convert_dotd` to true
 3. DIA-NN analysis [`dia-nn`](https://github.com/vdemichev/DiaNN/)
 4. Generation of output files (msstats)
 5. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
