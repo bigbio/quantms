@@ -1,23 +1,26 @@
 name: nf-core AWS full size tests
 # This workflow is triggered on published releases.
 # It can be additionally triggered manually with GitHub actions workflow dispatch button.
-# It runs the -profile 'test_full' on AWS batch
+# It runs the -profiles 'test_lfq' 'test_tmt' and 'test_dia' on AWS batch
 
 on:
   release:
     types: [published]
   workflow_dispatch:
+
 jobs:
   run-tower:
     name: Run AWS full tests
     if: github.repository == 'nf-core/quantms'
     runs-on: ubuntu-latest
+    # Do a full-scale run with data from each acquisition/quantification mode
+    strategy:
+      matrix:
+        mode: ["lfq", "tmt", "dia"]
     steps:
       - name: Launch workflow via tower
         uses: seqeralabs/action-tower-launch@v2
-        # TODO nf-core: You can customise AWS full pipeline tests as required
-        # Add full size test data (but still relatively small datasets for few samples)
-        # on the `test_full.config` test runs with only one set of parameters
+
         with:
           workspace_id: ${{ secrets.TOWER_WORKSPACE_ID }}
           access_token: ${{ secrets.TOWER_ACCESS_TOKEN }}
@@ -27,9 +30,9 @@ jobs:
           parameters: |
             {
               "hook_url": "${{ secrets.MEGATESTS_ALERTS_SLACK_HOOK_URL }}",
-              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/quantms/results-${{ github.sha }}"
+              "outdir": "s3://${{ secrets.AWS_S3_BUCKET }}/quantms/results-${{ github.sha }}/mode_${{ matrix.mode }}"
             }
-          profiles: test_full
+          profiles: test_${{ matrix.mode }}
 
       - uses: actions/upload-artifact@v3
         with:

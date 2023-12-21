@@ -1,0 +1,31 @@
+name: MSSTATS
+description: A module to performance proteomics statistical analysis using MSstats tool.
+keywords:
+  - MSstats
+  - Downstream Analysis
+tools:
+  - MSstats:
+      description: |
+        An R package for statistical analysis of quantitative mass spectrometry-based proteomics experiments.
+      homepage: https://github.com/Vitek-Lab/MSstats
+      documentation: https://www.bioconductor.org/packages/release/bioc/manuals/MSstats/man/MSstats.pdf
+input:
+  - out_msstats:
+      type: file
+      description: MSstats input file with analysis results for statistical downstream analysis in MSstats.
+      pattern: "out_msstats.csv"
+output:
+  - msstats_csv:
+      type: file
+      description: csv file with results of statistical testing
+      pattern: "*.csv"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+authors:
+  - "@daichengxin"

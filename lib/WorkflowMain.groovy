@@ -46,18 +46,12 @@ class WorkflowMain {
 
         // Check input has been provided
         if (!params.input) {
-            Nextflow.error("Please provide an input samplesheet to the pipeline e.g. '--input samplesheet.csv'")
+            Nextflow.error("Please provide an input sdrf to the pipeline e.g. '--input *.sdrf.csv'")
         }
+
+        // check fasta database has been provided
+        if (!params.database) {
+            Nextflow.error("Please provide an fasta database to the pipeline e.g. '--database *.fasta'")
     }
-    //
-    // Get attribute from genome config file e.g. fasta
-    //
-    public static Object getGenomeAttribute(params, attribute) {
-        if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-            if (params.genomes[ params.genome ].containsKey(attribute)) {
-                return params.genomes[ params.genome ][ attribute ]
-            }
-        }
-        return null
     }
 }
