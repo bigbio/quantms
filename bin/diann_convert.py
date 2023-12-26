@@ -825,7 +825,7 @@ def mztab_PSH(report, folder, database):
     def __find_info(directory, n):
         # This line matches n="220101_myfile", folder="." to
         # "myfolder/220101_myfile_ms_info.tsv"
-        files = list(Path(directory).glob(f"{n}_ms_info.tsv"))
+        files = list(Path(directory).rglob(f"{n}_ms_info.tsv"))
         # Check that it matches one and only one file
         if not files:
             raise ValueError(f"Could not find {n} info file in {directory}")
