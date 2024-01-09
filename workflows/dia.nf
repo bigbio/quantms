@@ -122,7 +122,7 @@ workflow DIA {
     DIANNSUMMARY(
         ms_file_names,
         meta,
-        empirical_lib.out.empirical_library,
+        empirical_lib,
         INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(),
         ch_searchdb)
 
