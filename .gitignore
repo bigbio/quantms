@@ -13,3 +13,4 @@ testing*
 results*/
 venv/
 lint_log.txt
+node_modules
