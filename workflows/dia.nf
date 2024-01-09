@@ -69,6 +69,8 @@ workflow DIA {
         indiv_fin_analysis_in = ch_file_preparation_results.combine(ch_searchdb)
             .combine(assembly_log)
             .combine(empirical_library)
+
+        empirical_lib = empirical_library
     } else {
         //
         // MODULE: DIANN_PRELIMINARY_ANALYSIS
@@ -93,6 +95,9 @@ workflow DIA {
             .combine(ch_searchdb)
             .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log)
             .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library)
+
+        
+        empirical_lib = ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
     }
 
     //
@@ -118,7 +123,7 @@ workflow DIA {
     DIANNSUMMARY(
         ms_file_names,
         meta,
-        ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
+        empirical_lib.out.empirical_library,
         INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(),
         ch_searchdb)
 
