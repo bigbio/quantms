@@ -624,10 +624,10 @@
                     "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
                 },
                 "reference_channel": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "The reference channel, e.g. for calculating ratios.",
                     "fa_icon": "fas fa-list-ol",
-                    "default": 126
+                    "default": "126"
                 },
                 "iso_debug": {
                     "type": "integer",

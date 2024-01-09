@@ -14,21 +14,23 @@ workflow DATABASESEARCHENGINES {
     main:
     (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty(), Channel.empty() ]
 
-    if (params.search_engines.contains("msgf")){
+    if (params.search_engines.contains("msgf")) {
         SEARCHENGINEMSGF(ch_mzmls_search.combine(ch_searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINEMSGF.out.version)
         ch_id_msgf = ch_id_msgf.mix(SEARCHENGINEMSGF.out.id_files_msgf)
     }
 
-    if (params.search_engines.contains("comet")){
+    if (params.search_engines.contains("comet")) {
         SEARCHENGINECOMET(ch_mzmls_search.combine(ch_searchengine_in_db))
         ch_versions = ch_versions.mix(SEARCHENGINECOMET.out.version)
         ch_id_comet = ch_id_comet.mix(SEARCHENGINECOMET.out.id_files_comet)
     }
 
-    if (params.search_engines.contains("sage")){
+    // sorted mzmls to generate same batch ids when enable cache
+    ch_mzmls_sorted_search = ch_mzmls_search.collect(flat: false, sort: { a, b -> a[0]["mzml_id"] <=> b[0]["mzml_id"] }).flatMap()
+    if (params.search_engines.contains("sage")) {
         cnt = 0
-        ch_meta_mzml_db = ch_mzmls_search.map{ metapart, mzml ->
+        ch_meta_mzml_db = ch_mzmls_sorted_search.map{ metapart, mzml ->
             cnt++
             def groupkey = metapart.labelling_type +
                     metapart.dissociationmethod +

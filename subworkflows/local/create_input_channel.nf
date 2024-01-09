@@ -129,7 +129,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
             meta.dissociationmethod     = "ETD"
         } else if (row.DissociationMethod == "ELECTRON CAPTURE DISSOCIATION"){
             meta.dissociationmethod     = "ECD"
-        } else{
+        } else {
             meta.dissociationmethod         = row.DissociationMethod
         }
 
@@ -144,8 +144,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
         meta.enzyme                     = row.Enzyme
 
         enzymes += row.Enzyme
-        if (enzymes.size() > 1)
-        {
+        if (enzymes.size() > 1) {
             log.error "Currently only one enzyme is supported for the whole experiment. Specified was '${enzymes}'. Check or split your SDRF."
             log.error filestr
             exit 1
@@ -166,7 +165,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
                 exit 1
             }
         }
-    }else if(session.config.conda && session.config.conda.enabled){
+    } else if (session.config.conda && session.config.conda.enabled) {
         log.error "File in DIA mode found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
         exit 1
     }

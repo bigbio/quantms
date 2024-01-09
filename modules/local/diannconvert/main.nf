@@ -14,7 +14,7 @@ process DIANNCONVERT {
     path(exp_design)
     path(report_pg)
     path(report_pr)
-    path(mzml_information)
+    path(ms_information)
     val(meta)
     path(fasta)
     path("version/versions.yml")
