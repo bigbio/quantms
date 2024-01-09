@@ -96,8 +96,7 @@ workflow DIA {
             .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log)
             .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library)
 
-        
-        empirical_lib = ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
+        empirical_lib = ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library
     }
 
     //
