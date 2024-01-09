@@ -22,8 +22,12 @@ process DIANN_PRELIMINARY_ANALYSIS {
 
     // I am using here the ["key"] syntax, since the preprocessed meta makes
     // was evaluating to null when using the dot notation.
-    mass_acc_ms1 = meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') ? meta['precursormasstolerance'] : 5
-    mass_acc_ms2 = meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm') ? meta['fragmentmasstolerance'] : 13
+    mass_acc_ms1 = meta['precursormasstoleranceunit']
+        .toLowerCase()
+        .endsWith('ppm') ? meta['precursormasstolerance'] : 5
+    mass_acc_ms2 = meta['fragmentmasstoleranceunit']
+        .toLowerCase()
+        .endsWith('ppm') ? meta['fragmentmasstolerance'] : 13
 
     if (params.mass_acc_automatic) {
         mass_acc = '--quick-mass-acc --individual-mass-acc'
@@ -38,6 +42,8 @@ process DIANN_PRELIMINARY_ANALYSIS {
     # Fragment Tolerance value was: ${meta['fragmentmasstolerance']}
     # Precursor Tolerance unit was: ${meta['precursormasstoleranceunit']}
     # Fragment Tolerance unit was: ${meta['fragmentmasstoleranceunit']}
+
+    # Final mas accuracy is '${mass_acc}'
 
     diann   --lib ${predict_library} \\
             --f ${ms_file} \\
