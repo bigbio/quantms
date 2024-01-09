@@ -12,3 +12,4 @@ testing*
 /build/
 results*/
 venv/
+node_modules
