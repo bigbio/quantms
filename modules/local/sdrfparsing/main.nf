@@ -28,9 +28,12 @@ process SDRFPARSING {
     ## -t2 since the one-table format parser is broken in OpenMS2.5
     ## -l for legacy behavior to always add sample columns
 
-    # --extension_convert raw:mzML$extensionconversions  # JSP- Leaving here for reference while testing, remove before merging.
-    # Also remove the definition of extensionconversions above ....
-    parse_sdrf convert-openms -t2 -l --extension_convert raw:mzML -s ${sdrf} 2>&1 | tee ${sdrf.baseName}_parsing.log
+    parse_sdrf convert-openms \\
+        -t2 -l \\
+        --extension_convert raw:mzML$extensionconversions \\
+        -s ${sdrf} \\
+        $args \\
+        2>&1 | tee ${sdrf.baseName}_parsing.log
 
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
