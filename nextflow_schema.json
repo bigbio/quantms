@@ -967,6 +967,19 @@
                     "description": "Enable cross-run normalization between runs by diann.",
                     "default": true,
                     "fa_icon": "far fa-check-square"
+                },
+                "random_preanalysis": {
+                    "type": "boolean",
+                    "description": "Enable random selection of spectrum files to generate empirical library.",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "empirical_assembly_ms_n": {
+                    "type": "integer",
+                    "description": "The number of randomly selected spectrum files.",
+                    "default": 200,
+                    "fa_icon": "fas fa-filter",
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-braille"
