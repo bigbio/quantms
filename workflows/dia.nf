@@ -75,7 +75,11 @@ workflow DIA {
         //
         // MODULE: DIANN_PRELIMINARY_ANALYSIS
         //
-        DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
+        if (params.random_preanalysis){
+            DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.randomSample(params.empirical_assembly_ms_n, 2024).combine(speclib))
+        } else{
+            DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
+        }
         ch_software_versions = ch_software_versions
             .mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
 
