@@ -13,8 +13,7 @@ workflow INPUT_CHECK {
         is_sdrf = true
     } else {
         is_sdrf = false
-        if (!params.labelling_type || !params.acquisition_method)
-        {
+        if (!params.labelling_type || !params.acquisition_method) {
             log.error "If no SDRF was given, specifying --labelling_type and --acquisition_method is mandatory."
             exit 1
         }

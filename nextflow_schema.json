@@ -624,10 +624,10 @@
                     "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
                 },
                 "reference_channel": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "The reference channel, e.g. for calculating ratios.",
                     "fa_icon": "fas fa-list-ol",
-                    "default": 126
+                    "default": "126"
                 },
                 "iso_debug": {
                     "type": "integer",
@@ -940,6 +940,20 @@
                     "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
                     "hidden": false
                 },
+                "skip_preliminary_analysis": {
+                    "type": "boolean",
+                    "description": "Skip the preliminary analysis step, thus use the passed spectral library as-is insted of generating a local concensus library.",
+                    "fa_icon": "fas fa-forward",
+                    "default": false,
+                    "hidden": false
+                },
+                "empirical_assembly_log": {
+                    "type": "string",
+                    "description": "The log file for the empirical assembly, Only used if `--skip_preliminary_analysis` is set to `true` and `--diann_speclib` is passed. If passed, will use that log file to carry out the DIA-NN search, instead of running a preliminary search.",
+                    "fa_icon": "fas fa-file",
+                    "help_text": "If passed, will use that log file to carry out the DIA-NN search, instead of predicting one from the fasta file.",
+                    "hidden": false
+                },
                 "diann_debug": {
                     "type": "integer",
                     "description": "Debug level",
@@ -953,6 +967,19 @@
                     "description": "Enable cross-run normalization between runs by diann.",
                     "default": true,
                     "fa_icon": "far fa-check-square"
+                },
+                "random_preanalysis": {
+                    "type": "boolean",
+                    "description": "Enable random selection of spectrum files to generate empirical library.",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "empirical_assembly_ms_n": {
+                    "type": "integer",
+                    "description": "The number of randomly selected spectrum files.",
+                    "default": 200,
+                    "fa_icon": "fas fa-filter",
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-braille"

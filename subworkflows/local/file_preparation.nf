@@ -50,7 +50,7 @@ workflow FILE_PREPARATION {
     //  This means users should pre-index to save time and space, especially
     //  when re-running.
 
-    if (params.reindex_mzml){
+    if (params.reindex_mzml) {
         MZMLINDEXING( ch_branched_input.mzML )
         ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
         ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
@@ -76,7 +76,7 @@ workflow FILE_PREPARATION {
         ch_versions = ch_versions.mix(TDF2MZML.out.version)
         ch_results = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
         // indexed_mzml_bundle = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
-    } else{
+    } else {
         ch_results = indexed_mzml_bundle.mix(ch_branched_input.dotd)
     }
 
@@ -84,7 +84,7 @@ workflow FILE_PREPARATION {
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms_statistics.collect())
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
 
-    if (params.openms_peakpicking){
+    if (params.openms_peakpicking) {
         // If the peak picker is enabled, it will over-write not bypass the .d files
         OPENMSPEAKPICKER (
             indexed_mzml_bundle
