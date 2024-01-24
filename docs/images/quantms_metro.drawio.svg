@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 1283 569.4" style="enable-background:new 0 0 1283 569.4;" xml:space="preserve">
+	 viewBox="0 0 1283 603" style="enable-background:new 0 0 1283 603;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:none;stroke:#CDA2BE;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
 	.st1{fill:none;stroke:#53A567;stroke-width:10;stroke-miterlimit:10;}
@@ -40,12 +40,11 @@
 	.st34{font-size:6.4378px;}
 	.st35{clip-path:url(#SVGID_12_);}
 	.st36{font-size:6.5691px;}
-	.st37{enable-background:new    ;}
-	.st38{letter-spacing:34.3;}
+	.st37{letter-spacing:33.3;}
 </style>
 <path class="st0" d="M404.7,113.4c7.8-9.3,13.7-15.5,26.3-32.4"/>
 <path class="st0" d="M412,152.4c19.5-23.6,38.3-48.8,84.6-104.5"/>
-<path pointer-events="stroke" class="st1" d="M740.2,310.8l19.3-0.6c2.8,0.1,7.4,8.6,7.2,17.8l7.3,25.9c3.4-0.6,7.7,0,10.4,0
+<path pointer-events="stroke" class="st1" d="M740.2,310.8l19.3-0.6c2.8,0.1,3.6,8.9,7.2,17.8l7.3,25.9c2.6,6.3,5.3,20.9,4.5,16.8
 	l30.2,0.7"/>
 <g>
 	<rect x="404.5" y="48.9" pointer-events="all" class="st2" width="103" height="169.5"/>
@@ -86,8 +85,8 @@
 		c-31,0.5-59.8,2.1-103,0 M507.5,218.4c-39.6,1.3-81.9,0-103,0 M404.5,218.4c0.2-68.9,0.1-127.7,0-169.5 M404.5,218.4
 		c1.7-50.1,0.7-97.9,0-169.5"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 409.1841 21.2311)" class="st4 st5">Search engines</text>
-		<text transform="matrix(0.932 0 0 1 419.8096 35.6088)" class="st4 st5">(at least one)</text>
+		<text transform="matrix(0.932 0 0 1 409.1846 21.231)" class="st4 st5">Search engines</text>
+		<text transform="matrix(0.932 0 0 1 419.8096 35.6089)" class="st4 st5">(at least one)</text>
 		<polygon class="st2" points="459.9,43.2 454.8,43.2 454.8,43.2 		"/>
 	</g>
 	<path pointer-events="stroke" class="st6" d="M165.4,295.5l104.1-0.9c6.7,0,10.7-3.5,12-10.6l23.9-123.8c1.4-7,5.4-10.5,12-10.5h15
@@ -99,7 +98,7 @@
 	<path pointer-events="stroke" class="st7" d="M279.2,165.8l78.3,0.1c6.7,0,12-2.9,16-8.6l26.1-37.6c4-5.7,12.1-26,18.8-26l37.8-0.3
 		"/>
 	<path pointer-events="stroke" class="st8" d="M279.2,165.8l65.3,1.1c6.7,0.1,11.5,3.3,14.5,9.8l44.1,103c3,6.4,10.6,5.8,17.3,5.8
-		l24.2,0"/>
+		h24.2"/>
 	<path pointer-events="stroke" class="st8" d="M165.4,312.7l114.1-0.9c6.7,0,10.8-3.5,12.3-10.5l26.5-122.9
 		c1.5-7,5.4-10.8,11.8-11.5l9.5-1.1"/>
 	<path pointer-events="stroke" class="st7" d="M279.2,182h41.3c6.7,0,10.7,3.5,12,10.5l23.9,123.8c1.4,7,5.3,11.1,11.9,12.2
@@ -147,7 +146,7 @@
 		c-30.8-0.4-62.4-1.2-132,0 M654.5,218.4c1.5-48.6-1.6-97.5,0-169.5 M654.5,218.4c0.9-42,0.1-81.7,0-169.5"/>
 	<g transform="translate(-0.5 -0.5)">
 		<text transform="matrix(0.932 0 0 1 692.9385 29.3228)" class="st4 st5">Rescoring</text>
-		<text transform="matrix(0.932 0 0 1 685.6387 44.774)" class="st4 st5">(exactly one)</text>
+		<text transform="matrix(0.932 0 0 1 685.6387 44.7739)" class="st4 st5">(exactly one)</text>
 	</g>
 	<path pointer-events="stroke" class="st6" d="M48.2,149.6h117"/>
 	<path pointer-events="stroke" class="st8" d="M48.2,165.8l30.8,0.1l86.2-0.1"/>
@@ -162,14 +161,14 @@
 	<path pointer-events="stroke" class="st1" d="M48.2,83.3l100.3,1.8c6.7,0.1,11.5,3.4,14.5,9.8l36.1,77.4c3,6.4,7.8,9.5,14.5,9.5
 		h65.7"/>
 	<path pointer-events="all" class="st10" d="M48.4,89.7L48.4,89.7c-5.5,0-9.9-4.7-9.9-10.6V55.2c0-5.9,4.4-10.6,9.9-10.6l0,0
-		c5.5,0,9.9,4.7,9.9,10.6v23.8C58.3,85,53.8,89.7,48.4,89.7z"/>
+		c5.5,0,9.9,4.7,9.9,10.6V79C58.3,85,53.8,89.7,48.4,89.7z"/>
 	<path pointer-events="all" class="st10" d="M48.4,188.3L48.4,188.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v23.8C58.3,183.5,53.8,188.3,48.4,188.3z"/>
 	<path pointer-events="all" class="st11" d="M165.4,188.3L165.4,188.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v23.8C175.3,183.5,170.8,188.3,165.4,188.3z"/>
 	<g transform="translate(-0.5 -0.5)">
 		<text transform="matrix(0.932 0 0 1 135.8687 203.4312)" class="st4 st5">ThermoRaw</text>
-		<text transform="matrix(0.932 0 0 1 141.1685 218.8819)" class="st4 st5">FileParser</text>
+		<text transform="matrix(0.932 0 0 1 141.1685 218.8818)" class="st4 st5">FileParser</text>
 	</g>
 	<path pointer-events="stroke" class="st8" d="M279.2,165.8l63.3,0.1c6.7,0,12.8,2,18.3,6.1l31.9,32.3c5.5,4.1,11,17.1,20.7,18.3
 		h45.8"/>
@@ -184,7 +183,7 @@
 	<path pointer-events="all" class="st11" d="M453.2,235L453.2,235c-5.5,0-9.9-4.7-9.9-10.6v-10.1c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v10.1C463.1,230.2,458.7,235,453.2,235z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 434.2 197.0468)" class="st4 st5">Comet</text>
+		<text transform="matrix(0.932 0 0 1 434.2002 197.0469)" class="st4 st5">Comet</text>
 	</g>
 	<path pointer-events="stroke" class="st6" d="M580.4,151.5h20c6.7,0,12.8-2,18.3-6l64-45.8c5.5-4,11.7-5.9,18.3-5.9h20"/>
 	<path pointer-events="stroke" class="st12" d="M580.4,168.8h20c6.7,0,12.8,1.8,18.5,5.6l37,24.4c5.7,3.8,11.9,5.6,18.5,5.6h20"/>
@@ -193,15 +192,15 @@
 	<path pointer-events="all" class="st13" d="M580.4,176.6L580.4,176.6c-5.5,0-9.9-4.7-9.9-10.6v-10.1c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6V166C590.3,171.8,585.8,176.6,580.4,176.6z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 544.8823 140.4473)" class="st4 st5">ConsensusID</text>
+		<text transform="matrix(0.932 0 0 1 544.8828 140.4473)" class="st4 st5">ConsensusID</text>
 	</g>
 	<path pointer-events="stroke" class="st6" d="M694.4,187.1h30h-9.9h30"/>
 	<path pointer-events="stroke" class="st8" d="M694.4,204.4h30h-9.9h30"/>
 	<path pointer-events="all" class="st11" d="M694.4,212.1L694.4,212.1c-5.5,0-9.9-4.7-9.9-10.6v-10.1c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v10.1C704.3,207.4,699.9,212.1,694.4,212.1z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 664.8887 162.2828)" class="st4 st5">Distribution</text>
-		<text transform="matrix(0.932 0 0 1 680.5879 177.733)" class="st4 st5">fitting</text>
+		<text transform="matrix(0.932 0 0 1 664.8887 162.2827)" class="st4 st5">Distribution</text>
+		<text transform="matrix(0.932 0 0 1 680.5879 177.7329)" class="st4 st5">fitting</text>
 	</g>
 	<path pointer-events="stroke" class="st6" d="M744.6,187.1h20c6.7,0,12.8-1.8,18.5-5.6l37.7-24.5c5.7-3.8,11.9-5.6,18.5-5.6h20"/>
 	<path pointer-events="stroke" class="st8" d="M444.6,285.4h26.7h450.1h32.3"/>
@@ -210,18 +209,18 @@
 	<path pointer-events="all" class="st11" d="M744.6,212.1L744.6,212.1c-5.5,0-9.9-4.7-9.9-10.6v-10.1c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v10.1C754.4,207.4,750,212.1,744.6,212.1z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 735.4688 162.2828)" class="st4 st5">FDR</text>
-		<text transform="matrix(0.932 0 0 1 729.7686 177.7335)" class="st4 st5">control</text>
+		<text transform="matrix(0.932 0 0 1 735.4688 162.2827)" class="st4 st5">FDR</text>
+		<text transform="matrix(0.932 0 0 1 729.7686 177.7334)" class="st4 st5">control</text>
 	</g>
 	<path pointer-events="all" class="st11" d="M435.6,285.4L435.6,285.4c0-5.4,4-9.7,9-9.7l0,0c5,0,9,4.3,9,9.7l0,0c0,5.4-4,9.7-9,9.7
 		l0,0C439.6,295.1,435.6,290.8,435.6,285.4z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 423.1909 255.3846)" class="st4 st5">Isobaric</text>
-		<text transform="matrix(0.932 0 0 1 420.3002 270.5453)" class="st4 st5">Analyzer</text>
+		<text transform="matrix(0.932 0 0 1 423.1914 255.3848)" class="st4 st5">Isobaric</text>
+		<text transform="matrix(0.932 0 0 1 420.3008 270.5454)" class="st4 st5">Analyzer</text>
 	</g>
 	<path pointer-events="stroke" class="st6" d="M48.2,295.6h30l57.2-0.1h30"/>
 	<path pointer-events="stroke" class="st8" d="M48.2,311.8h30l57.2,1h30"/>
-	<path pointer-events="stroke" class="st1" d="M48.2,328h72.3c6.7,0,10,2.3,10,6.7v3.3c0,2.3,3.5,15.9,10.2,15.9l312.1,0"/>
+	<path pointer-events="stroke" class="st1" d="M48.2,328h72.3c6.7,0,10,2.3,10,6.7v3.3c0,2.3,3.5,15.9,11.5,33h312.1"/>
 	<path pointer-events="all" class="st10" d="M48.4,334.3L48.4,334.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v23.8C58.3,329.6,53.8,334.3,48.4,334.3z"/>
 	<path pointer-events="stroke" class="st6" d="M859.4,151.5h20c6.7,0,13-1.6,19-4.7l67.2-35.2c6-3.1,12.3-4.7,19-4.7h20"/>
@@ -231,44 +230,44 @@
 	<path pointer-events="all" class="st13" d="M859.4,176.6L859.4,176.6c-5.5,0-9.9-4.7-9.9-10.6v-10.1c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6V166C869.3,171.8,864.8,176.6,859.4,176.6z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 849.9141 126.0162)" class="st4 st5">Mod.</text>
-		<text transform="matrix(0.932 0 0 1 833.6143 141.4669)" class="st4 st5">localization</text>
+		<text transform="matrix(0.932 0 0 1 849.9141 126.0161)" class="st4 st5">Mod.</text>
+		<text transform="matrix(0.932 0 0 1 833.6143 141.4668)" class="st4 st5">localization</text>
 	</g>
 	<path pointer-events="all" class="st11" d="M726.9,118.8H715c-8,0-14.6-7-14.6-15.7l0,0c0-8.6,6.5-15.7,14.6-15.7h11.9
 		c8,0,14.6,7,14.6,15.7l0,0C741.5,111.8,735,118.8,726.9,118.8z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 674.9854 82.1314)" class="st4 st5">Percolator + FDR</text>
+		<text transform="matrix(0.932 0 0 1 674.9854 82.1313)" class="st4 st5">Percolator + FDR</text>
 	</g>
-	<path pointer-events="stroke" class="st1" d="M279.2,182h43.3c6.7,0,10.5,3.5,11.6,10.6l20.8,135.5c1.1,7.1,4.2,25.8,10.8,25.9
+	<path pointer-events="stroke" class="st1" d="M279.2,182h43.3c6.7,0,10.5,3.5,11.6,10.6l20.8,135.5c1.1,7.1,4.2,25.8,8.6,42.9
 		l77.5-0.2"/>
-	<path pointer-events="stroke" class="st1" d="M856.4,354h30l90.4,2.1h31.6"/>
-	<path pointer-events="all" class="st2" d="M311.9,427.2v-13.5c0-7.4-3.4-11.2-10.4-11.2H189.3c-6.9,0-10.4,3.6-10.4,11.2v13.5"/>
-	<path pointer-events="none" class="st14" d="M311.6,426.6l-1.1-18l-4.5-6.8l-5.8,0.8l-117.1-0.3l-4.4,7.1l-1,16.1"/>
-	<path pointer-events="none" class="st15" d="M311.9,427.2c-0.6-3.5-0.4-6.5,0-13.5 M311.9,427.2c-0.6-4.7,0.2-10.5,0-13.5
-		 M311.9,413.7c-1.8-7.5-4.4-9.3-10.4-11.2 M311.9,413.7c-0.4-9.8-4.5-10.2-10.4-11.2 M301.6,402.6c-32.8,1-68.1-0.6-112.3,0
-		 M301.6,402.6c-37.6,1.1-74.7,1.2-112.3,0 M189.3,402.6c-6.1,1.1-10.3,1.6-10.4,11.2 M189.3,402.6c-7.6,0.2-8.5,2.6-10.4,11.2
-		 M178.9,413.7c0,4,1.2,10.7,0,13.5 M178.9,413.7c-0.5,2.3,0.5,5.2,0,13.5"/>
-	<path pointer-events="none" class="st15" d="M178.9,427.2c-0.5,32.3-1.7,63.3,0,113.3 M178.9,427.2c-1.3,34.1-1.5,66.8,0,113.3
-		 M178.9,540.6c-0.3,5.8,5,9.9,10.4,11.2 M178.9,540.6c0.6,6.4,5.3,13.5,10.4,11.2 M189.3,551.7c45.3,1.8,87.7-1,112.3,0
-		 M189.3,551.7c33.2-2,66.4-0.5,112.3,0 M301.6,551.7c6.9,1.4,9.7-2.7,10.4-11.2 M301.6,551.7c8.3-0.8,10.1-2.8,10.4-11.2
-		 M311.9,540.6c-0.1-32.1,0-65,0-113.3 M311.9,540.6c-0.3-39.4,0.8-79.5,0-113.3"/>
-	<path pointer-events="none" class="st15" d="M178.9,427.2c37.8,0.4,74.6-1,133,0 M178.9,427.2c39.3,1,78.8-0.2,133,0"/>
+	<path pointer-events="stroke" class="st1" d="M831.3,371.2L885,371l90.8,1.1l35.5-1.1"/>
+	<path pointer-events="all" class="st2" d="M326.4,463.4v-13.5c0-7.4-3.4-11.2-10.4-11.2H203.8c-6.9,0-10.4,3.6-10.4,11.2v13.5"/>
+	<path pointer-events="none" class="st14" d="M326.1,462.8l-1.1-18l-4.5-6.8l-5.8,0.8l-117.1-0.3l-18.9-29.1l13.5,52.3"/>
+	<path pointer-events="none" class="st15" d="M326.4,463.4c-0.6-3.5-0.4-6.5,0-13.5 M326.4,463.4c-0.6-4.7,0.2-10.5,0-13.5
+		 M326.4,449.9c-1.8-7.5-4.4-9.3-10.4-11.2 M326.4,449.9c-0.4-9.8-4.5-10.2-10.4-11.2 M316.1,438.8c-32.8,1-68.1-0.6-112.3,0
+		 M316.1,438.8c-37.6,1.1-74.7,1.2-112.3,0 M203.8,438.8c-6.1,1.1-10.3,1.6-10.4,11.2 M203.8,438.8c-7.6,0.2-8.5,2.6-10.4,11.2
+		 M193.4,449.9c0,4,1.2,10.7,0,13.5 M193.4,449.9c-0.5,2.3,0.5,5.2,0,13.5"/>
+	<path pointer-events="none" class="st15" d="M193.4,463.4c-0.5,32.3-1.7,63.3,0,113.3 M193.4,463.4c-1.3,34.1-1.5,66.8,0,113.3
+		 M193.4,576.8c-0.3,5.8,5,9.9,10.4,11.2 M193.4,576.8c0.6,6.4,5.3,13.5,10.4,11.2 M203.8,587.9c45.3,1.8,87.7-1,112.3,0
+		 M203.8,587.9c33.2-2,66.4-0.5,112.3,0 M316.1,587.9c6.9,1.4,9.7-2.7,10.4-11.2 M316.1,587.9c8.3-0.8,10.1-2.8,10.4-11.2
+		 M326.4,576.8c-0.1-32.1,0-65,0-113.3 M326.4,576.8c-0.3-39.4,0.8-79.5,0-113.3"/>
+	<path pointer-events="none" class="st15" d="M193.4,463.4c37.8,0.4,74.6-1,133,0 M193.4,463.4c39.3,1,78.8-0.2,133,0"/>
 	<g pointer-events="none">
-		<text transform="matrix(0.932 0 0 1 223.5659 419.7271)" class="st16 st5">Legend</text>
+		<text transform="matrix(0.932 0 0 1 238.0721 455.968)" class="st16 st5">Legend</text>
 	</g>
-	<path pointer-events="none" class="st17" d="M192.4,496.5c8.1-1.5,19.3,1.6,33.2,0 M192.4,496.5c13.1,0.4,24.8,0.5,33.2,0"/>
-	<path pointer-events="none" class="st18" d="M192.4,470.7c11,1.9,21,1,33.2,0 M192.4,470.7c8,0.4,17.1-0.2,33.2,0"/>
-	<path pointer-events="none" class="st19" d="M192.4,445.5c10,1.2,19.1,0.4,34,0 M192.4,445.5c9.9,1.2,21.1-0.3,34,0"/>
+	<path pointer-events="none" class="st17" d="M206.9,532.7c8.1-1.5,19.3,1.6,33.2,0 M206.9,532.7c13.1,0.4,24.8,0.5,33.2,0"/>
+	<path pointer-events="none" class="st18" d="M206.9,506.9c11,1.9,21,1,33.2,0 M206.9,506.9c8,0.4,17.1-0.2,33.2,0"/>
+	<path pointer-events="none" class="st19" d="M206.9,481.7c10,1.2,19.1,0.4,34,0 M206.9,481.7c9.9,1.2,21.1-0.3,34,0"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 236.0303 449.8394)" class="st4 st5">DDA-LFQ</text>
-	</g>
-	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 237.3633 475.0113)" class="st4 st5">DDA-ISO</text>
+		<text transform="matrix(0.932 0 0 1 250.5364 486.0804)" class="st4 st5">DDA-LFQ</text>
 	</g>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 238.6963 500.9605)" class="st4 st5">DIA-LFQ</text>
+		<text transform="matrix(0.932 0 0 1 251.8694 511.2522)" class="st4 st5">DDA-ISO</text>
+	</g>
+	<g transform="translate(-0.5 -0.5)">
+		<text transform="matrix(0.932 0 0 1 253.2025 537.2014)" class="st4 st5">DIA-LFQ</text>
 		<g transform="translate(-0.5 -0.5)">
-			<text transform="matrix(0.932 0 0 1 233.4663 527.0298)" class="st4 st5">Parallel step</text>
+			<text transform="matrix(0.932 0 0 1 247.9725 563.2698)" class="st4 st5">Parallel step</text>
 		</g>
 	</g>
 	<path pointer-events="none" class="st8" d="M953.7,285.4l27.6-0.7l0,0h30"/>
@@ -276,53 +275,50 @@
 	<path pointer-events="none" class="st11" d="M953.7,295L953.7,295c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0c5,0,9,4.3,9,9.7l0,0
 		C962.7,290.7,958.7,295,953.7,295z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 932.5004 268.4966)" class="st4 st5">IDMapper</text>
+		<text transform="matrix(0.932 0 0 1 932.5 268.4966)" class="st4 st5">IDMapper</text>
 	</g>
 	<path pointer-events="none" class="st10" d="M1011.3,294.3L1011.3,294.3c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0
 		c5,0,9,4.3,9,9.7l0,0C1020.3,290,1016.3,294.3,1011.3,294.3z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 999.3168 258.2403)" class="st4 st5">Protein</text>
-		<text transform="matrix(0.932 0 0 1 993.1895 270.5452)" class="st4 st5">inference</text>
+		<text transform="matrix(0.932 0 0 1 999.3164 258.2402)" class="st4 st5">Protein</text>
+		<text transform="matrix(0.932 0 0 1 993.1895 270.5449)" class="st4 st5">inference</text>
 	</g>
 	<path pointer-events="none" class="st6" d="M1004.5,106.8h30c6.7,0,10,3.6,10,10.7v110.8c0,7.2,3.3,10.7,10,10.7h173.7"/>
-	<path pointer-events="none" class="st8" d="M1068.7,279.6h24.7c0,0,0-2.7,0-8.5l2.1-14.1c0-2.9,3.3-4.3,10-4.3l122.6-0.1"/>
+	<path pointer-events="none" class="st8" d="M1067.9,285.1l25.5,0.4c0,0,0-8.6,0-14.4l2.1-14.1c0-2.9,3.3-4.3,10-4.3l122.6-0.1"/>
 	<path pointer-events="none" class="st6" d="M1004.5,106.8h29.1c6.7,0,10-3.5,10-10.7V65.9c0-7.2,3.3-10.7,10-10.7h174.8"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 0.5 410.4625)" class="st20 st5">nf-core/quantms v1.2</text>
-		<text transform="matrix(0.932 0 0 1 0.5 441.3638)" class="st4 st5">Example analysis pathways</text>
+		<text transform="matrix(0.932 0 0 1 1.1963 439.2405)" class="st20 st5">nf-core/quantms v1.2</text>
+		<text transform="matrix(0.932 0 0 1 1.1963 478.0288)" class="st4 st5">Example analysis pathways</text>
 	</g>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 263.3667 124.4068)" class="st4 st5">mzML</text>
-		<text transform="matrix(0.932 0 0 1 257.3667 139.8575)" class="st4 st5">indexing</text>
+		<text transform="matrix(0.932 0 0 1 263.3667 124.4067)" class="st4 st5">mzML</text>
+		<text transform="matrix(0.932 0 0 1 257.3667 139.8574)" class="st4 st5">indexing</text>
 	</g>
-	<path pointer-events="none" class="st1" d="M443.2,353.8h27.3h143.9l42.7,0.7"/>
-	<path pointer-events="none" class="st10" d="M304.7,363.5h-50.9c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h50.9c5,0,9,4.3,9,9.7l0,0
-		C313.7,359.2,309.7,363.5,304.7,363.5z"/>
+	<path pointer-events="none" class="st1" d="M425.6,371l35.7,0.9l152.4-0.6l499.2,0.6"/>
+	<path pointer-events="none" class="st10" d="M304.8,380.7h-50.9c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h50.9c5,0,9,4.3,9,9.7l0,0
+		C313.8,376.4,309.8,380.7,304.8,380.7z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 263.3667 379.0223)" class="st4 st5">DIA-NN </text>
-		<text transform="matrix(0.932 0 0 1 238.6963 392.0903)" class="st4 st5">insilico lib. predict</text>
+		<text transform="matrix(0.932 0 0 1 259.7099 397.5)" class="st4 st5">DIA-NN </text>
+		<text transform="matrix(0.932 0 0 1 238.6963 409.9005)" class="st4 st5">insilico lib. predict</text>
 	</g>
-	<path pointer-events="none" class="st1" d="M646.3,354.5l32-0.1h147.9l30.2-0.4"/>
-	<path pointer-events="none" class="st11" d="M445.8,363.5h-20c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h20c5,0,9,4.3,9,9.7l0,0
-		C454.8,359.2,450.8,363.5,445.8,363.5z"/>
+	<path pointer-events="none" class="st11" d="M445.8,381.1h-20c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h20c5,0,9,4.3,9,9.7l0,0
+		C454.8,376.8,450.8,381.1,445.8,381.1z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 407.1502 403.9023)" class="st4 st5">preanalysis</text>
+		<text transform="matrix(0.932 0 0 1 407.2002 409.9)" class="st4 st5">preanalysis</text>
 	</g>
-	<path pointer-events="none" class="st10" d="M596.3,363.5h-41.8c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h41.8c5,0,9,4.3,9,9.7l0,0
-		C605.3,359.2,601.3,363.5,596.3,363.5z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 555.2837 379.0223)" class="st4 st5">DIA-NN</text>
-		<text transform="matrix(0.932 0 0 1 529.2837 391.9883)" class="st4 st5">empirical lib. gen.</text>
+		<text transform="matrix(0.932 0 0 1 555.2842 397.5)" class="st4 st5">DIA-NN</text>
+		<text transform="matrix(0.932 0 0 1 529.2842 409.9005)" class="st4 st5">empirical lib. gen.</text>
 	</g>
 	<path pointer-events="none" class="st21" d="M165.4,320.5L165.4,320.5c-5.5,0-9.9-4.7-9.9-10.6v-10.1c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v10.1C175.3,315.8,170.8,320.5,165.4,320.5z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 155.2241 270.4376)" class="st4 st5">Add</text>
+		<text transform="matrix(0.932 0 0 1 155.2241 270.4375)" class="st4 st5">Add</text>
 		<text transform="matrix(0.932 0 0 1 146.9238 285.8882)" class="st4 st5">decoys</text>
 	</g>
 	<path pointer-events="none" class="st6" d="M1004.5,106.8h30c6.7,0,10,3.6,10,10.7v15.8c0,7.2,3.3,10.7,10,10.7l173.9,0.1"/>
-	<path pointer-events="none" class="st7" d="M1068.7,269.9v-97.9c0-7.2,3.3-10.7,10-10.7l149.6,0.1"/>
-	<path pointer-events="none" class="st8" d="M1068.7,269.9v-97.9c0-7.2,3.3-10.7,10-10.7l149.6,0.1"/>
+	<path pointer-events="none" class="st7" d="M1068.7,269.9V172c0-7.2,3.3-10.7,10-10.7l149.6,0.1"/>
+	<path pointer-events="none" class="st8" d="M1068.7,279.6V172c0-7.2,3.3-10.7,10-10.7l149.6,0.1"/>
 	<path pointer-events="none" class="st22" d="M1008.4,356.2l104.1-14.9c6.7,0,10-3.5,10-10.7V83c0-7.2,3.3-10.7,10-10.7h95.9"/>
 	<path pointer-events="none" class="st10" d="M1027.5,116.5h-46c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h46c5,0,9,4.3,9,9.7l0,0
 		C1036.5,112.2,1032.5,116.5,1027.5,116.5z"/>
@@ -335,41 +331,41 @@
 	<g transform="translate(-0.5 -0.5)">
 		<text transform="matrix(0.932 0 0 1 1212.501 134.7095)" class="st4 st5">mzTab</text>
 	</g>
-	<path pointer-events="none" class="st10" d="M1068.7,289.3L1068.7,289.3c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0
-		c5,0,9,4.3,9,9.7l0,0C1077.7,285,1073.7,289.3,1068.7,289.3z"/>
+	<path pointer-events="none" class="st10" d="M1067.9,295L1067.9,295c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0c5,0,9,4.3,9,9.7
+		l0,0C1076.9,290.7,1072.9,295,1067.9,295z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 1050.1895 303.5927)" class="st4 st5">Protein</text>
-		<text transform="matrix(0.932 0 0 1 1043.1895 317.1451)" class="st4 st5">Quantifier</text>
+		<text transform="matrix(0.932 0 0 1 1050.1895 305.35)" class="st4 st5">Protein</text>
+		<text transform="matrix(0.932 0 0 1 1043.1895 319.6068)" class="st4 st5">Quantifier</text>
 	</g>
-	<path pointer-events="none" class="st1" d="M1004.6,356.2h113.6c6.7,0,4.3-18.4,4.3-25.6V83c0-7.2,3.3-10.7,10-10.7h95.9"/>
+	<path pointer-events="none" class="st1" d="M999.3,371.9h113.6c12-15.7,9.6-34.1,9.6-41.3V83c0-7.2,3.3-10.7,10-10.7h95.9"/>
 	<path pointer-events="none" class="st10" d="M1228.4,80.1L1228.4,80.1c-5.5,0-9.9-4.7-9.9-10.6V59.4c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6v10.2C1238.3,75.4,1233.8,80.1,1228.4,80.1z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 1216.7256 45.6529)" class="st4 st5">Triqler</text>
+		<text transform="matrix(0.932 0 0 1 1216.7256 45.6528)" class="st4 st5">Triqler</text>
 	</g>
-	<path pointer-events="none" class="st1" d="M1004.6,356.2h113.6c5.7-7.3,4.3-18.4,4.3-25.6V277c0-7.2,3.3-10.7,10-10.7h95.7"/>
+	<path pointer-events="none" class="st1" d="M1003.3,371.9h113.6c7-23,5.6-34.1,5.6-41.3V277c0-7.2,3.3-10.7,10-10.7h95.7"/>
 	<path pointer-events="none" class="st10" d="M1228.4,275.3L1228.4,275.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8c0-5.9,4.4-10.6,9.9-10.6
 		l0,0c5.5,0,9.9,4.7,9.9,10.6v23.8C1238.3,270.6,1233.8,275.3,1228.4,275.3z"/>
 	<g transform="translate(-0.5 -0.5)">
 		<text transform="matrix(0.932 0 0 1 1211.499 226.9849)" class="st4 st5">MSstats</text>
 	</g>
-	<path pointer-events="none" class="st10" d="M1027.5,363.5h-46c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h46c5,0,9,4.3,9,9.7l0,0
-		C1036.5,359.1,1032.5,363.5,1027.5,363.5z"/>
+	<path pointer-events="none" class="st10" d="M1027.5,379.7h-46c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h46c5,0,9,4.3,9,9.7l0,0
+		C1036.5,375.3,1032.5,379.7,1027.5,379.7z"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 987.4893 379.0222)" class="st4 st5">DIA-NN</text>
-		<text transform="matrix(0.932 0 0 1 983.1998 391.9879)" class="st4 st5">summary</text>
+		<text transform="matrix(0.932 0 0 1 987.4893 393.1005)" class="st4 st5">DIA-NN</text>
+		<text transform="matrix(0.932 0 0 1 983 405.3179)" class="st4 st5">summary</text>
 	</g>
-	<path pointer-events="stroke" class="st1" d="M338,354l36.4-0.6c4.6-13.3,7-15.5,8.8-19.8l7.3-20.8c0,0-3.1,0.1,0,0l27.1,0"/>
-	<path pointer-events="stroke" class="st1" d="M446.1,312.7l26.7,0.6c3.1,0.1,6.2,1.5,8,5.8l5.6,15c1.8,4.3,6.2,19.8,9.3,19.8
-		l37.8-0.2"/>
+	<path pointer-events="stroke" class="st1" d="M338.9,371.2l36.4-0.6c5.1-29.8,6.1-32.8,7.9-37l7.3-20.8c0,0-3.1,0.1,0,0h27.1"/>
+	<path pointer-events="stroke" class="st1" d="M446.1,312.7l26.7,0.6c3.1,0.1,6.2,1.5,8,5.8l2.7,12.5c2.5,4.1,5.4,24.4,8.1,38.4
+		l34.4,1.1"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 697.7 414.6986)" class="st4 st5">DIA-NN</text>
-		<text transform="matrix(0.932 0 0 1 652.7344 427.0914)" class="st4 st5">individual final analysis</text>
+		<text transform="matrix(0.932 0 0 1 697.7002 414.6982)" class="st4 st5">DIA-NN</text>
+		<text transform="matrix(0.932 0 0 1 652.7344 427.0918)" class="st4 st5">individual final analysis</text>
 	</g>
-	<path pointer-events="stroke" class="st1" d="M606.1,354.4l36.4-0.6c3.7-8,4.7-15.2,6.5-19.5l3.8-13.8c1.8-4.3,3.8-9,6.9-9.1
+	<path pointer-events="stroke" class="st1" d="M601.6,371.8l36.4-0.6c8.2-25.4,9.2-32.6,11-36.9l3.8-13.8c1.8-4.3,3.8-9,6.9-9.1
 		l20.6-0.6"/>
 	<g transform="translate(-0.5 -0.5)">
-		<text transform="matrix(0.932 0 0 1 436.0838 64.1059)" class="st4 st5">MSGF+</text>
+		<text transform="matrix(0.932 0 0 1 436.084 64.106)" class="st4 st5">MSGF+</text>
 	</g>
 	<path pointer-events="stroke" class="st8" d="M279.2,165.8l79.3-0.9c6.7-0.1,11.9-3,15.8-8.8l38.8-59c3.9-5.8-1.4-3.2,5.3-3.4
 		l37.8-0.3"/>
@@ -377,33 +373,38 @@
 		c5.5,0,9.9,4.7,9.9,10.6v23.8C289.3,183.5,284.8,188.3,279.4,188.3z"/>
 	<path pointer-events="all" class="st11" d="M453.2,100.5L453.2,100.5c-5.5,0-9.9-4.7-9.9-10.6V79.8c0-5.9,4.4-10.6,9.9-10.6l0,0
 		c5.5,0,9.9,4.7,9.9,10.6V90C463.1,95.8,458.7,100.5,453.2,100.5z"/>
+	<path pointer-events="none" class="st10" d="M596.3,380.7h-41.8c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h41.8c5,0,9,4.3,9,9.7l0,0
+		C605.3,376.4,601.3,380.7,596.3,380.7z"/>
+	<path pointer-events="none" class="st1" d="M638,371.2l36.1-0.2H822l34.4,0.9"/>
 </g>
 <path class="st1" d="M0,16"/>
 <path d="M0,16"/>
 <path pointer-events="none" class="st11" d="M446.6,322.4h-20c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h20c5,0,9,4.3,9,9.7l0,0
 	C455.6,318.1,451.6,322.4,446.6,322.4z"/>
-<polygon class="st23" points="388.3,299.1 488.9,299.1 486.9,392.6 386.3,392.6 "/>
+<polygon class="st23" points="388.3,299.1 488.9,299.1 487.4,397 386.8,397 "/>
 <rect x="392.7" y="353.8" class="st2" width="86.7" height="24.7"/>
-<text transform="matrix(0.932 0 0 1 420.8 375.9656)" class="st4 st24">Job n</text>
-<text transform="matrix(0.932 0 0 1 415.2999 385.8182)" class="st4 st24">In Parallel</text>
-<rect x="403.9" y="310.8" class="st2" width="65.4" height="28.3"/>
-<text transform="matrix(0.932 0 0 1 422.9001 334.6379)" class="st4 st24">Job 1</text>
+<text transform="matrix(0.932 0 0 1 422.6501 356.2)" class="st4 st24">Job n</text>
+<text transform="matrix(0.932 0 0 1 415.3002 392.6003)" class="st4 st24">In Parallel</text>
+<polygon class="st2" points="403.9,324.9 469.3,310.8 469.3,339.1 403.9,339.1 "/>
+<text transform="matrix(0.932 0 0 1 422.9004 334.6377)" class="st4 st24">Job 1</text>
 <text transform="matrix(0.932 0 0 1 426.5576 339.144)" class="st4 st5">......</text>
 <g>
 	<g>
 		<g>
-			<defs>
-				<rect id="SVGID_1_" x="-395" y="-139.7" width="35" height="37.5"/>
-			</defs>
-			<clipPath id="SVGID_2_">
-				<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
-			</clipPath>
-			<g transform="translate(-395 -198)" class="st25">
-				<path class="st26" d="M398,257.1h17.4l11.2,11.2v25.3H398V257.1z"/>
-				<path class="st27" d="M395.5,275.4c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8h-30.2
-					c-1,0-1.8-0.8-1.8-1.8V275.4z"/>
-				<text transform="matrix(1 0 0 1 401.0742 281.5916)" class="st14 st4 st28">mzML</text>
-				<path class="st27" d="M415.5,267.9v-10.7l11.1,10.7H415.5z"/>
+			<g>
+				<defs>
+					<rect id="SVGID_1_" x="-790" y="-337.7" width="35" height="37.5"/>
+				</defs>
+				<clipPath id="SVGID_2_">
+					<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+				</clipPath>
+				<g transform="translate(-395 -198)" class="st25">
+					<path class="st26" d="M398,257.1h17.4l11.2,11.2v25.3H398V257.1z"/>
+					<path class="st27" d="M395.5,275.4c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8h-30.2
+						c-1,0-1.8-0.8-1.8-1.8V275.4z"/>
+					<text transform="matrix(1 0 0 1 401.0742 281.5916)" class="st14 st4 st28">mzML</text>
+					<path class="st27" d="M415.5,267.9v-10.7l11.1,10.7H415.5z"/>
+				</g>
 			</g>
 		</g>
 	</g>
@@ -411,18 +412,20 @@
 <g>
 	<g>
 		<g>
-			<defs>
-				<rect id="SVGID_3_" x="-395" y="-47.7" width="35" height="37.5"/>
-			</defs>
-			<clipPath id="SVGID_4_">
-				<use xlink:href="#SVGID_3_"  style="overflow:visible;"/>
-			</clipPath>
-			<g transform="translate(-395 -198)" class="st29">
-				<path class="st26" d="M398,349.2h17.4l11.2,11.2v25.3H398V349.2z"/>
-				<path class="st27" d="M395.5,367.5c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8h-30.2
-					c-1,0-1.8-0.8-1.8-1.8V367.5z"/>
-				<text transform="matrix(1 0 0 1 405.7471 373.6404)" class="st14 st4 st28">raw</text>
-				<path class="st27" d="M415.5,359.9v-10.7l11.1,10.7H415.5z"/>
+			<g>
+				<defs>
+					<rect id="SVGID_3_" x="-790" y="-245.7" width="35" height="37.5"/>
+				</defs>
+				<clipPath id="SVGID_4_">
+					<use xlink:href="#SVGID_3_"  style="overflow:visible;"/>
+				</clipPath>
+				<g transform="translate(-395 -198)" class="st29">
+					<path class="st26" d="M398,349.2h17.4l11.2,11.2v25.3H398V349.2z"/>
+					<path class="st27" d="M395.5,367.5c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8h-30.2
+						c-1,0-1.8-0.8-1.8-1.8V367.5z"/>
+					<text transform="matrix(1 0 0 1 405.7471 373.6404)" class="st14 st4 st28">raw</text>
+					<path class="st27" d="M415.5,359.9v-10.7l11.1,10.7H415.5z"/>
+				</g>
 			</g>
 		</g>
 	</g>
@@ -430,18 +433,20 @@
 <g>
 	<g>
 		<g>
-			<defs>
-				<rect id="SVGID_5_" x="-395" y="89.2" width="35" height="37.5"/>
-			</defs>
-			<clipPath id="SVGID_6_">
-				<use xlink:href="#SVGID_5_"  style="overflow:visible;"/>
-			</clipPath>
-			<g transform="translate(-395 -198)" class="st30">
-				<path class="st26" d="M398,486.1h17.4l11.2,11.2v25.3H398V486.1z"/>
-				<path class="st27" d="M395.5,504.4c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8h-30.2
-					c-1,0-1.8-0.8-1.8-1.8V504.4z"/>
-				<text transform="matrix(1 0 0 1 403.6936 510.5903)" class="st14 st4 st28">fasta</text>
-				<path class="st27" d="M415.5,496.9v-10.7l11.1,10.7H415.5z"/>
+			<g>
+				<defs>
+					<rect id="SVGID_5_" x="-790" y="-108.8" width="35" height="37.5"/>
+				</defs>
+				<clipPath id="SVGID_6_">
+					<use xlink:href="#SVGID_5_"  style="overflow:visible;"/>
+				</clipPath>
+				<g transform="translate(-395 -198)" class="st30">
+					<path class="st26" d="M398,486.1h17.4l11.2,11.2v25.3H398V486.1z"/>
+					<path class="st27" d="M395.5,504.4c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8h-30.2
+						c-1,0-1.8-0.8-1.8-1.8V504.4z"/>
+					<text transform="matrix(1 0 0 1 403.6936 510.5903)" class="st14 st4 st28">fasta</text>
+					<path class="st27" d="M415.5,496.9v-10.7l11.1,10.7H415.5z"/>
+				</g>
 			</g>
 		</g>
 	</g>
@@ -449,18 +454,20 @@
 <g>
 	<g>
 		<g>
-			<defs>
-				<rect id="SVGID_7_" x="853.4" y="-135" width="25" height="26.8"/>
-			</defs>
-			<clipPath id="SVGID_8_">
-				<use xlink:href="#SVGID_7_"  style="overflow:visible;"/>
-			</clipPath>
-			<g transform="translate(-395 -198)" class="st31">
-				<path class="st26" d="M1645.6,261.6h12.4l8,8v18h-20.4V261.6z"/>
-				<path class="st27" d="M1643.8,274.7c0-0.7,0.6-1.3,1.3-1.3h21.6c0.7,0,1.3,0.6,1.3,1.3v5.3c0,0.7-0.6,1.3-1.3,1.3h-21.6
-					c-0.7,0-1.3-0.6-1.3-1.3V274.7z"/>
-				<text transform="matrix(1 0 0 1 1652.1426 279.1031)" class="st14 st4 st32">tsv</text>
-				<path class="st27" d="M1658.1,269.3v-7.7l7.9,7.7H1658.1z"/>
+			<g>
+				<defs>
+					<rect id="SVGID_7_" x="458.4" y="-333" width="25" height="26.8"/>
+				</defs>
+				<clipPath id="SVGID_8_">
+					<use xlink:href="#SVGID_7_"  style="overflow:visible;"/>
+				</clipPath>
+				<g transform="translate(-395 -198)" class="st31">
+					<path class="st26" d="M1645.6,261.6h12.4l8,8v18h-20.4V261.6z"/>
+					<path class="st27" d="M1643.8,274.7c0-0.7,0.6-1.3,1.3-1.3h21.6c0.7,0,1.3,0.6,1.3,1.3v5.3c0,0.7-0.6,1.3-1.3,1.3h-21.6
+						c-0.7,0-1.3-0.6-1.3-1.3V274.7z"/>
+					<text transform="matrix(1 0 0 1 1652.1426 279.1031)" class="st14 st4 st32">tsv</text>
+					<path class="st27" d="M1658.1,269.3v-7.7l7.9,7.7H1658.1z"/>
+				</g>
 			</g>
 		</g>
 	</g>
@@ -468,18 +475,20 @@
 <g>
 	<g>
 		<g>
-			<defs>
-				<rect id="SVGID_9_" x="854.4" y="-72.9" width="25" height="28.2"/>
-			</defs>
-			<clipPath id="SVGID_10_">
-				<use xlink:href="#SVGID_9_"  style="overflow:visible;"/>
-			</clipPath>
-			<g transform="translate(-394 -198)" class="st33">
-				<path class="st26" d="M1644.8,338.2h12.2l7.8,8.4v19h-20V338.2z"/>
-				<path class="st27" d="M1643,351.9c0-0.8,0.6-1.4,1.3-1.4h21.2c0.7,0,1.3,0.6,1.3,1.4v5.6c0,0.8-0.6,1.4-1.3,1.4h-21.2
-					c-0.7,0-1.3-0.6-1.3-1.4V351.9z"/>
-				<text transform="matrix(0.932 0 0 1 1646.1143 356.5904)" class="st14 st4 st34">mzTab</text>
-				<path class="st27" d="M1657,352.5V345l7.8,7.5H1657z"/>
+			<g>
+				<defs>
+					<rect id="SVGID_9_" x="460.4" y="-270.9" width="25" height="28.2"/>
+				</defs>
+				<clipPath id="SVGID_10_">
+					<use xlink:href="#SVGID_9_"  style="overflow:visible;"/>
+				</clipPath>
+				<g transform="translate(-394 -198)" class="st33">
+					<path class="st26" d="M1644.8,338.2h12.2l7.8,8.4v19h-20V338.2z"/>
+					<path class="st27" d="M1643,351.9c0-0.8,0.6-1.4,1.3-1.4h21.2c0.7,0,1.3,0.6,1.3,1.4v5.6c0,0.8-0.6,1.4-1.3,1.4h-21.2
+						c-0.7,0-1.3-0.6-1.3-1.4V351.9z"/>
+					<text transform="matrix(0.932 0 0 1 1646.1143 356.5903)" class="st14 st4 st34">mzTab</text>
+					<path class="st27" d="M1657,352.5V345l7.8,7.5H1657z"/>
+				</g>
 			</g>
 		</g>
 	</g>
@@ -487,33 +496,35 @@
 <g>
 	<g>
 		<g>
-			<defs>
-				<rect id="SVGID_11_" x="853.4" y="25.8" width="25" height="28.8"/>
-			</defs>
-			<clipPath id="SVGID_12_">
-				<use xlink:href="#SVGID_11_"  style="overflow:visible;"/>
-			</clipPath>
-			<g transform="translate(-395 -198)" class="st35">
-				<path class="st26" d="M1645.6,436.9h12.4l8,8.6v19.3h-20.4V436.9z"/>
-				<path class="st27" d="M1643.8,451c0-0.8,0.6-1.4,1.3-1.4h21.6c0.7,0,1.3,0.6,1.3,1.4v5.7c0,0.8-0.6,1.4-1.3,1.4h-21.6
-					c-0.7,0-1.3-0.6-1.3-1.4V451z"/>
-				<text transform="matrix(0.932 0 0 1 1652.1426 455.7271)" class="st14 st4 st36">tsv</text>
-				<path class="st27" d="M1658.1,444.7V437l7.9,7.7H1658.1z"/>
+			<g>
+				<defs>
+					<rect id="SVGID_11_" x="458.4" y="-172.2" width="25" height="28.8"/>
+				</defs>
+				<clipPath id="SVGID_12_">
+					<use xlink:href="#SVGID_11_"  style="overflow:visible;"/>
+				</clipPath>
+				<g transform="translate(-395 -198)" class="st35">
+					<path class="st26" d="M1645.6,436.9h12.4l8,8.6v19.3h-20.4V436.9z"/>
+					<path class="st27" d="M1643.8,451c0-0.8,0.6-1.4,1.3-1.4h21.6c0.7,0,1.3,0.6,1.3,1.4v5.7c0,0.8-0.6,1.4-1.3,1.4h-21.6
+						c-0.7,0-1.3-0.6-1.3-1.4V451z"/>
+					<text transform="matrix(0.932 0 0 1 1652.1426 455.7271)" class="st14 st4 st36">tsv</text>
+					<path class="st27" d="M1658.1,444.7V437l7.9,7.7H1658.1z"/>
+				</g>
 			</g>
 		</g>
 	</g>
 </g>
-<path pointer-events="none" class="st11" d="M733.5,363.5h-41.8c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h41.8c5,0,9,4.3,9,9.7l0,0
-	C742.5,359.2,738.5,363.5,733.5,363.5z"/>
+<path pointer-events="none" class="st11" d="M733.5,379.7h-41.8c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h41.8c5,0,9,4.3,9,9.7l0,0
+	C742.5,375.4,738.5,379.7,733.5,379.7z"/>
 <rect x="646.2" y="294.6" class="st23" width="140.5" height="102.4"/>
 <path pointer-events="none" class="st11" d="M731.2,320.5h-41.8c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h41.8c5,0,9,4.3,9,9.7l0,0
 	C740.2,316.2,736.2,320.5,731.2,320.5z"/>
-<text transform="matrix(0.932 0 0 1 700 331.6336)" class="st4 st24">Job 1</text>
-<text transform="matrix(0.932 0 0 1 700.7998 339.1444)" class="st4 st5">......</text>
-<text transform="matrix(0.932 0 0 1 697.7686 375.9656)" class="st4 st24">Job n</text>
-<text transform="matrix(0.932 0 0 1 667.8496 385.8185)" class="st4 st24">        In Parallel</text>
-<path pointer-events="none" class="st11" d="M209,532.7L209,532.7c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0c5,0,9,4.3,9,9.7l0,0
-	C218,528.4,214,532.7,209,532.7z"/>
+<text transform="matrix(0.932 0 0 1 700 331.6338)" class="st4 st24">Job 1</text>
+<text transform="matrix(0.932 0 0 1 700.7998 339.1445)" class="st4 st5">......</text>
+<text transform="matrix(0.932 0 0 1 699.1498 356.2)" class="st4 st24">Job n</text>
+<text transform="matrix(0.932 0 0 1 665.4 392.6004)" class="st4 st24">        In Parallel</text>
+<path pointer-events="none" class="st11" d="M223.5,568.9L223.5,568.9c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0c5,0,9,4.3,9,9.7
+	l0,0C232.5,564.6,228.5,568.9,223.5,568.9z"/>
 <path pointer-events="stroke" class="st6" d="M452.8,128.3"/>
 <line class="st6" x1="403.6" y1="80.9" x2="443.9" y2="81"/>
 <path class="st0" d="M417.8,125.8c7.8-9.3,13.7-15.5,26.3-32.4"/>
@@ -528,11 +539,22 @@
 <path class="st0" d="M406.7,120.8c7.8-9.3,13.7-15.5,26.3-32.4"/>
 <path pointer-events="stroke" class="st6" d="M353.9,149c6.7,0.1,36.9-13.1,58.1-17.9l34.1-0.3"/>
 <g transform="translate(-0.5 -0.5)">
-	<text transform="matrix(0.932 0 0 1 405.4684 119.2566)" class="st37"><tspan x="0" y="0" class="st4 st5 st38">	</tspan><tspan x="38.6" y="0" class="st4 st5">Sage</tspan></text>
+	<text transform="matrix(0.932 0 0 1 405.4688 119.2568)" class="st4 st5 st37"> </text>
+	<text transform="matrix(0.932 0 0 1 441.4434 119.2568)" class="st4 st5">Sage</text>
 </g>
 <path pointer-events="stroke" class="st6" d="M550.1,151.6c-6.7,0.1-28.3-19.1-93.2-19.1"/>
 <path pointer-events="stroke" class="st8" d="M357.5,165.9l93.3-19.1"/>
 <path pointer-events="stroke" class="st8" d="M452.6,147.5l91.8,21.2"/>
 <path pointer-events="all" class="st11" d="M453.7,155L453.7,155c-5.5,0-9.9-4.7-9.9-10.6v-10.1c0-5.9,4.4-10.6,9.9-10.6l0,0
 	c5.5,0,9.9,4.7,9.9,10.6v10.1C463.6,150.3,459.2,155,453.7,155z"/>
+<path pointer-events="stroke" class="st1" d="M241.3,327.3"/>
+<path pointer-events="stroke" class="st1" d="M233.4,364.4"/>
+<path pointer-events="stroke" class="st1" d="M223.2,370l8.5-29.5c17.7-1.5,0,0,8.9-1.2"/>
+<path pointer-events="stroke" class="st1" d="M240.6,339.4l20.6-0.6"/>
+<path pointer-events="stroke" class="st1" d="M317.5,334.6l15,38.9"/>
+<path pointer-events="stroke" class="st1" d="M292.4,338.9l28.1-0.1"/>
+<path pointer-events="none" class="st10" d="M292.6,348.8h-35.5c-4.2,0-7.6-4.3-7.6-9.7l0,0c0-5.4,3.4-9.7,7.6-9.7h35.5
+	c4.2,0,7.6,4.3,7.6,9.7l0,0C300.3,344.5,296.9,348.8,292.6,348.8z"/>
+<text transform="matrix(0.932 0 0 1 256.8666 342.0303)" class="st4 st5">speclib</text>
+<text transform="matrix(0.932 0 0 1 262.8667 359.3333)" class="st4 st5">skip</text>
 </svg>
