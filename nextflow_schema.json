@@ -296,7 +296,7 @@
                 "instrument": {
                     "type": "string",
                     "description": "Type of instrument that generated the data. 'low_res' or 'high_res' (default; refers to LCQ and LTQ instruments)",
-                    "default": "high_res",
+                    "default": null,
                     "fa_icon": "fas fa-list-ol"
                 },
                 "protocol": {
