@@ -1,258 +1,125 @@
 #!/usr/bin/env python
 
-
-"""Provide a command line tool to validate and transform tabular samplesheets."""
-
+# nf-core: Update the script to check the sdrf
+# This script is based on the example at: https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
 
 import argparse
-import csv
-import logging
+import errno
+import os
 import sys
-from collections import Counter
-from pathlib import Path
 
-logger = logging.getLogger()
-
-
-class RowChecker:
-    """
-    Define a service that can validate and transform each given row.
-
-    Attributes:
-        modified (list): A list of dicts, where each dict corresponds to a previously
-            validated and transformed row. The order of rows is maintained.
-
-    """
-
-    VALID_FORMATS = (
-        ".fq.gz",
-        ".fastq.gz",
-    )
-
-    def __init__(
-        self,
-        sample_col="sample",
-        first_col="fastq_1",
-        second_col="fastq_2",
-        single_col="single_end",
-        **kwargs,
-    ):
-        """
-        Initialize the row checker with the expected column names.
-
-        Args:
-            sample_col (str): The name of the column that contains the sample name
-                (default "sample").
-            first_col (str): The name of the column that contains the first (or only)
-                FASTQ file path (default "fastq_1").
-            second_col (str): The name of the column that contains the second (if any)
-                FASTQ file path (default "fastq_2").
-            single_col (str): The name of the new column that will be inserted and
-                records whether the sample contains single- or paired-end sequencing
-                reads (default "single_end").
-
-        """
-        super().__init__(**kwargs)
-        self._sample_col = sample_col
-        self._first_col = first_col
-        self._second_col = second_col
-        self._single_col = single_col
-        self._seen = set()
-        self.modified = []
-
-    def validate_and_transform(self, row):
-        """
-        Perform all validations on the given row and insert the read pairing status.
-
-        Args:
-            row (dict): A mapping from column headers (keys) to elements of that row
-                (values).
-
-        """
-        self._validate_sample(row)
-        self._validate_first(row)
-        self._validate_second(row)
-        self._validate_pair(row)
-        self._seen.add((row[self._sample_col], row[self._first_col]))
-        self.modified.append(row)
-
-    def _validate_sample(self, row):
-        """Assert that the sample name exists and convert spaces to underscores."""
-        if len(row[self._sample_col]) <= 0:
-            raise AssertionError("Sample input is required.")
-        # Sanitize samples slightly.
-        row[self._sample_col] = row[self._sample_col].replace(" ", "_")
-
-    def _validate_first(self, row):
-        """Assert that the first FASTQ entry is non-empty and has the right format."""
-        if len(row[self._first_col]) <= 0:
-            raise AssertionError("At least the first FASTQ file is required.")
-        self._validate_fastq_format(row[self._first_col])
-
-    def _validate_second(self, row):
-        """Assert that the second FASTQ entry has the right format if it exists."""
-        if len(row[self._second_col]) > 0:
-            self._validate_fastq_format(row[self._second_col])
-
-    def _validate_pair(self, row):
-        """Assert that read pairs have the same file extension. Report pair status."""
-        if row[self._first_col] and row[self._second_col]:
-            row[self._single_col] = False
-            first_col_suffix = Path(row[self._first_col]).suffixes[-2:]
-            second_col_suffix = Path(row[self._second_col]).suffixes[-2:]
-            if first_col_suffix != second_col_suffix:
-                raise AssertionError("FASTQ pairs must have the same file extensions.")
-        else:
-            row[self._single_col] = True
-
-    def _validate_fastq_format(self, filename):
-        """Assert that a given filename has one of the expected FASTQ extensions."""
-        if not any(filename.endswith(extension) for extension in self.VALID_FORMATS):
-            raise AssertionError(
-                f"The FASTQ file has an unrecognized extension: {filename}\n"
-                f"It should be one of: {', '.join(self.VALID_FORMATS)}"
-            )
-
-    def validate_unique_samples(self):
-        """
-        Assert that the combination of sample name and FASTQ filename is unique.
-
-        In addition to the validation, also rename all samples to have a suffix of _T{n}, where n is the
-        number of times the same sample exist, but with different FASTQ files, e.g., multiple runs per experiment.
-
-        """
-        if len(self._seen) != len(self.modified):
-            raise AssertionError("The pair of sample name and FASTQ must be unique.")
-        seen = Counter()
-        for row in self.modified:
-            sample = row[self._sample_col]
-            seen[sample] += 1
-            row[self._sample_col] = f"{sample}_T{seen[sample]}"
+import pandas as pd
+from sdrf_pipelines.sdrf.sdrf import SdrfDataFrame
+from sdrf_pipelines.sdrf.sdrf_schema import DEFAULT_TEMPLATE, MASS_SPECTROMETRY
 
 
-def read_head(handle, num_lines=10):
-    """Read the specified number of lines from the current position in the file."""
-    lines = []
-    for idx, line in enumerate(handle):
-        if idx == num_lines:
-            break
-        lines.append(line)
-    return "".join(lines)
+def parse_args(args=None):
+    Description = "Reformat nf-core/quantms sdrf file and check its contents."
+    Epilog = "Example usage: python validate_sdrf.py <sdrf> <check_ms>"
+
+    parser = argparse.ArgumentParser(description=Description, epilog=Epilog)
+    parser.add_argument("SDRF", help="SDRF/Expdesign file to be validated")
+    parser.add_argument("ISSDRF", help="SDRF file or Expdesign file")
+    parser.add_argument("--CHECK_MS", help="check mass spectrometry fields in SDRF.", action="store_true")
+
+    return parser.parse_args(args)
 
 
-def sniff_format(handle):
-    """
-    Detect the tabular format.
-
-    Args:
-        handle (text file): A handle to a `text file`_ object. The read position is
-        expected to be at the beginning (index 0).
-
-    Returns:
-        csv.Dialect: The detected tabular format.
-
-    .. _text file:
-        https://docs.python.org/3/glossary.html#term-text-file
-
-    """
-    peek = read_head(handle)
-    handle.seek(0)
-    sniffer = csv.Sniffer()
-    dialect = sniffer.sniff(peek)
-    return dialect
+def make_dir(path):
+    if len(path) > 0:
+        try:
+            os.makedirs(path)
+        except OSError as exception:
+            if exception.errno != errno.EEXIST:
+                raise exception
 
 
-def check_samplesheet(file_in, file_out):
-    """
-    Check that the tabular samplesheet has the structure expected by nf-core pipelines.
+def print_error(error, context="Line", context_str=""):
+    error_str = "ERROR: Please check samplesheet -> {}".format(error)
+    if context != "" and context_str != "":
+        error_str = "ERROR: Please check samplesheet -> {}\n{}: '{}'".format(
+            error, context.strip(), context_str.strip()
+        )
+    print(error_str)
+    sys.exit(1)
 
-    Validate the general shape of the table, expected columns, and each row. Also add
-    an additional column which records whether one or two FASTQ reads were found.
 
-    Args:
-        file_in (pathlib.Path): The given tabular samplesheet. The format can be either
-            CSV, TSV, or any other format automatically recognized by ``csv.Sniffer``.
-        file_out (pathlib.Path): Where the validated and transformed samplesheet should
-            be created; always in CSV format.
+def check_sdrf(check_ms, sdrf):
+    df = SdrfDataFrame.parse(sdrf)
+    errors = df.validate(DEFAULT_TEMPLATE)
+    if check_ms:
+        errors = errors + df.validate(MASS_SPECTROMETRY)
+    for error in errors:
+        print(error)
+    if not errors:
+        print("Everying seems to be fine. Well done.")
+    else:
+        print("There were validation errors!")
+    sys.exit(bool(errors))
 
-    Example:
-        This function checks that the samplesheet follows the following structure,
-        see also the `viral recon samplesheet`_::
 
-            sample,fastq_1,fastq_2
-            SAMPLE_PE,SAMPLE_PE_RUN1_1.fastq.gz,SAMPLE_PE_RUN1_2.fastq.gz
-            SAMPLE_PE,SAMPLE_PE_RUN2_1.fastq.gz,SAMPLE_PE_RUN2_2.fastq.gz
-            SAMPLE_SE,SAMPLE_SE_RUN1_1.fastq.gz,
+def check_expdesign(expdesign):
+    data = pd.read_csv(expdesign, sep="\t", header=0, dtype=str)
+    data = data.dropna()
+    schema_file = ["Fraction_Group", "Fraction", "Spectra_Filepath", "Label", "Sample"]
+    schema_sample = ["Sample", "MSstats_Condition", "MSstats_BioReplicate"]
 
-    .. _viral recon samplesheet:
-        https://raw.githubusercontent.com/nf-core/test-datasets/viralrecon/samplesheet/samplesheet_test_illumina_amplicon.csv
-
-    """
-    required_columns = {"sample", "fastq_1", "fastq_2"}
-    # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
-    with file_in.open(newline="") as in_handle:
-        reader = csv.DictReader(in_handle, dialect=sniff_format(in_handle))
-        # Validate the existence of the expected header columns.
-        if not required_columns.issubset(reader.fieldnames):
-            req_cols = ", ".join(required_columns)
-            logger.critical(f"The sample sheet **must** contain these column headers: {req_cols}.")
+    # check table format: two table
+    with open(expdesign, "r") as f:
+        lines = f.readlines()
+        try:
+            empty_row = lines.index("\n")
+        except ValueError:
+            print("the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf")
             sys.exit(1)
-        # Validate each row.
-        checker = RowChecker()
-        for i, row in enumerate(reader):
-            try:
-                checker.validate_and_transform(row)
-            except AssertionError as error:
-                logger.critical(f"{str(error)} On line {i + 2}.")
-                sys.exit(1)
-        checker.validate_unique_samples()
-    header = list(reader.fieldnames)
-    header.insert(1, "single_end")
-    # See https://docs.python.org/3.9/library/csv.html#id3 to read up on `newline=""`.
-    with file_out.open(mode="w", newline="") as out_handle:
-        writer = csv.DictWriter(out_handle, header, delimiter=",")
-        writer.writeheader()
-        for row in checker.modified:
-            writer.writerow(row)
+        if lines.index("\n") >= len(lines):
+            print("the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf")
+            sys.exit(1)
+
+        s_table = [i.replace("\n", "").split("\t") for i in lines[empty_row + 1 :]][1:]
+        s_header = lines[empty_row + 1].replace("\n", "").split("\t")
+        s_DataFrame = pd.DataFrame(s_table, columns=s_header)
+
+    # check missed mandatory column
+    missed_columns = set(schema_file) - set(data.columns)
+    if len(missed_columns) != 0:
+        print("{0} column missed".format(" ".join(missed_columns)))
+        sys.exit(1)
+
+    missed_columns = set(schema_sample) - set(s_DataFrame.columns)
+    if len(missed_columns) != 0:
+        print("{0} column missed".format(" ".join(missed_columns)))
+        sys.exit(1)
+
+    if len(set(data.Label)) != 1 and "MSstats_Mixture" not in s_DataFrame.columns:
+        print("MSstats_Mixture column missed in ISO experiments")
+        sys.exit(1)
+
+    # check logical problem: may be improved
+    check_expdesign_logic(data, s_DataFrame)
 
 
-def parse_args(argv=None):
-    """Define and immediately parse command line arguments."""
-    parser = argparse.ArgumentParser(
-        description="Validate and transform a tabular samplesheet.",
-        epilog="Example: python check_samplesheet.py samplesheet.csv samplesheet.valid.csv",
-    )
-    parser.add_argument(
-        "file_in",
-        metavar="FILE_IN",
-        type=Path,
-        help="Tabular input samplesheet in CSV or TSV format.",
-    )
-    parser.add_argument(
-        "file_out",
-        metavar="FILE_OUT",
-        type=Path,
-        help="Transformed output samplesheet in CSV format.",
-    )
-    parser.add_argument(
-        "-l",
-        "--log-level",
-        help="The desired log level (default WARNING).",
-        choices=("CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG"),
-        default="WARNING",
-    )
-    return parser.parse_args(argv)
+def check_expdesign_logic(fTable, sTable):
+    if int(max(fTable.Fraction_Group)) > len(set(fTable.Fraction_Group)):
+        print("Fraction_Group discontinuous!")
+        sys.exit(1)
+    fTable_D = fTable.drop_duplicates(["Fraction_Group", "Fraction", "Label", "Sample"])
+    if fTable_D.shape[0] < fTable.shape[0]:
+        print("Existing duplicate entries in Fraction_Group, Fraction, Label and Sample")
+        sys.exit(1)
+    if len(set(sTable.Sample)) < sTable.shape[0]:
+        print("Existing duplicate Sample in sample table!")
+        sys.exit(1)
 
 
-def main(argv=None):
-    """Coordinate argument parsing and program execution."""
-    args = parse_args(argv)
-    logging.basicConfig(level=args.log_level, format="[%(levelname)s] %(message)s")
-    if not args.file_in.is_file():
-        logger.error(f"The given input file {args.file_in} was not found!")
-        sys.exit(2)
-    args.file_out.parent.mkdir(parents=True, exist_ok=True)
-    check_samplesheet(args.file_in, args.file_out)
+def main(args=None):
+    # TODO validate expdesign file
+    args = parse_args(args)
+
+    if args.ISSDRF == "true":
+        check_sdrf(args.CHECK_MS, args.SDRF)
+    else:
+        check_expdesign(args.SDRF)
 
 
 if __name__ == "__main__":
