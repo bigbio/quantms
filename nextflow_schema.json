@@ -59,6 +59,12 @@
                     "default": "dda",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
+                },
+                "id_only": {
+                    "type": "boolean",
+                    "description": "Only perform identification subworkflow.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Only perform identification subworkflow for specific cases."
                 }
             }
         },
