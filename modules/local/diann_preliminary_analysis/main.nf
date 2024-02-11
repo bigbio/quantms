@@ -13,6 +13,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
     path "*.quant", emit: diann_quant
     tuple val(meta), path("*_diann.log"), emit: log
     path "versions.yml", emit: version
+    path(ms_file), emit: preliminary_ms_file
 
     when:
     task.ext.when == null || task.ext.when

@@ -86,9 +86,9 @@ workflow DIA {
         //
         // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
         //
-        // Order matters in DIANN, This shoudl be sorted for reproducible results.
+        // Order matters in DIANN, This should be sorted for reproducible results.
         ASSEMBLE_EMPIRICAL_LIBRARY(
-            ch_result.ms_file.collect(),
+            DIANN_PRELIMINARY_ANALYSIS.out.preliminary_ms_file.collect(),
             meta,
             DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
             speclib
