@@ -56,7 +56,6 @@
                 "acquisition_method": {
                     "type": "string",
                     "description": "Proteomics data acquisition method",
-                    "default": "dda",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
                 }
@@ -269,7 +268,6 @@
                 "instrument": {
                     "type": "string",
                     "description": "Type of instrument that generated the data. 'low_res' or 'high_res' (default; refers to LCQ and LTQ instruments)",
-                    "default": "high_res",
                     "fa_icon": "fas fa-list-ol"
                 },
                 "protocol": {
