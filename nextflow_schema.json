@@ -426,7 +426,7 @@
                 "run_fdr_cutoff": {
                     "type": "number",
                     "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
-                    "default": 0.10,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter"
                 },
                 "idfilter_debug": {
@@ -834,7 +834,7 @@
                 "feature_with_id_min_score": {
                     "type": "number",
                     "description": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter).",
-                    "default": 0.10,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
