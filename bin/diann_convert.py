@@ -47,8 +47,7 @@ def cli():
 def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
     """
     Convert DIA-NN output to MSstats, Triqler or mzTab.
-     The output formats are
-    used for quality control and downstream analysis.
+    The output formats are used for quality control and downstream analysis.
 
     :param folder: DiannConvert specifies the folder where the required file resides. The folder contains
         the DiaNN main report, protein matrix, precursor matrix, experimental design file, protein sequence
@@ -1161,10 +1160,9 @@ def per_peptide_study_report(report: pd.DataFrame) -> pd.DataFrame:
     This implementation differs in several aspects in the output values:
     1. in the fact that it actually gets values for the m/z
     2. always returns a float, whilst the apply version returns an 'object' dtype.
-    3. The original implementation, missing values had the string 'null', here
-       they have the value np.nan.
+    3. The original implementation, missing values had the string 'null', here they have the value np.nan.
     4. The order of the final output is different; the original orders columns by
-       study variables > calculated value, this one is calculated value > study variables.
+    study variables > calculated value, this one is calculated value > study variables.
 
     Calculates the mean, standard deviation and std error of the precursor
     abundances, as well as the mean retention time and m/z.
