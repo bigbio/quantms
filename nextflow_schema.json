@@ -56,7 +56,6 @@
                 "acquisition_method": {
                     "type": "string",
                     "description": "Proteomics data acquisition method",
-                    "default": "dda",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
                 }
@@ -269,7 +268,6 @@
                 "instrument": {
                     "type": "string",
                     "description": "Type of instrument that generated the data. 'low_res' or 'high_res' (default; refers to LCQ and LTQ instruments)",
-                    "default": "high_res",
                     "fa_icon": "fas fa-list-ol"
                 },
                 "protocol": {
@@ -428,7 +426,7 @@
                 "run_fdr_cutoff": {
                     "type": "number",
                     "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
-                    "default": 0.01,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter"
                 },
                 "idfilter_debug": {
@@ -836,21 +834,21 @@
                 "feature_with_id_min_score": {
                     "type": "number",
                     "description": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter).",
-                    "default": 0.0,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
                 "feature_without_id_min_score": {
                     "type": "number",
                     "description": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter).",
-                    "default": 0.0,
+                    "default": 0.75,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
                 "lfq_intensity_threshold": {
                     "type": "number",
                     "description": "The minimum intensity for a feature to be considered for quantification. (default: '10000')",
-                    "default": 10000,
+                    "default": 1000,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum intensity for a feature to be considered for quantification. (default: '10000')"
                 },
@@ -900,7 +898,7 @@
                     "description": "Set the scan window radius to a specific value",
                     "fa_icon": "fas fa-filter",
                     "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
-                    "default": 7
+                    "default": 8
                 },
                 "min_corr": {
                     "type": "number",
@@ -1181,7 +1179,7 @@
                 "max_memory": {
                     "type": "string",
                     "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
+                    "default": "128 GB",
                     "fa_icon": "fas fa-memory",
                     "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "hidden": true,
@@ -1190,7 +1188,7 @@
                 "max_time": {
                     "type": "string",
                     "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
+                    "default": "10d",
                     "fa_icon": "far fa-clock",
                     "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "hidden": true,
