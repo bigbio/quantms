@@ -4,6 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+include { MULTIQC                } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-validation'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -21,19 +22,6 @@ include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main'
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
-
-/*
-========================================================================================
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-========================================================================================
-*/
-
-//
-// MODULE: Installed directly from nf-core/modules
-//
-
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-
 
 
 /*
@@ -174,31 +162,7 @@ workflow QUANTMS {
 }
 
 /*
-========================================================================================
-    COMPLETION EMAIL AND SUMMARY
-========================================================================================
-*/
-
-workflow.onComplete {
-    if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
-    }
-    NfcoreTemplate.dump_parameters(workflow, params)
-    NfcoreTemplate.summary(workflow, params, log)
-    if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
-    }
-}
-
-workflow.onError {
-    if (workflow.errorReport.contains("Process requirement exceeds available memory")) {
-        println("🛑 Default resources exceed availability 🛑 ")
-        println("💡 See here on how to configure pipeline: https://nf-co.re/docs/usage/configuration#tuning-workflow-resources 💡")
-    }
-}
-
-/*
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
-========================================================================================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
