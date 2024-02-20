@@ -125,21 +125,12 @@ workflow QUANTMS {
     ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
 
 
+     //
+    // Collate and save software versions
     //
-    // MODULE: Pipeline reporting
-    //
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
-
-    //
-    // MODULE: pmultiqc
-    //
-    workflow_summary    = WorkflowQuantms.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
-
-    methods_description    = WorkflowQuantms.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    ch_methods_description = Channel.value(methods_description)
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
+        .set { ch_collated_versions }
 
     ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
