@@ -1,0 +1,31 @@
+name: MSSTATSTMT
+description: |
+  A module to performance proteomics statistical analysis with tandem mass tag (TMT) labeling using MSstatsTMT tool.
+  - MSstatsTMT
+  - downStream analysis
+tools:
+  - MSstatsTMT:
+      description: |
+        MSstatsTMT is an R-based package for detecting differentially abundant proteins in shotgun mass spectrometry-based proteomic experiments with tandem mass tag (TMT) labeling
+      homepage: https://github.com/Vitek-Lab/MSstatsTMT
+      documentation: https://www.bioconductor.org/packages/release/bioc/vignettes/MSstatsTMT/inst/doc/MSstatsTMT.html
+input:
+  - out_msstats:
+      type: file
+      description: MSstats input file with analysis results for statistical downstream analysis in MSstatsTMT.
+      pattern: "out_msstats.csv"
+output:
+  - msstats_csv:
+      type: file
+      description: csv file with results of statistical testing
+      pattern: "*.csv"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+authors:
+  - "@daichengxin"
