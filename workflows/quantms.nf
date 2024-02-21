@@ -139,7 +139,7 @@ workflow QUANTMS {
     ch_workflow_summary                   = Channel.value(paramsSummaryMultiqc(summary_params))
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
     ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
-    ch_multiqc_files                      = ch_multiqc_files.mix(Channel.from(ch_multiqc_config))
+    ch_multiqc_files                      = ch_multiqc_files.mix(ch_multiqc_config)
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files                      = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_collated_versions)
