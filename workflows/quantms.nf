@@ -109,25 +109,28 @@ workflow QUANTMS {
     ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(TMT.out.ch_pmultiqc_consensus)
     ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
     ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
-    ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
     LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
     ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
     ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(LFQ.out.ch_pmultiqc_consensus)
     ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
     ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
-    ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
     DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
     ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
     ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
-    ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
-
 
     //
     // Collate and save software versions
     //
-    softwareVersionsToYAML(ch_versions)
+    DIA.out.versions.mix(LFQ.out.versions).mix(TMT.out.versions).mix(ch_versions)
+            .branch {
+                yaml : it.asBoolean()
+                other : true
+            }
+            .set{ versions_clean }
+
+    softwareVersionsToYAML(versions_clean.yaml)
         .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
         .set { ch_collated_versions }
 
