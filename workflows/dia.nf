@@ -75,9 +75,18 @@ workflow DIA {
         //
         // MODULE: DIANN_PRELIMINARY_ANALYSIS
         //
-        if (params.random_preanalysis){
-            DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.randomSample(params.empirical_assembly_ms_n, 2024).combine(speclib))
-        } else{
+        if (params.random_preanalysis) {
+            preanalysis_seed = 2024
+            preanalysis_subset = ch_file_preparation_results
+                .randomSample(params.empirical_assembly_ms_n, preanalysis_seed)
+            empirical_lib_files = preanalysis_subset
+                .map { result -> result[1] }
+                .collect()
+            DIANN_PRELIMINARY_ANALYSIS(preanalysis_subset.combine(speclib))
+        } else {
+            empirical_lib_files = ch_file_preparation_results
+                .map { result -> result[1] }
+                .collect()
             DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
         }
         ch_software_versions = ch_software_versions
@@ -88,7 +97,7 @@ workflow DIA {
         //
         // Order matters in DIANN, This should be sorted for reproducible results.
         ASSEMBLE_EMPIRICAL_LIBRARY(
-            DIANN_PRELIMINARY_ANALYSIS.out.preliminary_ms_file.collect(),
+            empirical_lib_files,
             meta,
             DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
             speclib
