@@ -65,3 +65,5 @@ sp:
     fn: "general_stats.tsv"
   quantms/exp_design:
     fn: "*_design.tsv"
+
+disable_version_detection: true
