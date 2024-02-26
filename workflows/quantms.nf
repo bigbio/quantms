@@ -23,19 +23,6 @@ include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
 include { DDA_ID } from '../subworkflows/local/dda_id'
 
-/*
-========================================================================================
-    IMPORT NF-CORE MODULES/SUBWORKFLOWS
-========================================================================================
-*/
-
-//
-// MODULE: Installed directly from nf-core/modules
-//
-
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoftwareversions/main'
-
-
 
 /*
 ========================================================================================
