@@ -22,9 +22,9 @@ workflow FILE_PREPARATION {
     // Divide the compressed files
     ch_rawfiles
     .branch {
-        dottar: WorkflowQuantms.hasExtension(it[1], '.tar')
-        dotzip: WorkflowQuantms.hasExtension(it[1], '.zip')
-        gz: WorkflowQuantms.hasExtension(it[1], '.gz')
+        dottar: hasExtension(it[1], '.tar')
+        dotzip: hasExtension(it[1], '.zip')
+        gz: hasExtension(it[1], '.gz')
         uncompressed: true
     }.set { ch_branched_input }
 
@@ -37,9 +37,9 @@ workflow FILE_PREPARATION {
     // Divide mzml files
     ch_rawfiles
     .branch {
-        raw: WorkflowQuantms.hasExtension(it[1], '.raw')
-        mzML: WorkflowQuantms.hasExtension(it[1], '.mzML')
-        dotd: WorkflowQuantms.hasExtension(it[1], '.d')
+        raw: hasExtension(it[1], '.raw')
+        mzML: hasExtension(it[1], '.mzML')
+        dotd: hasExtension(it[1], '.d')
     }.set { ch_branched_input }
 
     // Note: we used to always index mzMLs if not already indexed but due to
@@ -98,4 +98,11 @@ workflow FILE_PREPARATION {
     results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
     statistics      = ch_statistics     // channel: [ *_ms_info.tsv ]
     version         = ch_versions       // channel: [ *.version.txt ]
+}
+
+//
+// check file extension
+//
+def hasExtension(file, extension) {
+    return file.toString().toLowerCase().endsWith(extension.toLowerCase())
 }
