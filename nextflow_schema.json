@@ -108,8 +108,7 @@
                     "description": "Choose the method to produce decoys from input target database.",
                     "default": "reverse",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": [
-                        "reverse", "shuffle"]
+                    "enum": ["reverse", "shuffle"]
                 },
                 "shuffle_max_attempts": {
                     "type": "integer",
