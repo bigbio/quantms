@@ -135,14 +135,16 @@ workflow QUANTMS {
         ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
         ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
-    DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
-    ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
-    ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
+        DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
+        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
+        ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
+        ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+    }
 
     //
     // Collate and save software versions
     //
-    DIA.out.versions.mix(LFQ.out.versions).mix(TMT.out.versions).mix(ch_versions)
+    ch_versions
             .branch {
                 yaml : it.asBoolean()
                 other : true
