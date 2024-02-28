@@ -3,7 +3,7 @@ process PMULTIQC {
 
     conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.24"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.24--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.25--pyhdfd78af_0"
     } else {
         container "biocontainers/pmultiqc:0.0.24--pyhdfd78af_0"
     }
