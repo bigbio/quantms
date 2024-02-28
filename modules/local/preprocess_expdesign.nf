@@ -6,11 +6,11 @@ process PREPROCESS_EXPDESIGN {
     tag "$design.Name"
     label 'process_low'
 
-    conda "bioconda::sdrf-pipelines=0.0.24"
+    conda "bioconda::sdrf-pipelines=0.0.25"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.24--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.25--pyhdfd78af_0"
     } else {
-        container "biocontainers/sdrf-pipelines:0.0.24--pyhdfd78af_0"
+        container "biocontainers/sdrf-pipelines:0.0.25--pyhdfd78af_0"
     }
 
     input:
