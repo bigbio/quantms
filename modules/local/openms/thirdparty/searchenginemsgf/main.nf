@@ -32,7 +32,7 @@ process SEARCHENGINEMSGF {
     if (meta.enzyme == 'Trypsin') enzyme = 'Trypsin/P'
     else if (meta.enzyme == 'Arg-C') enzyme = 'Arg-C/P'
     else if (meta.enzyme == 'Asp-N') enzyme = 'Asp-N/B'
-    else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin'
+    else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin/P'
     else if (meta.enzyme == 'Lys-C') enzyme = 'Lys-C/P'
 
     if (enzyme.toLowerCase() == "unspecific cleavage") {
