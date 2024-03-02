@@ -61,7 +61,7 @@ def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
                 info_list = [id_, MSLevel, None, None, None, None, rt, None, acquisition_datetime]
 
             if id_only and MSLevel == 2:
-                psm_part_info.append([re.findall(r"scan=(\d+)", id_)[0], MSLevel, mz_array, intensity_array])
+                psm_part_info.append([re.findall(r"[scan|spectrum]=(\d+)", id_)[0], MSLevel, mz_array, intensity_array])
             info.append(info_list)
 
         if id_only and len(psm_part_info) > 0:
