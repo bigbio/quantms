@@ -1,0 +1,31 @@
+name: MZMLSTATISTICS
+description: A module for mzMLs statistics
+keywords:
+  - mzML
+  - statistics
+tools:
+  - custom:
+      description: |
+        A custom module for mzMLs statistics.
+      homepage: https://github.com/bigbio/quantms
+      documentation: https://github.com/bigbio/quantms/tree/readthedocs
+input:
+  - mzml:
+      type: file
+      description: Spectra file in mzML format
+      pattern: "*.mzML"
+output:
+  - mzml_statistics:
+      type: file
+      description: mzMLs statistics file
+      pattern: "*_mzml_info.tsv"
+  - spectrum_df:
+      type: file
+      description: spectrum data file
+      pattern: "_spectrum_df.csv"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@wanghong"

@@ -1,1 +1,8 @@
 repository_type: pipeline
+lint:
+  files_exist:
+    - conf/igenomes.config
+    - conf/test_full.config
+    - conf/test.config
+  files_unchanged:
+    - .github/PULL_REQUEST_TEMPLATE.md

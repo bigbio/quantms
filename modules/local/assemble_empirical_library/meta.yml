@@ -1,0 +1,39 @@
+name: assemble_empirical_library
+description: A module for assembling an empirical library based on a preliminary analysis of the in-silico library with DIA-NN.
+keywords:
+  - DIA-NN
+  - DIA
+tools:
+  - DIA-NN:
+      description: |
+        DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing by Demichev.
+      homepage: https://github.com/vdemichev/DiaNN
+      documentation: https://github.com/vdemichev/DiaNN
+input:
+  - mzMLs:
+      type: file
+      description: Spectra file in mzML format
+      pattern: "*.mzML"
+  - quant:
+      type: file
+      description: The .quant files from DIA-NN preliminary analysis, containing IDs and quantification information.
+      pattern: "*.quant"
+  - lib:
+      type: file
+      description: Spectra library file
+      pattern: "*.tsv"
+output:
+  - empirical_library:
+      type: file
+      description: An empirical spectral library from the .quant files.
+      pattern: "empirical_library.tsv"
+  - log:
+      type: file
+      description: DIA-NN log file
+      pattern: "assemble_empirical_library.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
