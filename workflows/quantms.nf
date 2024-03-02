@@ -105,7 +105,7 @@ workflow QUANTMS {
     }
 
     if (params.id_only) {
-        DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db)
+        DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data)
         ch_versions = ch_versions.mix(DDA_ID.out.version.ifEmpty(null))
     } else {
         TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)

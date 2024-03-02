@@ -1,0 +1,36 @@
+name: PSMCONVERSION
+description: A module to extract PSM information from idXML file
+keywords:
+  - PSM
+  - conversion
+tools:
+  - custom:
+      description: |
+        A custom module for PSM extraction.
+      homepage: https://github.com/bigbio/quantms
+      documentation: https://github.com/bigbio/quantms/tree/readthedocs
+input:
+  - idxml_file:
+      type: file
+      description: idXML identification file
+      pattern: "*.idXML"
+  - spectrum_df:
+      type: file
+      description: spectrum data file
+      pattern: "_spectrum_df.csv"
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+
+
+output:
+  - psm_info:
+      type: file
+      description: PSM csv file
+      pattern: "*_psm.csv"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

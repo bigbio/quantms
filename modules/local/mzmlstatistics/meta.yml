@@ -19,6 +19,10 @@ output:
       type: file
       description: mzMLs statistics file
       pattern: "*_mzml_info.tsv"
+  - spectrum_df:
+      type: file
+      description: spectrum data file
+      pattern: "_spectrum_df.csv"
   - version:
       type: file
       description: File containing software version
