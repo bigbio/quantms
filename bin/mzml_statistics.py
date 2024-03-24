@@ -7,12 +7,12 @@ Authors: Hong Wong, Yasset Perez-Riverol
 import sys
 from pathlib import Path
 import sqlite3
-
+import re
 import pandas as pd
 from pyopenms import MSExperiment, MzMLFile
 
 
-def ms_dataframe(ms_path: str) -> None:
+def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
     file_columns = [
         "SpectrumID",
         "MSLevel",
@@ -25,8 +25,9 @@ def ms_dataframe(ms_path: str) -> None:
         "AcquisitionDateTime",
     ]
 
-    def parse_mzml(file_name: str, file_columns: list):
+    def parse_mzml(file_name: str, file_columns: list, id_only: bool = False):
         info = []
+        psm_part_info = []
         exp = MSExperiment()
         acquisition_datetime = exp.getDateTime().get()
         MzMLFile().load(file_name, exp)
@@ -54,10 +55,22 @@ def ms_dataframe(ms_path: str) -> None:
                 charge_state = spectrum.getPrecursors()[0].getCharge()
                 emz = spectrum.getPrecursors()[0].getMZ() if spectrum.getPrecursors()[0].getMZ() else None
                 info_list = [id_, MSLevel, charge_state, peak_per_ms, bpc, tic, rt, emz, acquisition_datetime]
+                mz_array = peaks_tuple[0]
+                intensity_array = peaks_tuple[1]
             else:
                 info_list = [id_, MSLevel, None, None, None, None, rt, None, acquisition_datetime]
 
+            if id_only and MSLevel == 2:
+                psm_part_info.append([re.findall(r"[scan|spectrum]=(\d+)", id_)[0], MSLevel, mz_array, intensity_array])
             info.append(info_list)
+
+        if id_only and len(psm_part_info) > 0:
+            pd.DataFrame(psm_part_info, columns=["scan", "ms_level", "mz", "intensity"]).to_csv(
+                f"{Path(ms_path).stem}_spectrum_df.csv",
+                mode="w",
+                index=False,
+                header=True,
+            )
 
         return pd.DataFrame(info, columns=file_columns)
 
@@ -139,7 +152,7 @@ def ms_dataframe(ms_path: str) -> None:
     if Path(ms_path).suffix == ".d" and Path(ms_path).is_dir():
         ms_df = parse_bruker_d(ms_path, file_columns)
     elif Path(ms_path).suffix in [".mzML", ".mzml"]:
-        ms_df = parse_mzml(ms_path, file_columns)
+        ms_df = parse_mzml(ms_path, file_columns, id_only)
     else:
         msg = f"Unrecognized or inexistent mass spec file '{ms_path}'"
         raise RuntimeError(msg)
@@ -155,7 +168,8 @@ def ms_dataframe(ms_path: str) -> None:
 
 def main():
     ms_path = sys.argv[1]
-    ms_dataframe(ms_path)
+    id_only = sys.argv[2]
+    ms_dataframe(ms_path, id_only)
 
 
 if __name__ == "__main__":

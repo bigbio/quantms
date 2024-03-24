@@ -58,6 +58,18 @@
                     "description": "Proteomics data acquisition method",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
+                },
+                "id_only": {
+                    "type": "boolean",
+                    "description": "Only perform identification subworkflow.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Only perform identification subworkflow for specific cases."
+                },
+                "export_decoy_psm": {
+                    "type": "boolean",
+                    "description": "Whether export PSM from decoy in final identification results",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Whether export PSM from decoy in final identification results for dda_id subworkflow for specific cases."
                 }
             }
         },
@@ -416,6 +428,12 @@
             "description": "Choose between different rescoring/posterior probability calculation methods and set them up.",
             "default": "",
             "properties": {
+                "skip_rescoring": {
+                    "type": "boolean",
+                    "description": "Skip PSM rescoring steps for specific cases, such as studying pure search engine results and search engine ranks",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
                 "posterior_probabilities": {
                     "type": "string",
                     "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)",
