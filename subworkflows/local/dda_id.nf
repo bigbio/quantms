@@ -8,6 +8,7 @@ include { PERCOLATOR         } from '../../modules/local/openms/thirdparty/perco
 include { FALSEDISCOVERYRATE as FDRIDPEP } from '../../modules/local/openms/falsediscoveryrate/main'
 include { IDPEP                          } from '../../modules/local/openms/idpep/main'
 include { PSMCONVERSION                  } from '../../modules/local/extract_psm/main'
+include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -39,7 +40,7 @@ workflow DDA_ID {
         sage: filename.name.contains('sage')
             return [meta, filename]
         nosage: true
-            return [meta, filename]
+            return [meta, filename, []]
     }.set{ch_id_files_branched}
 
 
@@ -48,9 +49,18 @@ workflow DDA_ID {
     //
     if (params.skip_rescoring == false) {
         if (params.posterior_probabilities == 'percolator') {
-            EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
-            ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)
-            ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
+            if (params.ms2rescore == true) {
+                MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
+                ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
+                EXTRACTPSMFEATURES(MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names))
+                ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat
+                ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
+            } else {
+                EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
+                ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)
+                ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
+            }
+
             PERCOLATOR(ch_id_files_feats)
             ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.version)
             ch_consensus_input = PERCOLATOR.out.id_files_perc
@@ -90,8 +100,6 @@ workflow DDA_ID {
         //
         // Extract PSMs and export parquet format
         //
-        ch_spectrum_data.view()
-        PSMFDRCONTROL.out.id_filtered.view()
         PSMCONVERSION(PSMFDRCONTROL.out.id_filtered.combine(ch_spectrum_data, by: 0))
 
     } else {
