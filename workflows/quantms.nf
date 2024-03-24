@@ -21,7 +21,6 @@ include { DECOYDATABASE } from '../modules/local/openms/decoydatabase/main'
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
-include { DDA_ID } from '../subworkflows/local/dda_id'
 
 
 /*
@@ -104,34 +103,27 @@ workflow QUANTMS {
         ch_versions = ch_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
     }
 
-    if (params.id_only) {
-        DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data)
-        ch_versions = ch_versions.mix(DDA_ID.out.version.ifEmpty(null))
-    } else {
-        TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
-        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
-        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(TMT.out.ch_pmultiqc_consensus)
-        ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
-        ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
-        ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-        LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
-        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
-        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(LFQ.out.ch_pmultiqc_consensus)
-        ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
-        ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
-        ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
+    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
+    ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
+    ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(TMT.out.ch_pmultiqc_consensus)
+    ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
+    ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
 
-        DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
-        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
-        ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
-        ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
-    }
+    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
+    ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
+    ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(LFQ.out.ch_pmultiqc_consensus)
+    ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
+    ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
+
+    DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
+    ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
+    ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
 
     //
     // Collate and save software versions
     //
-    ch_versions
+    DIA.out.versions.mix(LFQ.out.versions).mix(TMT.out.versions).mix(ch_versions)
             .branch {
                 yaml : it.asBoolean()
                 other : true

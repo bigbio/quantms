@@ -15,7 +15,6 @@ process MZMLSTATISTICS {
 
     output:
     path "*_ms_info.tsv", emit: ms_statistics
-    tuple val(meta), path("*_spectrum_df.csv"), emit: spectrum_df
     path "versions.yml", emit: version
     path "*.log", emit: log
 
@@ -25,7 +24,6 @@ process MZMLSTATISTICS {
 
     """
     mzml_statistics.py "${ms_file}" \\
-        $params.id_only \\
         2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml

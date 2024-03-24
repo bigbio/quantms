@@ -54,8 +54,7 @@
                             "body": [
                                 {
                                     "type": "FactSet",
-                                    "facts": [<% out << summary.collect{ k,v -> "{\"title\": \"$k\", \"value\" : \"$v\"}"
-                                        }.join(",\n") %>
+                                    "facts": [<% out << summary.collect{ k,v -> "{\"title\": \"$k\", \"value\" : \"$v\"}"}.join(",\n") %>
                                     ]
                                 }
                             ]
