@@ -43,7 +43,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
     # Precursor Tolerance unit was: ${meta['precursormasstoleranceunit']}
     # Fragment Tolerance unit was: ${meta['fragmentmasstoleranceunit']}
 
-    # Final mas accuracy is '${mass_acc}'
+    # Final mass accuracy is '${mass_acc}'
 
     diann   --lib ${predict_library} \\
             --f ${ms_file} \\
