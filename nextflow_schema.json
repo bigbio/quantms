@@ -434,6 +434,24 @@
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
+                "ms2rescore": {
+                    "type": "boolean",
+                    "description": "Whether performing peptide identification rescoring with LC-MS predictors such as MS²PIP and DeepLC.",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "ms2pip_model": {
+                    "type": "string",
+                    "description": "Which deep learning model to generate feature.",
+                    "fa_icon": "fas fa-font",
+                    "default": "HCD2021"
+                },
+                "feature_generators": {
+                    "type": "string",
+                    "description": "Which feature generator to generate feature.",
+                    "fa_icon": "fas fa-font",
+                    "default": "deeplc,ms2pip"
+                },
                 "posterior_probabilities": {
                     "type": "string",
                     "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)",
