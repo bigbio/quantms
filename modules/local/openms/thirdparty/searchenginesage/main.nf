@@ -50,7 +50,7 @@ process SEARCHENGINESAGE {
         -fragment_tol_unit $meta.fragmentmasstoleranceunit \\
         -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect{ "'${it}'" }.join(" ") } \\
         -variable_modifications ${meta.variablemodifications.tokenize(',').collect{ "'${it}'" }.join(" ") } \\
-        -charge "$params.min_precursor_charge $params.max_precursor_charge" \\
+        -charges "$params.min_precursor_charge $params.max_precursor_charge" \\
         -max_variable_mods $params.max_mods \\
         -isotope_error_range $params.isotope_error_range \\
         ${il_equiv} \\
