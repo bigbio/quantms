@@ -9,6 +9,7 @@ include { FALSEDISCOVERYRATE as FDRIDPEP } from '../../modules/local/openms/fals
 include { IDPEP                          } from '../../modules/local/openms/idpep/main'
 include { PSMCONVERSION                  } from '../../modules/local/extract_psm/main'
 include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
+include { IDSCORESWITCHER                } from '../../modules/local/openms/idscoreswitcher/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -64,10 +65,13 @@ workflow DDA_ID {
             PERCOLATOR(ch_id_files_feats)
             ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.version)
             ch_consensus_input = PERCOLATOR.out.id_files_perc
-        }
-
-
-        if (params.posterior_probabilities != 'percolator') {
+        } else if (params.posterior_probabilities == 'mokapot') {
+            MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
+            ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
+            IDSCORESWITCHER(MS2RESCORE.out.idxml.combine(Channel.value("PEP")))
+            ch_software_versions = ch_software_versions.mix(IDSCORESWITCHER.out.version)
+            ch_consensus_input = IDSCORESWITCHER.out.id_score_switcher.combine(Channel.value("MS:1001491"))
+        } else {
             ch_fdridpep = Channel.empty()
             if (params.search_engines.split(",").size() == 1) {
                 FDRIDPEP(ch_id_files)

@@ -104,7 +104,11 @@ workflow QUANTMS {
         ch_versions = ch_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
     }
 
-    if (params.id_only) {
+    // This rescoring engine currently only is supported in id_only subworkflows via ms2rescore.
+    if (params.id_only | params.posterior_probabilities == "mokapot") {
+        if (params.id_only == false) {
+            log.warn "The mokapot rescoring engine currently only is supported in id_only subworkflow via ms2rescore."
+        }
         DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data)
         ch_versions = ch_versions.mix(DDA_ID.out.version.ifEmpty(null))
     } else {

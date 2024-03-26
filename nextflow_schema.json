@@ -452,12 +452,18 @@
                     "fa_icon": "fas fa-font",
                     "default": "deeplc,ms2pip"
                 },
+                "calibration_set_size": {
+                    "type": "number",
+                    "description": "Percentage of number of calibration set for DeepLC",
+                    "default": 0.15,
+                    "fa_icon": "fas fa-filter"
+                },
                 "posterior_probabilities": {
                     "type": "string",
-                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)",
+                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)\n\n* 'mokapot' = Re-score based on PSM-feature-based semi-supervised learning algorithm introduced by Percolator",
                     "fa_icon": "fas fa-list-ol",
                     "default": "percolator",
-                    "enum": ["percolator", "fit_distributions"]
+                    "enum": ["percolator", "fit_distributions", "mokapot"]
                 },
                 "run_fdr_cutoff": {
                     "type": "number",
