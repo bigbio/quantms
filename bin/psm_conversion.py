@@ -85,6 +85,9 @@ def convert_psm(idxml, spectra_file, export_decoy_psm):
             elif search_engines == "Sage":
                 id_scores = ["Sage:hyperscore: " + str(hit.getScore())]
 
+            if hit.metaValueExists("MS:1001491"):
+                global_qvalue = hit.getMetaValue("MS:1001491")
+
             charge = hit.getCharge()
             peptidoform = hit.getSequence().toString()
             modifications = mods_position(peptidoform)

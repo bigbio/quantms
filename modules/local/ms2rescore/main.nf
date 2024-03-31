@@ -30,7 +30,7 @@ process MS2RESCORE {
 
     // ms2rescore only supports Da unit. https://ms2rescore.readthedocs.io/en/v3.0.2/userguide/configuration/
     if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da')) {
-        ms2_tolerence = 2 * meta['fragmentmasstolerance']
+        ms2_tolerence = meta['fragmentmasstolerance']
     } else {
         log.info "Warning: MS2Rescore only supports Da unit. Set default ms2 tolerance as 0.02!"
         ms2_tolerence = 0.02
@@ -54,7 +54,7 @@ process MS2RESCORE {
 
     stub:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}_ms2rescore"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}_ms2rescore"
 
     """
     touch ${prefix}.idXML

@@ -53,8 +53,16 @@ workflow DDA_ID {
             if (params.ms2rescore == true) {
                 MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
                 ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
-                EXTRACTPSMFEATURES(MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names))
-                ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat
+
+                MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names).branch{ meta, idxml, feature_name ->
+                    sage: idxml.name.contains('sage')
+                        return [meta, idxml]
+                    nosage: true
+                        return [meta, idxml, feature_name]
+                }.set{ch_ms2rescore_branched}
+
+                EXTRACTPSMFEATURES(ch_ms2rescore_branched.nosage)
+                ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat.mix(ch_ms2rescore_branched.sage)
                 ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
             } else {
                 EXTRACTPSMFEATURES(ch_id_files_branched.nosage)

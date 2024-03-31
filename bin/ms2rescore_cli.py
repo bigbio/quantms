@@ -56,6 +56,7 @@ def parse_cli_arguments_to_config(**kwargs):
                     "write_txt": False,
                     "write_flashlfq": False,
                     "rng": kwargs["rng"],
+                    "test_fdr": kwargs["test_fdr"],
                     "max_workers": kwargs["processes"],
                 }
             if value == "percolator":
@@ -136,6 +137,7 @@ def filter_out_artifact_psms(
 @click.option("-l", "--log_level", help="Logging level (default: `info`)", default="info")
 @click.option("-n", "--processes", help="Number of parallel processes available to MS²Rescore", type=int, default=16)
 @click.option("-f", "--fasta_file", help="Path to FASTA file")
+@click.option("-t", "--test_fdr", help="The false-discovery rate threshold at which to evaluate the learned models. (default: 0.05)", default=0.05)
 @click.option(
     "-fg",
     "--feature_generators",
