@@ -56,9 +56,20 @@
                 "acquisition_method": {
                     "type": "string",
                     "description": "Proteomics data acquisition method",
-                    "default": "dda",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
+                },
+                "id_only": {
+                    "type": "boolean",
+                    "description": "Only perform identification subworkflow.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Only perform identification subworkflow for specific cases."
+                },
+                "export_decoy_psm": {
+                    "type": "boolean",
+                    "description": "Whether export PSM from decoy in final identification results",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Whether export PSM from decoy in final identification results for dda_id subworkflow for specific cases."
                 }
             }
         },
@@ -269,7 +280,6 @@
                 "instrument": {
                     "type": "string",
                     "description": "Type of instrument that generated the data. 'low_res' or 'high_res' (default; refers to LCQ and LTQ instruments)",
-                    "default": "high_res",
                     "fa_icon": "fas fa-list-ol"
                 },
                 "protocol": {
@@ -314,6 +324,13 @@
                     "default": 3,
                     "fa_icon": "fas fa-sliders-h"
                 },
+                "min_peaks": {
+                    "type": "integer",
+                    "description": "Minimum number of peaks in the spectrum to be considered for the search engine. Default: 10",
+                    "default": 10,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+
                 "min_pr_mz": {
                     "type": "number",
                     "description": "The minimum precursor m/z for the in silico library generation or library-free search",
@@ -418,6 +435,12 @@
             "description": "Choose between different rescoring/posterior probability calculation methods and set them up.",
             "default": "",
             "properties": {
+                "skip_rescoring": {
+                    "type": "boolean",
+                    "description": "Skip PSM rescoring steps for specific cases, such as studying pure search engine results and search engine ranks",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
                 "posterior_probabilities": {
                     "type": "string",
                     "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)",
@@ -428,7 +451,7 @@
                 "run_fdr_cutoff": {
                     "type": "number",
                     "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
-                    "default": 0.01,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter"
                 },
                 "idfilter_debug": {
@@ -624,10 +647,10 @@
                     "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
                 },
                 "reference_channel": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "The reference channel, e.g. for calculating ratios.",
                     "fa_icon": "fas fa-list-ol",
-                    "default": 126
+                    "default": "126"
                 },
                 "iso_debug": {
                     "type": "integer",
@@ -836,21 +859,21 @@
                 "feature_with_id_min_score": {
                     "type": "number",
                     "description": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter).",
-                    "default": 0.0,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
                 "feature_without_id_min_score": {
                     "type": "number",
                     "description": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter).",
-                    "default": 0.0,
+                    "default": 0.75,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
                 "lfq_intensity_threshold": {
                     "type": "number",
                     "description": "The minimum intensity for a feature to be considered for quantification. (default: '10000')",
-                    "default": 10000,
+                    "default": 1000,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum intensity for a feature to be considered for quantification. (default: '10000')"
                 },
@@ -900,7 +923,7 @@
                     "description": "Set the scan window radius to a specific value",
                     "fa_icon": "fas fa-filter",
                     "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
-                    "default": 7
+                    "default": 8
                 },
                 "min_corr": {
                     "type": "number",
@@ -940,6 +963,20 @@
                     "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
                     "hidden": false
                 },
+                "skip_preliminary_analysis": {
+                    "type": "boolean",
+                    "description": "Skip the preliminary analysis step, thus use the passed spectral library as-is insted of generating a local concensus library.",
+                    "fa_icon": "fas fa-forward",
+                    "default": false,
+                    "hidden": false
+                },
+                "empirical_assembly_log": {
+                    "type": "string",
+                    "description": "The log file for the empirical assembly, Only used if `--skip_preliminary_analysis` is set to `true` and `--diann_speclib` is passed. If passed, will use that log file to carry out the DIA-NN search, instead of running a preliminary search.",
+                    "fa_icon": "fas fa-file",
+                    "help_text": "If passed, will use that log file to carry out the DIA-NN search, instead of predicting one from the fasta file.",
+                    "hidden": false
+                },
                 "diann_debug": {
                     "type": "integer",
                     "description": "Debug level",
@@ -953,6 +990,19 @@
                     "description": "Enable cross-run normalization between runs by diann.",
                     "default": true,
                     "fa_icon": "far fa-check-square"
+                },
+                "random_preanalysis": {
+                    "type": "boolean",
+                    "description": "Enable random selection of spectrum files to generate empirical library.",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "empirical_assembly_ms_n": {
+                    "type": "integer",
+                    "description": "The number of randomly selected spectrum files.",
+                    "default": 200,
+                    "fa_icon": "fas fa-filter",
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -1154,7 +1204,7 @@
                 "max_memory": {
                     "type": "string",
                     "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
+                    "default": "128 GB",
                     "fa_icon": "fas fa-memory",
                     "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "hidden": true,
@@ -1163,7 +1213,7 @@
                 "max_time": {
                     "type": "string",
                     "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
+                    "default": "10d",
                     "fa_icon": "far fa-clock",
                     "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "hidden": true,

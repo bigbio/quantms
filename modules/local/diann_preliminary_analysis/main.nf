@@ -13,6 +13,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
     path "*.quant", emit: diann_quant
     tuple val(meta), path("*_diann.log"), emit: log
     path "versions.yml", emit: version
+    path(ms_file), emit: preliminary_ms_file
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,6 +42,8 @@ process DIANN_PRELIMINARY_ANALYSIS {
     # Fragment Tolerance value was: ${meta['fragmentmasstolerance']}
     # Precursor Tolerance unit was: ${meta['precursormasstoleranceunit']}
     # Fragment Tolerance unit was: ${meta['fragmentmasstoleranceunit']}
+
+    # Final mass accuracy is '${mass_acc}'
 
     diann   --lib ${predict_library} \\
             --f ${ms_file} \\

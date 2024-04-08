@@ -32,7 +32,7 @@ process SEARCHENGINEMSGF {
     if (meta.enzyme == 'Trypsin') enzyme = 'Trypsin/P'
     else if (meta.enzyme == 'Arg-C') enzyme = 'Arg-C/P'
     else if (meta.enzyme == 'Asp-N') enzyme = 'Asp-N/B'
-    else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin'
+    else if (meta.enzyme == 'Chymotrypsin') enzyme = 'Chymotrypsin/P'
     else if (meta.enzyme == 'Lys-C') enzyme = 'Lys-C/P'
 
     if (enzyme.toLowerCase() == "unspecific cleavage") {
@@ -49,9 +49,11 @@ process SEARCHENGINEMSGF {
     }
 
     num_enzyme_termini = ""
+    max_missed_cleavages = "-max_missed_cleavages ${params.allowed_missed_cleavages}"
     if (meta.enzyme == "unspecific cleavage")
     {
         num_enzyme_termini = "none"
+        max_missed_cleavages = ""
     }
     else if (params.num_enzyme_termini == "fully")
     {
@@ -75,7 +77,7 @@ process SEARCHENGINEMSGF {
         -max_precursor_charge $params.max_precursor_charge \\
         -min_peptide_length $params.min_peptide_length \\
         -max_peptide_length $params.max_peptide_length \\
-        -max_missed_cleavages $params.allowed_missed_cleavages \\
+        ${max_missed_cleavages} \\
         -isotope_error_range $params.isotope_error_range \\
         -enzyme "${enzyme}" \\
         -tryptic ${msgf_num_enzyme_termini} \\
