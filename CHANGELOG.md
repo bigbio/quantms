@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#365](https://github.com/bigbio/quantms/pull/365) Updated sdrf-pipelines==0.0.26
 - [#359](https://github.com/bigbio/quantms/pull/359) Updated pmultiqc==0.0.25
 
-
 ### `Fixed`
 
 - [#357](https://github.com/bigbio/quantms/pull/357) Chymotrypsin -> Chymotrypsin/P in MSGF+
@@ -151,11 +150,11 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `thermorawfileparser` | 1.3.4      |
 | `comet`               | 2021010    |
 | `msgf+`               | 2022.01.07 |
-| `openms`              | 2.9.1      |
-| `sdrf-pipelines`      | 0.0.22     |
+| `openms`              | 3.1.0      |
+| `sdrf-pipelines`      | 0.0.26     |
 | `percolator`          | 3.5        |
-| `pmultiqc`            | 0.0.11     |
+| `pmultiqc`            | 0.0.24     |
 | `luciphor`            | 2020_04_03 |
 | `dia-nn`              | 1.8.1      |
-| `msstats`             | 4.2.0      |
-| `msstatstmt`          | 2.2.0      |
+| `msstats`             | 4.10.0     |
+| `msstatstmt`          | 2.10.0     |
