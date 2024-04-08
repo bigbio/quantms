@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#365](https://github.com/bigbio/quantms/pull/365) Updated sdrf-pipelines==0.0.26
 - [#359](https://github.com/bigbio/quantms/pull/359) Updated pmultiqc==0.0.25
 
-
 ### `Fixed`
 
 - [#357](https://github.com/bigbio/quantms/pull/357) Chymotrypsin -> Chymotrypsin/P in MSGF+
