@@ -828,6 +828,13 @@
                     "description": "Export the results in mzTab format.",
                     "default": true,
                     "fa_icon": "fas fa-check-square"
+                },
+                "protein_quant_debug": {
+                    "type": "integer",
+                    "description": "Debug level for the protein quantification step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-braille"
