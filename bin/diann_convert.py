@@ -224,7 +224,7 @@ def compute_mass_modified_peptide(peptide_seq: str) -> float:
         if aa in aa_mass and not_mod:
             aa = aa_mass[aa]
         elif aa not in ['G','A','V','L','I','F','M','P','W','S','C','T','Y','N','Q','D','E','K','R','H'] and not_mod and aa != ")":
-            aa = "X[18.0105644669]" # 17.003288 + 1.00727646688
+            logger.info(f"Unknown amino acid with mass not known:{aa}")
         peptide_parts.append(aa)
     new_peptide_seq = ''.join(peptide_parts)
     mass = AASequence.fromString(new_peptide_seq).getMonoWeight()
