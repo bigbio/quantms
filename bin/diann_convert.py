@@ -194,6 +194,42 @@ def get_exp_design_dfs(exp_design_file):
 
     return s_DataFrame, f_table
 
+def compute_mass_modified_peptide(peptide_seq: str) -> float:
+    """
+    Function that takes a peptide sequence including modifications and compute the mass using the AASequence class from
+    pyopenms. The notation of a peptidoform for pyopenms is the following:
+
+    if not modifications is present:
+      AVQVHQDTLRTMYFAXR -> AVQVHQDTLRTMYFAX[178.995499]R
+    if modification is present in Methionine:
+      AVQVHQDTLRTM(Oxidation)YFAXR -> AVQVHQDTLRTM(Oxidation)YFAX[178.995499]R
+
+    @param peptide_seq: str, peptide sequence
+    @return: float, mass of the peptide
+    """
+    peptide_parts: List[str] = []
+    not_mod = True
+    aa_mass = {
+        "X": "X[178.98493453312]",  # 196.995499 - 17.003288 - 1.00727646688
+        "U": "U[132.94306553312]",  # 150.95363  - 17.003288 - 1.00727646688
+        "O": "O[237.14773053312]",  # 255.158295 - 17.003288 - 1.00727646688
+    }
+    for aa in peptide_seq:
+        # Check if the letter is in aminoacid
+        if aa == "(":
+            not_mod = False
+        elif aa == ")":
+            not_mod = True
+        # Check aminoacid letter
+        if aa in aa_mass and not_mod:
+            aa = aa_mass[aa]
+        elif aa not in ['G','A','V','L','I','F','M','P','W','S','C','T','Y','N','Q','D','E','K','R','H'] and not_mod and aa != ")":
+            aa = aa+"[0.0000]"
+        peptide_parts.append(aa)
+    new_peptide_seq = ''.join(peptide_parts)
+    mass = AASequence.fromString(new_peptide_seq).getMonoWeight()
+    logger.debug(new_peptide_seq + ":" + str(mass))
+    return mass
 
 class DiannDirectory:
     def __init__(self, base_path, diann_version_file):
@@ -348,7 +384,7 @@ class DiannDirectory:
         logger.debug("Calculating Precursor.Mz")
         # Making the map is 10x faster, and includes the mass of
         # the modification. with respect to the previous implementation.
-        uniq_masses = {k: AASequence.fromString(k).getMonoWeight() for k in report["Modified.Sequence"].unique()}
+        uniq_masses = {k: compute_mass_modified_peptide(k) for k in report["Modified.Sequence"].unique()}
         mass_vector = report["Modified.Sequence"].map(uniq_masses)
         report["Calculate.Precursor.Mz"] = (mass_vector + (PROTON_MASS_U * report["Precursor.Charge"])) / report[
             "Precursor.Charge"
