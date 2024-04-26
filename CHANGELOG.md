@@ -3,17 +3,36 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.3.0dev] nfcore/quantms - [TBD] - Vaduz
+## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
 ### `Added`
 
+- [#335](https://github.com/bigbio/quantms/pull/335) (Performance improvement) Improvements in DIA pipeline to use random/subset files for library search
+- [#351](https://github.com/bigbio/quantms/pull/351) Identification workflow for DDA data
+
 ### `Changed`
 
+- [#365](https://github.com/bigbio/quantms/pull/365) Updated sdrf-pipelines==0.0.26
+- [#359](https://github.com/bigbio/quantms/pull/359) Updated pmultiqc==0.0.25
+
 ### `Fixed`
+
+- [#357](https://github.com/bigbio/quantms/pull/357) Chymotrypsin -> Chymotrypsin/P in MSGF+
+- [#355](https://github.com/bigbio/quantms/pull/355) Fixes bin/diann_convert.py
+- [#316](https://github.com/bigbio/quantms/pull/316) Fixing MSGF+ error
 
 ### `Dependencies`
 
 ### `Parameters`
+
+- id_only: Only perform identification, no quantification
+- min_peaks: Minimum number of peaks in a spectrum to be considered for search
+- export_decoy_psm: Export decoy PSMs
+- skip_rescoring: Skip rescoring
+- skip_preliminary_analysis: Skip preliminary analysis in DIA-NN
+- empirical_assembly_log: Path to the empirical assembly log file
+- random_preanalysis: Use random/subset files for library search
+- empirical_assembly_ms_n: Number of MS runs to use for empirical assembly
 
 ### `Deprecations`
 
@@ -131,11 +150,11 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `thermorawfileparser` | 1.3.4      |
 | `comet`               | 2021010    |
 | `msgf+`               | 2022.01.07 |
-| `openms`              | 2.9.1      |
-| `sdrf-pipelines`      | 0.0.22     |
+| `openms`              | 3.1.0      |
+| `sdrf-pipelines`      | 0.0.26     |
 | `percolator`          | 3.5        |
-| `pmultiqc`            | 0.0.11     |
+| `pmultiqc`            | 0.0.24     |
 | `luciphor`            | 2020_04_03 |
 | `dia-nn`              | 1.8.1      |
-| `msstats`             | 4.2.0      |
-| `msstatstmt`          | 2.2.0      |
+| `msstats`             | 4.10.0     |
+| `msstatstmt`          | 2.10.0     |
