@@ -12,7 +12,7 @@ include { IDPEP                          } from '../../modules/local/openms/idpe
 include { PSMCONVERSION                  } from '../../modules/local/extract_psm/main'
 include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
 include { IDSCORESWITCHER                } from '../../modules/local/openms/idscoreswitcher/main'
-include { EXTRACT_SAMPLE                 } from '../../modules/local/extract_sample/main'
+include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -81,7 +81,7 @@ workflow DDA_ID {
                 ch_consensus_input = PERCOLATOR.out.id_files_perc
             } else if (params.rescore_range == "by_sample") {
                 // Sample map
-                EXTRACT_SAMPLE(ch_expdesign)
+                GETSAMPLE(ch_expdesign)
                 ch_expdesign_sample = EXTRACT_SAMPLE.out.ch_expdesign_sample
                 ch_expdesign_sample.splitCsv(header: true, sep: '\t')
                     .map { get_sample_map(it) }.set{ sample_map_idv }
