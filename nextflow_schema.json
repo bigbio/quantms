@@ -447,6 +447,13 @@
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
+                "rescore_range": {
+                    "type": "string",
+                    "description": "Rescoring for independent run, Sample or whole experiments",
+                    "fa_icon": "fas fa-font",
+                    "default": "independent_run",
+                    "enum": ["independent_run", "by_sample", "by_project"]
+                },
                 "ms2pip_model": {
                     "type": "string",
                     "description": "Which deep learning model to generate feature.",
