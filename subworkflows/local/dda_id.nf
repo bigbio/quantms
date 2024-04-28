@@ -112,7 +112,6 @@ workflow DDA_ID {
                 IDRIPPER.out.meta.first().combine(IDRIPPER.out.id_rippers.flatten())
                     .map{ [comvert_exp_meta(it[0], "mzml_id", it[1], ""), it[1], "MS:1001491"] }
                     .set{ ch_consensus_input }
-                ch_consensus_input.view()
                 ch_software_versions = ch_software_versions.mix(IDRIPPER.out.version)
 
             } else if (params.rescore_range == "by_project"){
