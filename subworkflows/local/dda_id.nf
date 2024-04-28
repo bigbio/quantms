@@ -89,7 +89,7 @@ workflow DDA_ID {
                 sample_map = sample_map_idv.collect().map{ all_sample_map( it ) }
 
                 // Group by search_engines and convert meta
-                 ch_id_files_feats.combine( sample_map ).branch{ meta, filename, sample_map  ->
+                ch_id_files_feats.combine( sample_map ).branch{ meta, filename, sample_map  ->
                     sage: filename.name.contains('sage')
                         return [comvert_exp_meta(meta, "sample_id", filename, sample_map), filename]
                     msgf: filename.name.contains('msgf')
