@@ -195,7 +195,7 @@ workflow DDA_ID {
 }
 
 // Function to group by mzML/sample/experiment
-def comvert_exp_meta(Map meta, value, file_name, sample_map) {
+def convert_exp_meta(Map meta, value, file_name, sample_map) {
     def exp_meta = [:]
 
     if (value == "experiment_id") {
