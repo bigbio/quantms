@@ -91,11 +91,11 @@ workflow DDA_ID {
                 // Group by search_engines and convert meta
                 ch_id_files_feats.combine( sample_map ).branch{ meta, filename, sample_map  ->
                     sage: filename.name.contains('sage')
-                        return [comvert_exp_meta(meta, "sample_id", filename, sample_map), filename]
+                        return [convert_exp_meta(meta, "sample_id", filename, sample_map), filename]
                     msgf: filename.name.contains('msgf')
-                        return [comvert_exp_meta(meta, "sample_id", filename, sample_map), filename]
+                        return [convert_exp_meta(meta, "sample_id", filename, sample_map), filename]
                     comet: filename.name.contains('comet')
-                        return [comvert_exp_meta(meta, "sample_id", filename, sample_map), filename]
+                        return [convert_exp_meta(meta, "sample_id", filename, sample_map), filename]
                 }.set{ch_id_files_feat_branched}
 
                 // IDMERGER for samples group
@@ -110,7 +110,7 @@ workflow DDA_ID {
                 // Currently only ID runs on exactly one mzML file are supported in CONSENSUSID. Split idXML by runs
                 IDRIPPER(PERCOLATOR.out.id_files_perc)
                 IDRIPPER.out.meta.first().combine(IDRIPPER.out.id_rippers.flatten())
-                    .map{ [comvert_exp_meta(it[0], "mzml_id", it[1], ""), it[1], "MS:1001491"] }
+                    .map{ [convert_exp_meta(it[0], "mzml_id", it[1], ""), it[1], "MS:1001491"] }
                     .set{ ch_consensus_input }
                 ch_software_versions = ch_software_versions.mix(IDRIPPER.out.version)
 
@@ -118,11 +118,11 @@ workflow DDA_ID {
                 // Split ch_id_files_feats by search_engines
                 ch_id_files_feats.branch{ meta, filename ->
                     sage: filename.name.contains('sage')
-                        return [comvert_exp_meta(meta, "experiment_id", filename, ""), filename]
+                        return [convert_exp_meta(meta, "experiment_id", filename, ""), filename]
                     msgf: filename.name.contains('msgf')
-                        return [comvert_exp_meta(meta, "experiment_id", filename, ""), filename]
+                        return [convert_exp_meta(meta, "experiment_id", filename, ""), filename]
                     comet: filename.name.contains('comet')
-                        return [comvert_exp_meta(meta, "experiment_id", filename, ""), filename]
+                        return [convert_exp_meta(meta, "experiment_id", filename, ""), filename]
                 }.set{ch_id_files_feat_branched}
 
                 // IDMERGER for whole experiments
@@ -137,7 +137,7 @@ workflow DDA_ID {
                 // Currently only ID runs on exactly one mzML file are supported in CONSENSUSID. Split idXML by runs
                 IDRIPPER(PERCOLATOR.out.id_files_perc)
                 IDRIPPER.out.meta.first().combine(IDRIPPER.out.id_rippers.flatten())
-                    .map{ [comvert_exp_meta(it[0], "mzml_id", it[1], ""), it[1], "MS:1001491"] }
+                    .map{ [convert_exp_meta(it[0], "mzml_id", it[1], ""), it[1], "MS:1001491"] }
                     .set{ ch_consensus_input }
                 ch_software_versions = ch_software_versions.mix(IDRIPPER.out.version)
 
@@ -244,7 +244,7 @@ def convert_exp_meta(Map meta, value, file_name, sample_map) {
     exp_meta.fragmentmasstoleranceunit  = meta.fragmentmasstoleranceunit
     exp_meta.enzyme                     = meta.enzyme
     exp_meta.acquisition_method         = meta.acquisition_method
-    print(exp_meta)
+
     return exp_meta
 }
 

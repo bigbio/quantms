@@ -20,14 +20,18 @@ process EXTRACTPSMFEATURES {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
-    def feature = (params.ms2rescore == true) && (params.id_only == true) ? "-extra ${extra_feat}" : ""
+
+    feature = ""
+    if (params.ms2rescore && params.id_only) {
+        feature = "-extra \$(awk 'NR > 1 && \$1 !~ /psm_file/ {printf \"%s \", \$2}' ${extra_feat})"
+    }
 
     """
     PSMFeatureExtractor \\
         -in ${id_file} \\
         -out ${id_file.baseName}_feat.idXML \\
         -threads $task.cpus \\
-        -extra ${feature} \\
+        ${feature} \\
         $args \\
         2>&1 | tee ${id_file.baseName}_extract_psm_feature.log
 

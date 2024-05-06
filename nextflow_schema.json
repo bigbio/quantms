@@ -485,6 +485,13 @@
                     "default": 0.1,
                     "fa_icon": "fas fa-filter"
                 },
+                "extractpsmfeature_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the PSMFeatureExtractor step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "hidden": true,
+                    "default": 0
+                },
                 "idfilter_debug": {
                     "type": "integer",
                     "description": "Debug level when running the IDFilter step. Increase for verbose logging",
