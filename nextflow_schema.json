@@ -522,12 +522,12 @@
             "description": "In the following you can find help for the Percolator specific options that are only used if [`--posterior_probabilities`](#posterior_probabilities) was set to 'percolator'.\nNote that there are currently some restrictions to the original options of Percolator:\n\n* no Percolator protein FDR possible (currently OpenMS' FDR is used on protein level)\n* no support for separate target and decoy databases (i.e. no min-max q-value calculation or target-decoy competition strategy)\n* no support for combined or experiment-wide peptide re-scoring. Currently search results per input file are submitted to Percolator independently.",
             "default": "",
             "properties": {
-                "FDR_level": {
+                "fdr_level": {
                     "type": "string",
-                    "description": "Calculate FDR on PSM ('psm-level-fdrs') or peptide level ('peptide-level-fdrs')?",
-                    "default": "peptide-level-fdrs",
+                    "description": "Calculate FDR on PSM ('psm_level_fdrs') or peptide level ('peptide_level_fdrs')?",
+                    "default": "peptide_level_fdrs",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": ["peptide-level-fdrs", "psm-level-fdrs"]
+                    "enum": ["peptide_level_fdrs", "psm_level_fdrs"]
                 },
                 "train_FDR": {
                     "type": "number",
