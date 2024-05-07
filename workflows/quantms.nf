@@ -109,7 +109,7 @@ workflow QUANTMS {
         if (params.id_only == false) {
             log.warn "The mokapot rescoring engine currently only is supported in id_only subworkflow via ms2rescore."
         }
-        if (params.posterior_probabilities == "mokapot" && params.FDR_level == "peptide-level-fdrs") {
+        if (params.posterior_probabilities == "mokapot" && params.fdr_level == "peptide_level_fdrs") {
                 log.warn "The rescoring engine is set to mokapot. This rescoring engine currently only supports psm-level-fdr via ms2rescore."
         }
         DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data, CREATE_INPUT_CHANNEL.out.ch_expdesign)
