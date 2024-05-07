@@ -21,7 +21,7 @@ workflow PSMRESCORING {
             sage: filename.name.contains('sage')
                 return [meta, filename]
             nosage: true
-                return [meta, filename]
+                return [meta, filename, []]
         }.set{ch_id_files_branched}
         EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
         ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)

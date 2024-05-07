@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import numpy as np
 import pyopenms as oms
 import pandas as pd
@@ -63,8 +64,8 @@ def convert_psm(idxml, spectra_file, export_decoy_psm):
 
         if isinstance(spectra_df, pd.DataFrame):
             spectra = spectra_df[spectra_df["scan"] == scan_number]
-            mz_array = spectra["mz"].values[0]
-            intensity_array = spectra["intensity"].values[0]
+            mz_array = spectra["mz"].values
+            intensity_array = spectra["intensity"].values
             num_peaks = len(mz_array)
 
         for hit in peptide_id.getHits():
@@ -83,6 +84,9 @@ def convert_psm(idxml, spectra_file, export_decoy_psm):
                 id_scores = ["MS-GF:SpecEValue: " + str(hit.getScore())]
             elif search_engines == "Sage":
                 id_scores = ["Sage:hyperscore: " + str(hit.getScore())]
+
+            if hit.metaValueExists("MS:1001491"):
+                global_qvalue = hit.getMetaValue("MS:1001491")
 
             charge = hit.getCharge()
             peptidoform = hit.getSequence().toString()

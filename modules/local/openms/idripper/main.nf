@@ -1,6 +1,6 @@
-process CONSENSUSID {
+process IDRIPPER {
     tag "$meta.mzml_id"
-    label 'process_single'
+    label 'process_medium'
     label 'openms'
 
     conda "bioconda::openms-thirdparty=3.1.0"
@@ -12,7 +12,9 @@ process CONSENSUSID {
     tuple val(meta), path(id_file), val(qval_score)
 
     output:
-    tuple val(meta), path("${meta.mzml_id}_consensus.idXML"), emit: consensusids
+    val(meta), emit: meta
+    path("*.idXML"), emit: id_rippers
+    val("MS:1001491"), emit: qval_score
     path "versions.yml", emit: version
     path "*.log", emit: log
 
@@ -20,22 +22,32 @@ process CONSENSUSID {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
+    if (id_file.baseName.contains('sage')){
+        pattern = "_sage_perc.idXML"
+    } else if (id_file.baseName.contains('comet')){
+        pattern = "_comet_perc.idXML"
+    } else {
+        pattern = "_msgf_perc.idXML"
+    }
+
     """
-    ConsensusID \\
+    IDRipper \\
         -in ${id_file} \\
-        -out ${meta.mzml_id}_consensus.idXML \\
-        -per_spectrum \\
         -threads $task.cpus \\
-        -algorithm $params.consensusid_algorithm \\
-        -filter:min_support $params.min_consensus_support \\
-        -filter:considered_hits $params.consensusid_considered_top_hits \\
-        -debug $params.consensusid_debug \\
+        -out ./ \\
+        -split_ident_runs \\
         $args \\
-        2>&1 | tee ${meta.mzml_id}_consensusID.log
+        2>&1 | tee ${prefix}_idripper.log
+
+    for i in `ls | grep -v \"_perc.idXML\$\" | grep \".idXML\$\"`
+    do
+        mv \$i `ls \"\$i\" |awk -F \".\" \'{print \$1\"${pattern}\"}\'`
+    done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ConsensusID: \$(ConsensusID 2>&1  | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
+        IDRipper: \$(IDRipper 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
     END_VERSIONS
     """
 }
+//

@@ -441,18 +441,56 @@
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
+                "ms2rescore": {
+                    "type": "boolean",
+                    "description": "Whether performing peptide identification rescoring with LC-MS predictors such as MS²PIP and DeepLC.",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "rescore_range": {
+                    "type": "string",
+                    "description": "Rescoring for independent run, Sample or whole experiments",
+                    "fa_icon": "fas fa-font",
+                    "default": "independent_run",
+                    "enum": ["independent_run", "by_sample", "by_project"]
+                },
+                "ms2pip_model": {
+                    "type": "string",
+                    "description": "Which deep learning model to generate feature.",
+                    "fa_icon": "fas fa-font",
+                    "default": "HCD2021"
+                },
+                "feature_generators": {
+                    "type": "string",
+                    "description": "Which feature generator to generate feature.",
+                    "fa_icon": "fas fa-font",
+                    "default": "deeplc,ms2pip"
+                },
+                "calibration_set_size": {
+                    "type": "number",
+                    "description": "Percentage of number of calibration set for DeepLC",
+                    "default": 0.15,
+                    "fa_icon": "fas fa-filter"
+                },
                 "posterior_probabilities": {
                     "type": "string",
-                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)",
+                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)\n\n* 'mokapot' = Re-score based on PSM-feature-based semi-supervised learning algorithm introduced by Percolator",
                     "fa_icon": "fas fa-list-ol",
                     "default": "percolator",
-                    "enum": ["percolator", "fit_distributions"]
+                    "enum": ["percolator", "fit_distributions", "mokapot"]
                 },
                 "run_fdr_cutoff": {
                     "type": "number",
                     "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
                     "default": 0.1,
                     "fa_icon": "fas fa-filter"
+                },
+                "extractpsmfeature_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the PSMFeatureExtractor step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "hidden": true,
+                    "default": 0
                 },
                 "idfilter_debug": {
                     "type": "integer",
@@ -484,12 +522,12 @@
             "description": "In the following you can find help for the Percolator specific options that are only used if [`--posterior_probabilities`](#posterior_probabilities) was set to 'percolator'.\nNote that there are currently some restrictions to the original options of Percolator:\n\n* no Percolator protein FDR possible (currently OpenMS' FDR is used on protein level)\n* no support for separate target and decoy databases (i.e. no min-max q-value calculation or target-decoy competition strategy)\n* no support for combined or experiment-wide peptide re-scoring. Currently search results per input file are submitted to Percolator independently.",
             "default": "",
             "properties": {
-                "FDR_level": {
+                "fdr_level": {
                     "type": "string",
-                    "description": "Calculate FDR on PSM ('psm-level-fdrs') or peptide level ('peptide-level-fdrs')?",
-                    "default": "peptide-level-fdrs",
+                    "description": "Calculate FDR on PSM ('psm_level_fdrs') or peptide level ('peptide_level_fdrs')?",
+                    "default": "peptide_level_fdrs",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": ["peptide-level-fdrs", "psm-level-fdrs"]
+                    "enum": ["peptide_level_fdrs", "psm_level_fdrs"]
                 },
                 "train_FDR": {
                     "type": "number",
