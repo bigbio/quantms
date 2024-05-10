@@ -36,6 +36,12 @@ process MS2RESCORE {
         ms2_tolerence = 0.02
     }
 
+    if (params.decoy_string_position == "prefix") {
+        decoy_pattern = "^${params.decoy_string}"
+    } else {
+        decoy_pattern = "${params.decoy_string}\$"
+    }
+
     """
     ms2rescore_cli.py \\
         --psm_file $idxml \\
@@ -43,6 +49,7 @@ process MS2RESCORE {
         --ms2_tolerance $ms2_tolerence \\
         --output_path ${idxml.baseName}_ms2rescore.idXML \\
         --processes $task.cpus \\
+        --id_decoy_pattern $decoy_pattern \\
         $args \\
         2>&1 | tee ${meta.mzml_id}_ms2rescore.log
 
