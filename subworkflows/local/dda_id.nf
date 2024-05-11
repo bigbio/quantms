@@ -13,6 +13,7 @@ include { PSMCONVERSION                  } from '../../modules/local/extract_psm
 include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
 include { IDSCORESWITCHER                } from '../../modules/local/openms/idscoreswitcher/main'
 include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
+include { SAGEFEATURE                    } from '../../modules/local/add_sage_feat/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -61,12 +62,15 @@ workflow DDA_ID {
                 ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
 
                 MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names).branch{ meta, idxml, feature_name ->
-                    feature: true
+                    sage: idxml.name.contains('sage')
+                        return [meta, idxml, feature_name]
+                    nosage: true
                         return [meta, idxml, feature_name]
                 }.set{ch_ms2rescore_branched}
 
-                EXTRACTPSMFEATURES(ch_ms2rescore_branched.feature)
-                ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat
+                EXTRACTPSMFEATURES(ch_ms2rescore_branched.nosage)
+                SAGEFEATURE(ch_ms2rescore_branched.sage)
+                ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat.mix(SAGEFEATURE.out.id_files_feat)
                 ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
             } else {
                 EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
