@@ -2,7 +2,7 @@ process MS2RESCORE {
     tag "$meta.mzml_id"
     label 'process_high'
 
-    conda "bioconda::ms2rescore=3.0.2"
+    conda "bioconda::ms2rescore=3.0.2 bioconda::psm-utils=0.8.0 conda-forge::pydantic=1.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ms2rescore:3.0.2--pyhdfd78af_0':
         'biocontainers/ms2rescore:3.0.2--pyhdfd78af_0' }"
