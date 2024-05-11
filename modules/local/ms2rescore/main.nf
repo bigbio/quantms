@@ -55,7 +55,7 @@ process MS2RESCORE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MS²Rescore: \$(echo \$(ms2rescore --version 2>&1) | grep -oP 'MS²Rescore \\(v\\K[^\\)]+' ))
+        MS2Rescore: \$(echo \$(ms2rescore --version 2>&1) | grep -oP 'MS²Rescore \\(v\\K[^\\)]+' )
     END_VERSIONS
     """
 
@@ -68,7 +68,7 @@ process MS2RESCORE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MS²Rescore: \$(echo \$(ms2rescore --version 2>&1) | grep -oP 'MS²Rescore \\(v\\K[^\\)]+' ))
+        MS2Rescore: \$(echo \$(ms2rescore --version 2>&1) | grep -oP 'MS²Rescore \\(v\\K[^\\)]+' )
     END_VERSIONS
     """
 }
