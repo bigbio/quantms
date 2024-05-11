@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Written by Jonas Scheid under the MIT license
 
+
 import sys
 import click
 import importlib.resources
