@@ -2,11 +2,11 @@ process PSMCONVERSION {
     tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda "bioconda::pyopenms=3.1.0"
+    conda "bioconda::pyopenms=2.8.0"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pyopenms:3.1.0--py39h9b8898c_0"
+        container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
     } else {
-        container "biocontainers/pyopenms:3.1.0--py39h9b8898c_0"
+        container "biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
     }
 
     input:
