@@ -21,7 +21,7 @@ process PMULTIQC {
 
     script:
     def args = task.ext.args ?: ''
-    def disable_pmultiqc = (params.enable_pmultiqc) && (params.export_mztab) ? "" : "--disable_plugin"
+    def disable_pmultiqc = (params.enable_pmultiqc) && (params.export_mztab) && (!params.skip_raw_conversion) ? "" : "--disable_plugin"
     def disable_table_plots = (params.enable_pmultiqc) && (params.skip_table_plots) ? "--disable_table" : ""
     def disable_idxml_index = (params.enable_pmultiqc) && (params.pmultiqc_idxml_skip) ? "--ignored_idxml" : ""
 

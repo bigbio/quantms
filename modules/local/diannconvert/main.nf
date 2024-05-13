@@ -22,7 +22,7 @@ process DIANNCONVERT {
     output:
     path "*msstats_in.csv", emit: out_msstats
     path "*triqler_in.tsv", emit: out_triqler
-    path "*.mzTab", emit: out_mztab
+    path "*.mzTab", emit: out_mztab optional true
     path "*.log", emit: log
     path "versions.yml", emit: version
 
@@ -39,6 +39,7 @@ process DIANNCONVERT {
         --folder ./ \\
         --exp_design ${exp_design} \\
         --diann_version ./version/versions.yml \\
+        --skip_mzTab $params.skip_raw_conversion \\
         --dia_params "${dia_params}" \\
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\

@@ -61,13 +61,23 @@ workflow QUANTMS {
     //
     // SUBWORKFLOW: File preparation
     //
-    FILE_PREPARATION (
-        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
-    )
+    statistics = Channel.empty()
+    ch_raw_input = Channel.empty()
+    if (params.skip_raw_conversion == false) {
+        FILE_PREPARATION (
+            CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
+        )
+        ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
+        statistics = FILE_PREPARATION.out.statistics
+    } else {
+        ch_raw_input = CREATE_INPUT_CHANNEL.out.ch_meta_config_dia
+        if (ch_raw_input.ifEmpty(true)) {
+            exit 1, 'Allows skipping of raw data conversions in the DIA workflow only!'
+        }
+    }
 
-    ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
 
-    FILE_PREPARATION.out.results
+    ch_raw_input.mix(FILE_PREPARATION.out.results)
             .branch {
                 dia: it[0].acquisition_method.contains("dia")
                 iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
@@ -131,7 +141,7 @@ workflow QUANTMS {
         ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
         ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
-        DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
+        DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, statistics)
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
         ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
         ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
@@ -161,7 +171,9 @@ workflow QUANTMS {
     ch_methods_description                = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_multiqc_config)
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files                      = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)
+    if (!params.skip_raw_conversion) {
+        ch_multiqc_files                      = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)
+    }
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_collated_versions)
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
     ch_multiqc_quantms_logo               = file("$projectDir/assets/nf-core-quantms_logo_light.png")
