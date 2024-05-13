@@ -34,7 +34,7 @@ jobs:
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        test_profile: ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt"]
+        test_profile: ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
         exec_profile: ["docker", "conda"]
         exclude:
           - test_profile: test_dia

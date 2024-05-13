@@ -56,8 +56,8 @@ workflow DIA {
     //
     // MODULE: SILICOLIBRARYGENERATION
     //
-    if (params.diann_speclib != null) {
-        speclib = Channel.fromPath(params.diann_speclib)
+    if (params.diann_speclib != null && params.diann_speclib.toString() != "") {
+        speclib = Channel.from(file(params.diann_speclib, checkIfExists: true))
     } else {
         SILICOLIBRARYGENERATION(ch_searchdb, DIANNCFG.out.diann_cfg)
         speclib = SILICOLIBRARYGENERATION.out.predict_speclib

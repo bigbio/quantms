@@ -13,6 +13,7 @@ include { PSMCONVERSION                  } from '../../modules/local/extract_psm
 include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
 include { IDSCORESWITCHER                } from '../../modules/local/openms/idscoreswitcher/main'
 include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
+include { SAGEFEATURE                    } from '../../modules/local/add_sage_feat/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -48,6 +49,8 @@ workflow DDA_ID {
             return [meta, filename, []]
     }.set{ch_id_files_branched}
 
+    ch_pmultiqc_consensus = Channel.empty()
+    ch_pmultiqc_ids = Channel.empty()
 
     //
     // SUBWORKFLOW: Rescoring
@@ -60,13 +63,14 @@ workflow DDA_ID {
 
                 MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names).branch{ meta, idxml, feature_name ->
                     sage: idxml.name.contains('sage')
-                        return [meta, idxml]
+                        return [meta, idxml, feature_name]
                     nosage: true
                         return [meta, idxml, feature_name]
                 }.set{ch_ms2rescore_branched}
 
                 EXTRACTPSMFEATURES(ch_ms2rescore_branched.nosage)
-                ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat.mix(ch_ms2rescore_branched.sage)
+                SAGEFEATURE(ch_ms2rescore_branched.sage)
+                ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat.mix(SAGEFEATURE.out.id_files_feat)
                 ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
             } else {
                 EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
@@ -143,6 +147,7 @@ workflow DDA_ID {
 
             }
 
+        ch_rescoring_results = ch_consensus_input
 
         } else if (params.posterior_probabilities == 'mokapot') {
             MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
@@ -150,6 +155,7 @@ workflow DDA_ID {
             IDSCORESWITCHER(MS2RESCORE.out.idxml.combine(Channel.value("PEP")))
             ch_software_versions = ch_software_versions.mix(IDSCORESWITCHER.out.version)
             ch_consensus_input = IDSCORESWITCHER.out.id_score_switcher.combine(Channel.value("MS:1001491"))
+            ch_rescoring_results = IDSCORESWITCHER.out.id_files_ForIDPEP
         } else {
             ch_fdridpep = Channel.empty()
             if (params.search_engines.split(",").size() == 1) {
@@ -161,6 +167,7 @@ workflow DDA_ID {
             IDPEP(ch_fdridpep.mix(ch_id_files))
             ch_software_versions = ch_software_versions.mix(IDPEP.out.version)
             ch_consensus_input = IDPEP.out.id_files_ForIDPEP
+            ch_rescoring_results = ch_consensus_input
         }
 
         //
@@ -172,7 +179,9 @@ workflow DDA_ID {
             CONSENSUSID(ch_consensus_input.groupTuple(size: params.search_engines.split(",").size()))
             ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.version.ifEmpty(null))
             ch_psmfdrcontrol = CONSENSUSID.out.consensusids
-            ch_consensus_results = CONSENSUSID.out.consensusids
+            ch_psmfdrcontrol
+                .map { it -> it[1] }
+                .set { ch_pmultiqc_consensus }
         } else {
             ch_psmfdrcontrol = ch_consensus_input
         }
@@ -180,16 +189,20 @@ workflow DDA_ID {
         PSMFDRCONTROL(ch_psmfdrcontrol)
         ch_software_versions = ch_software_versions.mix(PSMFDRCONTROL.out.version.ifEmpty(null))
 
-
         // Extract PSMs and export parquet format
         PSMCONVERSION(PSMFDRCONTROL.out.id_filtered.combine(ch_spectrum_data, by: 0))
 
+        ch_rescoring_results
+            .map { it -> it[1] }
+            .set { ch_pmultiqc_ids }
     } else {
         PSMCONVERSION(ch_id_files.combine(ch_spectrum_data, by: 0))
     }
 
 
     emit:
+    ch_pmultiqc_ids         = ch_pmultiqc_ids
+    ch_pmultiqc_consensus   = ch_pmultiqc_consensus
     version                 = ch_software_versions
 }
 

@@ -1,19 +1,19 @@
-process PSMCONVERSION {
+process SAGEFEATURE {
     tag "$meta.mzml_id"
-    label 'process_medium'
+    label 'process_low'
 
-    conda "bioconda::pyopenms=2.8.0"
+    conda "bioconda::pyopenms=3.1.0"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
+        container "https://depot.galaxyproject.org/singularity/pyopenms:3.1.0--py39h9b8898c_0"
     } else {
-        container "biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
+        container "biocontainers/pyopenms:3.1.0--py39h9b8898c_0"
     }
 
     input:
-    tuple val(meta), path(idxml_file), path(spectrum_df)
+    tuple val(meta), path(id_file), path(extra_feat)
 
     output:
-    path "*_psm.csv", emit: psm_info
+    tuple val(meta), path("${id_file.baseName}_feat.idXML"), emit: id_files_feat
     path "versions.yml", emit: version
     path "*.log", emit: log
 
@@ -21,12 +21,8 @@ process PSMCONVERSION {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
-
     """
-    psm_conversion.py "${idxml_file}" \\
-        ${spectrum_df} \\
-        $params.export_decoy_psm \\
-        2>&1 | tee extract_idxml.log
+    add_sage_feature.py "${id_file}" "${id_file.baseName}_feat.idXML" "${extra_feat}" 2>&1 | tee add_sage_feature.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
