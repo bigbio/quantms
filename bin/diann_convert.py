@@ -39,13 +39,12 @@ def cli():
 @click.option("--folder", "-f")
 @click.option("--exp_design", "-d")
 @click.option("--diann_version", "-v")
-@click.option("--skip_mzTab", "-s")
 @click.option("--dia_params", "-p")
 @click.option("--charge", "-c")
 @click.option("--missed_cleavages", "-m")
 @click.option("--qvalue_threshold", "-q", type=float)
 @click.pass_context
-def convert(ctx, folder, exp_design, dia_params, diann_version, skip_mzTab, charge, missed_cleavages, qvalue_threshold):
+def convert(ctx, folder, exp_design, dia_params, diann_version, charge, missed_cleavages, qvalue_threshold):
     """
     Convert DIA-NN output to MSstats, Triqler or mzTab.
     The output formats are used for quality control and downstream analysis.
@@ -139,17 +138,16 @@ def convert(ctx, folder, exp_design, dia_params, diann_version, skip_mzTab, char
     logger.info(f"Triqler input file is saved as {exp_out_prefix}_triqler_in.tsv")
     del out_triqler
 
-    if not skip_mzTab:
-        mztab_out = f"{Path(exp_design).stem}_out.mzTab"
-        # Convert to mzTab
-        diann_directory.convert_to_mztab(
-            report=report,
-            f_table=f_table,
-            charge=charge,
-            missed_cleavages=missed_cleavages,
-            dia_params=dia_params,
-            out=mztab_out,
-        )
+    mztab_out = f"{Path(exp_design).stem}_out.mzTab"
+    # Convert to mzTab
+    diann_directory.convert_to_mztab(
+        report=report,
+        f_table=f_table,
+        charge=charge,
+        missed_cleavages=missed_cleavages,
+        dia_params=dia_params,
+        out=mztab_out,
+    )
 
 
 def _true_stem(x):
