@@ -9,7 +9,7 @@ process SEARCHENGINEMSGF {
         'biocontainers/openms-thirdparty:3.1.0--h9ee0642_1' }"
 
     input:
-    tuple val(meta),  path(mzml_file), path(database)
+    tuple val(meta),  path(mzml_file), path(database), path(cnlcp), path(canno), path(csarr), path(cseq)
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
