@@ -16,6 +16,7 @@ workflow ID {
     take:
     ch_file_preparation_results
     ch_database_wdecoy
+    ch_expdesign
 
     main:
 
@@ -33,7 +34,7 @@ workflow ID {
     //
     // SUBWORKFLOW: PSMReScoring
     //
-    PSMRESCORING (ch_file_preparation_results, DATABASESEARCHENGINES.out.ch_id_files_idx)
+    PSMRESCORING (ch_file_preparation_results, DATABASESEARCHENGINES.out.ch_id_files_idx, ch_expdesign)
     ch_software_versions = ch_software_versions.mix(PSMRESCORING.out.versions.ifEmpty(null))
 
     //

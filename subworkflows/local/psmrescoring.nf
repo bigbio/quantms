@@ -16,6 +16,7 @@ workflow PSMRESCORING {
     take:
     ch_file_preparation_results
     ch_id_files
+    ch_expdesign
 
     main:
     ch_software_versions = Channel.empty()
@@ -168,13 +169,25 @@ def convert_exp_meta(Map meta, value, file_name, sample_map) {
     } else if (value == "sample_id") {
         tag = file(file_name).name.lastIndexOf('_perc.idXML')
         if (tag == -1) {
-            position = file(file_name).name.lastIndexOf('_sage.idXML')
-            if (position == -1) {
-                position = file(file_name).name.lastIndexOf('_comet_feat.idXML')
+            ifms2rescore = file(file_name).name.lastIndexOf('_ms2rescore_')
+            if (ifms2rescore == -1) {
+                position = file(file_name).name.lastIndexOf('_sage.idXML')
                 if (position == -1) {
-                    position = file(file_name).name.lastIndexOf('_msgf_feat.idXML')
+                    position = file(file_name).name.lastIndexOf('_comet_feat.idXML')
+                    if (position == -1) {
+                        position = file(file_name).name.lastIndexOf('_msgf_feat.idXML')
+                    }
+                }
+            } else {
+                position = file(file_name).name.lastIndexOf('_sage_ms2rescore.idXML')
+                if (position == -1) {
+                    position = file(file_name).name.lastIndexOf('_comet_ms2rescore_feat.idXML')
+                    if (position == -1) {
+                        position = file(file_name).name.lastIndexOf('_msgf_ms2rescore_feat.idXML')
+                    }
                 }
             }
+
         } else {
             position = file(file_name).name.lastIndexOf('_sage_perc.idXML')
             if (position == -1) {
