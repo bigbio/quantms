@@ -463,8 +463,7 @@
                 "ms2pip_model_dir": {
                     "type": "string",
                     "description": "The path of ms2pip model files. Providing model file to avoid repeated download and slow internet connection",
-                    "fa_icon": "fas fa-font",
-                    "default": "HCD2021"
+                    "fa_icon": "fas fa-font"
                 },
                 "feature_generators": {
                     "type": "string",
