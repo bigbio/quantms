@@ -2,10 +2,10 @@ process MS2RESCORE {
     tag "$meta.mzml_id"
     label 'process_high'
 
-    conda "bioconda::ms2rescore=3.0.2 bioconda::psm-utils=0.8.0 conda-forge::pydantic=1.10"
+    conda "bioconda::ms2rescore=3.0.3 bioconda::psm-utils=0.8.0 conda-forge::pydantic=1.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ms2rescore:3.0.2--pyhdfd78af_0':
-        'biocontainers/ms2rescore:3.0.2--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/ms2rescore:3.0.3--pyhdfd78af_0':
+        'biocontainers/ms2rescore:3.0.3--pyhdfd78af_0' }"
 
     // userEmulation settings when docker is specified
     containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
@@ -48,6 +48,7 @@ process MS2RESCORE {
         --spectrum_path . \\
         --ms2_tolerance $ms2_tolerence \\
         --output_path ${idxml.baseName}_ms2rescore.idXML \\
+        --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
         --id_decoy_pattern $decoy_pattern \\
         $args \\

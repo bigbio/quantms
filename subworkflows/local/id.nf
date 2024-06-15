@@ -33,7 +33,7 @@ workflow ID {
     //
     // SUBWORKFLOW: PSMReScoring
     //
-    PSMRESCORING (DATABASESEARCHENGINES.out.ch_id_files_idx)
+    PSMRESCORING (ch_file_preparation_results, DATABASESEARCHENGINES.out.ch_id_files_idx)
     ch_software_versions = ch_software_versions.mix(PSMRESCORING.out.versions.ifEmpty(null))
 
     //

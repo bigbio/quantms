@@ -86,7 +86,7 @@ workflow DDA_ID {
             } else if (params.rescore_range == "by_sample") {
                 // Sample map
                 GETSAMPLE(ch_expdesign)
-                ch_expdesign_sample = EXTRACT_SAMPLE.out.ch_expdesign_sample
+                ch_expdesign_sample = GETSAMPLE.out.ch_expdesign_sample
                 ch_expdesign_sample.splitCsv(header: true, sep: '\t')
                     .map { get_sample_map(it) }.set{ sample_map_idv }
 
@@ -155,7 +155,7 @@ workflow DDA_ID {
             IDSCORESWITCHER(MS2RESCORE.out.idxml.combine(Channel.value("PEP")))
             ch_software_versions = ch_software_versions.mix(IDSCORESWITCHER.out.version)
             ch_consensus_input = IDSCORESWITCHER.out.id_score_switcher.combine(Channel.value("MS:1001491"))
-            ch_rescoring_results = IDSCORESWITCHER.out.id_files_ForIDPEP
+            ch_rescoring_results = IDSCORESWITCHER.out.ch_consensus_input
         } else {
             ch_fdridpep = Channel.empty()
             if (params.search_engines.split(",").size() == 1) {
