@@ -36,6 +36,7 @@ def parse_cli_arguments_to_config(**kwargs):
                 config["ms2rescore"]["feature_generators"]["basic"] = {}
             if "ms2pip" in feature_generators:
                 config["ms2rescore"]["feature_generators"]["ms2pip"] = {
+                    "model_dir": kwargs["ms2pip_model_dir"],
                     "model": kwargs["ms2pip_model"],
                     "ms2_tolerance": kwargs["ms2_tolerance"],
                 }
@@ -147,6 +148,7 @@ def filter_out_artifact_psms(
     default="",
 )
 @click.option("-pipm", "--ms2pip_model", help="MS²PIP model (default: `Immuno-HCD`)", type=str, default="Immuno-HCD")
+@click.option("-md", "--ms2pip_model_dir", help="The path of MS²PIP model (default: `./`)", type=str, default="./")
 @click.option(
     "-ms2tol", "--ms2_tolerance", help="Fragment mass tolerance [Da](default: `0.02`)", type=float, default=0.02
 )

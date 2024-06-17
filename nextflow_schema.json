@@ -460,6 +460,11 @@
                     "fa_icon": "fas fa-font",
                     "default": "HCD2021"
                 },
+                "ms2pip_model_dir": {
+                    "type": "string",
+                    "description": "The path of ms2pip model files. Providing model file to avoid repeated download and slow internet connection",
+                    "fa_icon": "fas fa-font"
+                },
                 "feature_generators": {
                     "type": "string",
                     "description": "Which feature generator to generate feature.",
@@ -525,7 +530,7 @@
                 "fdr_level": {
                     "type": "string",
                     "description": "Calculate FDR on PSM ('psm_level_fdrs') or peptide level ('peptide_level_fdrs')?",
-                    "default": "peptide_level_fdrs",
+                    "default": "psm_level_fdrs",
                     "fa_icon": "fas fa-list-ol",
                     "enum": ["peptide_level_fdrs", "psm_level_fdrs"]
                 },

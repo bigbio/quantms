@@ -86,7 +86,7 @@ workflow DDA_ID {
             } else if (params.rescore_range == "by_sample") {
                 // Sample map
                 GETSAMPLE(ch_expdesign)
-                ch_expdesign_sample = EXTRACT_SAMPLE.out.ch_expdesign_sample
+                ch_expdesign_sample = GETSAMPLE.out.ch_expdesign_sample
                 ch_expdesign_sample.splitCsv(header: true, sep: '\t')
                     .map { get_sample_map(it) }.set{ sample_map_idv }
 
@@ -155,7 +155,7 @@ workflow DDA_ID {
             IDSCORESWITCHER(MS2RESCORE.out.idxml.combine(Channel.value("PEP")))
             ch_software_versions = ch_software_versions.mix(IDSCORESWITCHER.out.version)
             ch_consensus_input = IDSCORESWITCHER.out.id_score_switcher.combine(Channel.value("MS:1001491"))
-            ch_rescoring_results = IDSCORESWITCHER.out.id_files_ForIDPEP
+            ch_rescoring_results = IDSCORESWITCHER.out.ch_consensus_input
         } else {
             ch_fdridpep = Channel.empty()
             if (params.search_engines.split(",").size() == 1) {
@@ -224,13 +224,25 @@ def convert_exp_meta(Map meta, value, file_name, sample_map) {
     } else if (value == "sample_id") {
         tag = file(file_name).name.lastIndexOf('_perc.idXML')
         if (tag == -1) {
-            position = file(file_name).name.lastIndexOf('_sage.idXML')
-            if (position == -1) {
-                position = file(file_name).name.lastIndexOf('_comet_feat.idXML')
+            ifms2rescore = file(file_name).name.lastIndexOf('_ms2rescore_')
+            if (ifms2rescore == -1) {
+                position = file(file_name).name.lastIndexOf('_sage.idXML')
                 if (position == -1) {
-                    position = file(file_name).name.lastIndexOf('_msgf_feat.idXML')
+                    position = file(file_name).name.lastIndexOf('_comet_feat.idXML')
+                    if (position == -1) {
+                        position = file(file_name).name.lastIndexOf('_msgf_feat.idXML')
+                    }
+                }
+            } else {
+                position = file(file_name).name.lastIndexOf('_sage_ms2rescore.idXML')
+                if (position == -1) {
+                    position = file(file_name).name.lastIndexOf('_comet_ms2rescore_feat.idXML')
+                    if (position == -1) {
+                        position = file(file_name).name.lastIndexOf('_msgf_ms2rescore_feat.idXML')
+                    }
                 }
             }
+
         } else {
             position = file(file_name).name.lastIndexOf('_sage_perc.idXML')
             if (position == -1) {
