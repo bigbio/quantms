@@ -10,7 +10,8 @@ from false positives.
 
 quantms uses Percolator to improve identification results and to obtain error probabilities for peptide spectrum
 matches. In order to build a good mode for discriminating correct and incorrect matches, the tool needs sufficient
-correct peptide spectrum matches.
+correct peptide spectrum matches. In addition, quantms also supports three different re-rescoring strategies: individual run, merge by sample,
+or merge by projects in follow parameter: `--rescoring_range`. Re-rescoring is proved to have less time consuming and comparable performance in individual run.
 
 Percolator features used in quantms
 ---------------------------------------

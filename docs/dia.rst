@@ -58,8 +58,11 @@ parameters that can be changed in the commandline:
 - `--scan_window`: Sets the scan window radius.
 - `-time_corr_only`: Low RAM & high speed mode enabled.
 - `diann_speclib`: Predefined transition library. DIA-NN supports comma-separated (.csv) or tab-separated (.tsv, .xls or .txt), .speclib (compact format used by DIA-NN), .sptxt (SpectraST, experimental) and .msp (NIST, experimental) library files. Important: the library must not contain non-fragmented precursor ions as 'fragments': each fragment ion must actually be produced by the peptide backbone fragmentation.
+- `random_preanalysis`: Use random/subset files for library search.
+- `empirical_assembly_ms_n`: Number of MS runs to use for empirical assembly.
 
-.. Note:: The MS1 and MS2 mass accuracy only support ppm unit in DIA branch. quantms will automatically enable `--mass_acc_automatic=true` to determine accuracy by DIA-NN if Da unit is provided.
+.. Note:: The MS1 and MS2 mass accuracy only support ppm unit in DIA branch. quantms will automatically enable `--mass_acc_automatic=true` to determine accuracy by DIA-NN if Da unit is provided. In addition, quantms also supports uses random/subset files to empirical library assembly and library search.
+This improves the speed of operation, but may bring about performance degradation.
 
 The fourth step of the workflow, assemble an empirical spectral library from .quant files. The `IDs RT & IM profiling` mode is enabled. The following parameters are used that can be changed in the commandline:
 

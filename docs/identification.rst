@@ -41,7 +41,7 @@ digestion of the protein database (as reviewed in [RIVEROL2014]_).
 Peptide Identification
 ------------------------------------
 
-The peptide identification step in the quantms pipeline can be performed (**independently** or **combined**) with two
+The peptide identification step in the quantms pipeline can be performed (**independently** or **combined**) with three
 different open-source tools : :doc:`comet`, :doc:`msgf` or :doc:`sage`. The parameters for the search engines Comet, MS-GF+ or Sage are
 read from the SDRF input parameters including the post-translation modifications (annotated with UNIMOD accessions),
 precursor and fragment ion mass tolerances, etc. The only parameter that MUST be provided by commandline to the
@@ -76,7 +76,9 @@ boost the number of peptide identifications and the score of the final peptide h
 
 quantms provides two different algorithms and tools for re-scoring of the peptide identifications: :doc:`percolator`
 and :doc:`idpep`. By default, quantms uses the :doc:`percolator` algorithm, which has proved to increase peptide
-identifications for :doc:`comet` and :doc:`msgf` search engines.
+identifications for :doc:`comet` and :doc:`msgf` search engines. quantms supports multiple strategies (individual run/by samples/by projects) to re-scoring.
+The former was shown to have less time consuming and comparable performance.
+quantms also introduces LC-MS predictors such as MS²PIP and DeepLC to boost identification rate by :doc:`ms2rescore`.
 
 .. note:: In some cases, Percolator fails to boost the original search engines, especially in cases like small datasets
           where the number of peptide identifications is insufficient). As an alternative, quantms offers a fully parameterized
@@ -87,7 +89,7 @@ identifications for :doc:`comet` and :doc:`msgf` search engines.
 
 After the re-scoring of the peptide identification and combination of the results from multiple search engines
 (if multiple search engines are allowed), quantms allows the fdr calculation steps (read more in :doc:`fdr`) and
-optionally the modification sites localization (read more in :doc:`modlocal`).
+optionally the modification sites localization (read more in :doc:`modlocal`). The final results are exported in idXML and csv formats (compatible with Parquet).
 
 References
 ---------------------------
