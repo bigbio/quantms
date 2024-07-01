@@ -3,8 +3,8 @@ process INDIVIDUAL_FINAL_ANALYSIS {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
-        'docker.io/biocontainers/diann:v1.8.1_cv1' }"
+        'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-bigbio-diann-1.9.1dev.sif' :
+        'ghcr.io/bigbio/diann:1.9.1dev' }"
 
     input:
     tuple val(meta), path(ms_file), path(fasta), path(diann_log), path(library)
