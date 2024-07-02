@@ -292,7 +292,7 @@ class DiannDirectory:
         return diann_version_id
 
     def validate_diann_version(self) -> None:
-        supported_diann_versions = ["1.8.1"]
+        supported_diann_versions = ["1.8.1", "1.9.beta.1"]
         if self.diann_version not in supported_diann_versions:
             raise ValueError(f"Unsupported DIANN version {self.diann_version}")
 
