@@ -58,7 +58,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "(\\d*\\.\\d+\\.\\d+)|(\\d*\\.\\d+)")
+        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "\\d+\\.\\d+(\\.\\w+)*(\\.[\\d]+)?")
     END_VERSIONS
     """
 }
