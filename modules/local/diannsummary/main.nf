@@ -24,7 +24,8 @@ process DIANNSUMMARY {
     path "diann_report.gg_matrix.tsv", emit: gg_matrix
     path "diann_report.unique_genes_matrix.tsv", emit: unique_gene_matrix
     path "diannsummary.log", emit: log
-    path "empirical_library.tsv.speclib", emit: final_speclib
+    path "empirical_library.tsv", emit: final_speclib
+    path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib
     path "versions.yml", emit: version
 
     when:
