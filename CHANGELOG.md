@@ -3,6 +3,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] nfcore/quantms
+
+### `Added`
+
+- [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
+
+### `Changed`
+
+### `Fixed`
+
+### `Dependencies`
+
+### `Parameters`
+
+- `validate_ontologies`: enable or disable validating ontologies in the input SDRF file.
+
 ## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
 ### `Added`
