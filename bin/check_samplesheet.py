@@ -124,7 +124,7 @@ def main(args=None):
     args = parse_args(args)
 
     if args.ISSDRF == "true":
-        check_sdrf(args.CHECK_MS, args.SDRF, args.VALIDATE_ONTOLOGIES)
+        check_sdrf(args.CHECK_MS, args.SDRF, args.VALIDATE_ONTOLOGIES == "true")
     else:
         check_expdesign(args.SDRF)
 
