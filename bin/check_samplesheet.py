@@ -20,6 +20,7 @@ def parse_args(args=None):
     parser = argparse.ArgumentParser(description=Description, epilog=Epilog)
     parser.add_argument("SDRF", help="SDRF/Expdesign file to be validated")
     parser.add_argument("ISSDRF", help="SDRF file or Expdesign file")
+    parser.add_argument("VALIDATE_ONTOLOGIES", help="Validate ontology terms.")
     parser.add_argument("--CHECK_MS", help="check mass spectrometry fields in SDRF.", action="store_true")
 
     return parser.parse_args(args)
@@ -44,18 +45,24 @@ def print_error(error, context="Line", context_str=""):
     sys.exit(1)
 
 
-def check_sdrf(check_ms, sdrf):
+def check_sdrf(check_ms, sdrf, validate_ontologies):
     df = SdrfDataFrame.parse(sdrf)
-    errors = df.validate(DEFAULT_TEMPLATE)
-    if check_ms:
-        errors = errors + df.validate(MASS_SPECTROMETRY)
-    for error in errors:
-        print(error)
-    if not errors:
-        print("Everying seems to be fine. Well done.")
+    if validate_ontologies:
+        errors = df.validate(DEFAULT_TEMPLATE)
+        if check_ms:
+            errors = errors + df.validate(MASS_SPECTROMETRY)
+        for error in errors:
+            print(error)
+        if not errors:
+            print("Everying seems to be fine. Well done.")
+        else:
+            print("There were validation errors!")
     else:
-        print("There were validation errors!")
+        errors = False
+        print("No ontology term validation was performed.")
+
     sys.exit(bool(errors))
+
 
 
 def check_expdesign(expdesign):
@@ -117,7 +124,7 @@ def main(args=None):
     args = parse_args(args)
 
     if args.ISSDRF == "true":
-        check_sdrf(args.CHECK_MS, args.SDRF)
+        check_sdrf(args.CHECK_MS, args.SDRF, args.VALIDATE_ONTOLOGIES == "true")
     else:
         check_expdesign(args.SDRF)
 
