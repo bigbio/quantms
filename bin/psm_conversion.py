@@ -17,6 +17,8 @@ _parquet_field = [
 
 
 def mods_position(peptide):
+    if peptide.startswith("."):
+        peptide = peptide[1:]
     pattern = re.compile(r"\((.*?)\)")
     original_mods = pattern.findall(peptide)
     peptide = re.sub(r"\(.*?\)", ".", peptide)
