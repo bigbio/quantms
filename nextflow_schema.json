@@ -70,6 +70,12 @@
                     "description": "Whether export PSM from decoy in final identification results",
                     "fa_icon": "far fa-check-square",
                     "help_text": "Whether export PSM from decoy in final identification results for dda_id subworkflow for specific cases."
+                },
+                "validate_ontologies": {
+                    "type": "boolean",
+                    "description": "Check that ontology terms in an input SDRF file exist.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "If false, only a basic readability check is performed on an input SDRF file. This option is useful when ontology providers are inaccessible."
                 }
             }
         },

@@ -18,7 +18,7 @@ workflow INPUT_CHECK {
             exit 1
         }
     }
-    SAMPLESHEET_CHECK ( input_file, is_sdrf )
+    SAMPLESHEET_CHECK ( input_file, is_sdrf, params.validate_ontologies )
 
     emit:
     ch_input_file   = SAMPLESHEET_CHECK.out.checked_file
