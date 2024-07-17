@@ -81,7 +81,6 @@ jobs:
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          source $MAMBA_ROOT_PREFIX/etc/profile.d/micromamba.sh
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
       - name: Gather failed logs
         if: failure() || cancelled()
