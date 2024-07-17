@@ -61,7 +61,8 @@ jobs:
           wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
           echo "$(pwd)/bin" >> $GITHUB_PATH
           echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
-          ./bin/micromamba shell init -s bash -p ./micromamba
+          export MAMBA_ROOT_PREFIX="./micromamba"
+          ./bin/micromamba shell init -s bash
           echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
 
       - name: Run pipeline with test data
