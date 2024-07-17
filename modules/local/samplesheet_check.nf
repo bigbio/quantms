@@ -3,11 +3,11 @@ process SAMPLESHEET_CHECK {
     tag "$input_file"
     label 'process_single'
 
-    conda "bioconda::sdrf-pipelines=0.0.26"
+    conda "bioconda::sdrf-pipelines=0.0.27"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.26--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.27--pyhdfd78af_0"
     } else {
-        container "biocontainers/sdrf-pipelines:0.0.26--pyhdfd78af_0"
+        container "biocontainers/sdrf-pipelines:0.0.27--pyhdfd78af_0"
     }
 
     input:
