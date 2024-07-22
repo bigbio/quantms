@@ -3,8 +3,8 @@ process SILICOLIBRARYGENERATION {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
-        'docker.io/biocontainers/diann:v1.8.1_cv1' }"
+        'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-bigbio-diann-1.9.1dev.sif' :
+        'ghcr.io/bigbio/diann:1.9.1dev' }"
 
     input:
     file(fasta)
@@ -49,7 +49,7 @@ process SILICOLIBRARYGENERATION {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "(\\d*\\.\\d+\\.\\d+)|(\\d*\\.\\d+)")
+        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "\\d+\\.\\d+(\\.\\w+)*(\\.[\\d]+)?")
     END_VERSIONS
     """
 }

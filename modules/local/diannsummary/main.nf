@@ -3,8 +3,8 @@ process DIANNSUMMARY {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
-        'docker.io/biocontainers/diann:v1.8.1_cv1' }"
+        'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-bigbio-diann-1.9.1dev.sif' :
+        'ghcr.io/bigbio/diann:1.9.1dev' }"
 
     input:
     // Note that the files are passed as names and not paths, this prevents them from being staged
@@ -24,7 +24,8 @@ process DIANNSUMMARY {
     path "diann_report.gg_matrix.tsv", emit: gg_matrix
     path "diann_report.unique_genes_matrix.tsv", emit: unique_gene_matrix
     path "diannsummary.log", emit: log
-    path "empirical_library.tsv.speclib", emit: final_speclib
+    path "empirical_library.tsv", emit: final_speclib
+    path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib
     path "versions.yml", emit: version
 
     when:
@@ -69,7 +70,7 @@ process DIANNSUMMARY {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "(\\d*\\.\\d+\\.\\d+)|(\\d*\\.\\d+)")
+        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "\\d+\\.\\d+(\\.\\w+)*(\\.[\\d]+)?")
     END_VERSIONS
     """
 }
