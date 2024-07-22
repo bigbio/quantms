@@ -88,6 +88,12 @@ jobs:
             squashfs-tools-ng \
             uidmap \
             zlib1g-dev
+          sudo rm -rf /usr/local/go
+          sudo tar -C /usr/local -xzf go1.22.5.linux-amd64.tar.gz
+          echo 'export PATH=/usr/local/go/bin:$PATH' >> ~/.bashrc && \
+          source ~/.bashrc
+          wget -qO- https://github.com/sylabs/singularity/releases/download/v4.1.4/singularity-ce_4.1.4-jammy_amd64.deb
+          sudo apt install ./singularity-ce_4.1.4-jammy_amd64.deb
       - name: Run pipeline with test data in docker profile
         if: matrix.exec_profile == 'docker'
         # TODO nf-core: You can customise CI pipeline run tests as required
