@@ -68,10 +68,9 @@ jobs:
           echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
           ./bin/micromamba shell init -s bash
           echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
-      - name: Install Singularity
+      - name: Install Singularity with defaults
         if: matrix.exec_profile == 'singularity'
-        - name: Singularity install with defaults
-          uses: singularityhub/install-singularity@main
+        uses: singularityhub/install-singularity@main
       - name: Run pipeline with test data in docker profile
         if: matrix.exec_profile == 'docker'
         # TODO nf-core: You can customise CI pipeline run tests as required
