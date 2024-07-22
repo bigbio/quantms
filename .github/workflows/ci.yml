@@ -43,6 +43,9 @@ jobs:
             exec_profile: conda
           - NXF_VER: "latest-everything"
             exec_profile: "conda"
+        include:
+          - test_profile: test_latest_dia
+            exec_profile: singularity
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4

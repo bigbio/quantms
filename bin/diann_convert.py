@@ -591,13 +591,13 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
 
     logger.debug("Classifying results type ...")
     pg["opt_global_result_type"] = "single_protein"
-    pg.loc[pg["Protein.Ids"].str.contains(";"), "opt_global_result_type"] = "indistinguishable_protein_group"
+    pg.loc[pg["Protein.Group"].str.contains(";"), "opt_global_result_type"] = "indistinguishable_protein_group"
 
     out_mztab_PRH = pg
     del pg
     out_mztab_PRH = out_mztab_PRH.drop(["Protein.Names"], axis=1)
     out_mztab_PRH.rename(
-        columns={"Protein.Group": "accession", "First.Protein.Description": "description"}, inplace=True
+        columns={"First.Protein.Description": "description"}, inplace=True
     )
     out_mztab_PRH.loc[:, "database"] = database
 
@@ -614,10 +614,10 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
         out_mztab_PRH.loc[:, i] = "null"
 
     logger.debug("Extracting accession values (keeping first)...")
-    out_mztab_PRH.loc[:, "accession"] = out_mztab_PRH.apply(lambda x: x["accession"].split(";")[0], axis=1)
+    out_mztab_PRH.loc[:, "accession"] = out_mztab_PRH.apply(lambda x: x["Protein.Group"].split(";")[0], axis=1)
 
     protein_details_df = out_mztab_PRH[out_mztab_PRH["opt_global_result_type"] == "indistinguishable_protein_group"]
-    prh_series = protein_details_df["Protein.Ids"].str.split(";", expand=True).stack().reset_index(level=1, drop=True)
+    prh_series = protein_details_df["Protein.Group"].str.split(";", expand=True).stack().reset_index(level=1, drop=True)
     prh_series.name = "accession"
     protein_details_df = (
         protein_details_df.drop("accession", axis=1).join(prh_series).reset_index().drop(columns="index")
@@ -644,14 +644,14 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     # out_mztab_PRH.loc[out_mztab_PRH["opt_global_result_type"] == "single_protein", "ambiguity_members"] = "null"
     # or out_mztab_PRH.loc[out_mztab_PRH["Protein.Ids"] == out_mztab_PRH["accession"], "ambiguity_members"] = "null"
     out_mztab_PRH.loc[:, "ambiguity_members"] = out_mztab_PRH.apply(
-        lambda x: x["Protein.Ids"] if x["opt_global_result_type"] == "indistinguishable_protein_group" else "null",
+        lambda x: x["Protein.Group"] if x["opt_global_result_type"] == "indistinguishable_protein_group" else "null",
         axis=1,
     )
 
     logger.debug("Matching PRH to best search engine score...")
     score_looker = ModScoreLooker(report)
     out_mztab_PRH[["modifiedSequence", "best_search_engine_score[1]"]] = out_mztab_PRH.apply(
-        lambda x: score_looker.get_score(x["Protein.Ids"]), axis=1, result_type="expand"
+        lambda x: score_looker.get_score(x["Protein.Group"]), axis=1, result_type="expand"
     )
 
     logger.debug("Matching PRH to modifications...")
@@ -664,16 +664,16 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     # This used to be a bottleneck in performance
     # This implementation drops the run time from 57s to 25ms
     protein_agg_report = (
-        report[["PG.MaxLFQ", "Protein.Ids", "study_variable"]]
-        .groupby(["study_variable", "Protein.Ids"])
+        report[["PG.MaxLFQ", "Protein.Group", "study_variable"]]
+        .groupby(["study_variable", "Protein.Group"])
         .agg({"PG.MaxLFQ": ["mean", "std", "sem"]})
         .reset_index()
-        .pivot(columns=["study_variable"], index="Protein.Ids")
+        .pivot(columns=["study_variable"], index="Protein.Group")
         .reset_index()
     )
     protein_agg_report.columns = ["::".join([str(s) for s in col]).strip() for col in protein_agg_report.columns.values]
     subname_mapper = {
-        "Protein.Ids::::": "Protein.Ids",
+        "Protein.Group::::": "Protein.Group",
         "PG.MaxLFQ::mean": "protein_abundance_study_variable",
         "PG.MaxLFQ::std": "protein_abundance_stdev_study_variable",
         "PG.MaxLFQ::sem": "protein_abundance_std_error_study_variable",
@@ -685,7 +685,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
     # Oddly enough the last implementation mapped the the accession (Q9NZJ9) in the mztab
     # to the Protein.Ids (A0A024RBG1;Q9NZJ9;Q9NZJ9-2), leading to A LOT of missing values.
     out_mztab_PRH = out_mztab_PRH.merge(
-        protein_agg_report, on="Protein.Ids", how="left", validate="many_to_one", copy=True
+        protein_agg_report, on="Protein.Group", how="left", validate="many_to_one", copy=True
     )
     del name_mapper
     del subname_mapper
@@ -694,7 +694,7 @@ def mztab_PRH(report, pg, index_ref, database, fasta_df):
 
     out_mztab_PRH.loc[:, "PRH"] = "PRT"
     index = out_mztab_PRH.loc[:, "PRH"]
-    out_mztab_PRH.drop(["PRH", "Genes", "modifiedSequence", "Protein.Ids"], axis=1, inplace=True)
+    out_mztab_PRH.drop(["PRH", "Genes", "modifiedSequence", "Protein.Group"], axis=1, inplace=True)
     out_mztab_PRH.insert(0, "PRH", index)
     out_mztab_PRH.fillna("null", inplace=True)
     out_mztab_PRH.loc[:, "database"] = database
@@ -734,12 +734,12 @@ def mztab_PEH(
     out_mztab_PEH = pd.DataFrame()
     out_mztab_PEH = pr.iloc[:, 0:10]
     out_mztab_PEH.drop(
-        ["Protein.Group", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis=1, inplace=True
+        ["Protein.Ids", "Protein.Names", "First.Protein.Description", "Proteotypic"], axis=1, inplace=True
     )
     out_mztab_PEH.rename(
         columns={
             "Stripped.Sequence": "sequence",
-            "Protein.Ids": "accession",
+            "Protein.Group": "accession",
             "Modified.Sequence": "opt_global_cv_MS:1000889_peptidoform_sequence",
             "Precursor.Charge": "charge",
         },
@@ -909,7 +909,7 @@ def mztab_PSH(report, folder, database):
     out_mztab_PSH = out_mztab_PSH[
         [
             "Stripped.Sequence",
-            "Protein.Ids",
+            "Protein.Group",
             "Q.Value",
             "RT.Start",
             "Precursor.Charge",
@@ -1014,7 +1014,7 @@ def classify_result_type(target):
     :return: A string implys protein type
     :rtype: str
     """
-    if ";" in target["Protein.Ids"]:
+    if ";" in target["Protein.Group"]:
         return "indistinguishable_protein_group"
     return "single_protein"
 
@@ -1056,7 +1056,7 @@ def match_in_report(report, target, max_, flag, level):
         return tuple(q_value)
 
     if flag == 1 and level == "protein":
-        result = report[report["Protein.Ids"] == target]
+        result = report[report["Protein.Group"] == target]
         PRH_params = []
         for i in range(1, max_ + 1):
             match = result[result["study_variable"] == i]
@@ -1083,19 +1083,19 @@ class ModScoreLooker:
 
     def make_lookup_dict(self, report) -> Dict[str, Tuple[str, float]]:
         grouped_df = (
-            report[["Modified.Sequence", "Protein.Ids", "Global.PG.Q.Value"]]
+            report[["Modified.Sequence", "Protein.Group", "Global.PG.Q.Value"]]
             .sort_values("Global.PG.Q.Value", ascending=True)
-            .groupby(["Protein.Ids"])
+            .groupby(["Protein.Group"])
             .head(1)
         )
-        #        Modified.Sequence               Protein.Ids  Global.PG.Q.Value
+        #        Modified.Sequence               Protein.Group  Global.PG.Q.Value
         # 78265          LFNEQNFFQR  Q8IV63;Q8IV63-2;Q8IV63-3           0.000252
         # 103585    NPTIVNFPITNVDLR           Q53GS9;Q53GS9-2           0.000252
         # 103586          NPTWKPLIR           Q7Z4Q2;Q7Z4Q2-2           0.000252
         # 103588      NPVGYPLAWQFLR           Q9NZ08;Q9NZ08-2           0.000252
 
         out = {
-            row["Protein.Ids"]: (row["Modified.Sequence"], row["Global.PG.Q.Value"]) for _, row in grouped_df.iterrows()
+            row["Protein.Group"]: (row["Modified.Sequence"], row["Global.PG.Q.Value"]) for _, row in grouped_df.iterrows()
         }
         return out
 
@@ -1325,17 +1325,17 @@ def calculate_protein_coverages(report: pd.DataFrame, out_mztab_PRH: pd.DataFram
     protein in the PRH table (defined by accession, not protein.ids).
     """
     nested_df = (
-        report[["Protein.Ids", "Stripped.Sequence"]]
-        .groupby("Protein.Ids")
+        report[["Protein.Group", "Stripped.Sequence"]]
+        .groupby("Protein.Group")
         .agg({"Stripped.Sequence": set})
         .reset_index()
     )
-    #                      Protein.Ids                                  Stripped.Sequence
+    #                      Protein.Group                                  Stripped.Sequence
     # 0     A0A024RBG1;Q9NZJ9;Q9NZJ9-2                                   {SEQEDEVLLVSSSR}
     # 1        A0A096LP49;A0A096LP49-2                                  {SPWAMTERKHSSLER}
     # 2                A0AVT1;A0AVT1-2  {EDFTLLDFINAVK, KPDHVPISSEDER, QDVIITALDNVEAR,...
-    ids_to_seqs = dict(zip(nested_df["Protein.Ids"], nested_df["Stripped.Sequence"]))
-    acc_to_ids = dict(zip(out_mztab_PRH["accession"], out_mztab_PRH["Protein.Ids"]))
+    ids_to_seqs = dict(zip(nested_df["Protein.Group"], nested_df["Stripped.Sequence"]))
+    acc_to_ids = dict(zip(out_mztab_PRH["accession"], out_mztab_PRH["Protein.Group"]))
     fasta_id_to_seqs = dict(zip(fasta_df["id"], fasta_df["seq"]))
     acc_to_fasta_ids: dict = {}
 
