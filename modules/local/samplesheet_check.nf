@@ -3,16 +3,17 @@ process SAMPLESHEET_CHECK {
     tag "$input_file"
     label 'process_single'
 
-    conda "bioconda::sdrf-pipelines=0.0.26"
+    conda "bioconda::sdrf-pipelines=0.0.27"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.26--pyhdfd78af_0"
+        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.27--pyhdfd78af_0"
     } else {
-        container "biocontainers/sdrf-pipelines:0.0.26--pyhdfd78af_0"
+        container "biocontainers/sdrf-pipelines:0.0.27--pyhdfd78af_0"
     }
 
     input:
     path input_file
     val is_sdrf
+    val validate_ontologies
 
     output:
     path "*.log", emit: log
@@ -27,7 +28,7 @@ process SAMPLESHEET_CHECK {
     def args = task.ext.args ?: ''
 
     """
-    check_samplesheet.py "${input_file}" ${is_sdrf} --CHECK_MS 2>&1 | tee input_check.log
+    check_samplesheet.py "${input_file}" ${is_sdrf} ${validate_ontologies} --CHECK_MS 2>&1 | tee input_check.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
