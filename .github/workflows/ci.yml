@@ -73,21 +73,21 @@ jobs:
         run: |
           sudo apt-get update && \
           sudo apt-get install -y \
-             autoconf \
-             automake \
-             cryptsetup \
-             fuse \
-             fuse2fs \
-             libfuse-dev \
-             libglib2.0-dev \
-             libseccomp-dev \
-             libtool \
-             pkg-config \
-             runc \
-             squashfs-tools \
-             squashfs-tools-ng \
-             uidmap \
-             zlib1g-dev
+            autoconf \
+            automake \
+            cryptsetup \
+            fuse \
+            fuse2fs \
+            libfuse-dev \
+            libglib2.0-dev \
+            libseccomp-dev \
+            libtool \
+            pkg-config \
+            runc \
+            squashfs-tools \
+            squashfs-tools-ng \
+            uidmap \
+            zlib1g-dev
       - name: Run pipeline with test data in docker profile
         if: matrix.exec_profile == 'docker'
         # TODO nf-core: You can customise CI pipeline run tests as required
