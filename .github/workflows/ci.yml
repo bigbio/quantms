@@ -43,6 +43,9 @@ jobs:
             exec_profile: conda
           - NXF_VER: "latest-everything"
             exec_profile: "conda"
+        include:
+          - test_profile: test_latest_dia
+            exec_profile: singularity
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4
@@ -65,9 +68,11 @@ jobs:
           echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
           ./bin/micromamba shell init -s bash
           echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
-
-      - name: Run pipeline with test data
-        if: matrix.exec_profile != 'conda'
+      - name: Install Singularity with defaults
+        if: matrix.exec_profile == 'singularity'
+        uses: singularityhub/install-singularity@main
+      - name: Run pipeline with test data in docker profile
+        if: matrix.exec_profile == 'docker'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
@@ -82,6 +87,14 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+      - name: Run pipeline with test data in singularity profile
+        if: matrix.exec_profile == 'singularity'
+        # TODO nf-core: You can customise CI pipeline run tests as required
+        # For example: adding multiple test runs with different parameters
+        # Remember that you can parallelise this by using strategy.matrix
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
       - name: Gather failed logs
         if: failure() || cancelled()
         run: |

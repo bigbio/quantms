@@ -10,7 +10,7 @@ import sys
 
 _parquet_field = [
     "sequence", "protein_accessions", "protein_start_positions", "protein_end_positions",
-    "modifications", "retention_time", "charge", "calc_mass_to_charge", "reference_file_name",
+    "modifications", "retention_time", "charge", "exp_mass_to_charge", "reference_file_name",
     "scan_number", "peptidoform", "posterior_error_probability", "global_qvalue", "is_decoy",
     "consensus_support", "mz_array", "intensity_array", "num_peaks", "search_engines", "id_scores", "hit_rank"
 ]
@@ -61,7 +61,7 @@ def convert_psm(idxml, spectra_file, export_decoy_psm):
 
     for peptide_id in pep_ids:
         retention_time = peptide_id.getRT()
-        calc_mass_to_charge = peptide_id.getMZ()
+        exp_mass_to_charge = peptide_id.getMZ()
         scan_number = int(re.findall(r"(spectrum|scan)=(\d+)", peptide_id.getMetaValue("spectrum_reference"))[0][1])
 
         if isinstance(spectra_df, pd.DataFrame):
@@ -101,7 +101,7 @@ def convert_psm(idxml, spectra_file, export_decoy_psm):
             hit_rank = hit.getRank()
 
             parquet_data.append([sequence, protein_accessions, protein_start_positions, protein_end_positions,
-                                 modifications, retention_time, charge, calc_mass_to_charge, reference_file_name,
+                                 modifications, retention_time, charge, exp_mass_to_charge, reference_file_name,
                                  scan_number, peptidoform, posterior_error_probability, global_qvalue, is_decoy,
                                  consensus_support, mz_array, intensity_array, num_peaks, search_engines, id_scores,
                                  hit_rank])
