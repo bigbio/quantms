@@ -21,7 +21,11 @@ def parse_args(args=None):
     parser.add_argument("SDRF", help="SDRF/Expdesign file to be validated")
     parser.add_argument("ISSDRF", help="SDRF file or Expdesign file")
     parser.add_argument("VALIDATE_ONTOLOGIES", help="Validate ontology terms.")
-    parser.add_argument("--CHECK_MS", help="check mass spectrometry fields in SDRF.", action="store_true")
+    parser.add_argument(
+        "--CHECK_MS",
+        help="check mass spectrometry fields in SDRF.",
+        action="store_true",
+    )
 
     return parser.parse_args(args)
 
@@ -64,7 +68,6 @@ def check_sdrf(check_ms, sdrf, validate_ontologies):
     sys.exit(bool(errors))
 
 
-
 def check_expdesign(expdesign):
     data = pd.read_csv(expdesign, sep="\t", header=0, dtype=str)
     data = data.dropna()
@@ -77,10 +80,14 @@ def check_expdesign(expdesign):
         try:
             empty_row = lines.index("\n")
         except ValueError:
-            print("the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf")
+            print(
+                "the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf"
+            )
             sys.exit(1)
         if lines.index("\n") >= len(lines):
-            print("the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf")
+            print(
+                "the one-table format parser is broken in OpenMS2.5, please use one-table or sdrf"
+            )
             sys.exit(1)
 
         s_table = [i.replace("\n", "").split("\t") for i in lines[empty_row + 1 :]][1:]
@@ -112,7 +119,9 @@ def check_expdesign_logic(fTable, sTable):
         sys.exit(1)
     fTable_D = fTable.drop_duplicates(["Fraction_Group", "Fraction", "Label", "Sample"])
     if fTable_D.shape[0] < fTable.shape[0]:
-        print("Existing duplicate entries in Fraction_Group, Fraction, Label and Sample")
+        print(
+            "Existing duplicate entries in Fraction_Group, Fraction, Label and Sample"
+        )
         sys.exit(1)
     if len(set(sTable.Sample)) < sTable.shape[0]:
         print("Existing duplicate Sample in sample table!")

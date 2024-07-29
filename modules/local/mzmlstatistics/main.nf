@@ -14,8 +14,8 @@ process MZMLSTATISTICS {
     tuple val(meta), path(ms_file)
 
     output:
-    path "*_ms_info.tsv", emit: ms_statistics
-    tuple val(meta), path("*_spectrum_df.csv"), emit: spectrum_df, optional: true
+    path "*_ms_info.parquet", emit: ms_statistics
+    tuple val(meta), path("*_spectrum_df.parquet"), emit: spectrum_df, optional: true
     path "versions.yml", emit: version
     path "*.log", emit: log
 

@@ -101,7 +101,7 @@ workflow FILE_PREPARATION {
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
     statistics      = ch_statistics     // channel: [ *_ms_info.tsv ]
-    spectrum_data   = ch_spectrum_df    // channel: [val(mzml_id), *_spectrum_df.csv]
+    spectrum_data   = ch_spectrum_df    // channel: [val(mzml_id), *_spectrum_df.parquet]
     version         = ch_versions       // channel: [ *.version.txt ]
 }
 

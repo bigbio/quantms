@@ -18,11 +18,11 @@ output:
   - mzml_statistics:
       type: file
       description: mzMLs statistics file
-      pattern: "*_mzml_info.tsv"
+      pattern: "*_mzml_info.parquet"
   - spectrum_df:
       type: file
       description: spectrum data file
-      pattern: "_spectrum_df.csv"
+      pattern: "_spectrum_df.parquet"
   - version:
       type: file
       description: File containing software version

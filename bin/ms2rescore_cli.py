@@ -2,26 +2,27 @@
 # Written by Jonas Scheid under the MIT license
 
 
-import sys
-import click
 import importlib.resources
 import json
 import logging
+import sys
 from typing import List
 
+import click
 import pandas as pd
-
-from ms2rescore import rescore, package_data
-from psm_utils.io.idxml import IdXMLReader, IdXMLWriter
-from psm_utils import PSMList
 import pyopenms as oms
+from ms2rescore import package_data, rescore
+from psm_utils import PSMList
+from psm_utils.io.idxml import IdXMLReader, IdXMLWriter
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
 def parse_cli_arguments_to_config(**kwargs):
     """Update default MS²Rescore config with CLI arguments"""
-    config = json.load(importlib.resources.open_text(package_data, "config_default.json"))
+    config = json.load(
+        importlib.resources.open_text(package_data, "config_default.json")
+    )
 
     for key, value in kwargs.items():
         # Skip these arguments since they need to set in a nested dict of feature_generators
@@ -96,11 +97,21 @@ def filter_out_artifact_psms(
 ) -> List[oms.PeptideIdentification]:
     """Filter out PeptideHits that could not be processed by all feature generators"""
     num_mandatory_features = max([len(psm.rescoring_features) for psm in psm_list])
-    new_psm_list = PSMList(psm_list=[psm for psm in psm_list if len(psm.rescoring_features) == num_mandatory_features])
+    new_psm_list = PSMList(
+        psm_list=[
+            psm
+            for psm in psm_list
+            if len(psm.rescoring_features) == num_mandatory_features
+        ]
+    )
 
     # get differing peptidoforms of both psm lists
-    psm_list_peptides = set([next(iter(psm.provenance_data.items()))[1] for psm in psm_list])
-    new_psm_list_peptides = set([next(iter(psm.provenance_data.items()))[1] for psm in new_psm_list])
+    psm_list_peptides = set(
+        [next(iter(psm.provenance_data.items()))[1] for psm in psm_list]
+    )
+    new_psm_list_peptides = set(
+        [next(iter(psm.provenance_data.items()))[1] for psm in new_psm_list]
+    )
     not_supported_peptides = psm_list_peptides - new_psm_list_peptides
 
     # no need to filter if all peptides are supported
@@ -126,7 +137,10 @@ def filter_out_artifact_psms(
 
 @click.command()
 @click.option(
-    "-p", "--psm_file", help="Path to PSM file (PIN, mzIdentML, MaxQuant msms, X!Tandem XML, idXML)", required=True
+    "-p",
+    "--psm_file",
+    help="Path to PSM file (PIN, mzIdentML, MaxQuant msms, X!Tandem XML, idXML)",
+    required=True,
 )
 @click.option(
     "-s",
@@ -135,22 +149,53 @@ def filter_out_artifact_psms(
     required=True,
 )
 @click.option(
-    "-o", "--output_path", help="Path and stem for output file names (default: derive from identification file)"
+    "-o",
+    "--output_path",
+    help="Path and stem for output file names (default: derive from identification file)",
 )
-@click.option("-l", "--log_level", help="Logging level (default: `info`)", default="info")
-@click.option("-n", "--processes", help="Number of parallel processes available to MS²Rescore", type=int, default=16)
+@click.option(
+    "-l", "--log_level", help="Logging level (default: `info`)", default="info"
+)
+@click.option(
+    "-n",
+    "--processes",
+    help="Number of parallel processes available to MS²Rescore",
+    type=int,
+    default=16,
+)
 @click.option("-f", "--fasta_file", help="Path to FASTA file")
-@click.option("-t", "--test_fdr", help="The false-discovery rate threshold at which to evaluate the learned models. (default: 0.05)", default=0.05)
+@click.option(
+    "-t",
+    "--test_fdr",
+    help="The false-discovery rate threshold at which to evaluate the learned models. (default: 0.05)",
+    default=0.05,
+)
 @click.option(
     "-fg",
     "--feature_generators",
     help="Comma-separated list of feature generators to use (default: `ms2pip,deeplc`). See ms2rescore doc for further information",
     default="",
 )
-@click.option("-pipm", "--ms2pip_model", help="MS²PIP model (default: `Immuno-HCD`)", type=str, default="Immuno-HCD")
-@click.option("-md", "--ms2pip_model_dir", help="The path of MS²PIP model (default: `./`)", type=str, default="./")
 @click.option(
-    "-ms2tol", "--ms2_tolerance", help="Fragment mass tolerance [Da](default: `0.02`)", type=float, default=0.02
+    "-pipm",
+    "--ms2pip_model",
+    help="MS²PIP model (default: `Immuno-HCD`)",
+    type=str,
+    default="Immuno-HCD",
+)
+@click.option(
+    "-md",
+    "--ms2pip_model_dir",
+    help="The path of MS²PIP model (default: `./`)",
+    type=str,
+    default="./",
+)
+@click.option(
+    "-ms2tol",
+    "--ms2_tolerance",
+    help="Fragment mass tolerance [Da](default: `0.02`)",
+    type=float,
+    default=0.02,
 )
 @click.option(
     "-cs",
@@ -158,11 +203,25 @@ def filter_out_artifact_psms(
     help="Percentage of number of calibration set for DeepLC (default: `0.15`)",
     default=0.15,
 )
-@click.option("-re", "--rescoring_engine", help="Either mokapot or percolator (default: `mokapot`)", default="mokapot")
 @click.option(
-    "-rng", "--rng", help="Seed for mokapot's random number generator (default: `4711`)", type=int, default=4711
+    "-re",
+    "--rescoring_engine",
+    help="Either mokapot or percolator (default: `mokapot`)",
+    default="mokapot",
 )
-@click.option("-d", "--id_decoy_pattern", help="Regex decoy pattern (default: `DECOY_`)", default="^DECOY_")
+@click.option(
+    "-rng",
+    "--rng",
+    help="Seed for mokapot's random number generator (default: `4711`)",
+    type=int,
+    default=4711,
+)
+@click.option(
+    "-d",
+    "--id_decoy_pattern",
+    help="Regex decoy pattern (default: `DECOY_`)",
+    default="^DECOY_",
+)
 @click.option(
     "-lsb",
     "--lower_score_is_better",
