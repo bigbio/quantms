@@ -3,7 +3,7 @@ process MZMLSTATISTICS {
     label 'process_medium'
     label 'process_single'
 
-    conda "bioconda::pyopenms=3.1.0"
+    conda "bioconda::pyopenms=3.1.0 conda-forge::pyarrow"
     if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/pyopenms:3.1.0--py39h9b8898c_0"
     } else {
