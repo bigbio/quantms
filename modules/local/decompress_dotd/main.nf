@@ -67,9 +67,9 @@ process DECOMPRESS {
         else
             if [ -f \$1 ]; then
                 case \$1 in
-                    *.tar.gz)    tar xvzf \$1 && validate_tar \$1               ;;
+                    *.tar.gz)    tar xvzf \$1 && verify_tar \$1               ;;
                     *.gz)        gunzip \$1                                     ;;
-                    *.tar)       tar xvf \$1 && validate_tar \$1                ;;
+                    *.tar)       tar xvf \$1 && verify_tar \$1                ;;
                     *.zip)       unzip \$1                                      ;;
                     *)           echo "extract: '\$1' - unknown archive method" ;;
                 esac
