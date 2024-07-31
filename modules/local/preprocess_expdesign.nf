@@ -7,7 +7,7 @@ process PREPROCESS_EXPDESIGN {
     label 'process_low'
 
     conda "bioconda::sdrf-pipelines=0.0.27"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.27--pyhdfd78af_0"
     } else {
         container "biocontainers/sdrf-pipelines:0.0.27--pyhdfd78af_0"

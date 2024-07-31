@@ -3,7 +3,7 @@ process SAGEFEATURE {
     label 'process_low'
 
     conda "bioconda::quantms-utils=0.0.2"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/quantms-utils:0.0.2--pyhdfd78af_0"
     } else {
         container "biocontainers/quantms-utils:0.0.2--pyhdfd78af_0"
