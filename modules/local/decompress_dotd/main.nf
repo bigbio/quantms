@@ -41,7 +41,7 @@ process DECOMPRESS {
     """
     function verify_tar {
         exit_code=0
-        error=$(tar df \$1 2>&1) || exit_code=$?
+        error=\$(tar df \$1 2>&1) || exit_code=\$?
         if [ \$exit_code -eq 2 ]; then
             echo "\${error}"
             exit 2
