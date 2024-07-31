@@ -45,11 +45,11 @@ process DECOMPRESS {
         else
             if [ -f \$1 ]; then
                 case \$1 in
-                    *.tar.gz)    tar xvzf \$1 && tar dvf \$1 \$(basename \$1 .tar.gz) ;;
-                    *.gz)        gunzip \$1                                           ;;
-                    *.tar)       tar xvf \$1 && tar dvf \$1 \$(basename \$1 .tar)     ;;
-                    *.zip)       unzip \$1                                            ;;
-                    *)           echo "extract: '\$1' - unknown archive method"       ;;
+                    *.tar.gz)    tar xvzf \$1 && tar dvf \$1 \$(find . -type d -name '*[!.tar.gz]') ;;
+                    *.gz)        gunzip \$1                                                         ;;
+                    *.tar)       tar xvf \$1 && tar dvf \$1 \$(find . -type d -name '*[!.tar]')     ;;
+                    *.zip)       unzip \$1                                                          ;;
+                    *)           echo "extract: '\$1' - unknown archive method"                     ;;
                 esac
             else
                 echo "\$1 - file does not exist"
