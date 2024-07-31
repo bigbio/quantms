@@ -3,7 +3,7 @@ process PSMCONVERSION {
     label 'process_medium'
 
     conda "bioconda::pyopenms=3.1.0"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
+    if (workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container) {
         container "https://depot.galaxyproject.org/singularity/pyopenms:3.1.0--py39h9b8898c_0"
     } else {
         container "biocontainers/pyopenms:3.1.0--py39h9b8898c_0"
