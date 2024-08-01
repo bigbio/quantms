@@ -3,11 +3,10 @@ process GETSAMPLE {
     label 'process_low'
 
     conda "bioconda::sdrf-pipelines=0.0.25"
-    if (workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.25--pyhdfd78af_0"
-    } else {
-        container "biocontainers/sdrf-pipelines:0.0.25--pyhdfd78af_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.25--pyhdfd78af_0' :
+        'biocontainers/sdrf-pipelines:0.0.25--pyhdfd78af_0' }"
+
 
     input:
     path design

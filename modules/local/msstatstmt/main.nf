@@ -3,11 +3,9 @@ process MSSTATSTMT {
     label 'process_medium'
 
     conda "bioconda::bioconductor-msstatstmt=2.10.0"
-    if (workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/bioconductor-msstatstmt:2.10.0--r43hdfd78af_0"
-    } else {
-        container "biocontainers/bioconductor-msstatstmt:2.10.0--r43hdfd78af_0"
-    }
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/bioconductor-msstatstmt:2.10.0--r43hdfd78af_0' :
+        'biocontainers/bioconductor-msstatstmt:2.10.0--r43hdfd78af_0' }"
 
     input:
     path msstatstmt_csv_input
