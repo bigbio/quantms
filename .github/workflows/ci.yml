@@ -68,6 +68,7 @@ jobs:
           echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
           ./bin/micromamba shell init -s bash
           echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
+          micromamba clean --all
       - name: Install Singularity with defaults
         if: matrix.exec_profile == 'singularity'
         uses: singularityhub/install-singularity@main
