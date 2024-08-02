@@ -79,7 +79,7 @@ def convert_psm(idxml, spectra_file, export_decoy_psm):
     reference_file_name = os.path.splitext(
         prot_ids[0].getMetaValue("spectra_data")[0].decode("UTF-8")
     )[0]
-    spectra_df = pd.read_csv(spectra_file) if spectra_file else None
+    spectra_df = pd.read_parquet(spectra_file) if spectra_file else None
 
     for peptide_id in pep_ids:
         retention_time = peptide_id.getRT()
