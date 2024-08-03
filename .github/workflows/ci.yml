@@ -58,24 +58,16 @@ jobs:
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
-      - name: Set up miniconda
-        if: matrix.exec_profile == 'conda'
-        uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
-        with:
-          miniconda-version: "latest"
-          auto-update-conda: true
-          channels: conda-forge,bioconda,defaults
-
-      - name: Conda setup
+      - name: Install micromamba
+        env:
+          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
         if: matrix.exec_profile == 'conda'
         run: |
-          conda clean -a
-          conda install -n base conda-libmamba-solver
-          conda config --set solver libmamba
-          conda install conda-forge::mamba
-          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
-          echo $(realpath python) >> $GITHUB_PATH
-
+          wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+          echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
+          ./bin/micromamba shell init -s bash
+          echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
       - name: Install Singularity with defaults
         if: matrix.exec_profile == 'singularity'
         uses: singularityhub/install-singularity@main
@@ -87,14 +79,14 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
       - name: Run pipeline with test data in conda profile (and single-threaded)
-        #        env:
-        #          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda'
+        env:
+          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
+        if: matrix.exec_profile == 'conda' && ${TEST_PROFILE} == 'test_lfq'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,mamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
       - name: Run pipeline with test data in singularity profile
         if: matrix.exec_profile == 'singularity'
         # TODO nf-core: You can customise CI pipeline run tests as required
