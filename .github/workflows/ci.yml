@@ -69,11 +69,11 @@ jobs:
       - name: Conda setup
         if: matrix.profile == 'conda'
         run: |
-            conda clean -a
-            conda install -n base conda-libmamba-solver
-            conda config --set solver libmamba
-            echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
-            echo $(realpath python) >> $GITHUB_PATH
+          conda clean -a
+          conda install -n base conda-libmamba-solver
+          conda config --set solver libmamba
+          echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
+          echo $(realpath python) >> $GITHUB_PATH
 
       - name: Install Singularity with defaults
         if: matrix.exec_profile == 'singularity'
@@ -86,8 +86,8 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
       - name: Run pipeline with test data in conda profile (and single-threaded)
-#        env:
-#          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
+        #        env:
+        #          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
         if: matrix.exec_profile == 'conda'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
