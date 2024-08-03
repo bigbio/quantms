@@ -16,11 +16,11 @@ custom_content:
   order:
     - pmultiqc
     - nf-core-quantms-methods-description
-    - nf-core-quantms-summary
     - software_versions
+    - nf-core-quantms-summary
 
 thousandsSep_format: ","
-export_plots: false
+export_plots: true
 custom_logo: "./nf-core-quantms_logo_light.png"
 custom_logo_url: "https://github.com/bigbio/quantms"
 custom_logo_title: "quantms"
@@ -72,15 +72,27 @@ sp:
     fn: "general_stats.tsv"
   quantms/exp_design:
     fn: "*_design.tsv"
-  quantms/ms_info:
-    fn: "*ms_info.parquet"
-  quantms/mzML:
-    fn: "*.mzML"
+  quantms/sdrf:
+    fn: "*.sdrf.tsv"
   quantms/mztab:
     fn: "*.mzTab"
+    num_lines: 0
+  quantms/mzML:
+    fn: "*.mzML"
+    num_lines: 0
+  quantms/ms_info:
+    fn: "*_ms_info.parquet"
+    num_lines: 0
   quantms/idXML:
     fn: "*.idXML"
+    num_lines: 0
   quantms/msstats:
-    fn: "*_msstats_in.csv"
+    fn: "*msstats_in.csv"
+    num_lines: 0
+  quantms/diann_report:
+    fn: "*report.tsv"
+    num_lines: 0
+
+
 
 disable_version_detection: true
