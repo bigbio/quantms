@@ -59,7 +59,7 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Set up miniconda
-        if: matrix.profile == 'conda'
+        if: matrix.exec_profile == 'conda'
         uses: conda-incubator/setup-miniconda@a4260408e20b96e80095f42ff7f1a15b27dd94ca # v3
         with:
           miniconda-version: "latest"
@@ -67,11 +67,12 @@ jobs:
           channels: conda-forge,bioconda,defaults
 
       - name: Conda setup
-        if: matrix.profile == 'conda'
+        if: matrix.exec_profile == 'conda'
         run: |
           conda clean -a
           conda install -n base conda-libmamba-solver
           conda config --set solver libmamba
+          conda install conda-forge::mamba
           echo $(realpath $CONDA)/condabin >> $GITHUB_PATH
           echo $(realpath python) >> $GITHUB_PATH
 
