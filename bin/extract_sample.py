@@ -5,6 +5,7 @@ import errno
 import os
 import sys
 from pathlib import Path
+
 import pandas as pd
 
 
@@ -25,7 +26,7 @@ def extract_sample(expdesign):
     with open(expdesign, "r") as f:
         lines = f.readlines()
         empty_row = lines.index("\n")
-        s_table = [i.replace("\n", "").split("\t") for i in lines[empty_row + 1:]][1:]
+        s_table = [i.replace("\n", "").split("\t") for i in lines[empty_row + 1 :]][1:]
         s_header = lines[empty_row + 1].replace("\n", "").split("\t")
         s_DataFrame = pd.DataFrame(s_table, columns=s_header)
 
@@ -36,9 +37,13 @@ def extract_sample(expdesign):
     else:
         fTable.drop_duplicates(subset=["Spectra_Filepath"], inplace=True)
         for _, row in fTable.iterrows():
-            mixture_id = s_DataFrame[s_DataFrame["Sample"] == row["Sample"]]["MSstats_Mixture"]
-            sample_dt = sample_dt.append({"Spectra_Filepath": row["Spectra_Filepath"], "Sample": mixture_id},
-                                         ignore_index=True)
+            mixture_id = s_DataFrame[s_DataFrame["Sample"] == row["Sample"]][
+                "MSstats_Mixture"
+            ]
+            sample_dt = sample_dt.append(
+                {"Spectra_Filepath": row["Spectra_Filepath"], "Sample": mixture_id},
+                ignore_index=True,
+            )
         sample_dt.to_csv(f"{Path(expdesign).stem}_sample.csv", sep="\t", index=False)
 
 

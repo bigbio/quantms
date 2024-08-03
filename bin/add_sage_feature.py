@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # Add extra features in sage idXML. Adding extra feature in Sage isn't known input for PSMFeatureExtractor
 
-import pyopenms as oms
-import pandas as pd
 import sys
+
+import pandas as pd
+import pyopenms as oms
 
 
 def add_feature(idx_file, output_file, feat_file):
     extra_feat = []
-    feat = pd.read_csv(feat_file, sep='\t')
+    feat = pd.read_csv(feat_file, sep="\t")
     for _, row in feat.iterrows():
-        if row["feature_generator"] == 'psm_file':
+        if row["feature_generator"] == "psm_file":
             continue
         else:
             extra_feat.append(row["feature_name"])

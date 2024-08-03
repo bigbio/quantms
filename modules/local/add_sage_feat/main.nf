@@ -2,12 +2,10 @@ process SAGEFEATURE {
     tag "$meta.mzml_id"
     label 'process_low'
 
-    conda "bioconda::pyopenms=3.1.0"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pyopenms:3.1.0--py39h9b8898c_0"
-    } else {
-        container "biocontainers/pyopenms:3.1.0--py39h9b8898c_0"
-    }
+    conda "bioconda::quantms-utils=0.0.2"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.2--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.2--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(id_file), path(extra_feat)
@@ -22,7 +20,7 @@ process SAGEFEATURE {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    add_sage_feature.py "${id_file}" "${id_file.baseName}_feat.idXML" "${extra_feat}" 2>&1 | tee add_sage_feature.log
+    quantmsutilsc sage2feature --idx_file "${id_file}" --output_file "${id_file.baseName}_feat.idXML" --feat_file "${extra_feat}" 2>&1 | tee add_sage_feature.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

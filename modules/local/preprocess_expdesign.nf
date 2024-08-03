@@ -6,12 +6,10 @@ process PREPROCESS_EXPDESIGN {
     tag "$design.Name"
     label 'process_low'
 
-    conda "bioconda::sdrf-pipelines=0.0.27"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.27--pyhdfd78af_0"
-    } else {
-        container "biocontainers/sdrf-pipelines:0.0.27--pyhdfd78af_0"
-    }
+    conda "bioconda::sdrf-pipelines=0.0.28"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.28--pyhdfd78af_0' :
+        'biocontainers/sdrf-pipelines:0.0.28--pyhdfd78af_0' }"
 
     input:
     path design

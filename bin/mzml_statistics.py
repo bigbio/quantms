@@ -1,18 +1,26 @@
 #!/usr/bin/env python
 """
-This script parse the mass spectrum file and generates a set of statistics about the file.
+This script parses the mass spectrum file and generates a set of statistics about the file.
 License: Apache 2.0
 Authors: Hong Wong, Yasset Perez-Riverol
 """
+import re
+import sqlite3
 import sys
 from pathlib import Path
-import sqlite3
-import re
+
 import pandas as pd
+import pyarrow
 from pyopenms import MSExperiment, MzMLFile
 
 
 def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
+    """
+    Parse the mass spectrum file and generate a set of statistics about the file.
+    @param ms_path: The file name of the mass spectrum file
+    @param id_only: If True, it will save a csv with the spectrum id, mz and intensity
+
+    """
     file_columns = [
         "SpectrumID",
         "MSLevel",
@@ -26,6 +34,14 @@ def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
     ]
 
     def parse_mzml(file_name: str, file_columns: list, id_only: bool = False):
+        """
+        Parse mzML file and return a pandas DataFrame with the information. If id_only is True, it will also save a csv.
+        @param file_name: The file name of the mzML file
+        @param file_columns: The columns of the DataFrame
+        @param id_only: If True, it will save a csv with the spectrum id, mz and intensity
+        @return: A pandas DataFrame with the information of the mzML file
+        """
+
         info = []
         psm_part_info = []
         exp = MSExperiment()
@@ -50,27 +66,65 @@ def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
                 tic = spectrum.getMetaValue("total ion current")
 
             if MSLevel == 1:
-                info_list = [id_, MSLevel, None, peak_per_ms, bpc, tic, rt, None, acquisition_datetime]
+                info_list = [
+                    id_,
+                    MSLevel,
+                    None,
+                    peak_per_ms,
+                    bpc,
+                    tic,
+                    rt,
+                    None,
+                    acquisition_datetime,
+                ]
             elif MSLevel == 2:
                 charge_state = spectrum.getPrecursors()[0].getCharge()
-                emz = spectrum.getPrecursors()[0].getMZ() if spectrum.getPrecursors()[0].getMZ() else None
-                info_list = [id_, MSLevel, charge_state, peak_per_ms, bpc, tic, rt, emz, acquisition_datetime]
+                emz = (
+                    spectrum.getPrecursors()[0].getMZ()
+                    if spectrum.getPrecursors()[0].getMZ()
+                    else None
+                )
+                info_list = [
+                    id_,
+                    MSLevel,
+                    charge_state,
+                    peak_per_ms,
+                    bpc,
+                    tic,
+                    rt,
+                    emz,
+                    acquisition_datetime,
+                ]
                 mz_array = peaks_tuple[0]
                 intensity_array = peaks_tuple[1]
             else:
-                info_list = [id_, MSLevel, None, None, None, None, rt, None, acquisition_datetime]
+                info_list = [
+                    id_,
+                    MSLevel,
+                    None,
+                    None,
+                    None,
+                    None,
+                    rt,
+                    None,
+                    acquisition_datetime,
+                ]
 
             if id_only and MSLevel == 2:
-                psm_part_info.append([re.findall(r"[scan|spectrum]=(\d+)", id_)[0], MSLevel, mz_array, intensity_array])
+                psm_part_info.append(
+                    [
+                        re.findall(r"[scan|spectrum]=(\d+)", id_)[0],
+                        MSLevel,
+                        mz_array,
+                        intensity_array,
+                    ]
+                )
             info.append(info_list)
 
         if id_only and len(psm_part_info) > 0:
-            pd.DataFrame(psm_part_info, columns=["scan", "ms_level", "mz", "intensity"]).to_csv(
-                f"{Path(ms_path).stem}_spectrum_df.csv",
-                mode="w",
-                index=False,
-                header=True,
-            )
+            pd.DataFrame(
+                psm_part_info, columns=["scan", "ms_level", "mz", "intensity"]
+            ).to_parquet(f"{Path(ms_path).stem}_spectrum_df.parquet", index=False)
 
         return pd.DataFrame(info, columns=file_columns)
 
@@ -82,10 +136,15 @@ def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
         conn = sqlite3.connect(sql_filepath)
         c = conn.cursor()
 
-        datetime_cmd = "SELECT Value FROM GlobalMetadata WHERE key='AcquisitionDateTime'"
+        datetime_cmd = (
+            "SELECT Value FROM GlobalMetadata WHERE key='AcquisitionDateTime'"
+        )
         AcquisitionDateTime = c.execute(datetime_cmd).fetchall()[0][0]
 
-        df = pd.read_sql_query("SELECT Id, MsMsType, NumPeaks, MaxIntensity, SummedIntensities, Time FROM frames", conn)
+        df = pd.read_sql_query(
+            "SELECT Id, MsMsType, NumPeaks, MaxIntensity, SummedIntensities, Time FROM frames",
+            conn,
+        )
         df["AcquisitionDateTime"] = AcquisitionDateTime
 
         # {8:'DDA-PASEF', 9:'DIA-PASEF'}
@@ -104,7 +163,9 @@ def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
             precursor_df = pd.read_sql_query("SELECT * from Precursors", conn)
         except sqlite3.OperationalError as e:
             if "no such table: Precursors" in str(e):
-                print(f"No precursers recorded in {file_name}, This is normal for DIA data.")
+                print(
+                    f"No precursers recorded in {file_name}, This is normal for DIA data."
+                )
                 precursor_df = pd.DataFrame()
             else:
                 raise
@@ -154,15 +215,11 @@ def ms_dataframe(ms_path: str, id_only: bool = False) -> None:
     elif Path(ms_path).suffix in [".mzML", ".mzml"]:
         ms_df = parse_mzml(ms_path, file_columns, id_only)
     else:
-        msg = f"Unrecognized or inexistent mass spec file '{ms_path}'"
+        msg = f"Unrecognized or the mass spec file '{ms_path}' do not exist"
         raise RuntimeError(msg)
 
-    ms_df.to_csv(
-        f"{Path(ms_path).stem}_ms_info.tsv",
-        mode="w",
-        sep="\t",
-        index=False,
-        header=True,
+    ms_df.to_parquet(
+        f"{Path(ms_path).stem}_ms_info.parquet", engine="pyarrow", index=False
     )
 
 

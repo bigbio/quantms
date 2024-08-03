@@ -53,11 +53,18 @@ def convert_mod(unimod_database, fix_mod: str, var_mod: str) -> Tuple[List, List
             tag = 0
             for modification in unimod_database.modifications:
                 if modification.get_name() == mod.split(" ")[0]:
-                    diann_mod = modification.get_name() + "," + str(modification._delta_mono_mass)
+                    diann_mod = (
+                        modification.get_name()
+                        + ","
+                        + str(modification._delta_mono_mass)
+                    )
                     tag = 1
                     break
             if tag == 0:
-                print("Warning: Currently only supported unimod modifications for DIA pipeline. Skipped: " + mod)
+                print(
+                    "Warning: Currently only supported unimod modifications for DIA pipeline. Skipped: "
+                    + mod
+                )
                 continue
             site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
             if site == "Protein N-term":
@@ -65,7 +72,12 @@ def convert_mod(unimod_database, fix_mod: str, var_mod: str) -> Tuple[List, List
             elif site == "N-term":
                 site = "n"
 
-            if "TMT" in diann_mod or "Label" in diann_mod or "iTRAQ" in diann_mod or "mTRAQ" in diann_mod:
+            if (
+                "TMT" in diann_mod
+                or "Label" in diann_mod
+                or "iTRAQ" in diann_mod
+                or "mTRAQ" in diann_mod
+            ):
                 fix_ptm.append(diann_mod + "," + site + "," + "label")
             else:
                 fix_ptm.append(diann_mod + "," + site)
@@ -75,11 +87,18 @@ def convert_mod(unimod_database, fix_mod: str, var_mod: str) -> Tuple[List, List
             tag = 0
             for modification in unimod_database.modifications:
                 if modification.get_name() == mod.split(" ")[0]:
-                    diann_mod = modification.get_name() + "," + str(modification._delta_mono_mass)
+                    diann_mod = (
+                        modification.get_name()
+                        + ","
+                        + str(modification._delta_mono_mass)
+                    )
                     tag = 1
                     break
             if tag == 0:
-                print("Warning: Currently only supported unimod modifications for DIA pipeline. Skipped: " + mod)
+                print(
+                    "Warning: Currently only supported unimod modifications for DIA pipeline. Skipped: "
+                    + mod
+                )
                 continue
             site = re.findall(pattern, " ".join(mod.split(" ")[1:]))[0]
             if site == "Protein N-term":
@@ -87,7 +106,12 @@ def convert_mod(unimod_database, fix_mod: str, var_mod: str) -> Tuple[List, List
             elif site == "N-term":
                 site = "n"
 
-            if "TMT" in diann_mod or "Label" in diann_mod or "iTRAQ" in diann_mod or "mTRAQ" in diann_mod:
+            if (
+                "TMT" in diann_mod
+                or "Label" in diann_mod
+                or "iTRAQ" in diann_mod
+                or "mTRAQ" in diann_mod
+            ):
                 var_ptm.append(diann_mod + "," + site + "," + "label")
             else:
                 var_ptm.append(diann_mod + "," + site)
