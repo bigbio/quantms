@@ -81,7 +81,7 @@ jobs:
       - name: Run pipeline with test data in conda profile (and single-threaded)
         env:
           MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda' && ${TEST_PROFILE} == 'test_lfq'
+        if: matrix.exec_profile == 'conda'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
