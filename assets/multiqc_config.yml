@@ -93,6 +93,4 @@ sp:
     fn: "*report.tsv"
     num_lines: 0
 
-
-
 disable_version_detection: true
