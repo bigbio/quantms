@@ -39,16 +39,38 @@ process DECOMPRESS {
     String prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
+    function verify_tar {
+        exit_code=0
+        error=\$(tar df \$1 2>&1) || exit_code=\$?
+        if [ \$exit_code -eq 2 ]; then
+            echo "\${error}"
+            exit 2
+        fi
+
+        case \${error} in
+            *'No such file'* )
+                echo "\${error}" | grep "No such file"
+                exit 1
+                ;;
+            *'Size differs'* )
+                echo "\${error}" | grep "Size differs"
+                exit 1
+                ;;
+        esac
+    }
+
+
+
     function extract {
         if [ -z "\$1" ]; then
             echo "Usage: extract <path/file_name>.<gz|tar|tar.bz2>"
         else
             if [ -f \$1 ]; then
                 case \$1 in
-                    *.tar.gz)    tar xvzf \$1    ;;
-                    *.gz)        gunzip \$1      ;;
-                    *.tar)       tar xvf \$1     ;;
-                    *.zip)       unzip \$1     ;;
+                    *.tar.gz)    tar xvzf \$1 && verify_tar \$1               ;;
+                    *.gz)        gunzip \$1                                     ;;
+                    *.tar)       tar xvf \$1 && verify_tar \$1                ;;
+                    *.zip)       unzip \$1                                      ;;
                     *)           echo "extract: '\$1' - unknown archive method" ;;
                 esac
             else

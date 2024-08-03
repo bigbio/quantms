@@ -2,10 +2,10 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.21"
+    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.25"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.22--pyhdfd78af_0' :
-        'biocontainers/pmultiqc:0.0.22--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.25--pyhdfd78af_0' :
+        'biocontainers/pmultiqc:0.0.25--pyhdfd78af_0' }"
 
 
     input:
