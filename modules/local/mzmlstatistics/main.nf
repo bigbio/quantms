@@ -22,7 +22,9 @@ process MZMLSTATISTICS {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    mzml_statistics.py "${ms_file}" \\ $params.id_only \\ 2>&1 | tee mzml_statistics.log
+    mzml_statistics.py "${ms_file}" \\
+        $params.id_only \\
+        2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
