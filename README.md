@@ -126,7 +126,17 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 For further information or help, don't hesitate to get in touch on the [Slack `#quantms` channel](https://nfcore.slack.com/channels/quantms) (you can join with [this invite](https://nf-co.re/join/slack)).
 
-## Citations
+## How to cite
+
+If you use **bigbio/quantms** for your analysis, please cite it using the following citation:
+
+> **quantms: a cloud-based pipeline for quantitative proteomics enables the reanalysis of public proteomics data**
+>
+> Chengxin Dai, Julianus Pfeuffer, Hong Wang, Ping Zheng, Lukas Käll, Timo Sachsenberg, Vadim Demichev, Mingze Bai, Oliver Kohlbacher & Yasset Perez-Riverol
+>
+> _Nat Methods._ 2024 July 4. doi: [10.1038/s41592-024-02343-1](https://doi.org/10.1038/s41592-024-02343-1).
+
+## Other citations
 
 <!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
 <!-- If you use nf-core/quantms for your analysis, please cite it using the following doi: [10.5281/zenodo.7754148](https://doi.org/10.5281/zenodo.7754148) -->
