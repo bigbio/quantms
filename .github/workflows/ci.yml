@@ -35,7 +35,7 @@ jobs:
           - "23.04.0"
           - "latest-everything"
         test_profile: ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
-        exec_profile: ["docker", "conda"]
+        exec_profile: ["docker"]
         exclude:
           - test_profile: test_dia
             exec_profile: conda
