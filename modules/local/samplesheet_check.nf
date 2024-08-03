@@ -3,10 +3,10 @@ process SAMPLESHEET_CHECK {
     tag "$input_file"
     label 'process_single'
 
-    conda "bioconda::sdrf-pipelines=0.0.27"
+    conda "bioconda::sdrf-pipelines=0.0.28"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.27--pyhdfd78af_0' :
-        'biocontainers/sdrf-pipelines:0.0.27--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.28--pyhdfd78af_0' :
+        'biocontainers/sdrf-pipelines:0.0.28--pyhdfd78af_0' }"
 
     input:
     path input_file
