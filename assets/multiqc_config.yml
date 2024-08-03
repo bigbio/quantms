@@ -4,20 +4,13 @@ report_comment: >
   <a href="https://nf-co.re/quantms/dev/docs/output" target="_blank">documentation</a>.
 report_section_order:
   pmultiqc:
-    order: 1
+    order: 1000
   "nf-core-quantms-methods-description":
     order: -1000
   software_versions:
     order: -1001
   "nf-core-quantms-summary":
     order: -1002
-
-custom_content:
-  order:
-    - pmultiqc
-    - nf-core-quantms-methods-description
-    - software_versions
-    - nf-core-quantms-summary
 
 thousandsSep_format: ","
 export_plots: true
