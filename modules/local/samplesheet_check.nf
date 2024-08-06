@@ -24,20 +24,20 @@ process SAMPLESHEET_CHECK {
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
     // TODO validate experimental design file
     def args = task.ext.args ?: ''
-    def skip_sdrf_validation = params.validate_ontologies == false ? "--skip_sdrf_validation" : ""
-    def skip_ms_validation = params.skip_ms_validation == true ? "--skip_ms_validation" : ""
-    def skip_factor_validation = params.skip_factor_validation == true ? "--skip_factor_validation" : ""
-    def skip_experimental_design_validation = params.skip_experimental_design_validation == true ? "--skip_experimental_design_validation" : ""
-    def use_ols_cache_only = params.use_ols_cache_only == true ? "--use_ols_cache_only" : ""
+    def string_skip_sdrf_validation = params.validate_ontologies == false ? "--skip_sdrf_validation" : ""
+    def string_skip_ms_validation = params.skip_ms_validation == true ? "--skip_ms_validation" : ""
+    def string_skip_factor_validation = params.skip_factor_validation == true ? "--skip_factor_validation" : ""
+    def string_skip_experimental_design_validation = params.skip_experimental_design_validation == true ? "--skip_experimental_design_validation" : ""
+    def string_use_ols_cache_only = params.use_ols_cache_only == true ? "--use_ols_cache_only" : ""
+    def string_is_sdrf = is_sdrf == true ? "--is_sdrf" : ""
 
     """
-    check_samplesheet.py validate --exp_design "${input_file}" \\
-    --is_sdrf ${is_sdrf} \\
-    ${skip_sdrf_validation} \\
-    ${skip_ms_validation} \\
-    ${skip_factor_validation} \\
-    ${skip_experimental_design_validation} \\
-    ${use_ols_cache_only} 2>&1 | tee input_check.log
+    check_samplesheet.py validate --exp_design "${input_file}" --is_sdrf \\
+    ${string_skip_sdrf_validation} \\
+    ${string_skip_ms_validation} \\
+    ${string_skip_factor_validation} \\
+    ${string_skip_experimental_design_validation} \\
+    ${string_use_ols_cache_only} 2>&1 | tee input_check.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
