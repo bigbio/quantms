@@ -97,8 +97,7 @@
                     "fa_icon": "far fa-check-square",
                     "help_text": "Skip validation of factor columns in the SDRF. Only useful if your factor values are correct but the sdrf-validation library does not recognize them."
                 },
-                "skip_experimental_design_validation":
-                {
+                "skip_experimental_design_validation": {
                     "type": "boolean",
                     "description": "Skip validation of experimental design.",
                     "fa_icon": "far fa-check-square",
