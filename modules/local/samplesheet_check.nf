@@ -32,7 +32,7 @@ process SAMPLESHEET_CHECK {
     def string_is_sdrf = is_sdrf == true ? "--is_sdrf" : ""
 
     """
-    check_samplesheet.py validate --exp_design "${input_file}" --is_sdrf \\
+    check_samplesheet.py validate --exp_design "${input_file}" ${string_is_sdrf} \\
     ${string_skip_sdrf_validation} \\
     ${string_skip_ms_validation} \\
     ${string_skip_factor_validation} \\
