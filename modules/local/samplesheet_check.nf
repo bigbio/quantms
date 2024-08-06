@@ -24,7 +24,7 @@ process SAMPLESHEET_CHECK {
     script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
     // TODO validate experimental design file
     def args = task.ext.args ?: ''
-    def skip_sdrf_validation = params.skip_sdrf_validation == true ? "--skip_sdrf_validation" : ""
+    def skip_sdrf_validation = params.validate_ontologies == false ? "--skip_sdrf_validation" : ""
     def skip_ms_validation = params.skip_ms_validation == true ? "--skip_ms_validation" : ""
     def skip_factor_validation = params.skip_factor_validation == true ? "--skip_factor_validation" : ""
     def skip_experimental_design_validation = params.skip_experimental_design_validation == true ? "--skip_experimental_design_validation" : ""
