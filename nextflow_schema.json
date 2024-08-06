@@ -70,12 +70,44 @@
                     "description": "Whether export PSM from decoy in final identification results",
                     "fa_icon": "far fa-check-square",
                     "help_text": "Whether export PSM from decoy in final identification results for dda_id subworkflow for specific cases."
-                },
+                }
+            }
+        },
+        "sdrf_validation": {
+            "title": "SDRF validation",
+            "type": "object",
+            "description": "Settings for validating the input SDRF file.",
+            "default": "",
+            "properties": {
                 "validate_ontologies": {
                     "type": "boolean",
                     "description": "Check that ontology terms in an input SDRF file exist.",
                     "fa_icon": "far fa-check-square",
                     "help_text": "If false, only a basic readability check is performed on an input SDRF file. This option is useful when ontology providers are inaccessible."
+                },
+                "skip_ms_validation": {
+                    "type": "boolean",
+                    "description": "Skip validation of mass spectrometry files.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Skip validation of mass spectrometry metadata, including PTMs, tolerances or enzymes. Only useful if your metadata is correct but the terms are not in ontologies."
+                },
+                "skip_factor_validation": {
+                    "type": "boolean",
+                    "description": "Skip validation of factor columns.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Skip validation of factor columns in the SDRF. Only useful if your factor values are correct but the sdrf-validation library does not recognize them."
+                },
+                "skip_experimental_design_validation": {
+                    "type": "boolean",
+                    "description": "Skip validation of experimental design.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Skip validation of experimental design in the SDRF. Only useful if your experimental design is correct but the sdrf-validation library does not recognize it."
+                },
+                "use_ols_cache_only": {
+                    "type": "boolean",
+                    "description": "Use cached version of the Ontology Lookup Service (OLS).",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Use only the cached version of the Ontology Lookup Service (OLS) for ontology term validation. This is useful if you don't want the pipeline to query internet services."
                 }
             }
         },
@@ -1407,6 +1439,9 @@
         },
         {
             "$ref": "#/definitions/protein_database"
+        },
+        {
+            "$ref": "#/definitions/sdrf_validation"
         },
         {
             "$ref": "#/definitions/spectrum_preprocessing"
