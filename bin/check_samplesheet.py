@@ -205,7 +205,7 @@ def validate(
             use_ols_cache_only=use_ols_cache_only,
         )
     else:
-        check_expdesign(input)
+        check_expdesign(exp_design)
 
 
 cli.add_command(validate)
