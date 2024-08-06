@@ -31,7 +31,7 @@ process SAMPLESHEET_CHECK {
     def use_ols_cache_only = params.use_ols_cache_only == true ? "--use_ols_cache_only" : ""
 
     """
-    check_samplesheet.py --exp_design "${input_file}" \\
+    check_samplesheet.py validate --exp_design "${input_file}" \\
     --is_sdrf ${is_sdrf} \\
     ${skip_sdrf_validation} \\
     ${skip_ms_validation} \\
