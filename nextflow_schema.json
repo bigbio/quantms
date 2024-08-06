@@ -1441,6 +1441,9 @@
             "$ref": "#/definitions/protein_database"
         },
         {
+            "$ref": "#/definitions/sdrf_validation"
+        },
+        {
             "$ref": "#/definitions/spectrum_preprocessing"
         },
         {
