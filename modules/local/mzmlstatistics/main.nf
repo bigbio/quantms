@@ -20,10 +20,11 @@ process MZMLSTATISTICS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+    def string_id_only = params.id_only == true ? "--id_only" : ""
 
     """
     quantmsutilsc mzmlstats --ms_path "${ms_file}" \\
-        $params.id_only \\
+        ${string_id_only} \\
         2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
