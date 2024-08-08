@@ -43,7 +43,7 @@ process MS2RESCORE {
     }
 
     """
-    quantmsutils ms2rescore \\
+    quantmsutilsc ms2rescore \\
         --psm_file $idxml \\
         --spectrum_path . \\
         --ms2_tolerance $ms2_tolerence \\
