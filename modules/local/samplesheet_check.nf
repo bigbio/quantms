@@ -3,10 +3,10 @@ process SAMPLESHEET_CHECK {
     tag "$input_file"
     label 'process_single'
 
-    conda "bioconda::sdrf-pipelines=0.0.29"
+    conda "bioconda::quantms-utils=0.0.3"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.29--pyhdfd78af_0' :
-        'biocontainers/sdrf-pipelines:0.0.29--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.3--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.3--pyhdfd78af_0' }"
 
     input:
     path input_file
@@ -32,7 +32,7 @@ process SAMPLESHEET_CHECK {
     def string_is_sdrf = is_sdrf == true ? "--is_sdrf" : ""
 
     """
-    check_samplesheet.py validate --exp_design "${input_file}" ${string_is_sdrf} \\
+    quantmsutilsc checksamplesheet --exp_design "${input_file}" ${string_is_sdrf} \\
     ${string_skip_sdrf_validation} \\
     ${string_skip_ms_validation} \\
     ${string_skip_factor_validation} \\
