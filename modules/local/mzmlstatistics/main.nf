@@ -22,7 +22,7 @@ process MZMLSTATISTICS {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    quantmsutils mzmlstats --mzml_path "${ms_file}" \\
+    quantmsutilsc mzmlstats --mzml_path "${ms_file}" \\
         $params.id_only \\
         2>&1 | tee mzml_statistics.log
 
