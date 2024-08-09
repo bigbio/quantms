@@ -2,10 +2,10 @@ process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
     label 'process_low'
 
-    conda 'conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22'
+    conda 'conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.29'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0' :
-        'biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.29--pyhdfd78af_0' :
+        'biocontainers/sdrf-pipelines:0.0.29--pyhdfd78af_0' }"
 
 
     input:

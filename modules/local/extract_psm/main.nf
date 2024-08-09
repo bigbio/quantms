@@ -2,10 +2,10 @@ process PSMCONVERSION {
     tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda "bioconda::pmultiqc=0.0.25"
+    conda "bioconda::quantms-utils=0.0.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.25--pyhdfd78af_0' :
-        'biocontainers/pmultiqc:0.0.25--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.4--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.4--pyhdfd78af_0' }"
 
 
     input:
@@ -19,12 +19,13 @@ process PSMCONVERSION {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+    def string_export_decoy_psm = params.export_decoy_psm == true ? "--export_decoy_psm" : ""
 
 
     """
-    psm_conversion.py "${idxml_file}" \\
-        ${spectrum_df} \\
-        $params.export_decoy_psm \\
+    quantmsutilsc psmconvert --idxml "${idxml_file}" \\
+        --spectra_file ${spectrum_df} \\
+        ${string_export_decoy_psm} \\
         2>&1 | tee extract_idxml.log
 
     cat <<-END_VERSIONS > versions.yml
