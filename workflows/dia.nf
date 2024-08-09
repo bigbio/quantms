@@ -78,7 +78,7 @@ workflow DIA {
         if (params.random_preanalysis) {
             preanalysis_subset = ch_file_preparation_results
                 .toSortedList()
-                .flatten()
+                .flatMap()
                 .randomSample(params.empirical_assembly_ms_n, params.random_preanalysis_seed)
             empirical_lib_files = preanalysis_subset
                 .map { result -> result[1] }
