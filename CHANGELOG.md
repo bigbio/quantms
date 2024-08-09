@@ -12,7 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - [#400](https://github.com/bigbio/quantms/pull/400) The random file selection when using `random_preanalysis` with DIANN is now reproducible.
 
-
 ### `Changed`
 
 ### `Fixed`
