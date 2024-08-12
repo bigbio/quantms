@@ -76,9 +76,10 @@ workflow DIA {
         // MODULE: DIANN_PRELIMINARY_ANALYSIS
         //
         if (params.random_preanalysis) {
-            preanalysis_seed = 2024
             preanalysis_subset = ch_file_preparation_results
-                .randomSample(params.empirical_assembly_ms_n, preanalysis_seed)
+                .toSortedList()
+                .flatMap()
+                .randomSample(params.empirical_assembly_ms_n, params.random_preanalysis_seed)
             empirical_lib_files = preanalysis_subset
                 .map { result -> result[1] }
                 .collect()

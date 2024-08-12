@@ -1091,6 +1091,12 @@
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
+                "random_preanalysis_seed": {
+                    "type": "integer",
+                    "description": "Set the random seed for the random selection of spectrum files to generate the empirical library.",
+                    "default": 42,
+                    "fa_icon": false
+                },
                 "empirical_assembly_ms_n": {
                     "type": "integer",
                     "description": "The number of randomly selected spectrum files.",
