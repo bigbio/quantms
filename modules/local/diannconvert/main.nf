@@ -33,7 +33,7 @@ process DIANNCONVERT {
                         meta.precursormasstoleranceunit,meta.enzyme,meta.fixedmodifications,meta.variablemodifications].join(';')
 
     """
-    diann_convert.py convert \\
+    quantmsutilsc diann2mztab \\
         --folder ./ \\
         --exp_design ${exp_design} \\
         --diann_version ./version/versions.yml \\
