@@ -2,11 +2,10 @@ process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
     label 'process_low'
 
-    conda 'conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.29'
+    conda "bioconda::quantms-utils=0.0.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.29--pyhdfd78af_0' :
-        'biocontainers/sdrf-pipelines:0.0.29--pyhdfd78af_0' }"
-
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.6--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.6--pyhdfd78af_0' }"
 
     input:
     val(meta)
@@ -20,7 +19,7 @@ process GENERATE_DIANN_CFG {
     def args = task.ext.args ?: ''
 
     """
-    prepare_diann_parameters.py generate \\
+    quantmsutilsc dianncfg \\
         --enzyme "${meta.enzyme}" \\
         --fix_mod "${meta.fixedmodifications}" \\
         --var_mod "${meta.variablemodifications}" \\
