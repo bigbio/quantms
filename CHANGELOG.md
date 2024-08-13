@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Added`
 
 - [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
+- [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
+- [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
+- [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
 
 ### Fixed
 
@@ -15,11 +18,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
+- [#391](https://github.com/bigbio/quantms/pull/391) Move mzML statistics to parquet files from csv
+- [#386](https://github.com/bigbio/quantms/pull/386) Make optional the validation of ontology terms in the input SDRF file.
+- [#374](https://github.com/bigbio/quantms/pull/374) Create the common msgf+ database in one step before the msgf+ runs on each ms run file.
+-
+
 ### `Fixed`
 
 - [#396](https://github.com/bigbio/quantms/pull/396) Added verification of tar archive unpacking to prevent silent failures.
 
 ### `Dependencies`
+
+- quantms-utils==0.0.7
+- diann==1.9.1
 
 ### `Parameters`
 
