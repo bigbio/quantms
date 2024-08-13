@@ -2,10 +2,10 @@ process PSMCONVERSION {
     tag "$meta.mzml_id"
     label 'process_medium'
 
-    conda "bioconda::quantms-utils=0.0.4"
+    conda "bioconda::quantms-utils=0.0.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.4--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.4--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.6--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.6--pyhdfd78af_0' }"
 
 
     input:
