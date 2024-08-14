@@ -2,14 +2,14 @@
 
 ## [Pipeline](https://www.researchsquare.com/article/rs-3002027/v1)
 
-> Chengxin Dai, Julianus Pfeuffer, Hong Wang et al. quantms: A cloud-based pipeline for proteomics reanalysis enables the quantification of 17521 proteins in 9,502 human samples., 01 June 2023, PREPRINT (Version 1) available at Research Square [https://doi.org/10.21203/rs.3.rs-3002027/v1]
+> Dai C, Pfeuffer J, Wang H, Zheng P, Käll L, Sachsenberg T, Demichev V, Bai M, Kohlbacher O, Perez-Riverol Y. quantms: a cloud-based pipeline for quantitative proteomics enables the reanalysis of public proteomics data. Nat Methods. 2024 Jul 4. doi: 10.1038/s41592-024-02343-1. Epub ahead of print. PMID: 38965444.
 
 ## Pipeline research manuscripts
 
 - [proteogenomics](https://pubmed.ncbi.nlm.nih.gov/34904638/)
 
-  > Umer HM, Audain E, Zhu Y, Pfeuffer J, Sachsenberg T, Lehtiö J, Branca RM, Perez-Riverol Y. Generation of ENSEMBL-based proteogenomics databases boosts the identification of non-canonical peptides. Bioinformatics. 2022 Feb 7;38(5):1470-1472. doi: 10.1093/bioinformatics/btab838. PMID: 34904638; PMCID: PMC8825679.
-
+  > - Umer HM, Audain E, Zhu Y, Pfeuffer J, Sachsenberg T, Lehtiö J, Branca RM, Perez-Riverol Y. Generation of ENSEMBL-based proteogenomics databases boosts the identification of non-canonical peptides. Bioinformatics. 2022 Feb 7;38(5):1470-1472. doi: 10.1093/bioinformatics/btab838. PMID: 34904638; PMCID: PMC8825679.
+  > - Wang, Dong, Robbin Bouwmeester, Ping Zheng, Chengxin Dai, Aniel Sanchez Puente, Kunxian Shu, Mingze Bai, Husen M. Umer, and Yasset Perez-Riverol. "Proteogenomics analysis of human tissues using pangenomes." bioRxiv (2024): 2024-05.
 - [lfq dda benchmark](https://pubmed.ncbi.nlm.nih.gov/37220883/)
 
   > Bai M, Deng J, Dai C, Pfeuffer J, Sachsenberg T, Perez-Riverol Y. LFQ-Based Peptide and Protein Intensity Differential Expression Analysis. J Proteome Res. 2023 Jun 2;22(6):2114-2123. doi: 10.1021/acs.jproteome.2c00812. Epub 2023 May 23. PMID: 37220883; PMCID: PMC10243145.
