@@ -11,7 +11,7 @@
   > Umer HM, Audain E, Zhu Y, Pfeuffer J, Sachsenberg T, Lehtiö J, Branca RM, Perez-Riverol Y. Generation of ENSEMBL-based proteogenomics databases boosts the identification of non-canonical peptides. Bioinformatics. 2022 Feb 7;38(5):1470-1472. doi: 10.1093/bioinformatics/btab838. PMID: 34904638; PMCID: PMC8825679.
 
   > Wang, Dong, Robbin Bouwmeester, Ping Zheng, Chengxin Dai, Aniel Sanchez Puente, Kunxian Shu, Mingze Bai, Husen M. Umer, and Yasset Perez-Riverol. "Proteogenomics analysis of human tissues using pangenomes." bioRxiv (2024): 2024-05.
--
+
 - [lfq dda benchmark](https://pubmed.ncbi.nlm.nih.gov/37220883/)
 
   > Bai M, Deng J, Dai C, Pfeuffer J, Sachsenberg T, Perez-Riverol Y. LFQ-Based Peptide and Protein Intensity Differential Expression Analysis. J Proteome Res. 2023 Jun 2;22(6):2114-2123. doi: 10.1021/acs.jproteome.2c00812. Epub 2023 May 23. PMID: 37220883; PMCID: PMC10243145.
