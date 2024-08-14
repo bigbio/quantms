@@ -3,10 +3,10 @@ process MZMLSTATISTICS {
     label 'process_medium'
     label 'process_single'
 
-    conda "bioconda::quantms-utils=0.0.2"
+    conda "bioconda::quantms-utils=0.0.7"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.2--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.2--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.7--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.7--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(ms_file)
@@ -20,10 +20,11 @@ process MZMLSTATISTICS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+    def string_id_only = params.id_only == true ? "--id_only" : ""
 
     """
-    mzml_statistics.py "${ms_file}" \\
-        $params.id_only \\
+    quantmsutilsc mzmlstats --ms_path "${ms_file}" \\
+        ${string_id_only} \\
         2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
