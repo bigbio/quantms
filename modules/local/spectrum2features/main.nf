@@ -1,4 +1,4 @@
-process SAGEFEATURE {
+process SPECTRUM2FEATURES {
     tag "$meta.mzml_id"
     label 'process_low'
 
@@ -8,10 +8,10 @@ process SAGEFEATURE {
         'biocontainers/quantms-utils:0.0.7--pyhdfd78af_0' }"
 
     input:
-    tuple val(meta), path(id_file), path(extra_feat)
+    tuple val(meta), path(ms_file), path(id_file)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_feat.idXML"), emit: id_files_feat
+    tuple val(meta), path("${id_file.baseName}_snr.idXML"), emit: id_files_snr
     path "versions.yml", emit: version
     path "*.log", emit: log
 
@@ -20,7 +20,7 @@ process SAGEFEATURE {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    quantmsutilsc sage2feature --idx_file "${id_file}" --output_file "${id_file.baseName}_feat.idXML" --feat_file "${extra_feat}" 2>&1 | tee add_sage_feature.log
+    quantmsutilsc spectrum2feature --ms_path "${ms_path}" --idxml "${id_file}" --output "${id_file.baseName}_snr.idXML" 2>&1 | tee add_snr_feature.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
