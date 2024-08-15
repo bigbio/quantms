@@ -41,7 +41,7 @@ process SAMPLESHEET_CHECK {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(parse_sdrf --version 2>&1 | awk -F ' ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

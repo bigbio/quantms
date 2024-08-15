@@ -24,7 +24,7 @@ process SPECTRUM2FEATURES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        quantmsutils: \$(pip show quantmsutils | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

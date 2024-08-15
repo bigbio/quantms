@@ -27,7 +27,7 @@ process GENERATE_DIANN_CFG {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(pip show sdrf-pipelines | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }
