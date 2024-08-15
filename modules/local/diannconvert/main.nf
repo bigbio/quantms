@@ -2,10 +2,10 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda "bioconda::quantms-utils=0.0.7"
+    conda "bioconda::quantms-utils=0.0.8"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.7--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.7--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.8--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.8--pyhdfd78af_0' }"
 
     input:
     path(report)
@@ -45,7 +45,7 @@ process DIANNCONVERT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyopenms: \$(pip show pyopenms | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

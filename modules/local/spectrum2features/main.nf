@@ -1,5 +1,5 @@
-process GENERATE_DIANN_CFG {
-    tag "$meta.experiment_id"
+process SPECTRUM2FEATURES {
+    tag "$meta.mzml_id"
     label 'process_low'
 
     conda "bioconda::quantms-utils=0.0.8"
@@ -8,22 +8,19 @@ process GENERATE_DIANN_CFG {
         'biocontainers/quantms-utils:0.0.8--pyhdfd78af_0' }"
 
     input:
-    val(meta)
+    tuple val(meta), path(id_file), path(ms_file)
 
     output:
-    path 'diann_config.cfg', emit: diann_cfg
-    path 'versions.yml', emit: version
-    path '*.log'
+    tuple val(meta), path("${id_file.baseName}_snr.idXML"), emit: id_files_snr
+    path "versions.yml", emit: version
+    path "*.log", emit: log
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    quantmsutilsc dianncfg \\
-        --enzyme "${meta.enzyme}" \\
-        --fix_mod "${meta.fixedmodifications}" \\
-        --var_mod "${meta.variablemodifications}" \\
-        2>&1 | tee GENERATE_DIANN_CFG.log
+    quantmsutilsc spectrum2feature --ms_path "${ms_file}" --idxml "${id_file}" --output "${id_file.baseName}_snr.idXML" 2>&1 | tee add_snr_feature.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

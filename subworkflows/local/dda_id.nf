@@ -14,6 +14,7 @@ include { MS2RESCORE                     } from '../../modules/local/ms2rescore/
 include { IDSCORESWITCHER                } from '../../modules/local/openms/idscoreswitcher/main'
 include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
 include { SAGEFEATURE                    } from '../../modules/local/add_sage_feat/main'
+include { SPECTRUM2FEATURES              } from '../../modules/local/spectrum2features/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -77,6 +78,14 @@ workflow DDA_ID {
                 ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)
                 ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
             }
+
+            // Add SNR features to percolator
+            if (params.add_snr_feature_percolator) {
+                SPECTRUM2FEATURES(ch_id_files_feats.combine(ch_file_preparation_results, by: 0))
+                ch_id_files_feats = SPECTRUM2FEATURES.out.id_files_snr
+                ch_software_versions = ch_software_versions.mix(SPECTRUM2FEATURES.out.version)
+            }
+
 
             // Rescoring for independent run, Sample or whole experiments
             if (params.rescore_range == "independent_run") {

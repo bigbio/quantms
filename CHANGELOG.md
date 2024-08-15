@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-- quantms-utils==0.0.7
+- quantms-utils==0.0.8
 - diann==1.9.1
 
 ### `Parameters`

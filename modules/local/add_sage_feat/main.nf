@@ -2,10 +2,10 @@ process SAGEFEATURE {
     tag "$meta.mzml_id"
     label 'process_low'
 
-    conda "bioconda::quantms-utils=0.0.2"
+    conda "bioconda::quantms-utils=0.0.8"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.2--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.2--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.8--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.8--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(id_file), path(extra_feat)
@@ -24,7 +24,7 @@ process SAGEFEATURE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyopenms: \$(pip show pyopenms | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

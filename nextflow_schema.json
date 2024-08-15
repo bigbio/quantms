@@ -485,6 +485,12 @@
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
+                "add_snr_feature_percolator": {
+                    "type": "boolean",
+                    "description": "Whether add signal-to-noise ratio features for identification rescoring in percolator",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
                 "rescore_range": {
                     "type": "string",
                     "description": "Rescoring for independent run, Sample or whole experiments",
