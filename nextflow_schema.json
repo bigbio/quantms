@@ -1004,7 +1004,7 @@
                     "type": "string",
                     "description": "The version of DIA-NN used",
                     "fa_icon": "fas fa-font",
-                    "help_text": "There are differences between the different DIA-NN versions. DIA-NN do not support cloud freely in 1.9.1."
+                    "help_text": "There are differences between the different DIA-NN versions. DIA-NN do not support cloud freely in 1.9.beta.1"
                 },
                 "mass_acc_automatic": {
                     "type": "boolean",
