@@ -25,7 +25,7 @@ output:
   - psm_info:
       type: file
       description: PSM csv file
-      pattern: "*_psm.csv"
+      pattern: "*_psm.parquet"
   - version:
       type: file
       description: File containing software version
