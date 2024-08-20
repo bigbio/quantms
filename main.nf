@@ -27,7 +27,13 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_quan
 // WORKFLOW: Run main nf-core/quantms analysis pipeline
 //
 workflow NFCORE_QUANTMS {
+
+    main:
+
     QUANTMS ()
+
+    emit:
+    multiqc_report = QUANTMS.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 
 /*
@@ -36,13 +42,45 @@ workflow NFCORE_QUANTMS {
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+
+
 //
 // WORKFLOW: Execute a single named workflow for the pipeline
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
+
+    main:
+
+    //
+    // SUBWORKFLOW: Run initialisation tasks
+    //
+    PIPELINE_INITIALISATION (
+        params.version,
+        params.help,
+        params.validate_params,
+        params.monochrome_logs,
+        args,
+        params.outdir,
+        params.input
+    )
+
     NFCORE_QUANTMS ()
+
+    //
+    // SUBWORKFLOW: Run completion tasks
+    //
+    PIPELINE_COMPLETION (
+        params.email,
+        params.email_on_fail,
+        params.plaintext_email,
+        params.outdir,
+        params.monochrome_logs,
+        params.hook_url,
+        NFCORE_QUANTMS.out.multiqc_report
+    )
 }
+
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

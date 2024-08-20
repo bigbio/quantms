@@ -24,7 +24,7 @@ input:
 output:
   - psm_info:
       type: file
-      description: PSM csv file
+      description: PSM parquet file
       pattern: "*_psm.parquet"
   - version:
       type: file

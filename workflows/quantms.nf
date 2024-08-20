@@ -35,6 +35,8 @@ def multiqc_report = []
 
 workflow QUANTMS {
 
+    main:
+
     // TODO check what the standard is here: ch_versions or ch_software_versions
     ch_versions = Channel.empty()
 
@@ -174,8 +176,10 @@ workflow QUANTMS {
             .combine(ch_msstats_in.ifEmpty([])),
         ch_multiqc_quantms_logo
     )
-    multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
 
+    emit:
+    multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
+    versions            = versions_clean.yaml
 }
 
 /*
