@@ -9,7 +9,7 @@ process IDMERGER {
         'biocontainers/openms-thirdparty:3.1.0--h9ee0642_1' }"
 
     input:
-    tuple val(meta), path(id_files)
+    tuple val(meta), path(id_files), val(groupkey)
 
     output:
     tuple val(meta), path("*_merged.idXML"), emit: id_merged
@@ -18,23 +18,23 @@ process IDMERGER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+    def prefix = task.ext.prefix ?: "${groupkey}"
 
     if (params.rescore_range == "by_project") {
         if (id_files[0].baseName.contains('sage')){
-            prefix = "${meta.experiment_id}_sage"
+            prefix = "${groupkey}_sage"
         } else if (id_files[0].baseName.contains('comet')){
-            prefix = "${meta.experiment_id}_comet"
+            prefix = "${groupkey}_comet"
         } else {
-            prefix = "${meta.experiment_id}_msgf"
+            prefix = "${groupkey}_msgf"
         }
     } else if (params.rescore_range == "by_sample") {
         if (id_files[0].baseName.contains('sage')){
-            prefix = "${meta.mzml_id}_sage"
+            prefix = "${groupkey}_sage"
         } else if (id_files[0].baseName.contains('comet')){
-            prefix = "${meta.mzml_id}_comet"
+            prefix = "${groupkey}_comet"
         } else {
-            prefix = "${meta.mzml_id}_msgf"
+            prefix = "${groupkey}_msgf"
         }
     }
 
