@@ -100,9 +100,9 @@ workflow DDA_ID {
                     .map { get_sample_map(it) }.set{ sample_map_idv }
 
                 ch_id_files_feats.map {[it[0].mzml_id, it[0], it[1]]}
-                                 .combine(sample_map_idv, by: 0)
-                                 .map {[it[1], it[2], it[3]]}
-                                 .set{ch_id_files_feats_sample}
+                    .combine(sample_map_idv, by: 0)
+                    .map {[it[1], it[2], it[3]]}
+                    .set{ch_id_files_feats_sample}
 
                 // Group by search_engines and sample
                 ch_id_files_feats_sample.branch{ meta, filename, sample  ->
