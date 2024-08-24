@@ -30,8 +30,6 @@ include { DDA_ID } from '../subworkflows/local/dda_id'
 ========================================================================================
 */
 
-// Info required for completion email and summary
-def multiqc_report = []
 
 workflow QUANTMS {
 

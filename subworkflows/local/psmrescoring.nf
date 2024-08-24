@@ -96,7 +96,7 @@ workflow PSMRESCORING {
 
             // Currently only ID runs on exactly one mzML file are supported in CONSENSUSID. Split idXML by runs
             IDRIPPER(PERCOLATOR.out.id_files_perc)
-            IDRIPPER.out.meta.flatten().map{[it.mzml_id, it]}.set{meta}
+            ch_file_preparation_results.map{[it[0].mzml_id, it[0]]}.set{meta}
             IDRIPPER.out.id_rippers.flatten().map { add_file_prefix (it)}.set{id_rippers}
             meta.combine(id_rippers, by: 0)
                     .map{ [it[1], it[2], "MS:1001491"]}
@@ -184,7 +184,7 @@ def get_sample_map(LinkedHashMap row) {
     file_name             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
     sample                = row.Sample
 
-    return [sample, file_name]
+    return [file_name, sample]
 
 }
 
