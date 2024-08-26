@@ -2,10 +2,10 @@ process SAGEFEATURE {
     tag "$meta.mzml_id"
     label 'process_low'
 
-    conda "bioconda::quantms-utils=0.0.9"
+    conda "bioconda::quantms-utils=0.0.10"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.9--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.9--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.10--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.10--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(id_file), path(extra_feat)
