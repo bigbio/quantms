@@ -7,4 +7,4 @@ lint:
     - conf/test.config
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
-    - assets/multiqc_config.yml
+  multiqc_config: False
