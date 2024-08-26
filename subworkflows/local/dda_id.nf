@@ -99,22 +99,25 @@ workflow DDA_ID {
                 ch_expdesign_sample.splitCsv(header: true, sep: '\t')
                     .map { get_sample_map(it) }.set{ sample_map_idv }
 
-                sample_map = sample_map_idv.collect().map{ all_sample_map( it ) }
+                ch_id_files_feats.map {[it[0].mzml_id, it[0], it[1]]}
+                    .combine(sample_map_idv, by: 0)
+                    .map {[it[1], it[2], it[3]]}
+                    .set{ch_id_files_feats_sample}
 
-                // Group by search_engines and convert meta
-                ch_id_files_feats.combine( sample_map ).branch{ meta, filename, sample_map  ->
+                // Group by search_engines and sample
+                ch_id_files_feats_sample.branch{ meta, filename, sample  ->
                     sage: filename.name.contains('sage')
-                        return [convert_exp_meta(meta, "sample_id", filename, sample_map), filename]
+                        return [meta, filename, sample]
                     msgf: filename.name.contains('msgf')
-                        return [convert_exp_meta(meta, "sample_id", filename, sample_map), filename]
+                        return [meta, filename, sample]
                     comet: filename.name.contains('comet')
-                        return [convert_exp_meta(meta, "sample_id", filename, sample_map), filename]
+                        return [meta, filename, sample]
                 }.set{ch_id_files_feat_branched}
 
                 // IDMERGER for samples group
-                IDMERGER(ch_id_files_feat_branched.comet.groupTuple(by: 0)
-                    .mix(ch_id_files_feat_branched.msgf.groupTuple(by: 0))
-                    .mix(ch_id_files_feat_branched.sage.groupTuple(by: 0)))
+                IDMERGER(ch_id_files_feat_branched.comet.groupTuple(by: 2)
+                    .mix(ch_id_files_feat_branched.msgf.groupTuple(by: 2))
+                    .mix(ch_id_files_feat_branched.sage.groupTuple(by: 2)))
                 ch_software_versions = ch_software_versions.mix(IDMERGER.out.version)
 
                 PERCOLATOR(IDMERGER.out.id_merged)
@@ -122,26 +125,30 @@ workflow DDA_ID {
 
                 // Currently only ID runs on exactly one mzML file are supported in CONSENSUSID. Split idXML by runs
                 IDRIPPER(PERCOLATOR.out.id_files_perc)
-                IDRIPPER.out.meta.first().combine(IDRIPPER.out.id_rippers.flatten())
-                    .map{ [convert_exp_meta(it[0], "mzml_id", it[1], ""), it[1], "MS:1001491"] }
-                    .set{ ch_consensus_input }
+                ch_file_preparation_results.map{[it[0].mzml_id, it[0]]}.set{meta}
+                IDRIPPER.out.id_rippers.flatten().map { add_file_prefix (it)}.set{id_rippers}
+                meta.combine(id_rippers, by: 0)
+                        .map{ [it[1], it[2], "MS:1001491"]}
+                        .set{ ch_consensus_input }
                 ch_software_versions = ch_software_versions.mix(IDRIPPER.out.version)
 
             } else if (params.rescore_range == "by_project"){
+                ch_id_files_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_feats}
+
                 // Split ch_id_files_feats by search_engines
-                ch_id_files_feats.branch{ meta, filename ->
+                ch_id_files_feats.branch{ experiment_id, meta, filename ->
                     sage: filename.name.contains('sage')
-                        return [convert_exp_meta(meta, "experiment_id", filename, ""), filename]
+                        return [meta, filename, experiment_id]
                     msgf: filename.name.contains('msgf')
-                        return [convert_exp_meta(meta, "experiment_id", filename, ""), filename]
+                        return [meta, filename, experiment_id]
                     comet: filename.name.contains('comet')
-                        return [convert_exp_meta(meta, "experiment_id", filename, ""), filename]
+                        return [meta, filename, experiment_id]
                 }.set{ch_id_files_feat_branched}
 
                 // IDMERGER for whole experiments
-                IDMERGER(ch_id_files_feat_branched.comet.groupTuple(by: 0)
-                    .mix(ch_id_files_feat_branched.msgf.groupTuple(by: 0))
-                    .mix(ch_id_files_feat_branched.sage.groupTuple(by: 0)))
+                IDMERGER(ch_id_files_feat_branched.comet.groupTuple(by: 2)
+                    .mix(ch_id_files_feat_branched.msgf.groupTuple(by: 2))
+                    .mix(ch_id_files_feat_branched.sage.groupTuple(by: 2)))
                 ch_software_versions = ch_software_versions.mix(IDMERGER.out.version)
 
                 PERCOLATOR(IDMERGER.out.id_merged)
@@ -149,14 +156,16 @@ workflow DDA_ID {
 
                 // Currently only ID runs on exactly one mzML file are supported in CONSENSUSID. Split idXML by runs
                 IDRIPPER(PERCOLATOR.out.id_files_perc)
-                IDRIPPER.out.meta.first().combine(IDRIPPER.out.id_rippers.flatten())
-                    .map{ [convert_exp_meta(it[0], "mzml_id", it[1], ""), it[1], "MS:1001491"] }
-                    .set{ ch_consensus_input }
+                ch_file_preparation_results.map{[it[0].mzml_id, it[0]]}.set{meta}
+                IDRIPPER.out.id_rippers.flatten().map { add_file_prefix (it)}.set{id_rippers}
+                meta.combine(id_rippers, by: 0)
+                        .map{ [it[1], it[2], "MS:1001491"]}
+                        .set{ ch_consensus_input }
                 ch_software_versions = ch_software_versions.mix(IDRIPPER.out.version)
 
             }
 
-        ch_rescoring_results = ch_consensus_input
+            ch_rescoring_results = ch_consensus_input
 
         } else if (params.posterior_probabilities == 'mokapot') {
             MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
@@ -215,71 +224,17 @@ workflow DDA_ID {
     version                 = ch_software_versions
 }
 
-// Function to group by mzML/sample/experiment
-def convert_exp_meta(Map meta, value, file_name, sample_map) {
-    def exp_meta = [:]
-
-    if (value == "experiment_id") {
-        exp_meta.mzml_id = meta.experiment_id
-    } else if (value == "mzml_id") {
-        position = file(file_name).name.lastIndexOf('_sage_perc.idXML')
+// Function to add file prefix
+def add_file_prefix(file_path) {
+    position = file(file_path).name.lastIndexOf('_sage_perc.idXML')
+    if (position == -1) {
+        position = file(file_path).name.lastIndexOf('_comet_perc.idXML')
         if (position == -1) {
-            position = file(file_name).name.lastIndexOf('_comet_perc.idXML')
-            if (position == -1) {
-                position = file(file_name).name.lastIndexOf('_msgf_perc.idXML')
-            }
+            position = file(file_path).name.lastIndexOf('_msgf_perc.idXML')
         }
-        exp_meta.mzml_id = file(file_name).name.take(position)
-    } else if (value == "sample_id") {
-        tag = file(file_name).name.lastIndexOf('_perc.idXML')
-        if (tag == -1) {
-            ifms2rescore = file(file_name).name.lastIndexOf('_ms2rescore_')
-            if (ifms2rescore == -1) {
-                position = file(file_name).name.lastIndexOf('_sage.idXML')
-                if (position == -1) {
-                    position = file(file_name).name.lastIndexOf('_comet_feat.idXML')
-                    if (position == -1) {
-                        position = file(file_name).name.lastIndexOf('_msgf_feat.idXML')
-                    }
-                }
-            } else {
-                position = file(file_name).name.lastIndexOf('_sage_ms2rescore.idXML')
-                if (position == -1) {
-                    position = file(file_name).name.lastIndexOf('_comet_ms2rescore_feat.idXML')
-                    if (position == -1) {
-                        position = file(file_name).name.lastIndexOf('_msgf_ms2rescore_feat.idXML')
-                    }
-                }
-            }
-
-        } else {
-            position = file(file_name).name.lastIndexOf('_sage_perc.idXML')
-            if (position == -1) {
-                position = file(file_name).name.lastIndexOf('_comet_perc.idXML')
-                if (position == -1) {
-                    position = file(file_name).name.lastIndexOf('_msgf_perc.idXML')
-                }
-            }
-        }
-
-        file_name = file(file_name).name.take(position)
-        exp_meta.mzml_id = sample_map[file_name]
     }
-
-
-    exp_meta.experiment_id              = meta.experiment_id
-    exp_meta.labelling_type             = meta.labelling_type
-    exp_meta.dissociationmethod         = meta.dissociationmethod
-    exp_meta.fixedmodifications         = meta.fixedmodifications
-    exp_meta.variablemodifications      = meta.variablemodifications
-    exp_meta.precursormasstolerance     = meta.precursormasstolerance
-    exp_meta.precursormasstoleranceunit = meta.precursormasstoleranceunit
-    exp_meta.fragmentmasstolerance      = meta.fragmentmasstolerance
-    exp_meta.fragmentmasstoleranceunit  = meta.fragmentmasstoleranceunit
-    exp_meta.enzyme                     = meta.enzyme
-    exp_meta.acquisition_method         = meta.acquisition_method
-
-    return exp_meta
+    file_name = file(file_path).name.take(position)
+    return [file_name, file_path]
 }
 
 // Function to get sample map
@@ -289,17 +244,7 @@ def get_sample_map(LinkedHashMap row) {
     filestr               = row.Spectra_Filepath
     file_name             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
     sample                = row.Sample
-    sample_map[file_name] = sample
 
-    return sample_map
+    return [file_name, sample]
 
-}
-
-def all_sample_map(sample_list) {
-    res = [:]
-    sample_list.each {
-        res = res + it
-    }
-
-    return res
 }

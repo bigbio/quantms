@@ -28,8 +28,8 @@ process DIANNSUMMARY {
     path "diann_report.gg_matrix.tsv", emit: gg_matrix
     path "diann_report.unique_genes_matrix.tsv", emit: unique_gene_matrix
     path "diannsummary.log", emit: log
+    // Different library files format are exported due to different DIA-NN versions
     path "empirical_library.tsv", emit: final_speclib optional true
-    path "empirical_library.tsv.speclib", emit: final_tsv_speclib optional true
     path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib optional true
     path "versions.yml", emit: version
 

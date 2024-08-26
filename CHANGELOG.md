@@ -3,58 +3,37 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] nfcore/quantms
-
-### `Added`
-
-- [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
-- [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
-- [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
-- [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
-
-### Fixed
-
-- [#400](https://github.com/bigbio/quantms/pull/400) The random file selection when using `random_preanalysis` with DIANN is now reproducible.
-
-### `Changed`
-
-- [#391](https://github.com/bigbio/quantms/pull/391) Move mzML statistics to parquet files from csv
-- [#386](https://github.com/bigbio/quantms/pull/386) Make optional the validation of ontology terms in the input SDRF file.
-- [#374](https://github.com/bigbio/quantms/pull/374) Create the common msgf+ database in one step before the msgf+ runs on each ms run file.
--
-
-### `Fixed`
-
-- [#396](https://github.com/bigbio/quantms/pull/396) Added verification of tar archive unpacking to prevent silent failures.
-
-### `Dependencies`
-
-- quantms-utils==0.0.9
-- diann==1.9.1
-
-### `Parameters`
-
-- `validate_ontologies`: enable or disable validating ontologies in the input SDRF file.
-
 ## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
 ### `Added`
 
 - [#335](https://github.com/bigbio/quantms/pull/335) (Performance improvement) Improvements in DIA pipeline to use random/subset files for library search
 - [#351](https://github.com/bigbio/quantms/pull/351) Identification workflow for DDA data
+- [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
+- [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
+- [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
+- [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
 
 ### `Changed`
 
 - [#365](https://github.com/bigbio/quantms/pull/365) Updated sdrf-pipelines==0.0.26
 - [#359](https://github.com/bigbio/quantms/pull/359) Updated pmultiqc==0.0.25
+- [#391](https://github.com/bigbio/quantms/pull/391) Move mzML statistics to parquet files from csv
+- [#386](https://github.com/bigbio/quantms/pull/386) Make optional the validation of ontology terms in the input SDRF file
+- [#374](https://github.com/bigbio/quantms/pull/374) Create the common msgf+ database in one step before the msgf+ runs on each ms run file.
 
 ### `Fixed`
 
-- [#357](https://github.com/bigbio/quantms/pull/357) Chymotrypsin -> Chymotrypsin/P in MSGF+
+- [#357](https://github.com/bigbio/quantms/pull/357) Chymotrypsin -> Chymotrypsin/P in MSGF+.
 - [#355](https://github.com/bigbio/quantms/pull/355) Fixes bin/diann_convert.py
-- [#316](https://github.com/bigbio/quantms/pull/316) Fixing MSGF+ error
+- [#316](https://github.com/bigbio/quantms/pull/316) Fixing MSGF+ error.
+- [#396](https://github.com/bigbio/quantms/pull/396) Added verification of tar archive unpacking to prevent silent failures.
+- [#400](https://github.com/bigbio/quantms/pull/400) The random file selection when using `random_preanalysis` with DIANN is now reproducible.
 
 ### `Dependencies`
+
+- quantms-utils==0.0.9
+- diann==1.9.1
 
 ### `Parameters`
 
@@ -66,6 +45,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - empirical_assembly_log: Path to the empirical assembly log file
 - random_preanalysis: Use random/subset files for library search
 - empirical_assembly_ms_n: Number of MS runs to use for empirical assembly
+- validate_ontologies: Enable or disable validating ontologies in the input SDRF file
+- skip_ms_validation: Skip validation of mass spectrometry files
+- skip_factor_validation: Skip validation of factor columns
+- skip_experimental_design_validation: Skip validation of experimental design
+- use_ols_cache_only: Use cached version of the Ontology Lookup Service
+- ms2rescore: Whether performing peptide identification rescoring with LC-MS predictors such as MS²PIP and DeepLC
+- ms2pip_model_dir: The path of ms2pip model files
+- rescore_range: Rescoring for independent run, Sample or whole experiments
+- ms2pip_model: Which deep learning model to generate feature
+- feature_generators: Which feature generator to generate feature
+- calibration_set_size: Percentage of number of calibration set for DeepLC
+- add_snr_feature_percolator: Whether add signal-to-noise ratio features for identification rescoring in percolator
+- diann_version: The version of DIA-NN used
+- random_preanalysis_seed: Set the random seed for the random selection of spectrum files to generate the empirical library
 
 ### `Deprecations`
 
