@@ -7,4 +7,6 @@ lint:
     - conf/test.config
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/CONTRIBUTING.md
+    - docs/README.md
   multiqc_config: False

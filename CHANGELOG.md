@@ -9,14 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#335](https://github.com/bigbio/quantms/pull/335) (Performance improvement) Improvements in DIA pipeline to use random/subset files for library search
 - [#351](https://github.com/bigbio/quantms/pull/351) Identification workflow for DDA data
+- [#362](https://github.com/bigbio/quantms/pull/362) Introduction to ms2rescore to identification workflow
+- [#374](https://github.com/bigbio/quantms/pull/374) Add msgf+ database indexing step
+- [#378](https://github.com/bigbio/quantms/pull/378) Introduction to ms2rescore to quant workflow
 - [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
 - [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
 - [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
+- [#396](https://github.com/bigbio/quantms/pull/396) Adds verification step to unpacking tar archives in the DECOMPRESS process
 - [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
+- [#404](https://github.com/bigbio/quantms/pull/404) Add spectrum SNR features to rescore
 
 ### `Changed`
 
-- [#365](https://github.com/bigbio/quantms/pull/365) Updated sdrf-pipelines==0.0.26
+- [#365](https://github.com/bigbio/quantms/pull/365) Updated sdrf-pipelines==0.0.29
 - [#359](https://github.com/bigbio/quantms/pull/359) Updated pmultiqc==0.0.25
 - [#391](https://github.com/bigbio/quantms/pull/391) Move mzML statistics to parquet files from csv
 - [#386](https://github.com/bigbio/quantms/pull/386) Make optional the validation of ontology terms in the input SDRF file
@@ -32,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
-- quantms-utils==0.0.9
+- quantms-utils==0.0.10
 - diann==1.9.1
 
 ### `Parameters`
@@ -40,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - id_only: Only perform identification, no quantification
 - min_peaks: Minimum number of peaks in a spectrum to be considered for search
 - export_decoy_psm: Export decoy PSMs
-- skip_rescoring: Skip rescoring
+- skip_rescoring: Skip rescoring steps
 - skip_preliminary_analysis: Skip preliminary analysis in DIA-NN
 - empirical_assembly_log: Path to the empirical assembly log file
 - random_preanalysis: Use random/subset files for library search

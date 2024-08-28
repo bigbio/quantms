@@ -10,14 +10,14 @@ However, don't be put off by this template - other more general issues and sugge
 Contributions to the code are even more welcome ;)
 
 > [!NOTE]
-> If you need help using or modifying nf-core/quantms then the best place to ask is on the nf-core Slack [#quantms](https://nfcore.slack.com/channels/quantms) channel ([join our Slack here](https://nf-co.re/join/slack)).
+> If you need help using or modifying nf-core/quantms or bigbio/quantms then the best place to ask is on the nf-core Slack [#quantms](https://nfcore.slack.com/channels/quantms) channel ([join our Slack here](https://nf-co.re/join/slack)).
 
 ## Contribution workflow
 
-If you'd like to write some code for nf-core/quantms, the standard workflow is as follows:
+If you'd like to write some code for nf-core/quantms and bigbio/quantms, the standard workflow is as follows:
 
-1. Check that there isn't already an issue about your idea in the [nf-core/quantms issues](https://github.com/nf-core/quantms/issues) to avoid duplicating work. If there isn't one already, please create one so that others know you're working on this
-2. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the [nf-core/quantms repository](https://github.com/nf-core/quantms) to your GitHub account
+1. Check that there isn't already an issue about your idea in the [nf-core/quantms issues](https://github.com/nf-core/quantms/issues) and [bigbio/quantms_issues](https://github.com/bigbio/quantms/issues) to avoid duplicating work. If there isn't one already, please create one so that others know you're working on this
+2. [Fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the [bigbio/quantms repository](https://github.com/bigbio/quantms) to your GitHub account
 3. Make the necessary changes / additions within your forked repository following [Pipeline conventions](#pipeline-contribution-conventions)
 4. Use `nf-core schema build` and add any new parameters to the pipeline JSON schema (requires [nf-core tools](https://github.com/nf-core/tools) >= 1.10).
 5. Submit a Pull Request against the `dev` branch and wait for the code to be reviewed and merged
@@ -61,7 +61,7 @@ These tests are run both with the latest available version of `Nextflow` and als
 
 ## Getting help
 
-For further information/help, please consult the [nf-core/quantms documentation](https://nf-co.re/quantms/usage) and don't hesitate to get in touch on the nf-core Slack [#quantms](https://nfcore.slack.com/channels/quantms) channel ([join our Slack here](https://nf-co.re/join/slack)).
+For further information/help, please consult the [bigbio/quantms documentation](https://docs.quantms.org/en/latest/usage.html) and don't hesitate to get in touch on the nf-core Slack [#quantms](https://nfcore.slack.com/channels/quantms) channel ([join our Slack here](https://nf-co.re/join/slack)).
 
 ## Pipeline contribution conventions
 
