@@ -5,6 +5,8 @@ lint:
     - conf/igenomes.config
     - conf/test_full.config
     - conf/test.config
+    - .github/workflows/awstest.yml
+    - .github/workflows/awsfulltest.yml
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/CONTRIBUTING.md
