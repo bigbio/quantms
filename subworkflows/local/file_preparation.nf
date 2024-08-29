@@ -18,13 +18,14 @@ workflow FILE_PREPARATION {
     ch_results    = Channel.empty()
     ch_statistics = Channel.empty()
     ch_mqc_data   = Channel.empty()
+    ch_spectrum_df = Channel.empty()
 
     // Divide the compressed files
     ch_rawfiles
     .branch {
-        dottar: WorkflowQuantms.hasExtension(it[1], '.tar')
-        dotzip: WorkflowQuantms.hasExtension(it[1], '.zip')
-        gz: WorkflowQuantms.hasExtension(it[1], '.gz')
+        dottar: hasExtension(it[1], '.tar')
+        dotzip: hasExtension(it[1], '.zip')
+        gz: hasExtension(it[1], '.gz')
         uncompressed: true
     }.set { ch_branched_input }
 
@@ -37,9 +38,9 @@ workflow FILE_PREPARATION {
     // Divide mzml files
     ch_rawfiles
     .branch {
-        raw: WorkflowQuantms.hasExtension(it[1], '.raw')
-        mzML: WorkflowQuantms.hasExtension(it[1], '.mzML')
-        dotd: WorkflowQuantms.hasExtension(it[1], '.d')
+        raw: hasExtension(it[1], '.raw')
+        mzML: hasExtension(it[1], '.mzML')
+        dotd: hasExtension(it[1], '.d')
     }.set { ch_branched_input }
 
     // Note: we used to always index mzMLs if not already indexed but due to
@@ -80,8 +81,11 @@ workflow FILE_PREPARATION {
         ch_results = indexed_mzml_bundle.mix(ch_branched_input.dotd)
     }
 
+
     MZMLSTATISTICS(ch_results)
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms_statistics.collect())
+    ch_spectrum_df = ch_spectrum_df.mix(MZMLSTATISTICS.out.spectrum_df)
+
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
 
     if (params.openms_peakpicking) {
@@ -96,6 +100,14 @@ workflow FILE_PREPARATION {
 
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
-    statistics      = ch_statistics     // channel: [ *_ms_info.tsv ]
+    statistics      = ch_statistics     // channel: [ *_ms_info.parquet ]
+    spectrum_data   = ch_spectrum_df    // channel: [val(mzml_id), *_spectrum_df.parquet]
     version         = ch_versions       // channel: [ *.version.txt ]
+}
+
+//
+// check file extension
+//
+def hasExtension(file, extension) {
+    return file.toString().toLowerCase().endsWith(extension.toLowerCase())
 }

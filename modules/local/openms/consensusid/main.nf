@@ -31,7 +31,7 @@ process CONSENSUSID {
         -filter:considered_hits $params.consensusid_considered_top_hits \\
         -debug $params.consensusid_debug \\
         $args \\
-        2>&1 | tee ${meta.id}_consensusID.log
+        2>&1 | tee ${meta.mzml_id}_consensusID.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

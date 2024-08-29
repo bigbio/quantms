@@ -3,6 +3,70 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
+
+### `Added`
+
+- [#335](https://github.com/bigbio/quantms/pull/335) (Performance improvement) Improvements in DIA pipeline to use random/subset files for library search
+- [#351](https://github.com/bigbio/quantms/pull/351) Identification workflow for DDA data
+- [#362](https://github.com/bigbio/quantms/pull/362) Introduction to ms2rescore to identification workflow
+- [#374](https://github.com/bigbio/quantms/pull/374) Add msgf+ database indexing step
+- [#378](https://github.com/bigbio/quantms/pull/378) Introduction to ms2rescore to quant workflow
+- [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
+- [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
+- [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
+- [#396](https://github.com/bigbio/quantms/pull/396) Adds verification step to unpacking tar archives in the DECOMPRESS process
+- [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
+- [#404](https://github.com/bigbio/quantms/pull/404) Add spectrum SNR features to rescore
+
+### `Changed`
+
+- [#365](https://github.com/bigbio/quantms/pull/365) Updated sdrf-pipelines==0.0.29
+- [#359](https://github.com/bigbio/quantms/pull/359) Updated pmultiqc==0.0.25
+- [#391](https://github.com/bigbio/quantms/pull/391) Move mzML statistics to parquet files from csv
+- [#386](https://github.com/bigbio/quantms/pull/386) Make optional the validation of ontology terms in the input SDRF file
+- [#374](https://github.com/bigbio/quantms/pull/374) Create the common msgf+ database in one step before the msgf+ runs on each ms run file.
+
+### `Fixed`
+
+- [#357](https://github.com/bigbio/quantms/pull/357) Chymotrypsin -> Chymotrypsin/P in MSGF+.
+- [#355](https://github.com/bigbio/quantms/pull/355) Fixes bin/diann_convert.py
+- [#316](https://github.com/bigbio/quantms/pull/316) Fixing MSGF+ error.
+- [#396](https://github.com/bigbio/quantms/pull/396) Added verification of tar archive unpacking to prevent silent failures.
+- [#400](https://github.com/bigbio/quantms/pull/400) The random file selection when using `random_preanalysis` with DIANN is now reproducible.
+
+### `Dependencies`
+
+- quantms-utils==0.0.10
+- diann==1.9.1
+
+### `Parameters`
+
+- id_only: Only perform identification, no quantification
+- min_peaks: Minimum number of peaks in a spectrum to be considered for search
+- export_decoy_psm: Export decoy PSMs
+- skip_rescoring: Skip rescoring steps
+- skip_preliminary_analysis: Skip preliminary analysis in DIA-NN
+- empirical_assembly_log: Path to the empirical assembly log file
+- random_preanalysis: Use random/subset files for library search
+- empirical_assembly_ms_n: Number of MS runs to use for empirical assembly
+- validate_ontologies: Enable or disable validating ontologies in the input SDRF file
+- skip_ms_validation: Skip validation of mass spectrometry files
+- skip_factor_validation: Skip validation of factor columns
+- skip_experimental_design_validation: Skip validation of experimental design
+- use_ols_cache_only: Use cached version of the Ontology Lookup Service
+- ms2rescore: Whether performing peptide identification rescoring with LC-MS predictors such as MS²PIP and DeepLC
+- ms2pip_model_dir: The path of ms2pip model files
+- rescore_range: Rescoring for independent run, Sample or whole experiments
+- ms2pip_model: Which deep learning model to generate feature
+- feature_generators: Which feature generator to generate feature
+- calibration_set_size: Percentage of number of calibration set for DeepLC
+- add_snr_feature_percolator: Whether add signal-to-noise ratio features for identification rescoring in percolator
+- diann_version: The version of DIA-NN used
+- random_preanalysis_seed: Set the random seed for the random selection of spectrum files to generate the empirical library
+
+### `Deprecations`
+
 ## [1.2.0] nfcore/quantms - [11/02/2023] - Thimphu
 
 ### `Added`
@@ -38,8 +102,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - sage_processes: Number of processes to use in SAGE search engine (default: 1)
 - diann_speclib: Path to the spectral library to use in DIA-NN (default: null)
 - convert_dotd: if convert .d file to mzml (default: false)
-
-### `Deprecations`
 
 ## [1.1.1] nfcore/quantms - [03/27/23] - Berlin-Bern
 
@@ -119,11 +181,11 @@ The pipeline is using Nextflow DSL2, each process will be run with its own [Bioc
 | `thermorawfileparser` | 1.3.4      |
 | `comet`               | 2021010    |
 | `msgf+`               | 2022.01.07 |
-| `openms`              | 2.9.1      |
-| `sdrf-pipelines`      | 0.0.22     |
+| `openms`              | 3.1.0      |
+| `sdrf-pipelines`      | 0.0.26     |
 | `percolator`          | 3.5        |
-| `pmultiqc`            | 0.0.11     |
+| `pmultiqc`            | 0.0.24     |
 | `luciphor`            | 2020_04_03 |
 | `dia-nn`              | 1.8.1      |
-| `msstats`             | 4.2.0      |
-| `msstatstmt`          | 2.2.0      |
+| `msstats`             | 4.10.0     |
+| `msstatstmt`          | 2.10.0     |

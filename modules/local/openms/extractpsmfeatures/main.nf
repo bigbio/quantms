@@ -10,7 +10,7 @@ process EXTRACTPSMFEATURES {
         'biocontainers/openms-thirdparty:3.1.0--h9ee0642_1' }"
 
     input:
-    tuple val(meta), path(id_file)
+    tuple val(meta), path(id_file), path(extra_feat)
 
     output:
     tuple val(meta), path("${id_file.baseName}_feat.idXML"), emit: id_files_feat
@@ -21,11 +21,17 @@ process EXTRACTPSMFEATURES {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
+    feature = ""
+    if (params.ms2rescore && params.id_only) {
+        feature = "-extra \$(awk 'NR > 1 && \$1 !~ /psm_file/ {printf \"%s \", \$2}' ${extra_feat})"
+    }
+
     """
     PSMFeatureExtractor \\
         -in ${id_file} \\
         -out ${id_file.baseName}_feat.idXML \\
         -threads $task.cpus \\
+        ${feature} \\
         $args \\
         2>&1 | tee ${id_file.baseName}_extract_psm_feature.log
 

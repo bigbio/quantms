@@ -37,7 +37,7 @@ workflow TMT {
     //
     // SUBWORKFLOWS: ID
     //
-    ID(ch_file_preparation_results, ch_database_wdecoy)
+    ID(ch_file_preparation_results, ch_database_wdecoy, ch_expdesign)
     ch_software_versions = ch_software_versions.mix(ID.out.version.ifEmpty(null))
 
     //

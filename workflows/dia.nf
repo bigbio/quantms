@@ -44,52 +44,81 @@ workflow DIA {
         result ->
         meta:   preprocessed_meta(result[0])
         ms_file:result[1]
-        }
+    }
         .set { ch_result }
 
     meta = ch_result.meta.unique { it[0] }
 
     DIANNCFG(meta)
-    ch_software_versions = ch_software_versions.mix(DIANNCFG.out.version.ifEmpty(null))
+    ch_software_versions = ch_software_versions
+        .mix(DIANNCFG.out.version.ifEmpty(null))
 
     //
     // MODULE: SILICOLIBRARYGENERATION
     //
-    if (params.diann_speclib != null) {
-        speclib = Channel.fromPath(params.diann_speclib)
+    if (params.diann_speclib != null && params.diann_speclib.toString() != "") {
+        speclib = Channel.from(file(params.diann_speclib, checkIfExists: true))
     } else {
         SILICOLIBRARYGENERATION(ch_searchdb, DIANNCFG.out.diann_cfg)
         speclib = SILICOLIBRARYGENERATION.out.predict_speclib
     }
 
-    //
-    // MODULE: DIANN_PRELIMINARY_ANALYSIS
-    //
-    DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
-    ch_software_versions = ch_software_versions.mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
+    if (params.skip_preliminary_analysis) {
+        assembly_log = Channel.fromPath(params.empirical_assembly_log)
+        empirical_library = Channel.fromPath(params.diann_speclib)
+        indiv_fin_analysis_in = ch_file_preparation_results.combine(ch_searchdb)
+            .combine(assembly_log)
+            .combine(empirical_library)
 
-    //
-    // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
-    //
-    // Order matters in DIANN, This shoudl be sorted for reproducible results.
-    ASSEMBLE_EMPIRICAL_LIBRARY(
-        ch_result.ms_file.collect(),
-        meta,
-        DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
-        speclib
-    )
-    ch_software_versions = ch_software_versions.mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.version.ifEmpty(null))
+        empirical_lib = empirical_library
+    } else {
+        //
+        // MODULE: DIANN_PRELIMINARY_ANALYSIS
+        //
+        if (params.random_preanalysis) {
+            preanalysis_subset = ch_file_preparation_results
+                .toSortedList()
+                .flatMap()
+                .randomSample(params.empirical_assembly_ms_n, params.random_preanalysis_seed)
+            empirical_lib_files = preanalysis_subset
+                .map { result -> result[1] }
+                .collect()
+            DIANN_PRELIMINARY_ANALYSIS(preanalysis_subset.combine(speclib))
+        } else {
+            empirical_lib_files = ch_file_preparation_results
+                .map { result -> result[1] }
+                .collect()
+            DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
+        }
+        ch_software_versions = ch_software_versions
+            .mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
+
+        //
+        // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
+        //
+        // Order matters in DIANN, This should be sorted for reproducible results.
+        ASSEMBLE_EMPIRICAL_LIBRARY(
+            empirical_lib_files,
+            meta,
+            DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
+            speclib
+        )
+        ch_software_versions = ch_software_versions
+            .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.version.ifEmpty(null))
+        indiv_fin_analysis_in = ch_file_preparation_results
+            .combine(ch_searchdb)
+            .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log)
+            .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library)
+
+        empirical_lib = ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library
+    }
 
     //
     // MODULE: INDIVIDUAL_FINAL_ANALYSIS
     //
-    INDIVIDUAL_FINAL_ANALYSIS(
-        ch_file_preparation_results
-        .combine(ch_searchdb)
-        .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log)
-        .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library)
-    )
-    ch_software_versions = ch_software_versions.mix(INDIVIDUAL_FINAL_ANALYSIS.out.version.ifEmpty(null))
+    INDIVIDUAL_FINAL_ANALYSIS(indiv_fin_analysis_in)
+    ch_software_versions = ch_software_versions
+        .mix(INDIVIDUAL_FINAL_ANALYSIS.out.version.ifEmpty(null))
 
     //
     // MODULE: DIANNSUMMARY
@@ -103,9 +132,17 @@ workflow DIA {
         .ms_file.map { msfile -> file(msfile).getName() }
         .collect()
         .set { ms_file_names }
-    DIANNSUMMARY(ms_file_names, meta, ASSEMBLE_EMPIRICAL_LIBRARY.out.empirical_library,
-                    INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(), ch_searchdb)
-    ch_software_versions = ch_software_versions.mix(DIANNSUMMARY.out.version.ifEmpty(null))
+
+    DIANNSUMMARY(
+        ms_file_names,
+        meta,
+        empirical_lib,
+        INDIVIDUAL_FINAL_ANALYSIS.out.diann_quant.collect(),
+        ch_searchdb)
+
+    ch_software_versions = ch_software_versions.mix(
+        DIANNSUMMARY.out.version.ifEmpty(null)
+    )
 
     //
     // MODULE: DIANNCONVERT
@@ -118,7 +155,8 @@ workflow DIA {
         ch_searchdb,
         DIANNSUMMARY.out.version
     )
-    ch_software_versions = ch_software_versions.mix(DIANNCONVERT.out.version.ifEmpty(null))
+    ch_software_versions = ch_software_versions
+        .mix(DIANNCONVERT.out.version.ifEmpty(null))
 
     //
     // MODULE: MSSTATS
@@ -126,7 +164,9 @@ workflow DIA {
     if (!params.skip_post_msstats) {
         MSSTATS(DIANNCONVERT.out.out_msstats)
         ch_msstats_out = MSSTATS.out.msstats_csv
-        ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(
+            MSSTATS.out.version.ifEmpty(null)
+        )
     }
 
     emit:

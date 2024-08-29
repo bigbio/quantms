@@ -2,12 +2,10 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.21"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.22--pyhdfd78af_0"
-    } else {
-        container "biocontainers/pmultiqc:0.0.22--pyhdfd78af_0"
-    }
+    conda "bioconda::quantms-utils=0.0.10"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.10--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.10--pyhdfd78af_0' }"
 
     input:
     path(report)
@@ -27,7 +25,7 @@ process DIANNCONVERT {
     path "versions.yml", emit: version
 
     exec:
-        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, other versions of DIA-NN do not support mzTab conversion."
+        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1 and 1.9.beta.1, other versions of DIA-NN do not support mzTab conversion."
 
     script:
     def args = task.ext.args ?: ''
@@ -35,7 +33,7 @@ process DIANNCONVERT {
                         meta.precursormasstoleranceunit,meta.enzyme,meta.fixedmodifications,meta.variablemodifications].join(';')
 
     """
-    diann_convert.py convert \\
+    quantmsutilsc diann2mztab \\
         --folder ./ \\
         --exp_design ${exp_design} \\
         --diann_version ./version/versions.yml \\
@@ -47,7 +45,7 @@ process DIANNCONVERT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyopenms: \$(pip show pyopenms | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

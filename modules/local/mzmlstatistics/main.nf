@@ -3,32 +3,33 @@ process MZMLSTATISTICS {
     label 'process_medium'
     label 'process_single'
 
-    conda "bioconda::pyopenms=2.8.0"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pyopenms:2.8.0--py38hd8d5640_1"
-    } else {
-        container "biocontainers/pyopenms:2.8.0--py38hd8d5640_1"
-    }
+    conda "bioconda::quantms-utils=0.0.10"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.10--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.10--pyhdfd78af_0' }"
 
     input:
     tuple val(meta), path(ms_file)
 
     output:
-    path "*_ms_info.tsv", emit: ms_statistics
+    path "*_ms_info.parquet", emit: ms_statistics
+    tuple val(meta), path("*_spectrum_df.parquet"), emit: spectrum_df, optional: true
     path "versions.yml", emit: version
     path "*.log", emit: log
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+    def string_id_only = params.id_only == true ? "--id_only" : ""
 
     """
-    mzml_statistics.py "${ms_file}" \\
+    quantmsutilsc mzmlstats --ms_path "${ms_file}" \\
+        ${string_id_only} \\
         2>&1 | tee mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        pyopenms: \$(pip show pyopenms | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

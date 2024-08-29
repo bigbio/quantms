@@ -6,6 +6,10 @@ process INDIVIDUAL_FINAL_ANALYSIS {
         'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
         'docker.io/biocontainers/diann:v1.8.1_cv1' }"
 
+    if (params.diann_version == "1.9.beta.1") {
+        container 'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-bigbio-diann-1.9.1dev.sif'
+    }
+
     input:
     tuple val(meta), path(ms_file), path(fasta), path(diann_log), path(library)
 
@@ -53,7 +57,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "(\\d*\\.\\d+\\.\\d+)|(\\d*\\.\\d+)")
+        DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "\\d+\\.\\d+(\\.\\w+)*(\\.[\\d]+)?")
     END_VERSIONS
     """
 }

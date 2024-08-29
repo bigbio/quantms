@@ -2,12 +2,10 @@ process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
     label 'process_low'
 
-    conda 'conda-forge::pandas_schema bioconda::sdrf-pipelines=0.0.22'
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container 'https://depot.galaxyproject.org/singularity/sdrf-pipelines:0.0.22--pyhdfd78af_0'
-    } else {
-        container "biocontainers/sdrf-pipelines:0.0.22--pyhdfd78af_0"
-    }
+    conda "bioconda::quantms-utils=0.0.10"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.10--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.10--pyhdfd78af_0' }"
 
     input:
     val(meta)
@@ -21,7 +19,7 @@ process GENERATE_DIANN_CFG {
     def args = task.ext.args ?: ''
 
     """
-    prepare_diann_parameters.py generate \\
+    quantmsutilsc dianncfg \\
         --enzyme "${meta.enzyme}" \\
         --fix_mod "${meta.fixedmodifications}" \\
         --var_mod "${meta.variablemodifications}" \\
@@ -29,7 +27,7 @@ process GENERATE_DIANN_CFG {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(pip show sdrf-pipelines | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }

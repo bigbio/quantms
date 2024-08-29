@@ -102,6 +102,7 @@ process SEARCHENGINECOMET {
         -precursor_error_units $meta.precursormasstoleranceunit \\
         -fragment_mass_tolerance ${bin_tol} \\
         -fragment_bin_offset ${bin_offset} \\
+        -minimum_peaks $params.min_peaks \\
         ${il_equiv} \\
         -PeptideIndexing:unmatched_action ${params.unmatched_action} \\
         -debug $params.db_debug \\

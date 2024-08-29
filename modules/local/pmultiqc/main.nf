@@ -1,12 +1,11 @@
 process PMULTIQC {
     label 'process_high'
 
-    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.23"
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container "https://depot.galaxyproject.org/singularity/pmultiqc:0.0.23--pyhdfd78af_0"
-    } else {
-        container "biocontainers/pmultiqc:0.0.23--pyhdfd78af_0"
-    }
+    conda "conda-forge::pandas_schema conda-forge::lzstring bioconda::pmultiqc=0.0.25"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.25--pyhdfd78af_0' :
+        'biocontainers/pmultiqc:0.0.25--pyhdfd78af_0' }"
+
 
     input:
     path 'results/*'

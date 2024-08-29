@@ -56,9 +56,58 @@
                 "acquisition_method": {
                     "type": "string",
                     "description": "Proteomics data acquisition method",
-                    "default": "dda",
                     "enum": ["dda", "dia"],
                     "fa_icon": "far fa-list-ol"
+                },
+                "id_only": {
+                    "type": "boolean",
+                    "description": "Only perform identification subworkflow.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Only perform identification subworkflow for specific cases."
+                },
+                "export_decoy_psm": {
+                    "type": "boolean",
+                    "description": "Whether export PSM from decoy in final identification results",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Whether export PSM from decoy in final identification results for dda_id subworkflow for specific cases."
+                }
+            }
+        },
+        "sdrf_validation": {
+            "title": "SDRF validation",
+            "type": "object",
+            "description": "Settings for validating the input SDRF file.",
+            "default": "",
+            "properties": {
+                "validate_ontologies": {
+                    "type": "boolean",
+                    "description": "Check that ontology terms in an input SDRF file exist.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "If false, only a basic readability check is performed on an input SDRF file. This option is useful when ontology providers are inaccessible."
+                },
+                "skip_ms_validation": {
+                    "type": "boolean",
+                    "description": "Skip validation of mass spectrometry files.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Skip validation of mass spectrometry metadata, including PTMs, tolerances or enzymes. Only useful if your metadata is correct but the terms are not in ontologies."
+                },
+                "skip_factor_validation": {
+                    "type": "boolean",
+                    "description": "Skip validation of factor columns.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Skip validation of factor columns in the SDRF. Only useful if your factor values are correct but the sdrf-validation library does not recognize them."
+                },
+                "skip_experimental_design_validation": {
+                    "type": "boolean",
+                    "description": "Skip validation of experimental design.",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Skip validation of experimental design in the SDRF. Only useful if your experimental design is correct but the sdrf-validation library does not recognize it."
+                },
+                "use_ols_cache_only": {
+                    "type": "boolean",
+                    "description": "Use cached version of the Ontology Lookup Service (OLS).",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Use only the cached version of the Ontology Lookup Service (OLS) for ontology term validation. This is useful if you don't want the pipeline to query internet services."
                 }
             }
         },
@@ -269,7 +318,6 @@
                 "instrument": {
                     "type": "string",
                     "description": "Type of instrument that generated the data. 'low_res' or 'high_res' (default; refers to LCQ and LTQ instruments)",
-                    "default": "high_res",
                     "fa_icon": "fas fa-list-ol"
                 },
                 "protocol": {
@@ -314,6 +362,13 @@
                     "default": 3,
                     "fa_icon": "fas fa-sliders-h"
                 },
+                "min_peaks": {
+                    "type": "integer",
+                    "description": "Minimum number of peaks in the spectrum to be considered for the search engine. Default: 10",
+                    "default": 10,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+
                 "min_pr_mz": {
                     "type": "number",
                     "description": "The minimum precursor m/z for the in silico library generation or library-free search",
@@ -418,18 +473,73 @@
             "description": "Choose between different rescoring/posterior probability calculation methods and set them up.",
             "default": "",
             "properties": {
+                "skip_rescoring": {
+                    "type": "boolean",
+                    "description": "Skip PSM rescoring steps for specific cases, such as studying pure search engine results and search engine ranks",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "ms2rescore": {
+                    "type": "boolean",
+                    "description": "Whether performing peptide identification rescoring with LC-MS predictors such as MS²PIP and DeepLC.",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "add_snr_feature_percolator": {
+                    "type": "boolean",
+                    "description": "Whether add signal-to-noise ratio features for identification rescoring in percolator",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "rescore_range": {
+                    "type": "string",
+                    "description": "Rescoring for independent run, Sample or whole experiments",
+                    "fa_icon": "fas fa-font",
+                    "default": "independent_run",
+                    "enum": ["independent_run", "by_sample", "by_project"]
+                },
+                "ms2pip_model": {
+                    "type": "string",
+                    "description": "Which deep learning model to generate feature.",
+                    "fa_icon": "fas fa-font",
+                    "default": "HCD2021"
+                },
+                "ms2pip_model_dir": {
+                    "type": "string",
+                    "description": "The path of ms2pip model files. Providing model file to avoid repeated download and slow internet connection",
+                    "fa_icon": "fas fa-font"
+                },
+                "feature_generators": {
+                    "type": "string",
+                    "description": "Which feature generator to generate feature.",
+                    "fa_icon": "fas fa-font",
+                    "default": "deeplc,ms2pip"
+                },
+                "calibration_set_size": {
+                    "type": "number",
+                    "description": "Percentage of number of calibration set for DeepLC",
+                    "default": 0.15,
+                    "fa_icon": "fas fa-filter"
+                },
                 "posterior_probabilities": {
                     "type": "string",
-                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)",
+                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)\n\n* 'mokapot' = Re-score based on PSM-feature-based semi-supervised learning algorithm introduced by Percolator",
                     "fa_icon": "fas fa-list-ol",
                     "default": "percolator",
-                    "enum": ["percolator", "fit_distributions"]
+                    "enum": ["percolator", "fit_distributions", "mokapot"]
                 },
                 "run_fdr_cutoff": {
                     "type": "number",
                     "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
-                    "default": 0.01,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter"
+                },
+                "extractpsmfeature_debug": {
+                    "type": "integer",
+                    "description": "Debug level when running the PSMFeatureExtractor step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "hidden": true,
+                    "default": 0
                 },
                 "idfilter_debug": {
                     "type": "integer",
@@ -461,12 +571,12 @@
             "description": "In the following you can find help for the Percolator specific options that are only used if [`--posterior_probabilities`](#posterior_probabilities) was set to 'percolator'.\nNote that there are currently some restrictions to the original options of Percolator:\n\n* no Percolator protein FDR possible (currently OpenMS' FDR is used on protein level)\n* no support for separate target and decoy databases (i.e. no min-max q-value calculation or target-decoy competition strategy)\n* no support for combined or experiment-wide peptide re-scoring. Currently search results per input file are submitted to Percolator independently.",
             "default": "",
             "properties": {
-                "FDR_level": {
+                "fdr_level": {
                     "type": "string",
-                    "description": "Calculate FDR on PSM ('psm-level-fdrs') or peptide level ('peptide-level-fdrs')?",
-                    "default": "peptide-level-fdrs",
+                    "description": "Calculate FDR on PSM ('psm_level_fdrs') or peptide level ('peptide_level_fdrs')?",
+                    "default": "psm_level_fdrs",
                     "fa_icon": "fas fa-list-ol",
-                    "enum": ["peptide-level-fdrs", "psm-level-fdrs"]
+                    "enum": ["peptide_level_fdrs", "psm_level_fdrs"]
                 },
                 "train_FDR": {
                     "type": "number",
@@ -624,10 +734,10 @@
                     "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
                 },
                 "reference_channel": {
-                    "type": "integer",
+                    "type": "string",
                     "description": "The reference channel, e.g. for calculating ratios.",
                     "fa_icon": "fas fa-list-ol",
-                    "default": 126
+                    "default": "126"
                 },
                 "iso_debug": {
                     "type": "integer",
@@ -805,6 +915,13 @@
                     "description": "Export the results in mzTab format.",
                     "default": true,
                     "fa_icon": "fas fa-check-square"
+                },
+                "protein_quant_debug": {
+                    "type": "integer",
+                    "description": "Debug level for the protein quantification step. Increase for verbose logging",
+                    "fa_icon": "fas fa-bug",
+                    "default": 0,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -836,21 +953,21 @@
                 "feature_with_id_min_score": {
                     "type": "number",
                     "description": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter).",
-                    "default": 0.0,
+                    "default": 0.1,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.25) an identified (=id targeted) feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
                 "feature_without_id_min_score": {
                     "type": "number",
                     "description": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter).",
-                    "default": 0.0,
+                    "default": 0.75,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum probability (e.g.: 0.75) an unidentified feature must have to be kept for alignment and linking (0=no filter). (default: '0.0') (min: '0.0' max: '1.0')"
                 },
                 "lfq_intensity_threshold": {
                     "type": "number",
                     "description": "The minimum intensity for a feature to be considered for quantification. (default: '10000')",
-                    "default": 10000,
+                    "default": 1000,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum intensity for a feature to be considered for quantification. (default: '10000')"
                 },
@@ -883,6 +1000,12 @@
             "description": "Settings for DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
             "default": "",
             "properties": {
+                "diann_version": {
+                    "type": "string",
+                    "description": "The version of DIA-NN used",
+                    "fa_icon": "fas fa-font",
+                    "help_text": "There are differences between the different DIA-NN versions. DIA-NN do not support cloud freely in 1.9.beta.1"
+                },
                 "mass_acc_automatic": {
                     "type": "boolean",
                     "default": true,
@@ -900,7 +1023,7 @@
                     "description": "Set the scan window radius to a specific value",
                     "fa_icon": "fas fa-filter",
                     "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
-                    "default": 7
+                    "default": 8
                 },
                 "min_corr": {
                     "type": "number",
@@ -940,6 +1063,20 @@
                     "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
                     "hidden": false
                 },
+                "skip_preliminary_analysis": {
+                    "type": "boolean",
+                    "description": "Skip the preliminary analysis step, thus use the passed spectral library as-is insted of generating a local concensus library.",
+                    "fa_icon": "fas fa-forward",
+                    "default": false,
+                    "hidden": false
+                },
+                "empirical_assembly_log": {
+                    "type": "string",
+                    "description": "The log file for the empirical assembly, Only used if `--skip_preliminary_analysis` is set to `true` and `--diann_speclib` is passed. If passed, will use that log file to carry out the DIA-NN search, instead of running a preliminary search.",
+                    "fa_icon": "fas fa-file",
+                    "help_text": "If passed, will use that log file to carry out the DIA-NN search, instead of predicting one from the fasta file.",
+                    "hidden": false
+                },
                 "diann_debug": {
                     "type": "integer",
                     "description": "Debug level",
@@ -953,6 +1090,25 @@
                     "description": "Enable cross-run normalization between runs by diann.",
                     "default": true,
                     "fa_icon": "far fa-check-square"
+                },
+                "random_preanalysis": {
+                    "type": "boolean",
+                    "description": "Enable random selection of spectrum files to generate empirical library.",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
+                "random_preanalysis_seed": {
+                    "type": "integer",
+                    "description": "Set the random seed for the random selection of spectrum files to generate the empirical library.",
+                    "default": 42,
+                    "fa_icon": false
+                },
+                "empirical_assembly_ms_n": {
+                    "type": "integer",
+                    "description": "The number of randomly selected spectrum files.",
+                    "default": 200,
+                    "fa_icon": "fas fa-filter",
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -1154,7 +1310,7 @@
                 "max_memory": {
                     "type": "string",
                     "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
+                    "default": "128 GB",
                     "fa_icon": "fas fa-memory",
                     "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "hidden": true,
@@ -1163,7 +1319,7 @@
                 "max_time": {
                     "type": "string",
                     "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
+                    "default": "10d",
                     "fa_icon": "far fa-clock",
                     "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "hidden": true,
@@ -1285,6 +1441,13 @@
                     "description": "Validation of parameters in lenient more.",
                     "hidden": true,
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
+                },
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
                 }
             }
         }
@@ -1295,6 +1458,9 @@
         },
         {
             "$ref": "#/definitions/protein_database"
+        },
+        {
+            "$ref": "#/definitions/sdrf_validation"
         },
         {
             "$ref": "#/definitions/spectrum_preprocessing"
