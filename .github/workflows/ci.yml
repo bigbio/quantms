@@ -109,7 +109,7 @@ jobs:
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs
+          name: failed_logs_${{ github.run_id }}
           path: failed_logs
       - uses: actions/upload-artifact@v4
         if: always()
@@ -121,5 +121,5 @@ jobs:
         if: always()
         name: Upload log
         with:
-          name: nextflow.log
+          name: nextflow_${{ github.run_id }}.log
           path: .nextflow.log
