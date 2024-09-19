@@ -105,21 +105,21 @@ jobs:
           mkdir failed_logs
           failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs
+          name: failed_logs_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}
           path: failed_logs
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: always()
         name: Upload results
         with:
-          name: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
+          name: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}_results
           path: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: always()
         name: Upload log
         with:
-          name: nextflow.log
+          name: nextflow_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}.log
           path: .nextflow.log
