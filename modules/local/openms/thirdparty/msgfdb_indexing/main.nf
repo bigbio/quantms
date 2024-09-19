@@ -22,8 +22,8 @@ process MSGFDBINDEXING {
     """
     msgf_plus edu.ucsd.msjava.msdbsearch.BuildSA \\
         -d ${database} \\
-        -Xmx ${task.memory.toMega()}m \\
-        -Xms ${task.memory.toMega()}m \\
+        -Xmx${task.memory.toMega()}m \\
+        -Xms${task.memory.toMega()}m \\
         -o ./ \\
         -tda 0 \\
         -debug $params.db_debug \\
