@@ -111,15 +111,18 @@ jobs:
         with:
           name: failed_logs_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}
           path: failed_logs
+          overwrite: true
       - uses: actions/upload-artifact@v4
         if: always()
         name: Upload results
         with:
           name: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}_results
           path: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
+          overwrite: true
       - uses: actions/upload-artifact@v4
         if: always()
         name: Upload log
         with:
           name: nextflow_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}.log
           path: .nextflow.log
+          overwrite: true
