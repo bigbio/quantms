@@ -39,7 +39,7 @@ process ISOBARICANALYZER {
         -extraction:precursor_isotope_deviation $params.precursor_isotope_deviation \\
         ${iso_normalization} \\
         -${meta.labelling_type}:reference_channel $params.reference_channel \\
-        --quantificazion:isotope_correction false \\
+        --quantification:isotope_correction false \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
         $args \\
         2>&1 | tee ${mzml_file.baseName}_isob.log
