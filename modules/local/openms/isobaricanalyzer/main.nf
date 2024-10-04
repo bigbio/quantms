@@ -35,7 +35,10 @@ process ISOBARICANALYZER {
         }
 
         // Read the matrix file and format it into the command-line format
-        def matrix_lines = new File(params.plex_corr_matrix_file).readLines().drop(1).collect { line ->
+        def matrix_lines = new File(params.plex_corr_matrix_file).readLines()
+        .findAll { !it.startsWith('#') && it.trim() } // Skip lines starting with '#' and empty lines
+        .drop(1) // Assuming the first non-comment line is a header
+        .collect { line ->
             def values = line.split('/')
             return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
         }
