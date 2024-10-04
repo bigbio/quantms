@@ -26,6 +26,22 @@ process ISOBARICANALYZER {
     else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
 
     iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
+    isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : ""
+
+    if ($params.isotope_correction) {
+        // Read the isotope_correction matrix using plex_corr_matrix_file, it can't be null
+        if($params.plex_corr_matrix_file == null) {
+            error("plex_corr_matrix_file is required when isotope_correction is enabled")
+        }
+        def plex_corr_matrix_file = file("${params.plex_corr_matrix_file}")
+        // Read the matrix file and convert to a string
+        // Read the matrix file and format it into the command-line format
+        matrix_lines = new File("${params.plex_corr_matrix_file}").readLines().drop(1).collect { line ->
+             def values = line.split('/')
+             return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
+        }
+        isotope_correction = isotope_correction + " -" + {meta.labelling_type} + ":correction_matrix " + matrixLines.join(", ")
+    }
 
     """
     IsobaricAnalyzer \\
@@ -39,7 +55,7 @@ process ISOBARICANALYZER {
         -extraction:precursor_isotope_deviation $params.precursor_isotope_deviation \\
         ${iso_normalization} \\
         -${meta.labelling_type}:reference_channel $params.reference_channel \\
-        -quantification:isotope_correction false \\
+        ${isotope_correction} \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
         $args \\
         2>&1 | tee ${mzml_file.baseName}_isob.log
