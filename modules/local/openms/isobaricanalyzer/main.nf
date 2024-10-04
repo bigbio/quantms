@@ -26,7 +26,7 @@ process ISOBARICANALYZER {
     else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
 
     def iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
-    def isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : ""
+    def isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : "-quantification:isotope_correction false"
 
     // Check for isotope correction and load the correction matrix
     if (params.isotope_correction) {
