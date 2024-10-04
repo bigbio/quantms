@@ -42,7 +42,8 @@ process ISOBARICANALYZER {
             def values = line.split('/')
             return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
         }
-        isotope_correction += " -${meta.labelling_type}:correction_matrix ${matrix_lines.join(', ')}"
+        def correction_matrix = matrix_lines.join(", ")
+        isotope_correction += " -${meta.labelling_type}:correction_matrix \"${correction_matrix}\""
     }
 
     """
