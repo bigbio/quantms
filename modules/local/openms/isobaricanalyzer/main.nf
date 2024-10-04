@@ -25,39 +25,38 @@ process ISOBARICANALYZER {
     else if (meta.dissociationmethod == "ETD") diss_meth = "Electron transfer dissociation"
     else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
 
-    iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
-    isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : ""
+    def iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
+    def isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : ""
 
-    if ($params.isotope_correction) {
-        // Read the isotope_correction matrix using plex_corr_matrix_file, it can't be null
-        if($params.plex_corr_matrix_file == null) {
+    // Check for isotope correction and load the correction matrix
+    if (params.isotope_correction) {
+        if (params.plex_corr_matrix_file == null) {
             error("plex_corr_matrix_file is required when isotope_correction is enabled")
         }
-        def plex_corr_matrix_file = file("${params.plex_corr_matrix_file}")
-        // Read the matrix file and convert to a string
+
         // Read the matrix file and format it into the command-line format
-        matrix_lines = new File("${params.plex_corr_matrix_file}").readLines().drop(1).collect { line ->
+        def matrix_lines = new File(params.plex_corr_matrix_file).readLines().drop(1).collect { line ->
              def values = line.split('/')
              return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
         }
-        isotope_correction = isotope_correction + " -" + {meta.labelling_type} + ":correction_matrix " + matrixLines.join(", ")
+        isotope_correction += " -${meta.labelling_type}:correction_matrix ${matrix_lines.join(', ')}"
     }
 
     """
     IsobaricAnalyzer \\
-        -type $meta.labelling_type \\
+        -type ${meta.labelling_type} \\
         -in ${mzml_file} \\
-        -threads $task.cpus \\
+        -threads ${task.cpus} \\
         -extraction:select_activation "${diss_meth}" \\
-        -extraction:reporter_mass_shift $params.reporter_mass_shift \\
-        -extraction:min_reporter_intensity $params.min_reporter_intensity \\
-        -extraction:min_precursor_purity $params.min_precursor_purity \\
-        -extraction:precursor_isotope_deviation $params.precursor_isotope_deviation \\
+        -extraction:reporter_mass_shift ${params.reporter_mass_shift} \\
+        -extraction:min_reporter_intensity ${params.min_reporter_intensity} \\
+        -extraction:min_precursor_purity ${params.min_precursor_purity} \\
+        -extraction:precursor_isotope_deviation ${params.precursor_isotope_deviation} \\
         ${iso_normalization} \\
-        -${meta.labelling_type}:reference_channel $params.reference_channel \\
+        -${meta.labelling_type}:reference_channel ${params.reference_channel} \\
         ${isotope_correction} \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
-        $args \\
+        ${args} \\
         2>&1 | tee ${mzml_file.baseName}_isob.log
 
     cat <<-END_VERSIONS > versions.yml
