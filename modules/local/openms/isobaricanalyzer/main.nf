@@ -36,8 +36,8 @@ process ISOBARICANALYZER {
 
         // Read the matrix file and format it into the command-line format
         def matrix_lines = new File(params.plex_corr_matrix_file).readLines().drop(1).collect { line ->
-             def values = line.split('/')
-             return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
+            def values = line.split('/')
+            return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
         }
         isotope_correction += " -${meta.labelling_type}:correction_matrix ${matrix_lines.join(', ')}"
     }
