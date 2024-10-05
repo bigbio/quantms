@@ -110,7 +110,7 @@ jobs:
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ github.run_id }}_${{ github.job }}
+          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
           path: failed_logs
           overwrite: true
 
@@ -118,7 +118,7 @@ jobs:
         if: always()
         name: Upload results
         with:
-          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ github.run_id }}_${{ github.job }}_results
+          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
           path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
           overwrite: true
 
@@ -126,6 +126,6 @@ jobs:
         if: always()
         name: Upload log
         with:
-          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ github.run_id }}_${{ github.job }}.log
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
           path: .nextflow.log
           overwrite: true
