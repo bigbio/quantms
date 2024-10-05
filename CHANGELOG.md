@@ -19,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - openms==3.2.0
 
-
 ## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
 ### `Added`
