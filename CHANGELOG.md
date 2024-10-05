@@ -3,11 +3,28 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] nfcore/quantms - [--/--/----] - Cambridge
+
+### `Added`
+
+- [#423](https://github.com/bigbio/quantms/pull/423) Support for plex Correction matrices for TMT and iTRAQ analytical methods.
+
+### `Changed`
+
+- [#423](https://github.com/bigbio/quantms/pull/423) Updated OpenMS==3.2.0
+
+### `Fixed`
+
+### `Dependencies`
+
+- openms==3.2.0
+
+
 ## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
 ### `Added`
 
-- [#335](https://github.com/bigbio/quantms/pull/335) (Performance improvement) Improvements in DIA pipeline to use random/subset files for library search
+- [#335](https://github.com/bigbio/quantms/pull/335) (Performance improvement) Improvements in a DIA pipeline to use random/subset files for library search
 - [#351](https://github.com/bigbio/quantms/pull/351) Identification workflow for DDA data
 - [#362](https://github.com/bigbio/quantms/pull/362) Introduction to ms2rescore to identification workflow
 - [#374](https://github.com/bigbio/quantms/pull/374) Add msgf+ database indexing step
