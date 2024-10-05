@@ -41,7 +41,7 @@ process ISOBARICANALYZER {
         .drop(1) // Assuming the first non-comment line is a header
         .collect { line ->
             def values = line.split('/')
-            return "\"${values[1]}/${values[2]}/${values[3]}/${values[4]}\""
+            return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
         }
 
     // Join the matrix lines into a format for the C++ tool
