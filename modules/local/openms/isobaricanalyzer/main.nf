@@ -41,11 +41,11 @@ process ISOBARICANALYZER {
         .drop(1) // Assuming the first non-comment line is a header
         .collect { line ->
             def values = line.split('/')
-            return "${values[1]}/${values[2]}/${values[3]}/${values[4]}"
+            return "\"${values[1]}/${values[2]}/${values[3]}/${values[4]}\""
         }
 
     // Join the matrix lines into a format for the C++ tool
-    def correction_matrix = matrix_lines.join(", ")
+    def correction_matrix = matrix_lines.join(" ")
 
     isotope_correction += " -${meta.labelling_type}:correction_matrix ${correction_matrix}"
     }
