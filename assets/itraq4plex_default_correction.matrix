@@ -1,0 +1,7 @@
+# comment: itraq4plex from MSnbase
+# comment: https://github.com/lgatto/MSnbase/blob/master/inst/extdata/iTRAQ4plexPurityCorrections.csv
+channel/<-2Da>/<-1Da>/<+1Da>/<+2Da>
+114/0.0/1.0/5.9/0.2
+115/0.0/2.0/5.6/0.1
+116/0.0/3.0/4.5/0.1
+117/0.1/4.0/3.5/0.1
