@@ -3,10 +3,10 @@ process PERCOLATOR {
     label 'process_medium'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.1.0"
+    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.1.0--h9ee0642_1' :
-        'biocontainers/openms-thirdparty:3.1.0--h9ee0642_1' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
+        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
 
     input:
     tuple val(meta), path(id_file)

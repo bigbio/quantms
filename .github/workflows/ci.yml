@@ -34,7 +34,8 @@ jobs:
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        test_profile: ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
+        test_profile:
+          ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
         exec_profile: ["docker"]
         exclude:
           - test_profile: test_dia
@@ -72,16 +73,19 @@ jobs:
           echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
           ./bin/micromamba shell init -s bash
           echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
+
       - name: Install Singularity with defaults
         if: matrix.exec_profile == 'singularity'
         uses: singularityhub/install-singularity@main
-      - name: Run pipeline with test data in docker profile
-        if: matrix.exec_profile == 'docker'
+
+      - name: Run pipeline with test data in docker/singularity profile
+        if: matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
       - name: Run pipeline with test data in conda profile (and single-threaded)
         env:
           MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
@@ -91,13 +95,6 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-      - name: Run pipeline with test data in singularity profile
-        if: matrix.exec_profile == 'singularity'
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Gather failed logs
         if: failure() || cancelled()
@@ -105,21 +102,30 @@ jobs:
           mkdir failed_logs
           failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
-      - uses: actions/upload-artifact@v1
+
+      - uses: actions/upload-artifact@v4
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs
+          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
+          include-hidden-files: true
           path: failed_logs
-      - uses: actions/upload-artifact@v1
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
         if: always()
         name: Upload results
         with:
-          name: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
-          path: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
-      - uses: actions/upload-artifact@v1
+          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
+          include-hidden-files: true
+          path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
         if: always()
         name: Upload log
         with:
-          name: nextflow.log
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
+          include-hidden-files: true
           path: .nextflow.log
+          overwrite: false
