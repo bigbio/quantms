@@ -104,28 +104,28 @@ jobs:
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
 
       - uses: actions/upload-artifact@v4
-        include-hidden-files: true
         if: failure() || cancelled()
         name: Upload failed logs
         with:
           name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
+          include-hidden-files: true
           path: failed_logs
           overwrite: false
 
       - uses: actions/upload-artifact@v4
-        include-hidden-files: true
         if: always()
         name: Upload results
         with:
           name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
+          include-hidden-files: true
           path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
           overwrite: false
 
       - uses: actions/upload-artifact@v4
-        include-hidden-files: true
         if: always()
         name: Upload log
         with:
           name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
+          include-hidden-files: true
           path: .nextflow.log
           overwrite: false
