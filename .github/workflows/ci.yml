@@ -100,11 +100,6 @@ jobs:
         run: |
           nextflow -log pipeline.log run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
-      - name: Check log files
-        run: |
-          ls -R -la *
-          pwd
-
       - name: Gather failed logs
         if: failure() || cancelled()
         run: |
