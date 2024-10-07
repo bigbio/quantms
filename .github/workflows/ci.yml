@@ -73,16 +73,19 @@ jobs:
           echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
           ./bin/micromamba shell init -s bash
           echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
+          
       - name: Install Singularity with defaults
         if: matrix.exec_profile == 'singularity'
         uses: singularityhub/install-singularity@main
-      - name: Run pipeline with test data in docker profile
-        if: matrix.exec_profile == 'docker'
+        
+      - name: Run pipeline with test data in docker/singularity profile
+        if: matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow -log pipeline.log run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+          
       - name: Run pipeline with test data in conda profile (and single-threaded)
         env:
           MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
@@ -92,18 +95,6 @@ jobs:
         # Remember that you can parallelise this by using strategy.matrix
         run: |
           nextflow -log pipeline.log run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-      - name: Run pipeline with test data in singularity profile
-        if: matrix.exec_profile == 'singularity'
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
-        run: |
-          nextflow -log pipeline.log run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-
-      - name: Check log files
-        run: |
-          ls -R -la *
-          pwd
 
       - name: Gather failed logs
         if: failure() || cancelled()
@@ -111,6 +102,7 @@ jobs:
           mkdir failed_logs
           failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
+          
       - uses: actions/upload-artifact@v4
         if: failure() || cancelled()
         name: Upload failed logs
