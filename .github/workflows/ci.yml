@@ -100,6 +100,11 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
+      - name: Check log files
+        run: |
+          ls -R -la *
+          pwd
+
       - name: Gather failed logs
         if: failure() || cancelled()
         run: |
@@ -112,7 +117,7 @@ jobs:
         with:
           name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
           path: failed_logs
-          overwrite: true
+          overwrite: false
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -120,7 +125,7 @@ jobs:
         with:
           name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
           path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
-          overwrite: true
+          overwrite: false
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -128,4 +133,4 @@ jobs:
         with:
           name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
           path: .nextflow.log
-          overwrite: true
+          overwrite: false
