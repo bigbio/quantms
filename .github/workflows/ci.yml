@@ -34,7 +34,8 @@ jobs:
         NXF_VER:
           - "23.04.0"
           - "latest-everything"
-        test_profile: ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
+        test_profile:
+          ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
         exec_profile: ["docker"]
         exclude:
           - test_profile: test_dia
@@ -81,7 +82,7 @@ jobs:
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+          nextflow -log pipeline.log run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
       - name: Run pipeline with test data in conda profile (and single-threaded)
         env:
           MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
@@ -90,14 +91,19 @@ jobs:
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+          nextflow -log pipeline.log run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
       - name: Run pipeline with test data in singularity profile
         if: matrix.exec_profile == 'singularity'
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+          nextflow -log pipeline.log run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Check log files
+        run: |
+          ls -R -la *
+          pwd
 
       - name: Gather failed logs
         if: failure() || cancelled()
@@ -109,17 +115,22 @@ jobs:
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}
+          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
           path: failed_logs
+          overwrite: false
+
       - uses: actions/upload-artifact@v4
         if: always()
         name: Upload results
         with:
-          name: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}_results
-          path: ${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_results
+          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
+          path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          overwrite: false
+
       - uses: actions/upload-artifact@v4
         if: always()
         name: Upload log
         with:
-          name: nextflow_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}_${{ github.run_id }}.log
-          path: .nextflow.log
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
+          path: pipeline.log
+          overwrite: false
