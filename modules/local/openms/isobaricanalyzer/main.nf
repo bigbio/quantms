@@ -3,10 +3,10 @@ process ISOBARICANALYZER {
     label 'process_medium'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.1.0"
+    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.1.0--h9ee0642_1' :
-        'biocontainers/openms-thirdparty:3.1.0--h9ee0642_1' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
+        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
 
     input:
     tuple val(meta), path(mzml_file)
@@ -25,22 +25,46 @@ process ISOBARICANALYZER {
     else if (meta.dissociationmethod == "ETD") diss_meth = "Electron transfer dissociation"
     else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
 
-    iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
+    def iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
+    def isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : "-quantification:isotope_correction false"
+
+    // Check for isotope correction and load the correction matrix
+    if (params.isotope_correction) {
+        if (params.plex_corr_matrix_file == null) {
+            error("plex_corr_matrix_file is required when isotope_correction is enabled")
+        }
+
+        // Read the matrix file and format it into the command-line format
+        // Read the matrix file, skipping lines that start with '#' and process the matrix
+        def matrix_lines = new File(params.plex_corr_matrix_file).readLines()
+        .findAll { !it.startsWith('#') && it.trim() } // Skip lines starting with '#' and empty lines
+        .drop(1) // Assuming the first non-comment line is a header
+        .collect { line ->
+            def values = line.split('/')
+            return "\"${values[1]}/${values[2]}/${values[3]}/${values[4]}\""
+        }
+
+    // Join the matrix lines into a format for the C++ tool
+    def correction_matrix = matrix_lines.join(" ")
+
+    isotope_correction += " -${meta.labelling_type}:correction_matrix ${correction_matrix}"
+    }
 
     """
     IsobaricAnalyzer \\
-        -type $meta.labelling_type \\
+        -type ${meta.labelling_type} \\
         -in ${mzml_file} \\
-        -threads $task.cpus \\
+        -threads ${task.cpus} \\
         -extraction:select_activation "${diss_meth}" \\
-        -extraction:reporter_mass_shift $params.reporter_mass_shift \\
-        -extraction:min_reporter_intensity $params.min_reporter_intensity \\
-        -extraction:min_precursor_purity $params.min_precursor_purity \\
-        -extraction:precursor_isotope_deviation $params.precursor_isotope_deviation \\
+        -extraction:reporter_mass_shift ${params.reporter_mass_shift} \\
+        -extraction:min_reporter_intensity ${params.min_reporter_intensity} \\
+        -extraction:min_precursor_purity ${params.min_precursor_purity} \\
+        -extraction:precursor_isotope_deviation ${params.precursor_isotope_deviation} \\
         ${iso_normalization} \\
-        -${meta.labelling_type}:reference_channel $params.reference_channel \\
+        -${meta.labelling_type}:reference_channel ${params.reference_channel} \\
+        ${isotope_correction} \\
         -out ${mzml_file.baseName}_iso.consensusXML \\
-        $args \\
+        ${args} \\
         2>&1 | tee ${mzml_file.baseName}_isob.log
 
     cat <<-END_VERSIONS > versions.yml

@@ -723,8 +723,13 @@
                 "isotope_correction": {
                     "type": "boolean",
                     "description": "Enable isotope correction (highly recommended)",
-                    "default": true,
+                    "default": false,
                     "fa_icon": "fas fa-toggle-on"
+                },
+                "plex_corr_matrix_file": {
+                    "type": "string",
+                    "description": "Path to the correction matrix file for isobaric labelling, defaults are in assets folder",
+                    "fa_icon": "fas fa-font"
                 },
                 "iso_normalization": {
                     "type": "boolean",
