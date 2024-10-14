@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#423](https://github.com/bigbio/quantms/pull/423) Updated OpenMS==3.2.0
+- [#423]() Update thermorawfileparser==1.4.5
+- [#423]() Update quantms-utils==0.0.12
 
 ### `Fixed`
 

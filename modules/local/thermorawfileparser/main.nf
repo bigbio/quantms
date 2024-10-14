@@ -4,10 +4,10 @@ process THERMORAWFILEPARSER {
     label 'process_single'
     label 'error_retry'
 
-    conda "conda-forge::mono bioconda::thermorawfileparser=1.4.3"
+    conda "conda-forge::mono bioconda::thermorawfileparser=1.4.5"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.4.3--ha8f3691_0' :
-        'biocontainers/thermorawfileparser:1.4.3--ha8f3691_0' }"
+        'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.4.5--ha8f3691_0' :
+        'biocontainers/thermorawfileparser:1.4.5--ha8f3691_0' }"
 
     stageInMode {
         if (task.attempt == 1) {
