@@ -39,7 +39,7 @@ workflow DDA_ID {
         ch_file_preparation_results,
         ch_database_wdecoy
     )
-    ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versionss.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
     ch_id_files = DATABASESEARCHENGINES.out.ch_id_files_idx
 
     ch_id_files.branch{ meta, filename ->
@@ -59,7 +59,7 @@ workflow DDA_ID {
         if (params.posterior_probabilities == 'percolator') {
             if (params.ms2rescore == true) {
                 MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
-                ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versionss)
+                ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
 
                 MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names).branch{ meta, idxml, feature_name ->
                     sage: idxml.name.contains('sage')
@@ -170,7 +170,7 @@ workflow DDA_ID {
 
         } else if (params.posterior_probabilities == 'mokapot') {
             MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
-            ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versionss)
+            ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
             IDSCORESWITCHER(MS2RESCORE.out.idxml.combine(Channel.value("PEP")))
             ch_software_versions = ch_software_versions.mix(IDSCORESWITCHER.out.versions)
             ch_consensus_input = IDSCORESWITCHER.out.id_score_switcher.combine(Channel.value("MS:1001491"))

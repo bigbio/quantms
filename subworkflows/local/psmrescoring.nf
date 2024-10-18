@@ -34,7 +34,7 @@ workflow PSMRESCORING {
     if (params.posterior_probabilities == 'percolator') {
         if (params.ms2rescore == true) {
             MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
-            ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versionss)
+            ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
 
             MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names).branch{ meta, idxml, feature_name ->
                 sage: idxml.name.contains('sage')
