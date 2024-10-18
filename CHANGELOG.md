@@ -172,7 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#193](https://github.com/bigbio/quantms/pull/193) - Set the `local_input_type` default parameter to `mzML`
 - [#212](https://github.com/bigbio/quantms/pull/212) - Set the `min_consensus_support` default parameter to `1` to filter in ConsensusID for peptides identified with both search engines
-- [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow to run PROTEINQUANTIFIER TMT without exporting to mzTab
+- [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow torun PROTEINQUANTIFIER TMT without exporting to mzTab
 
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
 
