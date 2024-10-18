@@ -1,1 +1,27 @@
+bump_version: null
+lint:
+  files_exist:
+    - conf/igenomes.config
+    - conf/test_full.config
+    - conf/test.config
+    - .github/workflows/awstest.yml
+    - .github/workflows/awsfulltest.yml
+  files_unchanged:
+    - .github/PULL_REQUEST_TEMPLATE.md
+    - .github/CONTRIBUTING.md
+    - docs/README.md
+  multiqc_config: false
+nf_core_version: 3.0.2
+org_path: null
 repository_type: pipeline
+template:
+  author: Yasset Perez-Riverol
+  description: Quantitative Mass Spectrometry nf-core workflow
+  force: false
+  is_nfcore: true
+  name: quantms
+  org: nf-core
+  outdir: .
+  skip_features: null
+  version: 1.3.1dev
+update: null
