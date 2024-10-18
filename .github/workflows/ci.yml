@@ -7,9 +7,12 @@ on:
   pull_request:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
   NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -32,7 +35,7 @@ jobs:
       matrix:
         # Nextflow versions
         NXF_VER:
-          - "23.04.0"
+          - "24.04.2"
           - "latest-everything"
         test_profile:
           ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
@@ -55,7 +58,7 @@ jobs:
       - name: Check out pipeline code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
 
-      - name: Install Nextflow
+      - name: Set up Nextflow
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"

@@ -147,9 +147,13 @@ workflow QUANTMS {
             }
             .set{ versions_clean }
 
-    softwareVersionsToYAML(versions_clean.yaml)
-        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
-        .set { ch_collated_versions }
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
 
     ch_multiqc_files                      = Channel.empty()
     ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
@@ -177,7 +181,7 @@ workflow QUANTMS {
 
     emit:
     multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
-    versions            = versions_clean.yaml
+    versions            = ch_versions
 }
 
 /*

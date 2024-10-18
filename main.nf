@@ -9,8 +9,6 @@
 ----------------------------------------------------------------------------------------
 */
 
-nextflow.enable.dsl = 2
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
@@ -20,8 +18,6 @@ nextflow.enable.dsl = 2
 include { QUANTMS  } from './workflows/quantms'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_quantms_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_quantms_pipeline'
-
-
 
 //
 // WORKFLOW: Run main nf-core/quantms analysis pipeline
@@ -41,8 +37,6 @@ workflow NFCORE_QUANTMS {
     RUN ALL WORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-
-
 
 //
 // WORKFLOW: Execute a single named workflow for the pipeline
