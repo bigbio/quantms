@@ -1,7 +1,6 @@
 //
 // MODULE: Local to the pipeline
 //
-include { DECOYDATABASE } from '../../modules/local/openms/decoydatabase/main'
 include { CONSENSUSID   } from '../../modules/local/openms/consensusid/main'
 
 //
