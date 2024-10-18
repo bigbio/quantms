@@ -74,8 +74,6 @@ workflow QUANTMS {
                 lfq: it[0].labelling_type.contains("label free")
             }
             .set{ch_fileprep_result}
-
-
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
@@ -140,13 +138,9 @@ workflow QUANTMS {
     //
     // Collate and save software versions
     //
-    ch_versions
-            .branch {
-                yaml : it.asBoolean()
-                other : true
-            }
-            .set{ versions_clean }
-
+    ch_versions.subscribe { version ->
+        println "DEBUG: Version Info: ${version}"
+    }
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
