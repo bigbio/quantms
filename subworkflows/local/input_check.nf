@@ -7,9 +7,11 @@ include { SAMPLESHEET_CHECK } from '../../modules/local/samplesheet_check'
 workflow INPUT_CHECK {
     take:
     input_file // file: /path/to/input_file
-     ch_software_versions = Channel.empty()
 
     main:
+
+    ch_software_versions = Channel.empty()
+
     if (input_file.toString().toLowerCase().contains("sdrf")) {
         is_sdrf = true
     } else {
