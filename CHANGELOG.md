@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
 - [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
 - [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
-- [#396](https://github.com/bigbio/quantms/pull/396) Adds verification step to unpacking tar archives in the DECOMPRESS process
+- [#396](https://github.com/bigbio/quantms/pull/396) Adds a verification step to unpacking tar archives in the DECOMPRESS process
 - [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
 - [#404](https://github.com/bigbio/quantms/pull/404) Add spectrum SNR features to rescore
 
