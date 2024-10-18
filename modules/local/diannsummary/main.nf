@@ -31,7 +31,7 @@ process DIANNSUMMARY {
     // Different library files format are exported due to different DIA-NN versions
     path "empirical_library.tsv", emit: final_speclib optional true
     path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib optional true
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

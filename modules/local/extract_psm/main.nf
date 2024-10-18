@@ -13,7 +13,7 @@ process PSMCONVERSION {
 
     output:
     path "*_psm.parquet", emit: psm_info
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

@@ -39,7 +39,7 @@ workflow DDA_ID {
         ch_file_preparation_results,
         ch_database_wdecoy
     )
-    ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versions.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(DATABASESEARCHENGINES.out.versionss.ifEmpty(null))
     ch_id_files = DATABASESEARCHENGINES.out.ch_id_files_idx
 
     ch_id_files.branch{ meta, filename ->
@@ -59,7 +59,7 @@ workflow DDA_ID {
         if (params.posterior_probabilities == 'percolator') {
             if (params.ms2rescore == true) {
                 MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
-                ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
+                ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versionss)
 
                 MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names).branch{ meta, idxml, feature_name ->
                     sage: idxml.name.contains('sage')
@@ -71,29 +71,31 @@ workflow DDA_ID {
                 EXTRACTPSMFEATURES(ch_ms2rescore_branched.nosage)
                 SAGEFEATURE(ch_ms2rescore_branched.sage)
                 ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat.mix(SAGEFEATURE.out.id_files_feat)
-                ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
+                ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.versions, SAGEFEATURE.out.versions)
             } else {
                 EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
                 ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)
-                ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.version)
+                ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.versions)
             }
 
             // Add SNR features to percolator
             if (params.add_snr_feature_percolator) {
                 SPECTRUM2FEATURES(ch_id_files_feats.combine(ch_file_preparation_results, by: 0))
                 ch_id_files_feats = SPECTRUM2FEATURES.out.id_files_snr
-                ch_software_versions = ch_software_versions.mix(SPECTRUM2FEATURES.out.version)
+                ch_software_versions = ch_software_versions.mix(SPECTRUM2FEATURES.out.versions)
             }
 
 
             // Rescoring for independent run, Sample or whole experiments
             if (params.rescore_range == "independent_run") {
                 PERCOLATOR(ch_id_files_feats)
-                ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.version)
+                ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
                 ch_consensus_input = PERCOLATOR.out.id_files_perc
             } else if (params.rescore_range == "by_sample") {
                 // Sample map
                 GETSAMPLE(ch_expdesign)
+                ch_software_versions = ch_software_versions.mix(GETSAMPLE.out.versions)
+
                 ch_expdesign_sample = GETSAMPLE.out.ch_expdesign_sample
                 ch_expdesign_sample.splitCsv(header: true, sep: '\t')
                     .map { get_sample_map(it) }.set{ sample_map_idv }
@@ -117,10 +119,10 @@ workflow DDA_ID {
                 IDMERGER(ch_id_files_feat_branched.comet.groupTuple(by: 2)
                     .mix(ch_id_files_feat_branched.msgf.groupTuple(by: 2))
                     .mix(ch_id_files_feat_branched.sage.groupTuple(by: 2)))
-                ch_software_versions = ch_software_versions.mix(IDMERGER.out.version)
+                ch_software_versions = ch_software_versions.mix(IDMERGER.out.versions)
 
                 PERCOLATOR(IDMERGER.out.id_merged)
-                ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.version)
+                ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
 
                 // Currently only ID runs on exactly one mzML file are supported in CONSENSUSID. Split idXML by runs
                 IDRIPPER(PERCOLATOR.out.id_files_perc)
@@ -129,7 +131,7 @@ workflow DDA_ID {
                 meta.combine(id_rippers, by: 0)
                         .map{ [it[1], it[2], "MS:1001491"]}
                         .set{ ch_consensus_input }
-                ch_software_versions = ch_software_versions.mix(IDRIPPER.out.version)
+                ch_software_versions = ch_software_versions.mix(IDRIPPER.out.versions)
 
             } else if (params.rescore_range == "by_project"){
                 ch_id_files_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_feats}
@@ -148,10 +150,10 @@ workflow DDA_ID {
                 IDMERGER(ch_id_files_feat_branched.comet.groupTuple(by: 2)
                     .mix(ch_id_files_feat_branched.msgf.groupTuple(by: 2))
                     .mix(ch_id_files_feat_branched.sage.groupTuple(by: 2)))
-                ch_software_versions = ch_software_versions.mix(IDMERGER.out.version)
+                ch_software_versions = ch_software_versions.mix(IDMERGER.out.versions)
 
                 PERCOLATOR(IDMERGER.out.id_merged)
-                ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.version)
+                ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
 
                 // Currently only ID runs on exactly one mzML file are supported in CONSENSUSID. Split idXML by runs
                 IDRIPPER(PERCOLATOR.out.id_files_perc)
@@ -160,7 +162,7 @@ workflow DDA_ID {
                 meta.combine(id_rippers, by: 0)
                         .map{ [it[1], it[2], "MS:1001491"]}
                         .set{ ch_consensus_input }
-                ch_software_versions = ch_software_versions.mix(IDRIPPER.out.version)
+                ch_software_versions = ch_software_versions.mix(IDRIPPER.out.versions)
 
             }
 
@@ -168,21 +170,21 @@ workflow DDA_ID {
 
         } else if (params.posterior_probabilities == 'mokapot') {
             MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
-            ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
+            ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versionss)
             IDSCORESWITCHER(MS2RESCORE.out.idxml.combine(Channel.value("PEP")))
-            ch_software_versions = ch_software_versions.mix(IDSCORESWITCHER.out.version)
+            ch_software_versions = ch_software_versions.mix(IDSCORESWITCHER.out.versions)
             ch_consensus_input = IDSCORESWITCHER.out.id_score_switcher.combine(Channel.value("MS:1001491"))
             ch_rescoring_results = IDSCORESWITCHER.out.ch_consensus_input
         } else {
             ch_fdridpep = Channel.empty()
             if (params.search_engines.split(",").size() == 1) {
                 FDRIDPEP(ch_id_files)
-                ch_software_versions = ch_software_versions.mix(FDRIDPEP.out.version)
+                ch_software_versions = ch_software_versions.mix(FDRIDPEP.out.versions)
                 ch_id_files = Channel.empty()
                 ch_fdridpep = FDRIDPEP.out.id_files_idx_ForIDPEP_FDR
             }
             IDPEP(ch_fdridpep.mix(ch_id_files))
-            ch_software_versions = ch_software_versions.mix(IDPEP.out.version)
+            ch_software_versions = ch_software_versions.mix(IDPEP.out.versions)
             ch_consensus_input = IDPEP.out.id_files_ForIDPEP
             ch_rescoring_results = ch_consensus_input
         }
@@ -194,7 +196,7 @@ workflow DDA_ID {
         ch_consensus_results = Channel.empty()
         if (params.search_engines.split(",").size() > 1) {
             CONSENSUSID(ch_consensus_input.groupTuple(size: params.search_engines.split(",").size()))
-            ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.version.ifEmpty(null))
+            ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions.ifEmpty(null))
             ch_psmfdrcontrol = CONSENSUSID.out.consensusids
             ch_psmfdrcontrol
                 .map { it -> it[1] }
@@ -204,10 +206,11 @@ workflow DDA_ID {
         }
 
         PSMFDRCONTROL(ch_psmfdrcontrol)
-        ch_software_versions = ch_software_versions.mix(PSMFDRCONTROL.out.version.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(PSMFDRCONTROL.out.versions.ifEmpty(null))
 
         // Extract PSMs and export parquet format
         PSMCONVERSION(PSMFDRCONTROL.out.id_filtered.combine(ch_spectrum_data, by: 0))
+        ch_software_versions = ch_software_versions.mix(PSMCONVERSION.out.versions)
 
         ch_rescoring_results
             .map { it -> it[1] }
@@ -220,7 +223,7 @@ workflow DDA_ID {
     emit:
     ch_pmultiqc_ids         = ch_pmultiqc_ids
     ch_pmultiqc_consensus   = ch_pmultiqc_consensus
-    version                 = ch_software_versions
+    versions                = ch_software_versions
 }
 
 // Function to add file prefix

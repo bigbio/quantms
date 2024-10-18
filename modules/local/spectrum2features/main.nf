@@ -12,7 +12,7 @@ process SPECTRUM2FEATURES {
 
     output:
     tuple val(meta), path("${id_file.baseName}_snr.idXML"), emit: id_files_snr
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

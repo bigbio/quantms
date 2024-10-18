@@ -20,7 +20,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     output:
     path "empirical_library.tsv", emit: empirical_library
     path "assemble_empirical_library.log", emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

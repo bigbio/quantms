@@ -13,7 +13,7 @@ process SEARCHENGINESAGE {
 
     output:
     tuple val(metas), path(meta_order_files), emit: id_files_sage
-    path "versions.yml"                     , emit: version
+    path "versions.yml"                     , emit: versions
     path "*.log"                            , emit: log
 
     script:

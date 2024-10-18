@@ -7,6 +7,7 @@ include { FALSEDISCOVERYRATE as FDRCONSENSUSID } from '../../modules/local/openm
 include { IDFILTER                             } from '../../modules/local/openms/idfilter/main'
 
 workflow PSMFDRCONTROL {
+
     take:
     ch_id_files
 
@@ -16,18 +17,17 @@ workflow PSMFDRCONTROL {
 
     if (params.search_engines.split(",").size() == 1) {
         IDSCORESWITCHER(ch_id_files)
-        ch_version = ch_version.mix(IDSCORESWITCHER.out.version)
+        ch_version = ch_version.mix(IDSCORESWITCHER.out.versions)
         ch_idfilter = IDSCORESWITCHER.out.id_score_switcher
     } else {
         FDRCONSENSUSID(ch_id_files)
-        ch_version = ch_version.mix(FDRCONSENSUSID.out.version)
+        ch_version = ch_version.mix(FDRCONSENSUSID.out.versions)
         ch_idfilter = FDRCONSENSUSID.out.id_files_idx_ForIDPEP_FDR
     }
     IDFILTER(ch_idfilter)
-    ch_version = ch_version.mix(IDFILTER.out.version)
+    ch_version = ch_version.mix(IDFILTER.out.versions)
 
     emit:
     id_filtered =IDFILTER.out.id_filtered
-
-    version = ch_version
+    versions = ch_version
 }

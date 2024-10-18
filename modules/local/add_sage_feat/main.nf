@@ -12,7 +12,7 @@ process SAGEFEATURE {
 
     output:
     tuple val(meta), path("${id_file.baseName}_feat.idXML"), emit: id_files_feat
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

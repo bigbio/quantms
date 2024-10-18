@@ -38,7 +38,7 @@ workflow LFQ {
     // SUBWORKFLOWS: ID
     //
     ID(ch_file_preparation_results, ch_database_wdecoy, ch_expdesign)
-    ch_software_versions = ch_software_versions.mix(ID.out.version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(ID.out.versions.ifEmpty(null))
 
     //
     // SUBWORKFLOW: PROTEOMICSLFQ
@@ -54,7 +54,7 @@ workflow LFQ {
                 ch_expdesign,
                 ch_database_wdecoy
             )
-    ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.versions.ifEmpty(null))
 
     //
     // MODULE: MSSTATS
@@ -63,7 +63,7 @@ workflow LFQ {
     if(!params.skip_post_msstats && params.quantification_method == "feature_intensity"){
         MSSTATS(PROTEOMICSLFQ.out.out_msstats)
         ch_msstats_out = MSSTATS.out.msstats_csv
-        ch_software_versions = ch_software_versions.mix(MSSTATS.out.version.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(MSSTATS.out.versions.ifEmpty(null))
     }
 
 

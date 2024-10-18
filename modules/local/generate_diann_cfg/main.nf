@@ -12,7 +12,7 @@ process GENERATE_DIANN_CFG {
 
     output:
     path 'diann_config.cfg', emit: diann_cfg
-    path 'versions.yml', emit: version
+    path 'versions.yml', emit: versions
     path '*.log'
 
     script:

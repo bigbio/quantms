@@ -31,7 +31,7 @@ workflow FILE_PREPARATION {
 
     compressed_files = ch_branched_input.dottar.mix(ch_branched_input.dotzip, ch_branched_input.gz)
     DECOMPRESS(compressed_files)
-    ch_versions = ch_versions.mix(DECOMPRESS.out.version)
+    ch_versions = ch_versions.mix(DECOMPRESS.out.versions)
     ch_rawfiles = ch_branched_input.uncompressed.mix(DECOMPRESS.out.decompressed_files)
 
     //
@@ -53,7 +53,7 @@ workflow FILE_PREPARATION {
 
     if (params.reindex_mzml) {
         MZMLINDEXING( ch_branched_input.mzML )
-        ch_versions = ch_versions.mix(MZMLINDEXING.out.version)
+        ch_versions = ch_versions.mix(MZMLINDEXING.out.versions)
         ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
     } else {
         ch_results = ch_results.mix(ch_branched_input.mzML)
@@ -66,7 +66,7 @@ workflow FILE_PREPARATION {
     //  'log': Path(*.txt)}
 
     // Where meta is the same as the input meta
-    ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.version)
+    ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.versions)
     ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
 
     ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
@@ -74,7 +74,7 @@ workflow FILE_PREPARATION {
     // Convert .d files to mzML
     if (params.convert_dotd) {
         TDF2MZML( ch_branched_input.dotd )
-        ch_versions = ch_versions.mix(TDF2MZML.out.version)
+        ch_versions = ch_versions.mix(TDF2MZML.out.versions)
         ch_results = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
         // indexed_mzml_bundle = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
     } else {
@@ -86,7 +86,7 @@ workflow FILE_PREPARATION {
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms_statistics.collect())
     ch_spectrum_df = ch_spectrum_df.mix(MZMLSTATISTICS.out.spectrum_df)
 
-    ch_versions = ch_versions.mix(MZMLSTATISTICS.out.version)
+    ch_versions = ch_versions.mix(MZMLSTATISTICS.out.versions)
 
     if (params.openms_peakpicking) {
         // If the peak picker is enabled, it will over-write not bypass the .d files
@@ -94,7 +94,7 @@ workflow FILE_PREPARATION {
             indexed_mzml_bundle
         )
 
-        ch_versions = ch_versions.mix(OPENMSPEAKPICKER.out.version)
+        ch_versions = ch_versions.mix(OPENMSPEAKPICKER.out.versions)
         ch_results = OPENMSPEAKPICKER.out.mzmls_picked
     }
 
@@ -102,7 +102,7 @@ workflow FILE_PREPARATION {
     results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
     statistics      = ch_statistics     // channel: [ *_ms_info.parquet ]
     spectrum_data   = ch_spectrum_df    // channel: [val(mzml_id), *_spectrum_df.parquet]
-    version         = ch_versions       // channel: [ *.version.txt ]
+    versions         = ch_versions       // channel: [ *.version.txt ]
 }
 
 //

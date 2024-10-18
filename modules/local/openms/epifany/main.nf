@@ -12,7 +12,7 @@ process EPIFANY {
 
     output:
     tuple val(meta), path("${consus_file.baseName}_epi.consensusXML"), emit: epi_inference
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

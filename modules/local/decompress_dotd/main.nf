@@ -32,7 +32,7 @@ process DECOMPRESS {
 
     output:
     tuple val(meta), path('*.d'),   emit: decompressed_files
-    path 'versions.yml',   emit: version
+    path 'versions.yml',   emit: versions
     path '*.log',   emit: log
 
     script:

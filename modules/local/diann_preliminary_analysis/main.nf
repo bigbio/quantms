@@ -16,7 +16,7 @@ process DIANN_PRELIMINARY_ANALYSIS {
     output:
     path "*.quant", emit: diann_quant
     tuple val(meta), path("*_diann.log"), emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

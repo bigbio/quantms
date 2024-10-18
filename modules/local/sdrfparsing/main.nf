@@ -14,7 +14,7 @@ process SDRFPARSING {
     path "${sdrf.baseName}_openms_design.tsv", emit: ch_expdesign
     path "${sdrf.baseName}_config.tsv"       , emit: ch_sdrf_config_file
     path "*.log"                             , emit: log
-    path "versions.yml"                      , emit: version
+    path "versions.yml"                      , emit: versions
 
     script:
     def args = task.ext.args ?: ''

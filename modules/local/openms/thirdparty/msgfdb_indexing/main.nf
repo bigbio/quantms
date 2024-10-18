@@ -13,7 +13,7 @@ process MSGFDBINDEXING {
 
     output:
     tuple path("${database.baseName}.cnlcp"), path("${database.baseName}.canno"), path("${database.baseName}.csarr"), path("${database.baseName}.cseq"), emit: msgfdb_idx
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:

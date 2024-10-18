@@ -32,7 +32,7 @@ process THERMORAWFILEPARSER {
 
     output:
     tuple val(meta), path("*.mzML"), emit: mzmls_converted
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:

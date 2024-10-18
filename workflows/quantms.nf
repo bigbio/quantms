@@ -56,7 +56,7 @@ workflow QUANTMS {
         INPUT_CHECK.out.ch_input_file,
         INPUT_CHECK.out.is_sdrf
     )
-    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.versions.ifEmpty(null))
 
     //
     // SUBWORKFLOW: File preparation
@@ -65,7 +65,7 @@ workflow QUANTMS {
         CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
     )
 
-    ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(FILE_PREPARATION.out.versions.ifEmpty(null))
 
     FILE_PREPARATION.out.results
             .branch {
@@ -99,7 +99,7 @@ workflow QUANTMS {
             ch_db_for_decoy_creation_or_null
         )
         ch_searchengine_in_db = DECOYDATABASE.out.db_decoy
-        ch_versions = ch_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
+        ch_versions = ch_versions.mix(DECOYDATABASE.out.versions.ifEmpty(null))
     }
 
     // This rescoring engine currently only is supported in id_only subworkflows via ms2rescore.
@@ -111,7 +111,7 @@ workflow QUANTMS {
                 log.warn "The rescoring engine is set to mokapot. This rescoring engine currently only supports psm-level-fdr via ms2rescore."
         }
         DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-        ch_versions = ch_versions.mix(DDA_ID.out.version.ifEmpty(null))
+        ch_versions = ch_versions.mix(DDA_ID.out.versions.ifEmpty(null))
         ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_ids)
         ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_consensus)
     } else {
@@ -141,6 +141,7 @@ workflow QUANTMS {
     ch_versions.subscribe { version ->
         println "DEBUG: Version Info: ${version}"
     }
+
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",

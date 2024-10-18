@@ -13,7 +13,7 @@ process SEARCHENGINECOMET {
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_comet.idXML"),  emit: id_files_comet
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:

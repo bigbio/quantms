@@ -15,7 +15,7 @@ process SILICOLIBRARYGENERATION {
     file(diann_config)
 
     output:
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.predicted.speclib", emit: predict_speclib
     path "silicolibrarygeneration.log", emit: log
 

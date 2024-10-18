@@ -13,7 +13,7 @@ process SEARCHENGINEMSGF {
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:
