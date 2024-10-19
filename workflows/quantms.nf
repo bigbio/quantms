@@ -135,7 +135,7 @@ workflow QUANTMS {
         ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
     }
 
-    softwareVersionsToYAML(ch_versions)
+    softwareVersionsToYAML(ch_versions.filter { it != null })
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
