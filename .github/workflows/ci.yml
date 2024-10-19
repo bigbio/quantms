@@ -63,8 +63,15 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+      - name: Set up Apptainer
+        if: matrix.profile == 'singularity'
+        uses: eWaterCycle/setup-apptainer@main
+
+      - name: Set up Singularity
+        if: matrix.profile == 'singularity'
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
       - name: Install micromamba
         env:
@@ -80,6 +87,9 @@ jobs:
       - name: Install Singularity with defaults
         if: matrix.exec_profile == 'singularity'
         uses: singularityhub/install-singularity@main
+
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Run pipeline with test data in docker/singularity profile
         if: matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity'
