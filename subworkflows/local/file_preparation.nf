@@ -102,7 +102,7 @@ workflow FILE_PREPARATION {
     results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
     statistics      = ch_statistics     // channel: [ *_ms_info.parquet ]
     spectrum_data   = ch_spectrum_df    // channel: [val(mzml_id), *_spectrum_df.parquet]
-    versions         = ch_versions       // channel: [ *.version.txt ]
+    versions         = ch_versions       // channel: [ *.versions.yml ]
 }
 
 //
