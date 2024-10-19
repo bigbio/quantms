@@ -64,11 +64,11 @@ jobs:
           version: "${{ matrix.NXF_VER }}"
 
       - name: Set up Apptainer
-        if: matrix.profile == 'singularity'
+        if: matrix.exec_profile == 'singularity'
         uses: eWaterCycle/setup-apptainer@main
 
       - name: Set up Singularity
-        if: matrix.profile == 'singularity'
+        if: matrix.exec_profile == 'singularity'
         run: |
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
