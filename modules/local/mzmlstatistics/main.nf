@@ -1,6 +1,6 @@
 process MZMLSTATISTICS {
     tag "$meta.mzml_id"
-    label 'process_medium'
+    label 'process_very_low'
     label 'process_single'
 
     conda "bioconda::quantms-utils=0.0.11"

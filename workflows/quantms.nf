@@ -135,13 +135,6 @@ workflow QUANTMS {
         ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
     }
 
-    //
-    // Collate and save software versions
-    //
-    ch_versions.subscribe { version ->
-        println "DEBUG: Version Info: ${version}"
-    }
-
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
