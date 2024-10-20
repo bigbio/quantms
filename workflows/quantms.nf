@@ -133,6 +133,9 @@ workflow QUANTMS {
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
         ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
         ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+
+        // Other subworkflow will return null when performing another subworkflow due to unknown reason.
+        ch_versions = ch_versions..filter( ~/versions/ )
     }
 
     softwareVersionsToYAML(ch_versions)
