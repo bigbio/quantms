@@ -135,7 +135,7 @@ workflow QUANTMS {
         ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
 
         // Other subworkflow will return null when performing another subworkflow due to unknown reason.
-        ch_versions = ch_versions..filter( ~/versions/ )
+        ch_versions = ch_versions.filter{ it != null }
     }
 
     softwareVersionsToYAML(ch_versions)
