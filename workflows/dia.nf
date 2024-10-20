@@ -51,7 +51,7 @@ workflow DIA {
 
     DIANNCFG(meta)
     ch_software_versions = ch_software_versions
-        .mix(DIANNCFG.out.version.ifEmpty(null))
+        .mix(DIANNCFG.out.versions.ifEmpty(null))
 
     //
     // MODULE: SILICOLIBRARYGENERATION
@@ -91,7 +91,7 @@ workflow DIA {
             DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
         }
         ch_software_versions = ch_software_versions
-            .mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
+            .mix(DIANN_PRELIMINARY_ANALYSIS.out.versions.ifEmpty(null))
 
         //
         // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
@@ -104,7 +104,7 @@ workflow DIA {
             speclib
         )
         ch_software_versions = ch_software_versions
-            .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.version.ifEmpty(null))
+            .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.versions.ifEmpty(null))
         indiv_fin_analysis_in = ch_file_preparation_results
             .combine(ch_searchdb)
             .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log)
@@ -118,7 +118,7 @@ workflow DIA {
     //
     INDIVIDUAL_FINAL_ANALYSIS(indiv_fin_analysis_in)
     ch_software_versions = ch_software_versions
-        .mix(INDIVIDUAL_FINAL_ANALYSIS.out.version.ifEmpty(null))
+        .mix(INDIVIDUAL_FINAL_ANALYSIS.out.versions.ifEmpty(null))
 
     //
     // MODULE: DIANNSUMMARY
@@ -141,7 +141,7 @@ workflow DIA {
         ch_searchdb)
 
     ch_software_versions = ch_software_versions.mix(
-        DIANNSUMMARY.out.version.ifEmpty(null)
+        DIANNSUMMARY.out.versions.ifEmpty(null)
     )
 
     //
@@ -153,10 +153,10 @@ workflow DIA {
         DIANNSUMMARY.out.pr_matrix, ch_ms_info,
         meta,
         ch_searchdb,
-        DIANNSUMMARY.out.version
+        DIANNSUMMARY.out.versions
     )
     ch_software_versions = ch_software_versions
-        .mix(DIANNCONVERT.out.version.ifEmpty(null))
+        .mix(DIANNCONVERT.out.versions.ifEmpty(null))
 
     //
     // MODULE: MSSTATS
@@ -165,7 +165,7 @@ workflow DIA {
         MSSTATS(DIANNCONVERT.out.out_msstats)
         ch_msstats_out = MSSTATS.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(
-            MSSTATS.out.version.ifEmpty(null)
+            MSSTATS.out.versions.ifEmpty(null)
         )
     }
 

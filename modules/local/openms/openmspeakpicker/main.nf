@@ -13,7 +13,7 @@ process OPENMSPEAKPICKER {
 
     output:
     tuple val(meta), path("*.mzML"), emit: mzmls_picked
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

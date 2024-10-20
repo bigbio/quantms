@@ -17,14 +17,16 @@ workflow DATABASESEARCHENGINES {
 
     if (params.search_engines.contains("msgf")) {
         MSGFDBINDEXING(ch_searchengine_in_db)
+        ch_versions = ch_versions.mix(MSGFDBINDEXING.out.versions)
+
         SEARCHENGINEMSGF(ch_mzmls_search.combine(ch_searchengine_in_db).combine(MSGFDBINDEXING.out.msgfdb_idx))
-        ch_versions = ch_versions.mix(SEARCHENGINEMSGF.out.version)
+        ch_versions = ch_versions.mix(SEARCHENGINEMSGF.out.versions)
         ch_id_msgf = ch_id_msgf.mix(SEARCHENGINEMSGF.out.id_files_msgf)
     }
 
     if (params.search_engines.contains("comet")) {
         SEARCHENGINECOMET(ch_mzmls_search.combine(ch_searchengine_in_db))
-        ch_versions = ch_versions.mix(SEARCHENGINECOMET.out.version)
+        ch_versions = ch_versions.mix(SEARCHENGINECOMET.out.versions)
         ch_id_comet = ch_id_comet.mix(SEARCHENGINECOMET.out.id_files_comet)
     }
 
@@ -61,13 +63,12 @@ workflow DATABASESEARCHENGINES {
         ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(by: [0,1])
 
         SEARCHENGINESAGE(ch_meta_mzml_db_chunked.combine(ch_searchengine_in_db))
-        ch_versions = ch_versions.mix(SEARCHENGINESAGE.out.version)
+        ch_versions = ch_versions.mix(SEARCHENGINESAGE.out.versions)
         // we can safely use merge here since it is the same process
         ch_id_sage = ch_id_sage.mix(SEARCHENGINESAGE.out.id_files_sage.transpose())
     }
 
     emit:
     ch_id_files_idx = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
-
     versions        = ch_versions
 }

@@ -17,7 +17,7 @@ process PROTEINQUANTIFIER {
     path "*peptide_openms.csv", emit: peptide_out
     path "*.mzTab", optional: true, emit: out_mztab
     path "*.log"
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args ?: ''

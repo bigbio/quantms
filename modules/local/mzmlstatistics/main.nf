@@ -1,6 +1,6 @@
 process MZMLSTATISTICS {
     tag "$meta.mzml_id"
-    label 'process_medium'
+    label 'process_very_low'
     label 'process_single'
 
     conda "bioconda::quantms-utils=0.0.11"
@@ -14,7 +14,7 @@ process MZMLSTATISTICS {
     output:
     path "*_ms_info.parquet", emit: ms_statistics
     tuple val(meta), path("*_spectrum_df.parquet"), emit: spectrum_df, optional: true
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

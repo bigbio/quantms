@@ -14,7 +14,7 @@ process IDSCORESWITCHER {
 
     output:
     tuple val(meta), path("${id_file.baseName}_pep.idXML"), emit: id_score_switcher
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

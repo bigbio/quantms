@@ -4,7 +4,7 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_quantms_pipeline'
@@ -56,7 +56,7 @@ workflow QUANTMS {
         INPUT_CHECK.out.ch_input_file,
         INPUT_CHECK.out.is_sdrf
     )
-    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.versions.ifEmpty(null))
 
     //
     // SUBWORKFLOW: File preparation
@@ -65,7 +65,7 @@ workflow QUANTMS {
         CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
     )
 
-    ch_versions = ch_versions.mix(FILE_PREPARATION.out.version.ifEmpty(null))
+    ch_versions = ch_versions.mix(FILE_PREPARATION.out.versions.ifEmpty(null))
 
     FILE_PREPARATION.out.results
             .branch {
@@ -74,8 +74,6 @@ workflow QUANTMS {
                 lfq: it[0].labelling_type.contains("label free")
             }
             .set{ch_fileprep_result}
-
-
     //
     // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
     //
@@ -101,7 +99,7 @@ workflow QUANTMS {
             ch_db_for_decoy_creation_or_null
         )
         ch_searchengine_in_db = DECOYDATABASE.out.db_decoy
-        ch_versions = ch_versions.mix(DECOYDATABASE.out.version.ifEmpty(null))
+        ch_versions = ch_versions.mix(DECOYDATABASE.out.versions.ifEmpty(null))
     }
 
     // This rescoring engine currently only is supported in id_only subworkflows via ms2rescore.
@@ -113,7 +111,7 @@ workflow QUANTMS {
                 log.warn "The rescoring engine is set to mokapot. This rescoring engine currently only supports psm-level-fdr via ms2rescore."
         }
         DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-        ch_versions = ch_versions.mix(DDA_ID.out.version.ifEmpty(null))
+        ch_versions = ch_versions.mix(DDA_ID.out.versions.ifEmpty(null))
         ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_ids)
         ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_consensus)
     } else {
@@ -135,21 +133,19 @@ workflow QUANTMS {
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
         ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
         ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+
+        // Other subworkflow will return null when performing another subworkflow due to unknown reason.
+        ch_versions = ch_versions.filter{ it != null }
+
     }
 
-    //
-    // Collate and save software versions
-    //
-    ch_versions
-            .branch {
-                yaml : it.asBoolean()
-                other : true
-            }
-            .set{ versions_clean }
-
-    softwareVersionsToYAML(versions_clean.yaml)
-        .collectFile(storeDir: "${params.outdir}/pipeline_info", name: 'nf_core_pipeline_software_mqc_versions.yml', sort: true, newLine: true)
-        .set { ch_collated_versions }
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
 
     ch_multiqc_files                      = Channel.empty()
     ch_multiqc_config                     = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
@@ -177,7 +173,7 @@ workflow QUANTMS {
 
     emit:
     multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
-    versions            = versions_clean.yaml
+    versions            = ch_versions
 }
 
 /*

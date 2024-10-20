@@ -13,7 +13,7 @@ process IDMERGER {
 
     output:
     tuple val(meta), path("*_merged.idXML"), emit: id_merged
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

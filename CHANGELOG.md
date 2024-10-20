@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Changed`
 
 - [#423](https://github.com/bigbio/quantms/pull/423) Updated OpenMS==3.2.0
+- [#423]() Update thermorawfileparser==1.4.5
+- [#423]() Update quantms-utils==0.0.12
 
 ### `Fixed`
 
@@ -31,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
 - [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
 - [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
-- [#396](https://github.com/bigbio/quantms/pull/396) Adds verification step to unpacking tar archives in the DECOMPRESS process
+- [#396](https://github.com/bigbio/quantms/pull/396) Adds a verification step to unpacking tar archives in the DECOMPRESS process
 - [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
 - [#404](https://github.com/bigbio/quantms/pull/404) Add spectrum SNR features to rescore
 
@@ -170,7 +172,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#193](https://github.com/bigbio/quantms/pull/193) - Set the `local_input_type` default parameter to `mzML`
 - [#212](https://github.com/bigbio/quantms/pull/212) - Set the `min_consensus_support` default parameter to `1` to filter in ConsensusID for peptides identified with both search engines
-- [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow to run PROTEINQUANTIFIER TMT without exporting to mzTab
+- [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow torun PROTEINQUANTIFIER TMT without exporting to mzTab
 
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
 

@@ -20,14 +20,15 @@ workflow CREATE_INPUT_CHANNEL {
 
     if (is_sdrf.toString().toLowerCase().contains("true")) {
         SDRFPARSING ( ch_sdrf_or_design )
-        ch_versions = ch_versions.mix(SDRFPARSING.out.version)
+        ch_versions = ch_versions.mix(SDRFPARSING.out.versions)
         ch_config = SDRFPARSING.out.ch_sdrf_config_file
 
         ch_expdesign    = SDRFPARSING.out.ch_expdesign
     } else {
         PREPROCESS_EXPDESIGN( ch_sdrf_or_design )
-        ch_config = PREPROCESS_EXPDESIGN.out.ch_config
+        ch_versions = ch_versions.mix(PREPROCESS_EXPDESIGN.out.versions)
 
+        ch_config = PREPROCESS_EXPDESIGN.out.ch_config
         ch_expdesign = PREPROCESS_EXPDESIGN.out.ch_expdesign
     }
 
@@ -61,8 +62,7 @@ workflow CREATE_INPUT_CHANNEL {
     ch_meta_config_lfq                     // [meta, [spectra_files ]]
     ch_meta_config_dia                     // [meta, [spectra files ]]
     ch_expdesign
-
-    version         = ch_versions
+    versions         = ch_versions
 }
 
 // Function to get list of [meta, [ spectra_files ]]

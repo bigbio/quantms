@@ -15,17 +15,16 @@ workflow PROTEINQUANT {
     ch_version = Channel.empty()
 
     IDCONFLICTRESOLVER(ch_conflict_file)
-    ch_version = ch_version.mix(IDCONFLICTRESOLVER.out.version)
+    ch_version = ch_version.mix(IDCONFLICTRESOLVER.out.versions)
 
     PROTEINQUANTIFIER(IDCONFLICTRESOLVER.out.pro_resconf, ch_expdesign_file)
-    ch_version = ch_version.mix(PROTEINQUANTIFIER.out.version)
+    ch_version = ch_version.mix(PROTEINQUANTIFIER.out.versions)
 
     MSSTATSCONVERTER(IDCONFLICTRESOLVER.out.pro_resconf, ch_expdesign_file, "ISO")
-    ch_version = ch_version.mix(MSSTATSCONVERTER.out.version)
+    ch_version = ch_version.mix(MSSTATSCONVERTER.out.versions)
 
     emit:
     msstats_csv = MSSTATSCONVERTER.out.out_msstats
     out_mztab   = PROTEINQUANTIFIER.out.out_mztab
-
-    version     = ch_version
+    versions = ch_version
 }

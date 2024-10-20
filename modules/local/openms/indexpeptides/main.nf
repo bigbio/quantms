@@ -14,7 +14,7 @@ process INDEXPEPTIDES {
 
     output:
     tuple val(meta), path("${id_file.baseName}_idx.idXML"), emit: id_files_idx
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

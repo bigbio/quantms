@@ -13,7 +13,7 @@ process ISOBARICANALYZER {
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_iso.consensusXML"),  emit: id_files_consensusXML
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:
