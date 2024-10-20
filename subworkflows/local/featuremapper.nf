@@ -14,13 +14,13 @@ workflow FEATUREMAPPER {
     ch_version = Channel.empty()
 
     ISOBARICANALYZER(ch_mzml_files)
-    ch_version = ch_version.mix(ISOBARICANALYZER.out.version)
+    ch_version = ch_version.mix(ISOBARICANALYZER.out.versions)
 
     IDMAPPER(ch_id_files.combine(ISOBARICANALYZER.out.id_files_consensusXML, by: 0))
-    ch_version = ch_version.mix(IDMAPPER.out.version)
+    ch_version = ch_version.mix(IDMAPPER.out.versions)
 
     emit:
     id_map  = IDMAPPER.out.id_map
 
-    version = ch_version
+    versions = ch_version
 }

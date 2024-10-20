@@ -31,10 +31,8 @@ process PMULTIQC {
     # leaving here to ease debugging
     ls -lcth *
 
-    echo ">>>>>>>>> Experimental Design <<<<<<<<<"
     cat results/*openms_design.tsv
 
-    echo ">>>>>>>>> Running Multiqc <<<<<<<<<"
     multiqc \\
         -f \\
         --config ./results/multiqc_config.yml \\

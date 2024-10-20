@@ -1,7 +1,6 @@
 //
 // MODULE: Local to the pipeline
 //
-include { DECOYDATABASE } from '../../modules/local/openms/decoydatabase/main'
 include { CONSENSUSID   } from '../../modules/local/openms/consensusid/main'
 
 //
@@ -44,7 +43,7 @@ workflow ID {
     ch_consensus_results = Channel.empty()
     if (params.search_engines.split(",").size() > 1) {
         CONSENSUSID(PSMRESCORING.out.results.groupTuple(size: params.search_engines.split(",").size()))
-        ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.version.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions.ifEmpty(null))
         ch_psmfdrcontrol = CONSENSUSID.out.consensusids
         ch_consensus_results = CONSENSUSID.out.consensusids
     } else {
@@ -52,14 +51,14 @@ workflow ID {
     }
 
     PSMFDRCONTROL(ch_psmfdrcontrol)
-    ch_software_versions = ch_software_versions.mix(PSMFDRCONTROL.out.version.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(PSMFDRCONTROL.out.versions.ifEmpty(null))
 
     //
     // SUBWORKFLOW：PHOSPHOSCORING
     //
     if (params.enable_mod_localization) {
         PHOSPHOSCORING(ch_file_preparation_results, PSMFDRCONTROL.out.id_filtered)
-        ch_software_versions = ch_software_versions.mix(PHOSPHOSCORING.out.version.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(PHOSPHOSCORING.out.versions.ifEmpty(null))
         ch_id_results = PHOSPHOSCORING.out.id_luciphor
     } else {
         ch_id_results = PSMFDRCONTROL.out.id_filtered
@@ -69,5 +68,5 @@ workflow ID {
     id_results              = ch_id_results
     psmrescoring_results    = PSMRESCORING.out.results
     ch_consensus_results    = ch_consensus_results
-    version                 = ch_software_versions
+    versions                 = ch_software_versions
 }

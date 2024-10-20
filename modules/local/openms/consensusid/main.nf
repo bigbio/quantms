@@ -13,7 +13,7 @@ process CONSENSUSID {
 
     output:
     tuple val(meta), path("${meta.mzml_id}_consensus.idXML"), emit: consensusids
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

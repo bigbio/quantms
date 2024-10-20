@@ -9,6 +9,9 @@ workflow INPUT_CHECK {
     input_file // file: /path/to/input_file
 
     main:
+
+    ch_software_versions = Channel.empty()
+
     if (input_file.toString().toLowerCase().contains("sdrf")) {
         is_sdrf = true
     } else {
@@ -19,9 +22,10 @@ workflow INPUT_CHECK {
         }
     }
     SAMPLESHEET_CHECK ( input_file, is_sdrf, params.validate_ontologies )
+    ch_software_versions = ch_software_versions.mix(SAMPLESHEET_CHECK.out.versions)
 
     emit:
     ch_input_file   = SAMPLESHEET_CHECK.out.checked_file
     is_sdrf         = is_sdrf
-    versions	    = SAMPLESHEET_CHECK.out.versions
+    versions	    = ch_software_versions
 }

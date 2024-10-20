@@ -13,7 +13,7 @@ process PERCOLATOR {
 
     output:
     tuple val(meta), path("*_perc.idXML"), val("MS:1001491"), emit: id_files_perc
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

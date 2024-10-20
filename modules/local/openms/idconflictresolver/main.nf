@@ -12,7 +12,7 @@ process IDCONFLICTRESOLVER {
 
     output:
     path "${consus_file.baseName}_resconf.consensusXML", emit: pro_resconf
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

@@ -14,7 +14,7 @@ process IDFILTER {
 
     output:
     tuple val(meta), path("${id_file.baseName}_filter$task.ext.suffix"), emit: id_filtered
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

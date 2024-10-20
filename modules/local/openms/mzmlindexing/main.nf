@@ -13,7 +13,7 @@ process MZMLINDEXING {
 
     output:
     tuple val(meta), path("out/*.mzML"), emit: mzmls_indexed
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

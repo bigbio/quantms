@@ -16,7 +16,7 @@ process MSSTATSTMT {
     path "*.pdf" optional true
     path "*.csv", emit: msstats_csv
     path "*.log"
-    path "versions.yml" , emit: version
+    path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args ?: ''

@@ -26,7 +26,7 @@ process PROTEOMICSLFQ {
     path "debug_mergedIDsGreedyResolvedFDRFiltered.idXML", emit: debug_mergedIDsGreedyResolvedFDRFiltered optional true
     path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idXML", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved optional true
     path "*.log", emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args ?: ''

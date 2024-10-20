@@ -13,7 +13,7 @@ process IDMAPPER {
 
     output:
     path "${id_file.baseName}_map.consensusXML", emit: id_map
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

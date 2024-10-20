@@ -12,7 +12,7 @@ process DECOYDATABASE {
 
     output:
     path "*.fasta",   emit: db_decoy
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log",   emit: log
 
     script:

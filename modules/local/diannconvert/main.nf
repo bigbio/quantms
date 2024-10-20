@@ -22,7 +22,7 @@ process DIANNCONVERT {
     path "*triqler_in.tsv", emit: out_triqler
     path "*.mzTab", emit: out_mztab
     path "*.log", emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     exec:
         log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1 and 1.9.beta.1, other versions of DIA-NN do not support mzTab conversion."

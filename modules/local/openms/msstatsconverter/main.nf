@@ -15,7 +15,7 @@ process MSSTATSCONVERTER {
 
     output:
     path "*_msstats_in.csv", emit: out_msstats
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

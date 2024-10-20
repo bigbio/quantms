@@ -15,7 +15,7 @@ process IDRIPPER {
     val(meta), emit: meta
     path("*.idXML"), emit: id_rippers
     val("MS:1001491"), emit: qval_score
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

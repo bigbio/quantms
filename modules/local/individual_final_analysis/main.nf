@@ -16,7 +16,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
     output:
     path "*.quant", emit: diann_quant
     path "*_final_diann.log", emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when

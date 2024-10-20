@@ -13,7 +13,7 @@ process FILEMERGE {
 
     output:
     tuple val([:]), path("ID_mapper_merge.consensusXML"), emit: id_merge
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:
