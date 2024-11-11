@@ -17,6 +17,41 @@ MS2Rescore features generator used in quantms
 - MS2PIP
 - DeepLC
 
+For different experiments, ms2pip model can be specified by parameter `--ms2pip_model`. And setting parameter `--ms2pip_model_dir` as local directory to avoid duplicate model downloads.
+For optimal results, experimental data should match the properties of the MS2PIP model. Supported MS2PIP model as follows:
+
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| Model        | Fragmentation method | MS2 mass analyzer                      | Peptide properties                                 |
++==============+======================+========================================+====================================================+
+| HCD2019      | HCD                  | Orbitrap                               | Tryptic digest                                     |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| HCD2021      | HCD                  | Orbitrap                               | Tryptic / Chymotrypsin digest                      |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| CID          | CID                  | Linear ion trap                        | Tryptic digest                                     |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| iTRAQ        | HCD                  | Orbitrap                               | Tryptic digest, iTRAQ-labeled                      |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| iTRAQphospho | HCD                  | Orbitrap                               | Tryptic digest, iTRAQ-labeled, enriched for        |
+|              |                      |                                        | phosphorylation                                    |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| TMT          | HCD                  | Orbitrap                               | Tryptic digest, TMT-labeled                        |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| TTOF5600     | CID                  | Quadrupole time-of-flight              | Tryptic digest                                     |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| HCDch2       | HCD                  | Orbitrap                               | Tryptic digest                                     |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| CIDch2       | CID                  | Linear ion trap                        | Tryptic digest                                     |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| Immuno-HCD   | HCD                  | Orbitrap                               | Immunopeptides                                     |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| CID-TMT      | CID                  | Linear ion trap                        | Tryptic digest, TMT-labeled                        |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| timsTOF2023  | CID                  | Ion mobility quadrupole time-of-flight | Tryptic-, elastase digest, immuno class 1          |
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+| timsTOF2024  | CID                  | Ion mobility quadrupole time-of-flight | Tryptic-, elastase digest, immuno class 1 & class 2|
++--------------+----------------------+----------------------------------------+----------------------------------------------------+
+
+
 Troubleshooting
 ---------------------------
 
