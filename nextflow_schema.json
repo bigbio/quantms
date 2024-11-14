@@ -1169,25 +1169,25 @@
                     "type": "boolean",
                     "description": "Omit proteins with only one quantified feature?",
                     "fa_icon": "far fa-check-square",
-                    "default": false
+                    "default": true
                 },
                 "msstatslfq_removeFewMeasurements": {
                     "type": "boolean",
-                    "description": "Remove features with only one or two measurements across runs?",
+                    "description": "Keep features with only one or two measurements across runs?",
                     "fa_icon": "far fa-check-square",
-                    "default": false
+                    "default": true
                 },
                 "msstatsiso_useunique_peptide": {
                     "type": "boolean",
                     "description": "Use unique peptide for each protein",
                     "fa_icon": "far fa-check-square",
-                    "default": false
+                    "default": true
                 },
                 "msstatsiso_rmpsm_withfewmea_withinrun": {
                     "type": "boolean",
                     "description": "Remove the features that have 1 or 2 measurements within each run",
                     "fa_icon": "far fa-check-square",
-                    "default": false
+                    "default": true
                 },
                 "msstatsiso_summaryformultiple_psm": {
                     "type": "string",
