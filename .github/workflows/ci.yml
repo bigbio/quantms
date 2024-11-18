@@ -49,7 +49,7 @@ jobs:
             exec_profile: "conda"
         include:
           - test_profile: test_latest_dia
-            exec_profile: "singularity"
+            exec_profile: "docker"
           - test_profile: test_lfq
             exec_profile: "conda"
           - test_profile: test_dda_id
