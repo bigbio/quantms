@@ -5,14 +5,6 @@ on:
     branches:
       - dev
   pull_request:
-    branches:
-      - dev
-  pull_request_target:
-    branches:
-      - dev
-    types:
-      - opened
-      - synchronize
   release:
     types: [published]
   workflow_dispatch:
@@ -56,8 +48,6 @@ jobs:
           - NXF_VER: "latest-everything"
             exec_profile: "conda"
         include:
-          - test_profile: test_latest_dia
-            exec_profile: "docker"
           - test_profile: test_lfq
             exec_profile: "conda"
           - test_profile: test_dda_id
@@ -74,18 +64,6 @@ jobs:
       - name: Set up Apptainer
         if: matrix.exec_profile == 'singularity'
         uses: eWaterCycle/setup-apptainer@main
-
-      - name: Run sensitive task
-        if: github.event.pull_request.base.ref == 'main'
-        run: |
-          echo "Running task with secrets."
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ secrets.GHCR_USERNAME }}
-          password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Set up Singularity
         if: matrix.exec_profile == 'singularity'
