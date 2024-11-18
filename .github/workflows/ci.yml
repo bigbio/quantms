@@ -4,7 +4,12 @@ on:
   push:
     branches:
       - dev
+  pull_request:
+    branches:
+      - dev
   pull_request_target:
+    branches:
+      - dev
     types:
       - opened
       - synchronize
@@ -69,6 +74,11 @@ jobs:
       - name: Set up Apptainer
         if: matrix.exec_profile == 'singularity'
         uses: eWaterCycle/setup-apptainer@main
+
+      - name: Run sensitive task
+        if: github.event.pull_request.base.ref == 'main'
+        run: |
+          echo "Running task with secrets."
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
