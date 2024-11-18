@@ -44,8 +44,7 @@ workflow DIA {
         result ->
         meta:   preprocessed_meta(result[0])
         ms_file:result[1]
-    }
-        .set { ch_result }
+    }.set { ch_result }
 
     meta = ch_result.meta.unique { it[0] }
 
@@ -69,7 +68,6 @@ workflow DIA {
         indiv_fin_analysis_in = ch_file_preparation_results.combine(ch_searchdb)
             .combine(assembly_log)
             .combine(empirical_library)
-
         empirical_lib = empirical_library
     } else {
         //
