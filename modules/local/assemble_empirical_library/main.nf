@@ -15,7 +15,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     path(lib)
 
     output:
-    path "empirical_library.tsv", emit: empirical_library
+    path "empirical_library.*", emit: empirical_library
     path "assemble_empirical_library.log", emit: log
     path "versions.yml", emit: versions
 
@@ -45,7 +45,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     diann   --f ${(ms_files as List).join(' --f ')} \\
             --lib ${lib} \\
             --threads ${task.cpus} \\
-            --out-lib empirical_library.tsv \\
+            --out-lib empirical_library \\
             --verbose $params.diann_debug \\
             --rt-profiling \\
             --temp ./quant/ \\
