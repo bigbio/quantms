@@ -2,10 +2,10 @@ process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
     label 'process_low'
 
-    conda "bioconda::quantms-utils=0.0.12"
+    conda "bioconda::quantms-utils=0.0.15"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.12--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.12--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.15--pyhdfd78af_0' :
+        'biocontainers/quantms-utils:0.0.15--pyhdfd78af_0' }"
 
     input:
     val(meta)
