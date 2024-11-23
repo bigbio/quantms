@@ -1,14 +1,11 @@
 process ASSEMBLE_EMPIRICAL_LIBRARY {
     tag "$meta.experiment_id"
     label 'process_low'
+    label 'diann'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
         'docker.io/biocontainers/diann:v1.8.1_cv1' }"
-
-    if (params.diann_version == "1.9.beta.1") {
-        container 'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-bigbio-diann-1.9.1dev.sif'
-    }
 
     input:
     // In this step the real files are passed, and not the names
@@ -18,7 +15,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     path(lib)
 
     output:
-    path "empirical_library.tsv", emit: empirical_library
+    path "empirical_library.*", emit: empirical_library
     path "assemble_empirical_library.log", emit: log
     path "versions.yml", emit: versions
 
@@ -48,7 +45,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     diann   --f ${(ms_files as List).join(' --f ')} \\
             --lib ${lib} \\
             --threads ${task.cpus} \\
-            --out-lib empirical_library.tsv \\
+            --out-lib empirical_library \\
             --verbose $params.diann_debug \\
             --rt-profiling \\
             --temp ./quant/ \\

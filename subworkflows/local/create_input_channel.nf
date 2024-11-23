@@ -168,9 +168,6 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
     } else if (session.config.conda && session.config.conda.enabled) {
         log.error "File in DIA mode found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
         exit 1
-    } else if (!session.config.singularity.enabled && params.diann_version == "1.9.beta.1") {
-        log.error "DIA-NN 1.9.beta.1 currently only support singularity! Exiting. Please use the singularity profile with a container."
-        exit 1
     }
 
     if (wrapper.labelling_type.contains("label free") || meta.acquisition_method == "dia") {
