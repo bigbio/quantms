@@ -3,10 +3,10 @@ process MSGFDBINDEXING {
     label 'process_low'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
+    conda "bioconda::msgf_plus=2024.03.26"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'https://depot.galaxyproject.org/singularity/msgf_plus:2024.03.26--hdfd78af_0' :
+        'biocontainers/msgf_plus:2024.03.26--hdfd78af_0' }"
 
     input:
     path(database)
