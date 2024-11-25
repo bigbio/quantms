@@ -1,7 +1,6 @@
 process MSGFDBINDEXING {
     tag "$database.baseName"
     label 'process_low'
-    label 'openms'
 
     conda "bioconda::msgf_plus=2024.03.26"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
