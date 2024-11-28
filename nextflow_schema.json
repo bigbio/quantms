@@ -521,13 +521,6 @@
                     "default": 0.15,
                     "fa_icon": "fas fa-filter"
                 },
-                "posterior_probabilities": {
-                    "type": "string",
-                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)\n\n* 'mokapot' = Re-score based on PSM-feature-based semi-supervised learning algorithm introduced by Percolator",
-                    "fa_icon": "fas fa-list-ol",
-                    "default": "percolator",
-                    "enum": ["percolator", "fit_distributions", "mokapot"]
-                },
                 "run_fdr_cutoff": {
                     "type": "number",
                     "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
