@@ -2,6 +2,7 @@
 // Extract psm feature and ReScoring psm
 //
 
+include { EXTRACTPSMFEATURES             } from '../../modules/local/openms/extractpsmfeatures/main'
 include { PERCOLATOR                     } from '../../modules/local/openms/thirdparty/percolator/main'
 include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
 include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
