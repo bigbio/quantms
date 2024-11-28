@@ -611,29 +611,6 @@
             },
             "fa_icon": "fas fa-star-half"
         },
-        "psm_re_scoring_distribution_fitting": {
-            "title": "PSM re-scoring (distribution fitting)",
-            "type": "object",
-            "description": "Use this instead of Percolator if there are problems with Percolator (e.g. due to bad separation) or for performance",
-            "default": "",
-            "properties": {
-                "outlier_handling": {
-                    "type": "string",
-                    "description": "How to handle outliers during fitting:\n\n* ignore_iqr_outliers (default): ignore outliers outside of `3*IQR` from Q1/Q3 for fitting\n* set_iqr_to_closest_valid: set IQR-based outliers to the last valid value for fitting\n* ignore_extreme_percentiles: ignore everything outside 99th and 1st percentile (also removes equal values like potential censored max values in XTandem)\n* none: do nothing",
-                    "default": "none",
-                    "fa_icon": "fas fa-list-ol",
-                    "enum": ["none", "ignore_iqr_outliers", "set_iqr_to_closest_valid", "ignore_extreme_percentiles"]
-                },
-                "idpep_debug": {
-                    "type": "integer",
-                    "description": "Debug level for IDPEP step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
-                }
-            },
-            "fa_icon": "far fa-star-half"
-        },
         "consensus_id": {
             "title": "Consensus ID",
             "type": "object",
