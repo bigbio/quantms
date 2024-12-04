@@ -20,11 +20,15 @@ process DIANNSUMMARY {
 
     output:
     path "diann_report.tsv", emit: main_report
+    path "diann_report.parquet", emit: report_parquet optional true
+    path "diann_report.protein_description.tsv", emit: protein_description optional true
+    path "diann_report.stats.tsv", emit: report_stats
     path "diann_report.pr_matrix.tsv", emit: pr_matrix
     path "diann_report.pg_matrix.tsv", emit: pg_matrix
     path "diann_report.gg_matrix.tsv", emit: gg_matrix
     path "diann_report.unique_genes_matrix.tsv", emit: unique_gene_matrix
     path "diannsummary.log", emit: log
+
     // Different library files format are exported due to different DIA-NN versions
     path "empirical_library.tsv", emit: final_speclib optional true
     path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib optional true
