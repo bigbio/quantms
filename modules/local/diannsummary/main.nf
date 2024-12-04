@@ -21,7 +21,7 @@ process DIANNSUMMARY {
     output:
     path "diann_report.tsv", emit: main_report
     path "diann_report.parquet", emit: report_parquet optional true
-    path "diann_report.protein_description.tsv", emit: protein_description
+    path "diann_report.protein_description.tsv", emit: protein_description optional true
     path "diann_report.stats.tsv", emit: report_stats
     path "diann_report.pr_matrix.tsv", emit: pr_matrix
     path "diann_report.pg_matrix.tsv", emit: pg_matrix
