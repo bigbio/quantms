@@ -22,7 +22,7 @@ process EXTRACTPSMFEATURES {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     feature = ""
-    if (params.ms2rescore && params.id_only) {
+    if (params.ms2rescore) {
         feature = "-extra \$(awk 'NR > 1 && \$1 !~ /psm_file/ {printf \"%s \", \$2}' ${extra_feat})"
     }
 
