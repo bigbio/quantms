@@ -103,41 +103,28 @@ workflow QUANTMS {
     }
 
     // This rescoring engine currently only is supported in id_only subworkflows via ms2rescore.
-    if (params.id_only | params.posterior_probabilities == "mokapot") {
-        if (params.id_only == false) {
-            log.warn "The mokapot rescoring engine currently only is supported in id_only subworkflow via ms2rescore."
-        }
-        if (params.posterior_probabilities == "mokapot" && params.fdr_level == "peptide_level_fdrs") {
-                log.warn "The rescoring engine is set to mokapot. This rescoring engine currently only supports psm-level-fdr via ms2rescore."
-        }
-        DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-        ch_versions = ch_versions.mix(DDA_ID.out.versions.ifEmpty(null))
-        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_ids)
-        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_consensus)
-    } else {
-        TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
-        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
-        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(TMT.out.ch_pmultiqc_consensus)
-        ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
-        ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
-        ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-        LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
-        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
-        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(LFQ.out.ch_pmultiqc_consensus)
-        ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
-        ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
-        ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
+    TMT(ch_fileprep_result.iso, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
+    ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
+    ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(TMT.out.ch_pmultiqc_consensus)
+    ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
+    ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
+    ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
 
-        DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
-        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
-        ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
-        ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+    LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
+    ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
+    ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(LFQ.out.ch_pmultiqc_consensus)
+    ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
+    ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
+    ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
 
-        // Other subworkflow will return null when performing another subworkflow due to unknown reason.
-        ch_versions = ch_versions.filter{ it != null }
+    DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
+    ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
+    ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
+    ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
 
-    }
+    // Other subworkflow will return null when performing another subworkflow due to unknown reason.
+    ch_versions = ch_versions.filter{ it != null }
 
     softwareVersionsToYAML(ch_versions)
         .collectFile(

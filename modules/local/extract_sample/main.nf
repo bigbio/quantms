@@ -2,10 +2,10 @@ process GETSAMPLE {
     tag "$design.Name"
     label 'process_low'
 
-    conda "bioconda::quantms-utils=0.0.15"
+    conda "bioconda::quantms-utils=0.0.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.15--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.15--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.17--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.17--pyh7e72e81_0' }"
 
 
     input:
