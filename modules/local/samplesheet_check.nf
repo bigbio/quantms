@@ -1,7 +1,7 @@
 process SAMPLESHEET_CHECK {
 
     tag "$input_file"
-    label 'process_single'
+    label 'process_tiny'
 
     conda "bioconda::quantms-utils=0.0.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

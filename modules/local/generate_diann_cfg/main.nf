@@ -1,6 +1,6 @@
 process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
-    label 'process_low'
+    label 'process_tiny'
 
     conda "bioconda::quantms-utils=0.0.17"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
