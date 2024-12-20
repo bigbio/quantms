@@ -21,7 +21,7 @@ process SAMPLESHEET_CHECK {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
+    script: // This script is bundled with the pipeline, in bigbio/quantms/bin/
     // TODO validate experimental design file
     def args = task.ext.args ?: ''
     def string_skip_sdrf_validation = params.validate_ontologies == false ? "--skip_sdrf_validation" : ""

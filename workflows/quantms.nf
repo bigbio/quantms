@@ -75,7 +75,7 @@ workflow QUANTMS {
             }
             .set{ch_fileprep_result}
     //
-    // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
+    // WORKFLOW: Run main bigbio/quantms analysis pipeline based on the quantification type
     //
     ch_pipeline_results = Channel.empty()
     ch_ids_pmultiqc = Channel.empty()
