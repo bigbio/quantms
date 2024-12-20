@@ -29,6 +29,7 @@ process PROTEININFERENCE {
         -protein_fdr true \\
         -Algorithm:use_shared_peptides $params.use_shared_peptides \\
         -Algorithm:annotate_indistinguishable_groups $groups \\
+        -Algorithm:score_type "PEP" \\
         $gg \\
         -Algorithm:score_aggregation_method $params.protein_score \\
         -Algorithm:min_peptides_per_protein $params.min_peptides_per_protein \\
