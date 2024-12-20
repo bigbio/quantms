@@ -1,9 +1,9 @@
-# `nf-core/quantms`: Contributing Guidelines
+# `bigbio/quantms`: Contributing Guidelines
 
 Hi there!
-Many thanks for taking an interest in improving nf-core/quantms.
+Many thanks for taking an interest in improving bigbio/quantms.
 
-We try to manage the required tasks for nf-core/quantms using GitHub issues, you probably came to this page when creating one.
+We try to manage the required tasks for bigbio/quantms using GitHub issues, you probably came to this page when creating one.
 Please use the pre-filled template to save time.
 
 However, don't be put off by this template - other more general issues and suggestions are welcome!
@@ -65,7 +65,7 @@ For further information/help, please consult the [bigbio/quantms documentation](
 
 ## Pipeline contribution conventions
 
-To make the `nf-core/quantms` code and processing logic more understandable for new contributors and to ensure quality, we semi-standardise the way the code and other contributions are written.
+To make the `bigbio/quantms` code and processing logic more understandable for new contributors and to ensure quality, we semi-standardise the way the code and other contributions are written.
 
 ### Adding a new step
 
@@ -115,7 +115,7 @@ This repo includes a devcontainer configuration which will create a GitHub Codes
 
 To get started:
 
-- Open the repo in [Codespaces](https://github.com/nf-core/quantms/codespaces)
+- Open the repo in [Codespaces](https://github.com/bigbio/quantms/codespaces)
 - Tools installed
   - nf-core
   - Nextflow

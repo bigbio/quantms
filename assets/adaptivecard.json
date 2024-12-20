@@ -17,7 +17,7 @@
                         "size": "Large",
                         "weight": "Bolder",
                         "color": "<% if (success) { %>Good<% } else { %>Attention<%} %>",
-                        "text": "nf-core/quantms v${version} - ${runName}",
+                        "text": "bigbio/quantms v${version} - ${runName}",
                         "wrap": true
                     },
                     {

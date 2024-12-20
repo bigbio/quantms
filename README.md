@@ -87,6 +87,8 @@ The second requirement is a protein sequence database. We suggest downloading a 
 
 Now, you can run the pipeline using:
 
+<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
+
 ```bash
 nextflow run nf-core/quantms \
    -profile <docker/singularity/.../institute> \

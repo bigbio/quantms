@@ -9,7 +9,7 @@ report_section_order:
     order: -1000
   software_versions:
     order: -1001
-  "nf-core-quantms-summary":
+  "bigbio-quantms-summary":
     order: -1002
 
 thousandsSep_format: ","

@@ -1,4 +1,4 @@
-# nf-core/quantms: Citations
+# bigbio/quantms: Citations
 
 ## [Pipeline](https://www.researchsquare.com/article/rs-3002027/v1)
 

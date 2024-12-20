@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for the nf-core/quantms pipeline
+description: Suggest an idea for the bigbio/quantms pipeline
 labels: enhancement
 body:
   - type: textarea

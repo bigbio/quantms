@@ -1,4 +1,4 @@
-# nf-core/quantms: Usage
+# bigbio/quantms: Usage
 
 ## :warning: Please read this documentation on the nf-core website: [https://nf-co.re/quantms/usage](https://nf-co.re/quantms/usage)
 
