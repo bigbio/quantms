@@ -14,7 +14,6 @@ lint:
     - docs/README.md
   nextflow_config: false
   multiqc_config: false
-  nextflow_config: false
 nf_core_version: 3.0.2
 org_path: null
 repository_type: pipeline
