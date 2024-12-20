@@ -11,4 +11,4 @@ testing*
 *.pyc
 bin/
 venv/
-
+ro-crate-metadata.json
