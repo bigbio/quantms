@@ -21,6 +21,6 @@ template:
   force: false
   is_nfcore: true
   name: quantms
-  org: nf-core
+  org: bigbio
   outdir: .
   version: 1.3.1dev

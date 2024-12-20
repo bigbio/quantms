@@ -1,4 +1,4 @@
-# nf-core/quantms: Citations
+# bigbio/quantms: Citations
 
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 

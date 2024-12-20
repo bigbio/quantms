@@ -1,6 +1,6 @@
 {
-    "name": "nf-core/quantms",
-    "homePage": "https://github.com/nf-core/quantms",
+    "name": "bigbio/quantms",
+    "homePage": "https://github.com/bigbio/quantms",
     "repos": {
         "https://github.com/nf-core/modules.git": {
             "modules": {

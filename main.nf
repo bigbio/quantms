@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/quantms
+    bigbio/quantms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/quantms
+    Github : https://github.com/bigbio/quantms
     Website: https://nf-co.re/quantms
     Slack  : https://nfcore.slack.com/channels/quantms
 ----------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ params.fasta = getGenomeAttribute('fasta')
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
-workflow NFCORE_QUANTMS {
+workflow BIGBIO_QUANTMS {
 
     take:
     samplesheet // channel: samplesheet read in from --input
@@ -80,7 +80,7 @@ workflow {
     //
     // WORKFLOW: Run main workflow
     //
-    NFCORE_QUANTMS (
+    BIGBIO_QUANTMS (
         PIPELINE_INITIALISATION.out.samplesheet
     )
     //
@@ -93,7 +93,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_QUANTMS.out.multiqc_report
+        BIGBIO_QUANTMS.out.multiqc_report
     )
 }
 

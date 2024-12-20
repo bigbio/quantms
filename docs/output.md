@@ -1,4 +1,4 @@
-# nf-core/quantms: Output
+# bigbio/quantms: Output
 
 ## Introduction
 
