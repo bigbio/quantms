@@ -1078,6 +1078,12 @@
                     "default": 200,
                     "fa_icon": "fas fa-filter",
                     "hidden": true
+                },
+                "enable_diann_mztab": {
+                    "type": "boolean",
+                    "description": "Export the DIA-NN and DIA results to mzTab",
+                    "default": true,
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fas fa-braille"

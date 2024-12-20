@@ -2,10 +2,10 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda "bioconda::quantms-utils=0.0.17"
+    conda "bioconda::quantms-utils=0.0.18"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.17--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.17--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.18--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.18--pyh7e72e81_0' }"
 
     input:
     path(report)
@@ -31,6 +31,7 @@ process DIANNCONVERT {
     def args = task.ext.args ?: ''
     def dia_params = [meta.fragmentmasstolerance,meta.fragmentmasstoleranceunit,meta.precursormasstolerance,
                         meta.precursormasstoleranceunit,meta.enzyme,meta.fixedmodifications,meta.variablemodifications].join(';')
+    def diann2mztab = params.enable_diann_mztab ? "--enable_diann2mztab" : ""
 
     """
     quantmsutilsc diann2mztab \\
@@ -41,6 +42,7 @@ process DIANNCONVERT {
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
         --qvalue_threshold $params.protein_level_fdr_cutoff \\
+        ${diann2mztab} \\
         2>&1 | tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml
