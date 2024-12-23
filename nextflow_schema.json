@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/quantms/master/nextflow_schema.json",
-    "title": "nf-core/quantms pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/bigbio/quantms/master/nextflow_schema.json",
+    "title": "bigbio/quantms pipeline parameters",
     "description": "Quantitative Mass Spectrometry nf-core workflow",
     "type": "object",
     "$defs": {
@@ -1078,6 +1078,12 @@
                     "default": 200,
                     "fa_icon": "fas fa-filter",
                     "hidden": true
+                },
+                "enable_diann_mztab": {
+                    "type": "boolean",
+                    "description": "Export the DIA-NN and DIA results to mzTab",
+                    "default": true,
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fas fa-braille"

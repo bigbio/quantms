@@ -2,10 +2,10 @@ process SDRFPARSING {
     tag "$sdrf.Name"
     label 'process_tiny'
 
-    conda "bioconda::quantms-utils=0.0.17"
+    conda "bioconda::quantms-utils=0.0.18"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.17--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.17--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.18--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.18--pyh7e72e81_0' }"
 
     input:
     path sdrf

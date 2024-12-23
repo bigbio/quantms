@@ -3,10 +3,10 @@ process SAMPLESHEET_CHECK {
     tag "$input_file"
     label 'process_tiny'
 
-    conda "bioconda::quantms-utils=0.0.17"
+    conda "bioconda::quantms-utils=0.0.18"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.17--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.17--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.18--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.18--pyh7e72e81_0' }"
 
     input:
     path input_file
@@ -21,7 +21,7 @@ process SAMPLESHEET_CHECK {
     when:
     task.ext.when == null || task.ext.when
 
-    script: // This script is bundled with the pipeline, in nf-core/quantms/bin/
+    script: // This script is bundled with the pipeline, in bigbio/quantms/bin/
     // TODO validate experimental design file
     def args = task.ext.args ?: ''
     def string_skip_sdrf_validation = params.validate_ontologies == false ? "--skip_sdrf_validation" : ""

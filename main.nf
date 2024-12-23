@@ -1,9 +1,9 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/quantms
+    bigbio/quantms
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/quantms
+    Github : https://github.com/bigbio/quantms
     Website: https://nf-co.re/quantms
     Slack  : https://nfcore.slack.com/channels/quantms
 ----------------------------------------------------------------------------------------
@@ -20,9 +20,9 @@ include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_quan
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_quantms_pipeline'
 
 //
-// WORKFLOW: Run main nf-core/quantms analysis pipeline
+// WORKFLOW: Run main bigbio/quantms analysis pipeline
 //
-workflow NFCORE_QUANTMS {
+workflow BIGBIO_QUANTMS {
 
     main:
 
@@ -46,7 +46,7 @@ workflow {
 
     main:
 
-    NFCORE_QUANTMS ()
+    BIGBIO_QUANTMS ()
 
     //
     // SUBWORKFLOW: Run completion tasks
@@ -58,7 +58,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NFCORE_QUANTMS.out.multiqc_report
+        BIGBIO_QUANTMS.out.multiqc_report
     )
 }
 
