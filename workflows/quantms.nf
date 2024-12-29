@@ -75,7 +75,7 @@ workflow QUANTMS {
             }
             .set{ch_fileprep_result}
     //
-    // WORKFLOW: Run main nf-core/quantms analysis pipeline based on the quantification type
+    // WORKFLOW: Run main bigbio/quantms analysis pipeline based on the quantification type
     //
     ch_pipeline_results = Channel.empty()
     ch_ids_pmultiqc = Channel.empty()
@@ -129,7 +129,7 @@ workflow QUANTMS {
     softwareVersionsToYAML(ch_versions)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
-            name: 'nf_core_'  + 'pipeline_software_' +  'mqc_'  + 'versions.yml',
+            name: 'nf_core_'  +  'quantms_software_'  + 'mqc_'  + 'versions.yml',
             sort: true,
             newLine: true
         ).set { ch_collated_versions }

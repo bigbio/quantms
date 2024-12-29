@@ -7,3 +7,6 @@ testing/
 testing*
 *.pyc
 null/
+.idea/
+/lint_log.txt
+/lint_results.md

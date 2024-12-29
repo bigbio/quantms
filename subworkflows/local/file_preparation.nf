@@ -46,7 +46,7 @@ workflow FILE_PREPARATION {
     // Note: we used to always index mzMLs if not already indexed but due to
     //  either a bug or limitation in nextflow
     //  peeking into a remote file consumes a lot of RAM
-    //  See https://github.com/nf-core/quantms/issues/61
+    //  See https://github.com/bigbio/quantms/issues/61
     //  This is now done in the search engines themselves if they need it.
     //  This means users should pre-index to save time and space, especially
     //  when re-running.
