@@ -45,7 +45,7 @@ process MS2RESCORE {
     """
     rescoring ms2rescore \\
         --psm_file $idxml \\
-        --spectrum_path . \\
+        --spectrum_path $mzml \\
         --ms2_tolerance $ms2_tolerence \\
         --output_path ${idxml.baseName}_ms2rescore.idXML \\
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
