@@ -2,10 +2,10 @@ process MS2RESCORE {
     tag "$meta.mzml_id"
     label 'process_high'
 
-    conda "bioconda::quantms-rescoring=0.0.3"
+    conda "bioconda::quantms-rescoring=0.0.4"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.3--pyhdfd78af_0' :
-        'biocontainers/quantms-rescoring:0.0.3--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.4--pyhdfd78af_0' :
+        'biocontainers/quantms-rescoring:0.0.4--pyhdfd78af_0' }"
 
     // userEmulation settings when docker is specified
     containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
@@ -45,7 +45,7 @@ process MS2RESCORE {
     """
     rescoring ms2rescore \\
         --psm_file $idxml \\
-        --spectrum_path . \\
+        --spectrum_path $mzml \\
         --ms2_tolerance $ms2_tolerence \\
         --output_path ${idxml.baseName}_ms2rescore.idXML \\
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
