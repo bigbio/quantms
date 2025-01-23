@@ -2,10 +2,10 @@ process DECOYDATABASE {
     label 'process_very_low'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
+    conda "bioconda::openms-thirdparty=3.3.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.3.0--h9ee0642_4' :
+        'biocontainers/openms-thirdparty:3.3.0--h9ee0642_4' }"
 
     input:
     path(db_for_decoy)
