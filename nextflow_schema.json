@@ -322,7 +322,7 @@
                 },
                 "protocol": {
                     "type": "string",
-                    "description": "MSGF only: Labeling or enrichment protocol used, if any. Default: automatic",
+                    "description": "MSGF only: Labeling or enrichment protocol used, if any (options: 'automatic', 'phospho', 'iTRAQ', 'iTRAQ_phospho', 'TMT', 'none') Default: automatic",
                     "default": "automatic",
                     "fa_icon": "fas fa-list-ol"
                 },
