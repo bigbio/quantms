@@ -52,7 +52,7 @@ process MS2RESCORE {
         --processes $task.cpus \\
         --id_decoy_pattern $decoy_pattern \\
         $args \\
-        2>&1 | tee ${meta.mzml_id}_ms2rescore.log
+        2>&1 | tee ${idxml.baseName}_ms2rescore.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
