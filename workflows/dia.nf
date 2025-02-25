@@ -145,8 +145,10 @@ workflow DIA {
     //
     // MODULE: DIANNCONVERT
     //
+    diann_main_report = DIANNSUMMARY.out.main_report.mix(DIANNSUMMARY.out.report_parquet).last()
+
     DIANNCONVERT(
-        DIANNSUMMARY.out.main_report, ch_expdesign,
+        diann_main_report, ch_expdesign,
         DIANNSUMMARY.out.pg_matrix,
         DIANNSUMMARY.out.pr_matrix, ch_ms_info,
         meta,

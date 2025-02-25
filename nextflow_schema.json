@@ -1032,6 +1032,20 @@
                     "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
                     "hidden": false
                 },
+                "diann_report_decoys": {
+                    "type": "boolean",
+                    "description": "Save decoy PSMs to the main .parquet report for DIA-NN 2.0.*",
+                    "fa_icon": "far fa-check-square",
+                    "default": false,
+                    "hidden": false
+                },
+                "diann_export_xic": {
+                    "type": "boolean",
+                    "description": "instructs DIA-NN to extract MS1/fragment chromatograms for identified precursors within X seconds from the elution apex, with X set to 10s if not provided;equivalent to the 'XICs' option in the GUI",
+                    "fa_icon": "far fa-check-square",
+                    "default": false,
+                    "hidden": false
+                },
                 "skip_preliminary_analysis": {
                     "type": "boolean",
                     "description": "Skip the preliminary analysis step, thus use the passed spectral library as-is insted of generating a local concensus library.",

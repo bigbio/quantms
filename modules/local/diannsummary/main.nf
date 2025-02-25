@@ -19,8 +19,10 @@ process DIANNSUMMARY {
     path(fasta)
 
     output:
-    path "diann_report.tsv", emit: main_report
+    // DIA-NN 2.0 don't return report in tsv format
+    path "diann_report.tsv", emit: main_report optional true
     path "diann_report.parquet", emit: report_parquet optional true
+    path "diann_report.manifest.txt", emit: report_manifest optional true
     path "diann_report.protein_description.tsv", emit: protein_description optional true
     path "diann_report.stats.tsv", emit: report_stats
     path "diann_report.pr_matrix.tsv", emit: pr_matrix
@@ -50,6 +52,8 @@ process DIANNSUMMARY {
 
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     species_genes = params.species_genes ? "--species-genes": ""
+    report_decoys = params.diann_report_decoys ? "--report-decoys": ""
+    diann_export_xic = params.diann_export_xic ? "--xic": ""
 
     """
     # Notes: if .quant files are passed, mzml/.d files are not accessed, so the name needs to be passed but files
@@ -70,6 +74,8 @@ process DIANNSUMMARY {
             --matrices \\
             --out diann_report.tsv \\
             --qvalue $params.protein_level_fdr_cutoff \\
+            ${report_decoys} \\
+            ${diann_export_xic} \\
             $args \\
             2>&1 | tee diannsummary.log
 

@@ -2,10 +2,10 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda "bioconda::quantms-utils=0.0.18"
+    conda "bioconda::quantms-utils=0.0.19"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.18--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.18--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.19--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.19--pyh7e72e81_0' }"
 
     input:
     path(report)
@@ -25,7 +25,7 @@ process DIANNCONVERT {
     path "versions.yml", emit: versions
 
     exec:
-        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1 and 1.9.beta.1, other versions of DIA-NN do not support mzTab conversion."
+        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1 and and 2.0.*, other versions of DIA-NN don't support mzTab conversion."
 
     script:
     def args = task.ext.args ?: ''
