@@ -20,10 +20,10 @@ process ISOBARICANALYZER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
-    if (meta.dissociationmethod == "HCD" || meta.dissociationmethod == "HCID") diss_meth = "auto"
-    else if (meta.dissociationmethod == "CID") diss_meth = "Collision-induced dissociation"
-    else if (meta.dissociationmethod == "ETD") diss_meth = "Electron transfer dissociation"
-    else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
+    if (params.quant_activation_method == "HCD" || params.quant_activation_method == "HCID") diss_meth = "auto"
+    else if (params.quant_activation_method == "CID") diss_meth = "Collision-induced dissociation"
+    else if (params.quant_activation_method == "ETD") diss_meth = "Electron transfer dissociation"
+    else if (params.quant_activation_method == "ECD") diss_meth = "Electron capture dissociation"
 
     def iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
     def isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : "-quantification:isotope_correction false"

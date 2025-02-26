@@ -101,7 +101,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
     // for sdrf read from config file, without it, read from params
     if (is_sdrf.toString().toLowerCase().contains("false")) {
         meta.labelling_type             = params.labelling_type
-        meta.dissociationmethod         = params.fragment_method
+        meta.dissociationmethod         = params.ms2_fragment_method
         meta.fixedmodifications         = params.fixed_mods
         meta.variablemodifications      = params.variable_mods
         meta.precursormasstolerance     = params.precursor_mass_tolerance

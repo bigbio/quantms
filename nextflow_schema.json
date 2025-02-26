@@ -300,7 +300,7 @@
                     "fa_icon": "fas fa-tasks",
                     "help_text": "Specify which variable modifications should be applied to the database search (eg. '' or 'Oxidation (M)', see Unimod modifications\nin the style '({unimod name} ({optional term specificity} {optional origin})').\nAll possible modifications can be found in the restrictions mentioned in the command line documentation of e.g. [CometAdapter](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_CometAdapter.html) (scroll down a bit for the complete set).\nMultiple variable modifications can be specified comma separated (e.g. 'Carbamidomethyl (C),Oxidation (M)').\nVariable modifications may or may not be found at matching amino acids for a peptide to be reported."
                 },
-                "fragment_method": {
+                "ms2_fragment_method": {
                     "type": "string",
                     "description": "The fragmentation method used during tandem MS. (MS/MS or MS2).",
                     "default": "HCD",
@@ -653,7 +653,7 @@
             "description": "Extracts and normalizes labeling information",
             "default": "",
             "properties": {
-                "select_activation": {
+                "quant_activation_method": {
                     "type": "string",
                     "description": "Operate only on MSn scans where any of its precursors features a certain activation method. Set to empty to disable.",
                     "fa_icon": "fas fa-font",

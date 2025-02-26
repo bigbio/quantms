@@ -78,6 +78,7 @@ process SEARCHENGINEMSGF {
         -min_peptide_length $params.min_peptide_length \\
         -max_peptide_length $params.max_peptide_length \\
         ${max_missed_cleavages} \\
+        -fragment_method $meta.dissociationmethod \\
         -isotope_error_range $params.isotope_error_range \\
         -enzyme "${enzyme}" \\
         -tryptic ${msgf_num_enzyme_termini} \\
