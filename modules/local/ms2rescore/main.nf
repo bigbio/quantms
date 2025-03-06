@@ -32,7 +32,7 @@ process MS2RESCORE {
     if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da')) {
         ms2_tolerence = meta['fragmentmasstolerance']
     } else {
-        log.info "Warning: MS2Rescore only supports Da unit. Set default ms2 tolerance as 0.02!"
+        log.info "Warning: MS2Rescore only supports Da unit. Set default ms2 tolerance as 0.05!"
         ms2_tolerence = 0.05
     }
 

@@ -6,8 +6,8 @@ process IDSCORESWITCHER {
 
     conda "bioconda::openms-thirdparty=3.3.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.3.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.3.0--h9ee0642_4' }"
+        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.3.0--h9ee0642_8' :
+        'biocontainers/openms-thirdparty:3.3.0--h9ee0642_8' }"
 
     input:
     tuple val(meta), path(id_file), val(new_score)
