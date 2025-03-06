@@ -33,7 +33,7 @@ process MS2RESCORE {
         ms2_tolerence = meta['fragmentmasstolerance']
     } else {
         log.info "Warning: MS2Rescore only supports Da unit. Set default ms2 tolerance as 0.02!"
-        ms2_tolerence = 0.02
+        ms2_tolerence = 0.05
     }
 
     if (params.decoy_string_position == "prefix") {
@@ -56,7 +56,8 @@ process MS2RESCORE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MS2Rescore: \$(echo \$(ms2rescore --version 2>&1) | grep -oP 'MS²Rescore \\(v\\K[^\\)]+' )
+        ms2pip: \$(echo \$(ms2pip --version 2>&1))
+        deeplc: \$(echo \$(deeplc --version 2>&1))
     END_VERSIONS
     """
 
