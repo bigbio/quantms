@@ -2,10 +2,10 @@ process MS2RESCORE {
     tag "$meta.mzml_id"
     label 'process_high'
 
-    conda "bioconda::quantms-rescoring=0.0.4"
+    conda "bioconda::quantms-rescoring=0.0.5"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.4--pyhdfd78af_0' :
-        'biocontainers/quantms-rescoring:0.0.4--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.5--pyhdfd78af_0' :
+        'biocontainers/quantms-rescoring:0.0.5--pyhdfd78af_0' }"
 
     // userEmulation settings when docker is specified
     containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
@@ -32,8 +32,8 @@ process MS2RESCORE {
     if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da')) {
         ms2_tolerence = meta['fragmentmasstolerance']
     } else {
-        log.info "Warning: MS2Rescore only supports Da unit. Set default ms2 tolerance as 0.02!"
-        ms2_tolerence = 0.02
+        log.info "Warning: MS2Rescore only supports Da unit. Set default ms2 tolerance as 0.05!"
+        ms2_tolerence = 0.05
     }
 
     if (params.decoy_string_position == "prefix") {
@@ -43,11 +43,11 @@ process MS2RESCORE {
     }
 
     """
-    rescoring ms2rescore \\
-        --psm_file $idxml \\
-        --spectrum_path $mzml \\
+    rescoring msrescore2feature \\
+        --idxml $idxml \\
+        --mzml $mzml \\
         --ms2_tolerance $ms2_tolerence \\
-        --output_path ${idxml.baseName}_ms2rescore.idXML \\
+        --output ${idxml.baseName}_ms2rescore.idXML \\
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
         --id_decoy_pattern $decoy_pattern \\
@@ -56,7 +56,8 @@ process MS2RESCORE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        MS2Rescore: \$(echo \$(ms2rescore --version 2>&1) | grep -oP 'MS²Rescore \\(v\\K[^\\)]+' )
+        ms2pip: \$(echo \$(ms2pip --version 2>&1))
+        deeplc: \$(echo \$(deeplc --version 2>&1))
     END_VERSIONS
     """
 
