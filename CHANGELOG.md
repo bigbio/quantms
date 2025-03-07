@@ -11,15 +11,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Changed`
 
-- [#423](https://github.com/bigbio/quantms/pull/423) Updated OpenMS==3.2.0
-- [#423]() Update thermorawfileparser==1.4.5
-- [#423]() Update quantms-utils==0.0.12
+- [#474](https://github.com/bigbio/quantms/pull/423) Updated OpenMS==3.3.0
+- [#485](https://github.com/bigbio/quantms/pull/485) Support for DIA-NN 2.0
+- [#489](https://github.com/bigbio/quantms/pull/489) Refactor quantms-rescoring
+- [#456](https://github.com/bigbio/quantms/pull/456) Optimization of process resources
+- [#454](https://github.com/bigbio/quantms/pull/454) Output all DIA-NN results files
 
 ### `Fixed`
 
+- [#482](https://github.com/bigbio/quantms/pull/486) Fixed TMT MS3
+- [#483](https://github.com/bigbio/quantms/pull/483) Fixed ms2rescore log file name
+- [#420](https://github.com/bigbio/quantms/pull/420) Fixed MSGFDB index memory error
+- [#485](https://github.com/bigbio/quantms/pull/485) Fixed DIA-NN results format conversion
+
 ### `Dependencies`
 
-- openms==3.2.0
+- openms==3.3.0
+- quantms-utils==0.0.19
+- quantms-rescoring==0.0.5
+
+### `Parameters`
+
+- isotope_correction: Enable isotope correction
+- plex_corr_matrix_file: Path to the correction matrix file for isobaric labelling, defaults are in assets folder
+- quant_activation_method: Operate only on MSn scans where any of its precursors features a certain activation method
+- ms2_fragment_method: The fragmentation method used during tandem MS
+- diann_report_decoys: Save decoy PSMs to the main .parquet report for DIA-NN 2.0
+- diann_export_xic: Instructs DIA-NN to extract MS1/fragment chromatograms for identified precursors
+
+### `Deprecations`
+
+- [#450](https://github.com/bigbio/quantms/pull/450) Removes the posterior_probabilities parameter
+
 
 ## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
