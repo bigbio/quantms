@@ -58,6 +58,7 @@ process MS2RESCORE {
         quantms-rescoring: \$(echo \$(rescoring --version 2>&1) | sed 's/quantmsrescore: //g' | cut -d ' ' -f 2)
         ms2pip: \$(echo \$(ms2pip --version 2>&1) | grep version | sed 's/version: //g' | cut -d ' ' -f 3)
         deeplc: \$(echo \$(deeplc --version 2>&1))
+        MS2Rescore: \$(echo \$(ms2rescore --version 2>&1) | awk '{print \$NF}')
     END_VERSIONS
     """
 }
