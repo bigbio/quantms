@@ -43,7 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#450](https://github.com/bigbio/quantms/pull/450) Removes the posterior_probabilities parameter
 
-
 ## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
 ### `Added`
