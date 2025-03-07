@@ -15,7 +15,6 @@ process MS2RESCORE {
 
     output:
     tuple val(meta), path("*ms2rescore.idXML") , emit: idxml
-    tuple val(meta), path("*feature_names.tsv"), emit: feature_names
     tuple val(meta), path("*.html" )           , optional:true, emit: html
     path "versions.yml"                        , emit: versions
     path "*.log"                               , emit: log
@@ -56,21 +55,10 @@ process MS2RESCORE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ms2pip: \$(echo \$(ms2pip --version 2>&1))
+        quantms-rescoring: \$(echo \$(rescoring --version 2>&1) | sed 's/quantmsrescore: //g' | cut -d ' ' -f 2)
+        ms2pip: \$(echo \$(ms2pip --version 2>&1) | grep version | sed 's/version: //g' | cut -d ' ' -f 3)
         deeplc: \$(echo \$(deeplc --version 2>&1))
-    END_VERSIONS
-    """
-
-    stub:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.mzml_id}_ms2rescore"
-
-    """
-    touch ${prefix}.idXML
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        MS2Rescore: \$(echo \$(ms2rescore --version 2>&1) | grep -oP 'MS²Rescore \\(v\\K[^\\)]+' )
+        MS2Rescore: \$(echo \$(ms2rescore --version 2>&1) | awk '{print \$NF}')
     END_VERSIONS
     """
 }
