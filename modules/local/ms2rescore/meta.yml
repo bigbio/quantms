@@ -26,10 +26,6 @@ output:
       type: file
       description: idXML identification file after MS2 rescoring
       pattern: "*.idXML"
-  - feature_names:
-      type: file
-      description: File containing feature names
-      pattern: "*feature_names.tsv"
   - version:
       type: file
       description: File containing software version
