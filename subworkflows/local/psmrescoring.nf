@@ -6,7 +6,6 @@ include { EXTRACTPSMFEATURES             } from '../../modules/local/openms/extr
 include { PERCOLATOR                     } from '../../modules/local/openms/thirdparty/percolator/main'
 include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
 include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
-include { SAGEFEATURE                    } from '../../modules/local/add_sage_feat/main'
 include { IDMERGER                       } from '../../modules/local/openms/idmerger/main'
 include { IDRIPPER                       } from '../../modules/local/openms/idripper/main'
 include { SPECTRUM2FEATURES              } from '../../modules/local/spectrum2features/main'
@@ -32,18 +31,7 @@ workflow PSMRESCORING {
     if (params.ms2rescore == true) {
         MS2RESCORE(ch_id_files.combine(ch_file_preparation_results, by: 0))
         ch_software_versions = ch_software_versions.mix(MS2RESCORE.out.versions)
-
-        MS2RESCORE.out.idxml.join(MS2RESCORE.out.feature_names).branch{ meta, idxml, feature_name ->
-            sage: idxml.name.contains('sage')
-                return [meta, idxml, feature_name]
-            nosage: true
-                return [meta, idxml, feature_name]
-        }.set{ch_ms2rescore_branched}
-
-        EXTRACTPSMFEATURES(ch_ms2rescore_branched.nosage)
-        SAGEFEATURE(ch_ms2rescore_branched.sage)
-        ch_id_files_feats = EXTRACTPSMFEATURES.out.id_files_feat.mix(SAGEFEATURE.out.id_files_feat)
-        ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.versions, SAGEFEATURE.out.versions)
+        ch_id_files_feats = MS2RESCORE.out.idxml
     } else {
         EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
         ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)
