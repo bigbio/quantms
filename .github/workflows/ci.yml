@@ -36,7 +36,7 @@ jobs:
       matrix:
         # Nextflow versions
         NXF_VER:
-          - "24.04.2"
+          - "24.10.5"
           - "latest-everything"
         test_profile:
           ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
