@@ -6,7 +6,6 @@ lint:
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
     - .github/workflows/ci.yml
-    - .github/workflows/linting.yml
     - .gitignore
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
