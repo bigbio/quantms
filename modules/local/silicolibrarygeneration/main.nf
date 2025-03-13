@@ -44,7 +44,8 @@ process SILICOLIBRARYGENERATION {
             --threads ${task.cpus} \\
             --predictor \\
             --verbose $params.diann_debug \\
-            --gen-spec-lib
+            --gen-spec-lib \\
+            ${args}
 
     cp lib.log.txt silicolibrarygeneration.log
 
