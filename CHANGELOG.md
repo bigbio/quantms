@@ -3,11 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.0] nfcore/quantms - [--/--/----] - Cambridge
+## [1.4.0] nfcore/quantms - [--/--/----] - Tubingen
 
 ### `Added`
 
 - [#423](https://github.com/bigbio/quantms/pull/423) Support for plex Correction matrices for TMT and iTRAQ analytical methods.
+- [#485](https://github.com/bigbio/quantms/pull/485) Support for DIANN 2.0.2
+- [#494](https://github.com/bigbio/quantms/pull/494) Generation of mzml feature files for Deeplearning and AI tools, algorithm and description in [quantms-utils](https://github.com/bigbio/quantms-utils)
+- [#489](https://github.com/bigbio/quantms/pull/489) Smart rescoring of peptide identifications using deepLC and ms2pip, enabling RT training and model fitting. read the details in [quantms-rescoring](https://github.com/bigbio/quantms-rescoring)
 
 ### `Changed`
 
@@ -27,8 +30,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Dependencies`
 
 - openms==3.3.0
-- quantms-utils==0.0.19
+- thermorawfileparser==1.4.5
+- quantms-utils==0.0.20
+- diann==2.0.2
 - quantms-rescoring==0.0.5
+- ms2rescore==3.1.4
+- ms2pip>=4.0
+- deepLC>=3.0
 
 ### `Parameters`
 
@@ -38,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ms2_fragment_method: The fragmentation method used during tandem MS
 - diann_report_decoys: Save decoy PSMs to the main .parquet report for DIA-NN 2.0
 - diann_export_xic: Instructs DIA-NN to extract MS1/fragment chromatograms for identified precursors
+- mzml_features: Allows generating for MS1 features maps for every mzml file analyzed.
 
 ### `Deprecations`
 
