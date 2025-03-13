@@ -44,7 +44,7 @@ workflow DDA_ID {
         sage: filename.name.contains('sage')
             return [meta, filename]
         nosage: true
-            return [meta, filename, []]
+            return [meta, filename]
     }.set{ch_id_files_branched}
 
     ch_pmultiqc_consensus = Channel.empty()
