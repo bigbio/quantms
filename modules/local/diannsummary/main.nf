@@ -42,14 +42,6 @@ process DIANNSUMMARY {
     script:
     def args = task.ext.args ?: ''
 
-    if (params.mass_acc_automatic) {
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
-    } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
-        mass_acc = "--mass-acc ${meta['fragmentmasstolerance']} --mass-acc-ms1 ${meta['precursormasstolerance']}"
-    } else {
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
-    }
-
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     species_genes = params.species_genes ? "--species-genes": ""
     report_decoys = params.diann_report_decoys ? "--report-decoys": ""
@@ -64,8 +56,6 @@ process DIANNSUMMARY {
             --f ${(ms_files as List).join(' --f ')} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
-            ${scan_window} \\
-            ${mass_acc} \\
             --temp ./quant/ \\
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
@@ -76,8 +66,9 @@ process DIANNSUMMARY {
             --qvalue $params.protein_level_fdr_cutoff \\
             ${report_decoys} \\
             ${diann_export_xic} \\
-            $args \\
-            2>&1 | tee diannsummary.log
+            $args
+
+    cp diann_report.log.txt diannsummary.log
 
 
     cat <<-END_VERSIONS > versions.yml

@@ -25,17 +25,16 @@ process DIANN_PRELIMINARY_ANALYSIS {
     // was evaluating to null when using the dot notation.
 
     if (params.mass_acc_automatic) {
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
+        mass_acc = '' + params.quick_mass_acc ? "--quick-mass-acc" : ""
     } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
         mass_acc = "--mass-acc ${meta['fragmentmasstolerance']} --mass-acc-ms1 ${meta['precursormasstolerance']}"
     } else {
         log.info "Warning: DIA-NN only supports ppm unit tolerance for MS1 and MS2. Falling back to `mass_acc_automatic`=`true` to automatically determine the tolerance by DIA-NN!"
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
+        mass_acc = '' + params.quick_mass_acc ? "--quick-mass-acc" : ""
     }
 
     // Notes: Use double quotes for params, so that it is escaped in the shell.
-    scan_window = params.scan_window_automatic ? '--individual-windows' : "--window $params.scan_window"
-    time_corr_only = params.time_corr_only ? '--time-corr-only' : ''
+    scan_window = params.scan_window_automatic ? '' : "--window $params.scan_window"
 
     """
     # Precursor Tolerance value was: ${meta['precursormasstolerance']}
@@ -54,9 +53,9 @@ process DIANN_PRELIMINARY_ANALYSIS {
             --min-corr $params.min_corr \\
             --corr-diff $params.corr_diff \\
             ${mass_acc} \\
-            ${time_corr_only} \\
-            $args \\
-            2>&1 | tee ${ms_file.baseName}_diann.log
+            $args
+
+    cp report.log.txt ${ms_file.baseName}_diann.log
 
 
     cat <<-END_VERSIONS > versions.yml
