@@ -25,12 +25,12 @@ process DIANN_PRELIMINARY_ANALYSIS {
     // was evaluating to null when using the dot notation.
 
     if (params.mass_acc_automatic) {
-        mass_acc = '' + params.quick_mass_acc ? "--quick-mass-acc" : ""
+        mass_acc = ""
     } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
         mass_acc = "--mass-acc ${meta['fragmentmasstolerance']} --mass-acc-ms1 ${meta['precursormasstolerance']}"
     } else {
         log.info "Warning: DIA-NN only supports ppm unit tolerance for MS1 and MS2. Falling back to `mass_acc_automatic`=`true` to automatically determine the tolerance by DIA-NN!"
-        mass_acc = '' + params.quick_mass_acc ? "--quick-mass-acc" : ""
+        mass_acc = ""
     }
 
     // Notes: Use double quotes for params, so that it is escaped in the shell.

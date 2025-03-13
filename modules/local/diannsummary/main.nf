@@ -20,10 +20,10 @@ process DIANNSUMMARY {
 
     output:
     // DIA-NN 2.0 don't return report in tsv format
-    path "diann_report.tsv", emit: main_report optional true
-    path "diann_report.parquet", emit: report_parquet optional true
-    path "diann_report.manifest.txt", emit: report_manifest optional true
-    path "diann_report.protein_description.tsv", emit: protein_description optional true
+    path "diann_report.tsv", emit: main_report, optional: true
+    path "diann_report.parquet", emit: report_parquet, optional: true
+    path "diann_report.manifest.txt", emit: report_manifest, optional: true
+    path "diann_report.protein_description.tsv", emit: protein_description, optional: true
     path "diann_report.stats.tsv", emit: report_stats
     path "diann_report.pr_matrix.tsv", emit: pr_matrix
     path "diann_report.pg_matrix.tsv", emit: pg_matrix
@@ -32,8 +32,8 @@ process DIANNSUMMARY {
     path "diannsummary.log", emit: log
 
     // Different library files format are exported due to different DIA-NN versions
-    path "empirical_library.tsv", emit: final_speclib optional true
-    path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib optional true
+    path "empirical_library.tsv", emit: final_speclib, optional: true
+    path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib, optional: true
     path "versions.yml", emit: versions
 
     when:

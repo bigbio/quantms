@@ -51,7 +51,6 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --pg-level $params.pg_level \\
             $args
 
-
     cp report.log.txt ${ms_file.baseName}_final_diann.log
 
 
