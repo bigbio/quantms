@@ -25,7 +25,7 @@ workflow PSMRESCORING {
         sage: filename.name.contains('sage')
             return [meta, filename]
         nosage: true
-            return [meta, filename, []]
+            return [meta, filename]
     }.set{ch_id_files_branched}
 
     if (params.ms2rescore == true) {
