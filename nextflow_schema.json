@@ -214,7 +214,7 @@
                     "fa_icon": "far fa-check-square",
                     "help_text": "Force re-indexing in the beginning of the pipeline to make sure that indices are up-to-date and to avoid redundant indexing on-demand in steps that require an index (e.g., Comet)."
                 },
-                "mzml_features":{
+                "mzml_features": {
                     "type": "boolean",
                     "default": false,
                     "description": "Compute with mzmlstatistics step the features at MS1 level and output to a RAW file, only available for mzML files",
