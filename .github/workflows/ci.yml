@@ -84,7 +84,7 @@ jobs:
       - name: Install micromamba
         env:
           MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda' && github.base_ref != 'dev'
+        if: matrix.exec_profile == 'conda' && (github.base_ref != 'dev' || github.event.pull_request.base.ref != 'dev')
         run: |
           wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
           echo "$(pwd)/bin" >> $GITHUB_PATH
@@ -108,14 +108,14 @@ jobs:
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Run pipeline with test data (master/other branches)
-        if: github.event.pull_request.base.ref != 'dev' && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
+        if: (github.base_ref == 'master' || github.event.pull_request.base.ref == 'master') && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Run pipeline with test data in conda profile (and single-threaded)
         env:
           MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda' && github.base_ref != 'dev'
+        if: matrix.exec_profile == 'conda' && (github.base_ref != 'dev' || github.event.pull_request.base.ref != 'dev')
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
