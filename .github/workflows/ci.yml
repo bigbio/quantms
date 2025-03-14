@@ -106,7 +106,6 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
-
       - name: Gather failed logs
         if: failure() || cancelled()
         run: |
