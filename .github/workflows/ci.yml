@@ -100,7 +100,7 @@ jobs:
         uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
 
       - name: Run pipeline with test data in docker/singularity profile (dev branch)
-        if: github.base_ref == 'dev' && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
+        if: github.event.pull_request.base.ref != 'master' && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
         # TODO nf-core: You can customise CI pipeline run tests as required
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
@@ -108,7 +108,7 @@ jobs:
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Run pipeline with test data (master/other branches)
-        if: github.base_ref != 'dev' && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
+        if: github.event.pull_request.base.ref != 'dev' && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
