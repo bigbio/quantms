@@ -1,5 +1,5 @@
-name: nf-core CI
-# This workflow runs the pipeline with the minimal test dataset to check that it completes without any syntax errors
+name: nf-core extended CI
+# This workflow runs the pipeline with all singularity, conda or docker
 on:
   push:
     branches:
