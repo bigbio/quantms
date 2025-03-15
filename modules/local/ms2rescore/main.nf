@@ -55,10 +55,10 @@ process MS2RESCORE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
-        ms2pip: \$(ms2pip --version 2>&1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
-        deeplc: \$(deeplc --version 2>&1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')
-        MS2Rescore: \$(ms2rescore --version 2>&1 | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+        quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]')
+        ms2pip: \$(ms2pip --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]')
+        deeplc: \$(deeplc --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]')
+        MS2Rescore: \$(ms2rescore --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]' | head -n 1)
     END_VERSIONS
     """
 }
