@@ -20,7 +20,7 @@ process MZMLSTATISTICS {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
-    def string_ms2_file = params.id_only == true ? "--ms2_file" : ""
+    def string_ms2_file = params.id_only == true || params.mzml_features == true ? "--ms2_file" : ""
     def string_features_file = params.mzml_features == true ? "--feature_detection" : ""
 
     """
