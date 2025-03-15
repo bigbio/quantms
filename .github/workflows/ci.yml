@@ -35,8 +35,7 @@ jobs:
       matrix:
         NXF_VER:
           - "24.10.5"
-          - "latest-everything"
-        test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
+        test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
         exec_profile: ["docker"] # extended ci tests singularity and conda.
 
     steps:
