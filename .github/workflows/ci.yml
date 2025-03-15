@@ -20,14 +20,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    env:
-      NXF_ANSI_LOG: false
-      CAPSULE_LOG: none
-      TEST_PROFILE: ${{ matrix.test_profile }}
-      EXEC_PROFILE: ${{ matrix.exec_profile }}
-
-    name: Run pipeline with test data
+  test-docker:
+    name: Docker Tests
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'bigbio/quantms') }}
     runs-on: ubuntu-latest
     strategy:
@@ -37,14 +31,91 @@ jobs:
           - "24.10.5"
           - "latest-everything"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
-        exec_profile: ["docker", "singularity", "conda"]
-        exclude:
-          - test_profile: test_dia
-            exec_profile: "conda"
-          - test_profile: test_localize
-            exec_profile: "conda"
-          - NXF_VER: "latest-everything"
-            exec_profile: "conda"
+    env:
+      NXF_ANSI_LOG: false
+      CAPSULE_LOG: none
+      TEST_PROFILE: ${{ matrix.test_profile }}
+      EXEC_PROFILE: docker
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Set up Nextflow
+        uses: nf-core/setup-nextflow@v2
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@v1.3.1
+
+      - name: Run pipeline with test data in docker profile
+        if: github.event.pull_request.base.ref != 'master'
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Run pipeline with test data in docker profile (master branch)
+        if: github.event.pull_request.base.ref == 'master'
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Gather failed logs
+        if: failure() || cancelled()
+        run: |
+          mkdir failed_logs
+          failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
+          while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
+
+      - uses: actions/upload-artifact@v4
+        if: failure() || cancelled()
+        name: Upload failed logs
+        with:
+          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
+          include-hidden-files: true
+          path: failed_logs
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        name: Upload results
+        with:
+          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
+          include-hidden-files: true
+          path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        name: Upload log
+        with:
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
+          include-hidden-files: true
+          path: .nextflow.log
+          overwrite: false
+
+  test-singularity:
+    name: Singularity Tests
+    needs: test-docker
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'bigbio/quantms') }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        NXF_VER:
+          - "24.10.5"
+          - "latest-everything"
+        test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
+    env:
+      NXF_ANSI_LOG: false
+      CAPSULE_LOG: none
+      TEST_PROFILE: ${{ matrix.test_profile }}
+      EXEC_PROFILE: singularity
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4
@@ -62,15 +133,95 @@ jobs:
           version: "${{ matrix.NXF_VER }}"
 
       - name: Set up Singularity
-        if: matrix.exec_profile == 'singularity'
         run: |
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
+      - name: Install Singularity with defaults
+        uses: singularityhub/install-singularity@main
+
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@v1.3.1
+
+      - name: Run pipeline with test data in singularity profile
+        if: github.event.pull_request.base.ref != 'master'
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Run pipeline with test data in singularity profile (master branch)
+        if: github.event.pull_request.base.ref == 'master'
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Gather failed logs
+        if: failure() || cancelled()
+        run: |
+          mkdir failed_logs
+          failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
+          while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
+
+      - uses: actions/upload-artifact@v4
+        if: failure() || cancelled()
+        name: Upload failed logs
+        with:
+          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
+          include-hidden-files: true
+          path: failed_logs
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        name: Upload results
+        with:
+          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
+          include-hidden-files: true
+          path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        name: Upload log
+        with:
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
+          include-hidden-files: true
+          path: .nextflow.log
+          overwrite: false
+
+  test-conda:
+    name: Conda Tests
+    needs: test-singularity
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'bigbio/quantms') }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        NXF_VER:
+          - "24.10.5"
+        test_profile: ["test_lfq", "test_tmt", "test_dda_id", "test_tmt_corr"]
+        # Excluding test_dia and test_localize from conda as in original workflow
+    env:
+      NXF_ANSI_LOG: false
+      CAPSULE_LOG: none
+      TEST_PROFILE: ${{ matrix.test_profile }}
+      EXEC_PROFILE: conda
+      MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Set up Nextflow
+        uses: nf-core/setup-nextflow@v2
+        with:
+          version: "${{ matrix.NXF_VER }}"
+
       - name: Install micromamba
-        env:
-          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda'
         run: |
           wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
           echo "$(pwd)/bin" >> $GITHUB_PATH
@@ -78,32 +229,18 @@ jobs:
           ./bin/micromamba shell init -s bash
           echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
 
-      - name: Install Singularity with defaults
-        if: matrix.exec_profile == 'singularity'
-        uses: singularityhub/install-singularity@main
-
       - name: Disk space cleanup
         uses: jlumbroso/free-disk-space@v1.3.1
 
-      - name: Run pipeline with test data in docker/singularity profile
-        if: github.event.pull_request.base.ref != 'master' && matrix.exec_profile != 'conda'
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-
-      - name: Run pipeline with test data in docker/singularity profile (master branch)
-        if: github.event.pull_request.base.ref == 'master' && matrix.exec_profile != 'conda'
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-
       - name: Run pipeline with test data in conda profile (master branch)
-        env:
-          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda' && (github.event.pull_request.base.ref == 'master')
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
+        if: github.event.pull_request.base.ref == 'master'
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Run pipeline with test data in conda profile
+        if: github.event.pull_request.base.ref != 'master'
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Gather failed logs
         if: failure() || cancelled()
