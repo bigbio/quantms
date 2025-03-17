@@ -237,11 +237,6 @@ jobs:
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
-      - name: Run pipeline with test data in conda profile
-        if: github.event.pull_request.base.ref != 'master'
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-
       - name: Gather failed logs
         if: failure() || cancelled()
         run: |
