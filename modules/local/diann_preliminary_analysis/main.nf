@@ -50,12 +50,9 @@ process DIANN_PRELIMINARY_ANALYSIS {
             --verbose $params.diann_debug \\
             ${scan_window} \\
             --temp ./ \\
-            --min-corr $params.min_corr \\
-            --corr-diff $params.corr_diff \\
             ${mass_acc} \\
-            $args
-
-    cp report.log.txt ${ms_file.baseName}_diann.log
+            $args \\
+            2>&1 | tee ${ms_file.baseName}_diann.log
 
 
     cat <<-END_VERSIONS > versions.yml
