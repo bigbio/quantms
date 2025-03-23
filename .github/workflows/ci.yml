@@ -28,40 +28,23 @@ jobs:
       EXEC_PROFILE: ${{ matrix.exec_profile }}
 
     name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
     if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'bigbio/quantms') }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        # Nextflow versions
         NXF_VER:
           - "24.10.5"
-          - "latest-everything"
-        test_profile:
-          ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
-        exec_profile: ["docker"]
-        exclude:
-          - test_profile: test_dia
-            exec_profile: "conda"
-          - test_profile: test_localize
-            exec_profile: "conda"
-          - NXF_VER: "latest-everything"
-            exec_profile: "conda"
-        include:
-          - test_profile: test_lfq
-            exec_profile: "conda"
-            condition: ${{ github.base_ref != 'dev' }}
-          - test_profile: test_dda_id
-            exec_profile: "conda"
-            condition: ${{ github.base_ref != 'dev' }}
+        test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
+        exec_profile: ["docker"] # extended ci tests singularity and conda.
+
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
+      - uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: "17"
@@ -71,56 +54,19 @@ jobs:
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Set up Apptainer
-        if: matrix.exec_profile == 'singularity'
-        uses: eWaterCycle/setup-apptainer@main
-
       - name: Set up Singularity
         if: matrix.exec_profile == 'singularity'
         run: |
           mkdir -p $NXF_SINGULARITY_CACHEDIR
           mkdir -p $NXF_SINGULARITY_LIBRARYDIR
 
-      - name: Install micromamba
-        env:
-          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda' && github.base_ref != 'dev'
-        run: |
-          wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-          echo "$(pwd)/bin" >> $GITHUB_PATH
-          echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
-          ./bin/micromamba shell init -s bash
-          echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
-
-      - name: Install Singularity with defaults
-        if: matrix.exec_profile == 'singularity'
-        uses: singularityhub/install-singularity@main
-
       - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
+        uses: jlumbroso/free-disk-space@v1.3.1
 
-      - name: Run pipeline with test data in docker/singularity profile (dev branch)
-        if: github.base_ref == 'dev' && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
+      - name: Run pipeline with test data in docker/singularity profile
+        if: github.event.pull_request.base.ref != 'master'
         run: |
           nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-
-      - name: Run pipeline with test data (master/other branches)
-        if: github.base_ref != 'dev' && (matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity')
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-
-      - name: Run pipeline with test data in conda profile (and single-threaded)
-        env:
-          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda' && github.base_ref != 'dev'
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Gather failed logs
         if: failure() || cancelled()

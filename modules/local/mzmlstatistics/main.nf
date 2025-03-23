@@ -27,7 +27,7 @@ process MZMLSTATISTICS {
     quantmsutilsc mzmlstats --ms_path "${ms_file}" \\
         ${string_ms2_file} \\
         ${string_features_file} \\
-        2>&1 | tee mzml_statistics.log
+        2>&1 | tee ${ms_file.baseName}_mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
