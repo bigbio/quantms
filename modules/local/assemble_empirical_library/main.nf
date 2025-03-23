@@ -26,11 +26,11 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     def args = task.ext.args ?: ''
 
     if (params.mass_acc_automatic) {
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
+        mass_acc = '--individual-mass-acc'
     } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
         mass_acc = "--mass-acc ${meta['fragmentmasstolerance']} --mass-acc-ms1 ${meta['precursormasstolerance']}"
     } else {
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
+        mass_acc = '--individual-mass-acc'
     }
     scan_window = params.scan_window_automatic ? '--individual-windows' : "--window $params.scan_window"
 
@@ -53,8 +53,9 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             ${mass_acc} \\
             ${scan_window} \\
             --gen-spec-lib \\
-            $args \\
-            2>&1 | tee assemble_empirical_library.log
+            $args
+
+    cp report.log.txt assemble_empirical_library.log
 
 
     cat <<-END_VERSIONS > versions.yml
