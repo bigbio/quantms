@@ -75,17 +75,17 @@ workflow DIA {
         //
         if (params.random_preanalysis) {
             preanalysis_subset = ch_file_preparation_results
-                .toSortedList()
+                .toSortedList{ a, b -> a[1].getName() <=> b[1].getName() }
                 .flatMap()
                 .randomSample(params.empirical_assembly_ms_n, params.random_preanalysis_seed)
             empirical_lib_files = preanalysis_subset
                 .map { result -> result[1] }
-                .collect()
+                .collect( sort: { a, b -> a.getName() <=> b.getName() } )
             DIANN_PRELIMINARY_ANALYSIS(preanalysis_subset.combine(speclib))
         } else {
             empirical_lib_files = ch_file_preparation_results
                 .map { result -> result[1] }
-                .collect()
+                .collect( sort: { a, b -> a.getName() <=> b.getName() } )
             DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
         }
         ch_software_versions = ch_software_versions
@@ -96,7 +96,7 @@ workflow DIA {
         //
         // Order matters in DIANN, This should be sorted for reproducible results.
         ASSEMBLE_EMPIRICAL_LIBRARY(
-            empirical_lib_files.sort{ a, b -> a.getName() <=> b.getName() },
+            empirical_lib_files,
             meta,
             DIANN_PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
             speclib
