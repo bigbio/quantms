@@ -51,9 +51,9 @@ process DIANN_PRELIMINARY_ANALYSIS {
             ${scan_window} \\
             --temp ./ \\
             ${mass_acc} \\
-            $args \\
-            2>&1 | tee ${ms_file.baseName}_diann.log
+            $args
 
+    cp report.log.txt ${ms_file.baseName}_diann.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

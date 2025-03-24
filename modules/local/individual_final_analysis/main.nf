@@ -49,9 +49,9 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --no-main-report \\
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
-            $args \\
-            2>&1 | tee ${ms_file.baseName}_final_diann.log
+            $args
 
+    cp report.log.txt ${ms_file.baseName}_final_diann.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

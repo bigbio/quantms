@@ -66,9 +66,9 @@ process DIANNSUMMARY {
             --qvalue $params.protein_level_fdr_cutoff \\
             ${report_decoys} \\
             ${diann_export_xic} \\
-            $args \\
-            2>&1 | tee diannsummary.log
+            $args
 
+    cp diann_report.log.txt diannsummary.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

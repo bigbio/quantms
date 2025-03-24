@@ -45,9 +45,9 @@ process SILICOLIBRARYGENERATION {
             --predictor \\
             --verbose $params.diann_debug \\
             --gen-spec-lib \\
-            ${args} \\
-            2>&1 | tee silicolibrarygeneration.log
+            ${args}
 
+    cp *lib.log.txt silicolibrarygeneration.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

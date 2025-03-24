@@ -53,9 +53,9 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             ${mass_acc} \\
             ${scan_window} \\
             --gen-spec-lib \\
-            $args \\
-            2>&1 | tee assemble_empirical_library.log
+            $args
 
+    cp report.log.txt assemble_empirical_library.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
