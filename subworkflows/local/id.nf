@@ -42,11 +42,12 @@ workflow ID {
     ch_psmfdrcontrol     = Channel.empty()
     ch_consensus_results = Channel.empty()
     // split returns String[], whereas tokenize returns a list, unique works on lists
-    if (params.search_engines.tokenize(",").unique().size() > 1) {
+    n_unique_search_engines = params.search_engines.tokenize(",").unique().size()
+    if (n_unique_search_engines > 1) {
         // 'remainder: true' will keep remainders which do not match the specified size
         // if the 'size' is not matched, an empty channel will be returned and 
         // nothing will be run for the 'CONSENSUSID' process
-        CONSENSUSID(PSMRESCORING.out.results.groupTuple(size: params.search_engines.tokenize(",").unique().size()))
+        CONSENSUSID(PSMRESCORING.out.results.groupTuple(size: n_unique_search_engines))
         ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions.ifEmpty(null))
         ch_psmfdrcontrol = CONSENSUSID.out.consensusids
         ch_consensus_results = CONSENSUSID.out.consensusids
