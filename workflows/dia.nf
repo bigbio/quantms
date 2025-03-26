@@ -75,17 +75,17 @@ workflow DIA {
         //
         if (params.random_preanalysis) {
             preanalysis_subset = ch_file_preparation_results
-                .toSortedList()
+                .toSortedList{ a, b -> a[1].getName() <=> b[1].getName() }
                 .flatMap()
                 .randomSample(params.empirical_assembly_ms_n, params.random_preanalysis_seed)
             empirical_lib_files = preanalysis_subset
                 .map { result -> result[1] }
-                .collect()
+                .collect( sort: { a, b -> a.getName() <=> b.getName() } )
             DIANN_PRELIMINARY_ANALYSIS(preanalysis_subset.combine(speclib))
         } else {
             empirical_lib_files = ch_file_preparation_results
                 .map { result -> result[1] }
-                .collect()
+                .collect( sort: { a, b -> a.getName() <=> b.getName() } )
             DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
         }
         ch_software_versions = ch_software_versions
@@ -128,7 +128,7 @@ workflow DIA {
     // locally, evey element in ch_result is a string, whilst on cloud it is a path.
     ch_result
         .ms_file.map { msfile -> file(msfile).getName() }
-        .collect()
+        .collect(sort: true)
         .set { ms_file_names }
 
     DIANNSUMMARY(
