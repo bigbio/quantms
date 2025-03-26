@@ -1001,22 +1001,16 @@
                     "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
                     "default": 8
                 },
-                "min_corr": {
-                    "type": "number",
-                    "description": "Only peaks with correlation sum exceeding min_corr will be considered",
-                    "fa_icon": "fas fa-filter",
-                    "default": 2.0
-                },
-                "corr_diff": {
-                    "type": "number",
-                    "description": "Peaks with correlation sum below corr_diff from maximum will not be considered",
-                    "fa_icon": "fas fa-filter",
-                    "default": 1.0
-                },
-                "time_corr_only": {
+                "performance_mode": {
                     "type": "boolean",
-                    "description": "A single score will be used until RT alignment to save memory",
-                    "fa_icon": "fas fa-filter",
+                    "description": "Set Low RAM & High Speed Mode for DIANN, including min-corr, corr-diff, and time-corr-only three parameters",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
+                },
+                "quick_mass_acc": {
+                    "type": "boolean",
+                    "description": "when choosing the MS2 mass accuracy setting automatically, DIA-NN will use a fast heuristical algorithm instead of IDs number optimisation",
+                    "fa_icon": "far fa-check-square",
                     "default": true
                 },
                 "pg_level": {
