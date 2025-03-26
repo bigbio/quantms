@@ -20,10 +20,10 @@ process DIANNSUMMARY {
 
     output:
     // DIA-NN 2.0 don't return report in tsv format
-    path "diann_report.tsv", emit: main_report optional true
-    path "diann_report.parquet", emit: report_parquet optional true
-    path "diann_report.manifest.txt", emit: report_manifest optional true
-    path "diann_report.protein_description.tsv", emit: protein_description optional true
+    path "diann_report.tsv", emit: main_report, optional: true
+    path "diann_report.parquet", emit: report_parquet, optional: true
+    path "diann_report.manifest.txt", emit: report_manifest, optional: true
+    path "diann_report.protein_description.tsv", emit: protein_description, optional: true
     path "diann_report.stats.tsv", emit: report_stats
     path "diann_report.pr_matrix.tsv", emit: pr_matrix
     path "diann_report.pg_matrix.tsv", emit: pg_matrix
@@ -32,8 +32,8 @@ process DIANNSUMMARY {
     path "diannsummary.log", emit: log
 
     // Different library files format are exported due to different DIA-NN versions
-    path "empirical_library.tsv", emit: final_speclib optional true
-    path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib optional true
+    path "empirical_library.tsv", emit: final_speclib, optional: true
+    path "empirical_library.tsv.skyline.speclib", emit: skyline_speclib, optional: true
     path "versions.yml", emit: versions
 
     when:
@@ -41,14 +41,6 @@ process DIANNSUMMARY {
 
     script:
     def args = task.ext.args ?: ''
-
-    if (params.mass_acc_automatic) {
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
-    } else if (meta['precursormasstoleranceunit'].toLowerCase().endsWith('ppm') && meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('ppm')){
-        mass_acc = "--mass-acc ${meta['fragmentmasstolerance']} --mass-acc-ms1 ${meta['precursormasstolerance']}"
-    } else {
-        mass_acc = '--quick-mass-acc --individual-mass-acc'
-    }
 
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     species_genes = params.species_genes ? "--species-genes": ""
@@ -64,8 +56,6 @@ process DIANNSUMMARY {
             --f ${(ms_files as List).join(' --f ')} \\
             --threads ${task.cpus} \\
             --verbose $params.diann_debug \\
-            ${scan_window} \\
-            ${mass_acc} \\
             --temp ./quant/ \\
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
@@ -76,9 +66,9 @@ process DIANNSUMMARY {
             --qvalue $params.protein_level_fdr_cutoff \\
             ${report_decoys} \\
             ${diann_export_xic} \\
-            $args \\
-            2>&1 | tee diannsummary.log
+            $args
 
+    cp diann_report.log.txt diannsummary.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
