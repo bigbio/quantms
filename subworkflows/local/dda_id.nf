@@ -159,8 +159,9 @@ workflow DDA_ID {
         //
         ch_psmfdrcontrol     = Channel.empty()
         ch_consensus_results = Channel.empty()
-        if (params.search_engines.split(",").size() > 1) {
-            CONSENSUSID(ch_consensus_input.groupTuple(size: params.search_engines.split(",").size()))
+        // see comments in id.nf
+        if (params.search_engines.tokenize(",").unique().size() > 1) {
+            CONSENSUSID(ch_consensus_input.groupTuple(size: params.search_engines.tokenize(",").unique().size()))
             ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions.ifEmpty(null))
             ch_psmfdrcontrol = CONSENSUSID.out.consensusids
             ch_psmfdrcontrol

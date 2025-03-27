@@ -102,6 +102,14 @@ workflow QUANTMS {
         ch_versions = ch_versions.mix(DECOYDATABASE.out.versions.ifEmpty(null))
     }
 
+    // Check that there is no duplicated search engines
+    if (params.search_engines) {
+        search_engines = params.search_engines.tokenize(',')
+        if (search_engines.size() != search_engines.unique().size()) {
+            error( "Duplicated search engines in the search_engines parameter: ${params.search_engines}" )
+        }
+    }
+
     // Only performing id_only subworkflows .
     if (params.id_only) {
         DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data, CREATE_INPUT_CHANNEL.out.ch_expdesign)
