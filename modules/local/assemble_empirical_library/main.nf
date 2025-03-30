@@ -57,7 +57,6 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
 
     cp report.log.txt assemble_empirical_library.log
 
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "\\d+\\.\\d+(\\.\\w+)*(\\.[\\d]+)?")

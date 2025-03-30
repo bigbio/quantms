@@ -47,8 +47,7 @@ process SILICOLIBRARYGENERATION {
             --gen-spec-lib \\
             ${args}
 
-    cp lib.log.txt silicolibrarygeneration.log
-
+    cp *lib.log.txt silicolibrarygeneration.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

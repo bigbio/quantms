@@ -53,7 +53,6 @@ process INDIVIDUAL_FINAL_ANALYSIS {
 
     cp report.log.txt ${ms_file.baseName}_final_diann.log
 
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         DIA-NN: \$(diann 2>&1 | grep "DIA-NN" | grep -oP "\\d+\\.\\d+(\\.\\w+)*(\\.[\\d]+)?")

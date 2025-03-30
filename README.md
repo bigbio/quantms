@@ -121,6 +121,7 @@ We thank the following people for their extensive assistance in the development 
 
 - Timo Sachsenberg ([@timosachsenberg](https://github.com/timosachsenberg))
 - Wang Hong ([@WangHong007](https://github.com/WangHong007))
+- Henry Webel ([@enryH](https://github.com/enryH))
 
 ## Contributions and Support
 

@@ -18,6 +18,8 @@
 include { QUANTMS  } from './workflows/quantms'
 include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_quantms_pipeline'
 include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_quantms_pipeline'
+include { UTILS_NEXTFLOW_PIPELINE   } from './subworkflows/nf-core/utils_nextflow_pipeline'
+
 
 //
 // WORKFLOW: Run main bigbio/quantms analysis pipeline
@@ -45,6 +47,16 @@ workflow BIGBIO_QUANTMS {
 workflow {
 
     main:
+
+    // Dump parameters to JSON file for documenting the pipeline settings
+
+    UTILS_NEXTFLOW_PIPELINE (
+        false,
+        true,
+        params.outdir,
+        false
+    )
+
 
     BIGBIO_QUANTMS ()
 
