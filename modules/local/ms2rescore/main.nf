@@ -49,7 +49,6 @@ process MS2RESCORE {
         --output ${idxml.baseName}_ms2rescore.idXML \\
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
-        --id_decoy_pattern $decoy_pattern \\
         $args \\
         2>&1 | tee ${idxml.baseName}_ms2rescore.log
 
