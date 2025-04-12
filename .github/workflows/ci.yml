@@ -36,7 +36,7 @@ jobs:
         NXF_VER:
           - "24.10.5"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
-        exec_profile: ["docker"] # extended ci tests singularity and conda.
+        exec_profile: ["docker"] # extended ci tests singularity.
 
     steps:
       - name: Check out pipeline code

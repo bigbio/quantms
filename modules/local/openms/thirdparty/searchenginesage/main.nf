@@ -3,7 +3,6 @@ process SEARCHENGINESAGE {
     label 'process_medium' // we could make it dependent on the number of files
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.3.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.3.0--h9ee0642_8' :
         'biocontainers/openms-thirdparty:3.3.0--h9ee0642_8' }"
