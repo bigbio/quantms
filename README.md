@@ -87,6 +87,7 @@ The second requirement is a protein sequence database. We suggest downloading a 
 Now, you can run the pipeline using:
 
 <!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
+
 ```bash
 nextflow run bigbio/quantms \
    -profile <docker/singularity/.../institute> \
@@ -97,6 +98,7 @@ nextflow run bigbio/quantms \
 
 > [!NOTE]
 > Conda is no longer supported in this pipeline. Please use Docker, Singularity, or other container-based profiles.
+
 ```
 
 > [!WARNING]
@@ -157,3 +159,4 @@ You can cite the `nf-core` publication as follows:
 > Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
+```
