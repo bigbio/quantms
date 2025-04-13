@@ -2,7 +2,6 @@ process MSSTATSTMT {
     tag "$msstatstmt_csv_input.Name"
     label 'process_medium'
 
-    conda "bioconda::bioconductor-msstatstmt=2.10.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bioconductor-msstatstmt:2.10.0--r43hdfd78af_0' :
         'biocontainers/bioconductor-msstatstmt:2.10.0--r43hdfd78af_0' }"

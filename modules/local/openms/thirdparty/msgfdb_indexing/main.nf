@@ -2,7 +2,6 @@ process MSGFDBINDEXING {
     tag "$database.baseName"
     label 'process_low'
 
-    conda "bioconda::msgf_plus=2024.03.26"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/msgf_plus:2024.03.26--hdfd78af_0' :
         'biocontainers/msgf_plus:2024.03.26--hdfd78af_0' }"
