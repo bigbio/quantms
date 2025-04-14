@@ -12,6 +12,7 @@ include { MS2RESCORE                     } from '../../modules/local/ms2rescore/
 include { IDSCORESWITCHER                } from '../../modules/local/openms/idscoreswitcher/main'
 include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
 include { SPECTRUM2FEATURES              } from '../../modules/local/spectrum2features/main'
+include { PSMCLEAN                       } from '../../modules/local/psm_clean/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
@@ -61,8 +62,10 @@ workflow DDA_ID {
             ch_id_files_feats = MS2RESCORE.out.idxml
         } else {
             EXTRACTPSMFEATURES(ch_id_files_branched.nosage)
-            ch_id_files_feats = ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat)
             ch_software_versions = ch_software_versions.mix(EXTRACTPSMFEATURES.out.versions)
+            PSMCLEAN(ch_id_files_branched.sage.mix(EXTRACTPSMFEATURES.out.id_files_feat).combine(ch_file_preparation_results, by: 0))
+            ch_id_files_feats = PSMCLEAN.out.idxml
+            ch_software_versions = ch_software_versions.mix(PSMCLEAN.out.versions)
         }
 
         // Add SNR features to percolator

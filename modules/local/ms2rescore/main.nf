@@ -30,14 +30,20 @@ process MS2RESCORE {
     if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da')) {
         ms2_tolerence = meta['fragmentmasstolerance']
     } else {
-        log.info "Warning: MS2Rescore only supports Da unit. Set default ms2 tolerance as 0.05!"
-        ms2_tolerence = 0.05
+        log.info "Warning: MS2Rescore only supports Da unit. Set ms2 tolerance in nextflow config!"
+        ms2_tolerence = params.ms2rescore_fragment_tolerance
     }
 
     if (params.decoy_string_position == "prefix") {
         decoy_pattern = "^${params.decoy_string}"
     } else {
         decoy_pattern = "${params.decoy_string}\$"
+    }
+
+    if (params.force_model) {
+        force_model = "--force_model"
+    } else {
+        force_model = ""
     }
 
     """
@@ -48,6 +54,7 @@ process MS2RESCORE {
         --output ${idxml.baseName}_ms2rescore.idXML \\
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
+        ${force_model} \\
         $args \\
         2>&1 | tee ${idxml.baseName}_ms2rescore.log
 

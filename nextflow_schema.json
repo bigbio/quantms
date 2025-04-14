@@ -528,6 +528,18 @@
                     "default": 0.15,
                     "fa_icon": "fas fa-filter"
                 },
+                "ms2rescore_fragment_tolerance": {
+                    "type": "number",
+                    "description": "Fragment mass tolerance used for MS2PIP",
+                    "default": 0.05,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "force_model": {
+                    "type": "boolean",
+                    "description": "Force to run with provided MS2PIP model. Don't look for the best model and validation",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
+                },
                 "run_fdr_cutoff": {
                     "type": "number",
                     "description": "FDR cutoff on PSM level (or peptide level; see Percolator options) *per run* before going into feature finding, map alignment and inference. This can be seen as a pre-filter. See ",
