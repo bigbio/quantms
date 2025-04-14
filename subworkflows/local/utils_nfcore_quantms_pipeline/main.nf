@@ -45,7 +45,7 @@ workflow PIPELINE_INITIALISATION {
         version,
         true,
         outdir,
-        workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1
+        false // Conda is no longer supported
     )
 
     //

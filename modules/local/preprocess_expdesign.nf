@@ -6,7 +6,6 @@ process PREPROCESS_EXPDESIGN {
     tag "$design.Name"
     label 'process_tiny'
 
-    conda "bioconda::quantms-utils=0.0.20"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.20--pyh7e72e81_0' :
         'biocontainers/quantms-utils:0.0.20--pyh7e72e81_0' }"
