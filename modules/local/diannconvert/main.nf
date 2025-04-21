@@ -24,7 +24,7 @@ process DIANNCONVERT {
     path "versions.yml", emit: versions
 
     exec:
-        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1 and and 2.0.*, other versions of DIA-NN don't support mzTab conversion."
+        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, 2.0.* and 2.1.*, other versions of DIA-NN don't support mzTab conversion."
 
     script:
     def args = task.ext.args ?: ''
