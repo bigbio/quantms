@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - openms==3.3.0
 - thermorawfileparser==1.4.5
-- quantms-utils==0.0.20
+- quantms-utils==0.0.21
 - diann==2.0.2
 - quantms-rescoring==0.0.7
 - ms2rescore==3.1.4

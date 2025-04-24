@@ -3,8 +3,8 @@ process DIANNCONVERT {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.20--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.20--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.21--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.21--pyh7e72e81_0' }"
 
     input:
     path(report)
@@ -24,7 +24,7 @@ process DIANNCONVERT {
     path "versions.yml", emit: versions
 
     exec:
-        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1 and and 2.0.*, other versions of DIA-NN don't support mzTab conversion."
+        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, 2.0.* and 2.1.*, other versions of DIA-NN don't support mzTab conversion."
 
     script:
     def args = task.ext.args ?: ''
