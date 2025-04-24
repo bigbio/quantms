@@ -28,10 +28,10 @@ process MS2RESCORE {
 
     // ms2rescore only supports Da unit. https://ms2rescore.readthedocs.io/en/v3.0.2/userguide/configuration/
     if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da')) {
-        ms2_tolerence = meta['fragmentmasstolerance']
+        ms2_tolerance = meta['fragmentmasstolerance']
     } else {
         log.info "Warning: MS2Rescore only supports Da unit. Set ms2 tolerance in nextflow config!"
-        ms2_tolerence = params.ms2rescore_fragment_tolerance
+        ms2_tolerance = params.ms2rescore_fragment_tolerance
     }
 
     if (params.decoy_string_position == "prefix") {
@@ -50,7 +50,7 @@ process MS2RESCORE {
     rescoring msrescore2feature \\
         --idxml $idxml \\
         --mzml $mzml \\
-        --ms2_tolerance $ms2_tolerence \\
+        --ms2_tolerance $ms2_tolerance \\
         --output ${idxml.baseName}_ms2rescore.idXML \\
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
