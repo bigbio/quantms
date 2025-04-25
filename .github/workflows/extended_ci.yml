@@ -186,7 +186,7 @@ jobs:
           path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
           overwrite: false
           if-no-files-found: warn
-      
+
       - uses: actions/upload-artifact@v4
         if: always()
         name: Upload log
