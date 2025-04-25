@@ -82,6 +82,8 @@ jobs:
           name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}
           include-hidden-files: true
           path: failed_logs
+          overwrite: false
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
         if: success()
@@ -90,6 +92,8 @@ jobs:
           name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_results
           include-hidden-files: true
           path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          overwrite: false
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -98,3 +102,5 @@ jobs:
           name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}.log
           include-hidden-files: true
           path: .nextflow.log
+          overwrite: false
+          if-no-files-found: warn
