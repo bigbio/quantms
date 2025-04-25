@@ -74,7 +74,7 @@ jobs:
           mkdir failed_logs
           failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
-      
+
       - name: Set timestamp
         run: |
           echo "ARTIFACT_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
