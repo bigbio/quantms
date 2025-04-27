@@ -11,8 +11,9 @@ lint:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/CONTRIBUTING.md
     - docs/README.md
-  multiqc_config: false
-  nextflow_config: false
+  multiqc_config: False
+  nextflow_config: False
+  included_configs: False
 nf_core_version: 3.2.0
 repository_type: pipeline
 template:
