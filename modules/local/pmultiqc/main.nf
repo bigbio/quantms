@@ -5,7 +5,6 @@ process PMULTIQC {
         'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.26--pyhdfd78af_0' :
         'biocontainers/pmultiqc:0.0.26--pyhdfd78af_0' }"
 
-
     input:
     path 'results/*'
     path quantms_log

@@ -80,7 +80,7 @@ jobs:
           --outdir ./${{ needs.configure.outputs.REPOTITLE_LOWERCASE }} \
           --compress "none" \
           --container-system 'singularity' \
-          --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io/library/" \
+          --container-library "quay.io" -l "docker.io" -l "community.wave.seqera.io/library/" -l "ghcr.io" \
           --container-cache-utilisation 'amend' \
           --download-configuration 'yes'
 
