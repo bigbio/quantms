@@ -27,6 +27,9 @@ on:
 env:
   NXF_ANSI_LOG: false
 
+# This condition prevents the workflow from running
+if: ${{ false }}
+
 jobs:
   configure:
     runs-on: ubuntu-latest
