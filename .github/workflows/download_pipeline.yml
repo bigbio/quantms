@@ -35,23 +35,20 @@ defaults:
 
 # This ensures all jobs will be skipped regardless of their individual conditions
 jobs:
-  skip_workflow:
-    # This job will always run when the workflow is triggered
+  # This is the only job that will run - it succeeds quickly and marks the workflow as passing
+  workflow_disabled:
     runs-on: ubuntu-latest
+    # This job will always run
+    if: always()
     steps:
-      - run: echo "Workflow is disabled. Set WORKFLOW_ENABLED=true to run."
-
-  # Add a job that will cancel the workflow immediately
-  cancel_workflow:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel workflow
-        if: always()
-        uses: andymckay/cancel-action@0.3
+      - name: Workflow disabled message
+        run: echo "Workflow is disabled. Set WORKFLOW_ENABLED=true in the workflow file to run."
+      - name: Mark workflow as successful
+        run: exit 0
 
   configure:
-    # This job will never run due to the cancel_workflow job
-    if: false
+    # This job will be skipped because it depends on a condition that's never true
+    if: env.WORKFLOW_ENABLED == 'true' && false
     runs-on: ubuntu-latest
     outputs:
       REPO_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPO_LOWERCASE }}
@@ -66,8 +63,8 @@ jobs:
           echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> "$GITHUB_OUTPUT"
 
   download:
-    # This job will never run due to the cancel_workflow job
-    if: false
+    # This job will be skipped because it depends on a condition that's never true
+    if: env.WORKFLOW_ENABLED == 'true' && false
     runs-on: ubuntu-latest
     needs: configure
     steps:
