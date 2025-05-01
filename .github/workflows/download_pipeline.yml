@@ -38,7 +38,6 @@ jobs:
   # Add a job that will cancel the workflow immediately
   configure:
     # This job will never run due to the cancel_workflow job
-    if: false
     runs-on: ubuntu-latest
     outputs:
       REPO_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPO_LOWERCASE }}
