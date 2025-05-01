@@ -10,11 +10,14 @@ on:
   release:
     types: [published]
 
+env:
+  WORKFLOW_ENABLED: false
+
 jobs:
   run-platform:
     name: Run AWS full tests
     # run only if the PR is approved by at least 2 reviewers and against the master/main branch or manually triggered
-    if: github.repository == 'bigbio/quantms' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch'
+    if: env.WORKFLOW_ENABLED == 'true' && github.repository == 'bigbio/quantms' && github.event.review.state == 'approved' && (github.event.pull_request.base.ref == 'master' || github.event.pull_request.base.ref == 'main') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Set revision variable
