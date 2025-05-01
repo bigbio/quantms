@@ -29,7 +29,6 @@ env:
   WORKFLOW_ENABLED: false
 
 jobs:
-
   skip_workflow:
     if: env.WORKFLOW_ENABLED != 'true'
     runs-on: ubuntu-latest
