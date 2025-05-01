@@ -57,7 +57,6 @@ jobs:
     needs: configure
     steps:
       - name: Always succeed
-        if: always()
         run: |
           echo "Workflow disabled for now for nf-core tools failing"
           exit 0
