@@ -26,9 +26,18 @@ on:
 
 env:
   NXF_ANSI_LOG: false
+  WORKFLOW_ENABLED: false
 
+# Add a global condition that will apply to all jobs
+defaults:
+  run:
+    shell: bash
+
+# This ensures all jobs will be skipped regardless of their individual conditions
 jobs:
+  # Add a job that will cancel the workflow immediately
   configure:
+    # This job will never run due to the cancel_workflow job
     runs-on: ubuntu-latest
     outputs:
       REPO_LOWERCASE: ${{ steps.get_repo_properties.outputs.REPO_LOWERCASE }}
