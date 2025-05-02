@@ -62,7 +62,7 @@ jobs:
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}
+          name: failed_logs_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}
           include-hidden-files: true
           path: failed_logs
           overwrite: false
