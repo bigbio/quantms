@@ -6,11 +6,15 @@ lint:
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
     - .github/workflows/ci.yml
+    - .github/workflows/download_pipeline.yml
     - .gitignore
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/CONTRIBUTING.md
     - docs/README.md
+    - .github/workflows/awstest.yml
+    - .github/workflows/awsfulltest.yml
+    - .github/workflows/download_pipeline.yml
   included_configs: false
   multiqc_config: false
   nextflow_config: false
