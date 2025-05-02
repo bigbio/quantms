@@ -1,23 +1,56 @@
-# nf-core/quantms: Changelog
+# bigbio/quantms: Changelog
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.0] nfcore/quantms - [--/--/----] - Cambridge
+## [1.4.0] nfcore/quantms - [--/--/----] - Tubingen
 
 ### `Added`
 
 - [#423](https://github.com/bigbio/quantms/pull/423) Support for plex Correction matrices for TMT and iTRAQ analytical methods.
+- [#485](https://github.com/bigbio/quantms/pull/485) Support for DIANN 2.0.2
+- [#494](https://github.com/bigbio/quantms/pull/494) Generation of mzml feature files for Deeplearning and AI tools, algorithm and description in [quantms-utils](https://github.com/bigbio/quantms-utils)
+- [#489](https://github.com/bigbio/quantms/pull/489) Smart rescoring of peptide identifications using deepLC and ms2pip, enabling RT training and model fitting. read the details in [quantms-rescoring](https://github.com/bigbio/quantms-rescoring)
 
 ### `Changed`
 
-- [#423](https://github.com/bigbio/quantms/pull/423) Updated OpenMS==3.2.0
+- [#474](https://github.com/bigbio/quantms/pull/423) Updated OpenMS==3.3.0
+- [#485](https://github.com/bigbio/quantms/pull/485) Support for DIA-NN 2.0
+- [#489](https://github.com/bigbio/quantms/pull/489) Refactor quantms-rescoring
+- [#456](https://github.com/bigbio/quantms/pull/456) Optimization of process resources
+- [#454](https://github.com/bigbio/quantms/pull/454) Output all DIA-NN results files
 
 ### `Fixed`
 
+- [#482](https://github.com/bigbio/quantms/pull/486) Fixed TMT MS3
+- [#483](https://github.com/bigbio/quantms/pull/483) Fixed ms2rescore log file name
+- [#420](https://github.com/bigbio/quantms/pull/420) Fixed MSGFDB index memory error
+- [#485](https://github.com/bigbio/quantms/pull/485) Fixed DIA-NN results format conversion
+
 ### `Dependencies`
 
-- openms==3.2.0
+- openms==3.3.0
+- thermorawfileparser==1.4.5
+- quantms-utils==0.0.21
+- diann==2.0.2
+- quantms-rescoring==0.0.7
+- ms2rescore==3.1.4
+- ms2pip>=4.0
+- deepLC>=3.0
+
+### `Parameters`
+
+- isotope_correction: Enable isotope correction
+- plex_corr_matrix_file: Path to the correction matrix file for isobaric labelling, defaults are in assets folder
+- quant_activation_method: Operate only on MSn scans where any of its precursors features a certain activation method
+- ms2_fragment_method: The fragmentation method used during tandem MS
+- diann_report_decoys: Save decoy PSMs to the main .parquet report for DIA-NN 2.0
+- diann_export_xic: Instructs DIA-NN to extract MS1/fragment chromatograms for identified precursors
+- mzml_features: Allows generating for MS1 features maps for every mzml file analyzed.
+
+### `Deprecations`
+
+- [#450](https://github.com/bigbio/quantms/pull/450) Removes the posterior_probabilities parameter
 
 ## [1.3.0] nfcore/quantms - [08/04/2024] - Santiago de Cuba
 
@@ -31,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#386](https://github.com/bigbio/quantms/pull/386) Make validation of ontology terms optional
 - [#398](https://github.com/bigbio/quantms/pull/398) Python scripts moved to quantms-utils package
 - [#389](https://github.com/bigbio/quantms/pull/389) Introduction to DIANN 1.9.1 to the pipeline, only available in Singularity.
-- [#396](https://github.com/bigbio/quantms/pull/396) Adds verification step to unpacking tar archives in the DECOMPRESS process
+- [#396](https://github.com/bigbio/quantms/pull/396) Adds a verification step to unpacking tar archives in the DECOMPRESS process
 - [#397](https://github.com/bigbio/quantms/pull/397) More options included in SDRF validation.
 - [#404](https://github.com/bigbio/quantms/pull/404) Add spectrum SNR features to rescore
 
@@ -123,16 +156,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- [#92](https://github.com/nf-core/quantms/pull/92) Improved output docs for mzTab
-- [#91](https://github.com/nf-core/quantms/pull/91) Added dev profile for nightly versions of OpenMS tools
+- [#92](https://github.com/bigbio/quantms/pull/92) Improved output docs for mzTab
+- [#91](https://github.com/bigbio/quantms/pull/91) Added dev profile for nightly versions of OpenMS tools
 
 ### `Changed`
 
-- [#88](https://github.com/nf-core/quantms/pull/88) Updated Comet version to latest release (2023010)
+- [#88](https://github.com/bigbio/quantms/pull/88) Updated Comet version to latest release (2023010)
 
 ### `Fixed`
 
-- [#93](https://github.com/nf-core/quantms/pull/93) Fixed bug in docker vs. singularity container logic in some processes.
+- [#93](https://github.com/bigbio/quantms/pull/93) Fixed bug in docker vs. singularity container logic in some processes.
 
 ## [1.1.0] nfcore/quantms - [03/20/2023] - Berlin
 
@@ -170,11 +203,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#193](https://github.com/bigbio/quantms/pull/193) - Set the `local_input_type` default parameter to `mzML`
 - [#212](https://github.com/bigbio/quantms/pull/212) - Set the `min_consensus_support` default parameter to `1` to filter in ConsensusID for peptides identified with both search engines
-- [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow to run PROTEINQUANTIFIER TMT without exporting to mzTab
+- [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow torun PROTEINQUANTIFIER TMT without exporting to mzTab
 
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
 
-Initial release of nf-core/quantms, created with the [nf-core](https://nf-co.re/) template.
+Initial release of bigbio/quantms, created with the [nf-core](https://nf-co.re/) template.
 
 ### `Added`
 

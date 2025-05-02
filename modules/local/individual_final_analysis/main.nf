@@ -1,14 +1,11 @@
 process INDIVIDUAL_FINAL_ANALYSIS {
     tag "$ms_file.baseName"
     label 'process_high'
+    label 'diann'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://containers.biocontainers.pro/s3/SingImgsRepo/diann/v1.8.1_cv1/diann_v1.8.1_cv1.img' :
         'docker.io/biocontainers/diann:v1.8.1_cv1' }"
-
-    if (params.diann_version == "1.9.beta.1") {
-        container 'https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/tools/ghcr.io-bigbio-diann-1.9.1dev.sif'
-    }
 
     input:
     tuple val(meta), path(ms_file), path(fasta), path(diann_log), path(library)
@@ -16,7 +13,7 @@ process INDIVIDUAL_FINAL_ANALYSIS {
     output:
     path "*.quant", emit: diann_quant
     path "*_final_diann.log", emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -52,8 +49,9 @@ process INDIVIDUAL_FINAL_ANALYSIS {
             --no-main-report \\
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
-            $args \\
-            2>&1 | tee ${ms_file.baseName}_final_diann.log
+            $args
+
+    cp report.log.txt ${ms_file.baseName}_final_diann.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

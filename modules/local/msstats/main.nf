@@ -2,7 +2,6 @@ process MSSTATS {
     tag "$msstats_csv_input.Name"
     label 'process_medium'
 
-    conda "bioconda::bioconductor-msstats=4.10.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/bioconductor-msstats:4.10.0--r43hf17093f_0' :
         'biocontainers/bioconductor-msstats:4.10.0--r43hf17093f_0' }"
@@ -16,7 +15,7 @@ process MSSTATS {
     path "*.pdf" optional true
     path "*.csv", emit: msstats_csv
     path "*.log", emit: log
-    path "versions.yml" , emit: version
+    path "versions.yml" , emit: versions
 
     script:
     def args = task.ext.args ?: ''

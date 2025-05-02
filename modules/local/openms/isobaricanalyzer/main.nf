@@ -3,27 +3,26 @@ process ISOBARICANALYZER {
     label 'process_medium'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
     tuple val(meta), path(mzml_file)
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_iso.consensusXML"),  emit: id_files_consensusXML
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
-    if (meta.dissociationmethod == "HCD" || meta.dissociationmethod == "HCID") diss_meth = "auto"
-    else if (meta.dissociationmethod == "CID") diss_meth = "Collision-induced dissociation"
-    else if (meta.dissociationmethod == "ETD") diss_meth = "Electron transfer dissociation"
-    else if (meta.dissociationmethod == "ECD") diss_meth = "Electron capture dissociation"
+    if (params.quant_activation_method == "HCD" || params.quant_activation_method == "HCID") diss_meth = "auto"
+    else if (params.quant_activation_method == "CID") diss_meth = "Collision-induced dissociation"
+    else if (params.quant_activation_method == "ETD") diss_meth = "Electron transfer dissociation"
+    else if (params.quant_activation_method == "ECD") diss_meth = "Electron capture dissociation"
 
     def iso_normalization = params.iso_normalization ? "-quantification:normalization" : ""
     def isotope_correction = params.isotope_correction ? "-quantification:isotope_correction true" : "-quantification:isotope_correction false"

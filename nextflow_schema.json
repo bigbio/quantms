@@ -1,10 +1,10 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/quantms/master/nextflow_schema.json",
-    "title": "nf-core/quantms pipeline parameters",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com/bigbio/quantms/master/nextflow_schema.json",
+    "title": "bigbio/quantms pipeline parameters",
     "description": "Quantitative Mass Spectrometry nf-core workflow",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -213,6 +213,13 @@
                     "description": "Force initial re-indexing of input mzML files. Also fixes some common mistakes in slightly incomplete/outdated mzMLs. (Default: true for safety)",
                     "fa_icon": "far fa-check-square",
                     "help_text": "Force re-indexing in the beginning of the pipeline to make sure that indices are up-to-date and to avoid redundant indexing on-demand in steps that require an index (e.g., Comet)."
+                },
+                "mzml_features": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Compute with mzmlstatistics step the features at MS1 level and output to a RAW file, only available for mzML files",
+                    "help_text": "Compute with mzmlstatistics step the features at MS1 level and output to a RAW file, only available for mzML files",
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "far fa-chart-bar"
@@ -300,7 +307,7 @@
                     "fa_icon": "fas fa-tasks",
                     "help_text": "Specify which variable modifications should be applied to the database search (eg. '' or 'Oxidation (M)', see Unimod modifications\nin the style '({unimod name} ({optional term specificity} {optional origin})').\nAll possible modifications can be found in the restrictions mentioned in the command line documentation of e.g. [CometAdapter](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_CometAdapter.html) (scroll down a bit for the complete set).\nMultiple variable modifications can be specified comma separated (e.g. 'Carbamidomethyl (C),Oxidation (M)').\nVariable modifications may or may not be found at matching amino acids for a peptide to be reported."
                 },
-                "fragment_method": {
+                "ms2_fragment_method": {
                     "type": "string",
                     "description": "The fragmentation method used during tandem MS. (MS/MS or MS2).",
                     "default": "HCD",
@@ -322,7 +329,7 @@
                 },
                 "protocol": {
                     "type": "string",
-                    "description": "MSGF only: Labeling or enrichment protocol used, if any. Default: automatic",
+                    "description": "MSGF only: Labeling or enrichment protocol used, if any (options: 'automatic', 'phospho', 'iTRAQ', 'iTRAQ_phospho', 'TMT', 'none') Default: automatic",
                     "default": "automatic",
                     "fa_icon": "fas fa-list-ol"
                 },
@@ -521,12 +528,17 @@
                     "default": 0.15,
                     "fa_icon": "fas fa-filter"
                 },
-                "posterior_probabilities": {
-                    "type": "string",
-                    "description": "How to calculate posterior probabilities for PSMs:\n\n* 'percolator' = Re-score based on PSM-feature-based SVM and transform distance\n    to hyperplane for posteriors\n* 'fit_distributions' = Fit positive and negative distributions to scores\n    (similar to PeptideProphet)\n\n* 'mokapot' = Re-score based on PSM-feature-based semi-supervised learning algorithm introduced by Percolator",
-                    "fa_icon": "fas fa-list-ol",
-                    "default": "percolator",
-                    "enum": ["percolator", "fit_distributions", "mokapot"]
+                "ms2rescore_fragment_tolerance": {
+                    "type": "number",
+                    "description": "Fragment mass tolerance used for MS2PIP",
+                    "default": 0.05,
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "force_model": {
+                    "type": "boolean",
+                    "description": "Force to run with provided MS2PIP model. Don't look for the best model and validation",
+                    "default": false,
+                    "fa_icon": "far fa-check-square"
                 },
                 "run_fdr_cutoff": {
                     "type": "number",
@@ -618,29 +630,6 @@
             },
             "fa_icon": "fas fa-star-half"
         },
-        "psm_re_scoring_distribution_fitting": {
-            "title": "PSM re-scoring (distribution fitting)",
-            "type": "object",
-            "description": "Use this instead of Percolator if there are problems with Percolator (e.g. due to bad separation) or for performance",
-            "default": "",
-            "properties": {
-                "outlier_handling": {
-                    "type": "string",
-                    "description": "How to handle outliers during fitting:\n\n* ignore_iqr_outliers (default): ignore outliers outside of `3*IQR` from Q1/Q3 for fitting\n* set_iqr_to_closest_valid: set IQR-based outliers to the last valid value for fitting\n* ignore_extreme_percentiles: ignore everything outside 99th and 1st percentile (also removes equal values like potential censored max values in XTandem)\n* none: do nothing",
-                    "default": "none",
-                    "fa_icon": "fas fa-list-ol",
-                    "enum": ["none", "ignore_iqr_outliers", "set_iqr_to_closest_valid", "ignore_extreme_percentiles"]
-                },
-                "idpep_debug": {
-                    "type": "integer",
-                    "description": "Debug level for IDPEP step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
-                }
-            },
-            "fa_icon": "far fa-star-half"
-        },
         "consensus_id": {
             "title": "Consensus ID",
             "type": "object",
@@ -683,7 +672,7 @@
             "description": "Extracts and normalizes labeling information",
             "default": "",
             "properties": {
-                "select_activation": {
+                "quant_activation_method": {
                     "type": "string",
                     "description": "Operate only on MSn scans where any of its precursors features a certain activation method. Set to empty to disable.",
                     "fa_icon": "fas fa-font",
@@ -1005,12 +994,6 @@
             "description": "Settings for DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
             "default": "",
             "properties": {
-                "diann_version": {
-                    "type": "string",
-                    "description": "The version of DIA-NN used",
-                    "fa_icon": "fas fa-font",
-                    "help_text": "There are differences between the different DIA-NN versions. DIA-NN do not support cloud freely in 1.9.beta.1"
-                },
                 "mass_acc_automatic": {
                     "type": "boolean",
                     "default": true,
@@ -1030,22 +1013,16 @@
                     "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
                     "default": 8
                 },
-                "min_corr": {
-                    "type": "number",
-                    "description": "Only peaks with correlation sum exceeding min_corr will be considered",
-                    "fa_icon": "fas fa-filter",
-                    "default": 2.0
-                },
-                "corr_diff": {
-                    "type": "number",
-                    "description": "Peaks with correlation sum below corr_diff from maximum will not be considered",
-                    "fa_icon": "fas fa-filter",
-                    "default": 1.0
-                },
-                "time_corr_only": {
+                "performance_mode": {
                     "type": "boolean",
-                    "description": "A single score will be used until RT alignment to save memory",
-                    "fa_icon": "fas fa-filter",
+                    "description": "Set Low RAM & High Speed Mode for DIANN, including min-corr, corr-diff, and time-corr-only three parameters",
+                    "fa_icon": "far fa-check-square",
+                    "default": true
+                },
+                "quick_mass_acc": {
+                    "type": "boolean",
+                    "description": "when choosing the MS2 mass accuracy setting automatically, DIA-NN will use a fast heuristical algorithm instead of IDs number optimisation",
+                    "fa_icon": "far fa-check-square",
                     "default": true
                 },
                 "pg_level": {
@@ -1066,6 +1043,20 @@
                     "description": "The spectral library to use for DIA-NN",
                     "fa_icon": "fas fa-file",
                     "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
+                    "hidden": false
+                },
+                "diann_report_decoys": {
+                    "type": "boolean",
+                    "description": "Save decoy PSMs to the main .parquet report for DIA-NN 2.0.*",
+                    "fa_icon": "far fa-check-square",
+                    "default": false,
+                    "hidden": false
+                },
+                "diann_export_xic": {
+                    "type": "boolean",
+                    "description": "instructs DIA-NN to extract MS1/fragment chromatograms for identified precursors within X seconds from the elution apex, with X set to 10s if not provided;equivalent to the 'XICs' option in the GUI",
+                    "fa_icon": "far fa-check-square",
+                    "default": false,
                     "hidden": false
                 },
                 "skip_preliminary_analysis": {
@@ -1114,6 +1105,12 @@
                     "default": 200,
                     "fa_icon": "fas fa-filter",
                     "hidden": true
+                },
+                "enable_diann_mztab": {
+                    "type": "boolean",
+                    "description": "Export the DIA-NN and DIA results to mzTab",
+                    "default": true,
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -1297,41 +1294,6 @@
                 }
             }
         },
-        "max_job_request_options": {
-            "title": "Max job request options",
-            "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
-            "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
-            "properties": {
-                "max_cpus": {
-                    "type": "integer",
-                    "description": "Maximum number of CPUs that can be requested for any single job.",
-                    "default": 16,
-                    "fa_icon": "fas fa-microchip",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
-                },
-                "max_memory": {
-                    "type": "string",
-                    "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128 GB",
-                    "fa_icon": "fas fa-memory",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
-                },
-                "max_time": {
-                    "type": "string",
-                    "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "10d",
-                    "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
-                }
-            }
-        },
         "generic_options": {
             "title": "Generic options",
             "type": "object",
@@ -1339,12 +1301,6 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
@@ -1426,32 +1382,17 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "validationShowHiddenParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "validationFailUnrecognisedParams": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters fails when an unrecognised parameter is found.",
-                    "hidden": true,
-                    "help_text": "By default, when an unrecognised parameter is found, it returns a warinig."
-                },
-                "validationLenientMode": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-check-circle",
-                    "description": "Validation of parameters in lenient more.",
-                    "hidden": true,
-                    "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
-                },
                 "pipelines_testdata_base_path": {
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
                     "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
                     "hidden": true
                 }
             }
@@ -1459,70 +1400,64 @@
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/protein_database"
+            "$ref": "#/$defs/protein_database"
         },
         {
-            "$ref": "#/definitions/sdrf_validation"
+            "$ref": "#/$defs/sdrf_validation"
         },
         {
-            "$ref": "#/definitions/spectrum_preprocessing"
+            "$ref": "#/$defs/spectrum_preprocessing"
         },
         {
-            "$ref": "#/definitions/database_search"
+            "$ref": "#/$defs/database_search"
         },
         {
-            "$ref": "#/definitions/modification_localization"
+            "$ref": "#/$defs/modification_localization"
         },
         {
-            "$ref": "#/definitions/peptide_re_indexing"
+            "$ref": "#/$defs/peptide_re_indexing"
         },
         {
-            "$ref": "#/definitions/psm_re_scoring_general"
+            "$ref": "#/$defs/psm_re_scoring_general"
         },
         {
-            "$ref": "#/definitions/psm_re_scoring_percolator"
+            "$ref": "#/$defs/psm_re_scoring_percolator"
         },
         {
-            "$ref": "#/definitions/psm_re_scoring_distribution_fitting"
+            "$ref": "#/$defs/consensus_id"
         },
         {
-            "$ref": "#/definitions/consensus_id"
+            "$ref": "#/$defs/feature_mapper"
         },
         {
-            "$ref": "#/definitions/feature_mapper"
+            "$ref": "#/$defs/isobaric_analyzer"
         },
         {
-            "$ref": "#/definitions/isobaric_analyzer"
+            "$ref": "#/$defs/protein_inference"
         },
         {
-            "$ref": "#/definitions/protein_inference"
+            "$ref": "#/$defs/protein_quantification_dda"
         },
         {
-            "$ref": "#/definitions/protein_quantification_dda"
+            "$ref": "#/$defs/protein_quantification_lfq"
         },
         {
-            "$ref": "#/definitions/protein_quantification_lfq"
+            "$ref": "#/$defs/DIA-NN"
         },
         {
-            "$ref": "#/definitions/DIA-NN"
+            "$ref": "#/$defs/statistical_post_processing"
         },
         {
-            "$ref": "#/definitions/statistical_post_processing"
+            "$ref": "#/$defs/quality_control"
         },
         {
-            "$ref": "#/definitions/quality_control"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
-        },
-        {
-            "$ref": "#/definitions/max_job_request_options"
-        },
-        {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/generic_options"
         }
     ]
 }

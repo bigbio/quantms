@@ -3,17 +3,16 @@ process SEARCHENGINEMSGF {
     label 'process_medium'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
     tuple val(meta),  path(mzml_file), path(database), path(cnlcp), path(canno), path(csarr), path(cseq)
 
     output:
     tuple val(meta), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:
@@ -78,6 +77,7 @@ process SEARCHENGINEMSGF {
         -min_peptide_length $params.min_peptide_length \\
         -max_peptide_length $params.max_peptide_length \\
         ${max_missed_cleavages} \\
+        -fragment_method $meta.dissociationmethod \\
         -isotope_error_range $params.isotope_error_range \\
         -enzyme "${enzyme}" \\
         -tryptic ${msgf_num_enzyme_termini} \\

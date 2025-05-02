@@ -1,0 +1,86 @@
+name: Fork-specific CI for test_latest_dia
+
+# Trigger only for your fork and the 'test_latest_dia' test profile
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+    paths:
+      - "**.yml"
+
+env:
+  NXF_ANSI_LOG: false
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run test_latest_dia with Docker
+    runs-on: ubuntu-latest
+    env:
+      NXF_ANSI_LOG: false
+      CAPSULE_LOG: none
+      TEST_PROFILE: test_latest_dia
+      EXEC_PROFILE: docker
+
+    # Ensure this workflow only runs for your fork
+    if: ${{ github.repository == 'ypriverol/quantms' }}
+
+    steps:
+      - name: Check out pipeline code
+        uses: actions/checkout@v4
+
+      - name: Set up Nextflow
+        uses: nf-core/setup-nextflow@v2
+        with:
+          version: "24.10.5" # Or the Nextflow version you prefer
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: Run test_latest_dia with Docker
+        run: |
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+
+      - name: Gather failed logs
+        if: failure() || cancelled()
+        run: |
+          mkdir failed_logs
+          failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
+          while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
+
+      - uses: actions/upload-artifact@v4
+        if: failure() || cancelled()
+        name: Upload failed logs
+        with:
+          name: failed_logs_${{ env.TEST_PROFILE }}_${{ env.EXEC_PROFILE }}
+          include-hidden-files: true
+          path: failed_logs
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        name: Upload results
+        with:
+          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          include-hidden-files: true
+          path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          overwrite: false
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        name: Upload log
+        with:
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}.log
+          include-hidden-files: true
+          path: .nextflow.log
+          overwrite: false

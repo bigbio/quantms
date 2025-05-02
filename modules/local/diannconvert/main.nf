@@ -2,10 +2,9 @@ process DIANNCONVERT {
     tag "$meta.experiment_id"
     label 'process_medium'
 
-    conda "bioconda::quantms-utils=0.0.11"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.11--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.11--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.21--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.21--pyh7e72e81_0' }"
 
     input:
     path(report)
@@ -22,15 +21,16 @@ process DIANNCONVERT {
     path "*triqler_in.tsv", emit: out_triqler
     path "*.mzTab", emit: out_mztab
     path "*.log", emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     exec:
-        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1 and 1.9.beta.1, other versions of DIA-NN do not support mzTab conversion."
+        log.info "DIANNCONVERT is based on the output of DIA-NN 1.8.1, 2.0.* and 2.1.*, other versions of DIA-NN don't support mzTab conversion."
 
     script:
     def args = task.ext.args ?: ''
     def dia_params = [meta.fragmentmasstolerance,meta.fragmentmasstoleranceunit,meta.precursormasstolerance,
                         meta.precursormasstoleranceunit,meta.enzyme,meta.fixedmodifications,meta.variablemodifications].join(';')
+    def diann2mztab = params.enable_diann_mztab ? "--enable_diann2mztab" : ""
 
     """
     quantmsutilsc diann2mztab \\
@@ -41,6 +41,7 @@ process DIANNCONVERT {
         --charge $params.max_precursor_charge \\
         --missed_cleavages $params.allowed_missed_cleavages \\
         --qvalue_threshold $params.protein_level_fdr_cutoff \\
+        ${diann2mztab} \\
         2>&1 | tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml

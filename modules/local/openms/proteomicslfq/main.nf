@@ -3,10 +3,9 @@ process PROTEOMICSLFQ {
     label 'process_high'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
     path(mzmls)
@@ -26,7 +25,7 @@ process PROTEOMICSLFQ {
     path "debug_mergedIDsGreedyResolvedFDRFiltered.idXML", emit: debug_mergedIDsGreedyResolvedFDRFiltered optional true
     path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idXML", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved optional true
     path "*.log", emit: log
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args ?: ''

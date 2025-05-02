@@ -1,19 +1,17 @@
 process MSGFDBINDEXING {
     tag "$database.baseName"
     label 'process_low'
-    label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'https://depot.galaxyproject.org/singularity/msgf_plus:2024.03.26--hdfd78af_0' :
+        'biocontainers/msgf_plus:2024.03.26--hdfd78af_0' }"
 
     input:
     path(database)
 
     output:
     tuple path("${database.baseName}.cnlcp"), path("${database.baseName}.canno"), path("${database.baseName}.csarr"), path("${database.baseName}.cseq"), emit: msgfdb_idx
-    path "versions.yml",   emit: version
+    path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
     script:

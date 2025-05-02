@@ -20,14 +20,15 @@ workflow CREATE_INPUT_CHANNEL {
 
     if (is_sdrf.toString().toLowerCase().contains("true")) {
         SDRFPARSING ( ch_sdrf_or_design )
-        ch_versions = ch_versions.mix(SDRFPARSING.out.version)
+        ch_versions = ch_versions.mix(SDRFPARSING.out.versions)
         ch_config = SDRFPARSING.out.ch_sdrf_config_file
 
         ch_expdesign    = SDRFPARSING.out.ch_expdesign
     } else {
         PREPROCESS_EXPDESIGN( ch_sdrf_or_design )
-        ch_config = PREPROCESS_EXPDESIGN.out.ch_config
+        ch_versions = ch_versions.mix(PREPROCESS_EXPDESIGN.out.versions)
 
+        ch_config = PREPROCESS_EXPDESIGN.out.ch_config
         ch_expdesign = PREPROCESS_EXPDESIGN.out.ch_expdesign
     }
 
@@ -61,8 +62,7 @@ workflow CREATE_INPUT_CHANNEL {
     ch_meta_config_lfq                     // [meta, [spectra_files ]]
     ch_meta_config_dia                     // [meta, [spectra files ]]
     ch_expdesign
-
-    version         = ch_versions
+    versions         = ch_versions
 }
 
 // Function to get list of [meta, [ spectra_files ]]
@@ -101,7 +101,7 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
     // for sdrf read from config file, without it, read from params
     if (is_sdrf.toString().toLowerCase().contains("false")) {
         meta.labelling_type             = params.labelling_type
-        meta.dissociationmethod         = params.fragment_method
+        meta.dissociationmethod         = params.ms2_fragment_method
         meta.fixedmodifications         = params.fixed_mods
         meta.variablemodifications      = params.variable_mods
         meta.precursormasstolerance     = params.precursor_mass_tolerance
@@ -165,12 +165,6 @@ def create_meta_channel(LinkedHashMap row, is_sdrf, enzymes, files, wrapper) {
                 exit 1
             }
         }
-    } else if (session.config.conda && session.config.conda.enabled) {
-        log.error "File in DIA mode found in input design and conda profile was chosen. DIA-NN currently doesn't support conda! Exiting. Please use the docker/singularity profile with a container."
-        exit 1
-    } else if (!session.config.singularity.enabled && params.diann_version == "1.9.beta.1") {
-        log.error "DIA-NN 1.9.beta.1 currently only support singularity! Exiting. Please use the singularity profile with a container."
-        exit 1
     }
 
     if (wrapper.labelling_type.contains("label free") || meta.acquisition_method == "dia") {

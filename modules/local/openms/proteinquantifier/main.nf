@@ -3,10 +3,9 @@ process PROTEINQUANTIFIER {
     label 'process_medium'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
     path epi_filt_resolve
@@ -17,7 +16,7 @@ process PROTEINQUANTIFIER {
     path "*peptide_openms.csv", emit: peptide_out
     path "*.mzTab", optional: true, emit: out_mztab
     path "*.log"
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args ?: ''

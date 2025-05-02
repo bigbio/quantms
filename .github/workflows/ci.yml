@@ -4,12 +4,16 @@ on:
   push:
     branches:
       - dev
+      - master
   pull_request:
   release:
     types: [published]
+  workflow_dispatch:
 
 env:
   NXF_ANSI_LOG: false
+  NXF_SINGULARITY_CACHEDIR: ${{ github.workspace }}/.singularity
+  NXF_SINGULARITY_LIBRARYDIR: ${{ github.workspace }}/.singularity
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}"
@@ -24,77 +28,45 @@ jobs:
       EXEC_PROFILE: ${{ matrix.exec_profile }}
 
     name: Run pipeline with test data
-    # Only run on push if this is the nf-core dev branch (merged PRs)
-    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'nf-core/quantms') }}
+    if: ${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'bigbio/quantms') }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        # Nextflow versions
         NXF_VER:
-          - "23.04.0"
-          - "latest-everything"
-        test_profile:
-          ["test_lfq", "test_lfq_sage", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
-        exec_profile: ["docker"]
-        exclude:
-          - test_profile: test_dia
-            exec_profile: conda
-          - test_profile: test_localize
-            exec_profile: conda
-          - NXF_VER: "latest-everything"
-            exec_profile: "conda"
-        include:
-          - test_profile: test_latest_dia
-            exec_profile: singularity
-          - test_profile: test_lfq
-            exec_profile: conda
-          - test_profile: test_dda_id
-            exec_profile: conda
+          - "24.10.5"
+        test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id"]
+        exec_profile: ["docker"] # extended ci tests singularity.
+
     steps:
       - name: Check out pipeline code
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install Nextflow
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Set up Nextflow
         uses: nf-core/setup-nextflow@v2
         with:
           version: "${{ matrix.NXF_VER }}"
 
-      - name: Disk space cleanup
-        uses: jlumbroso/free-disk-space@54081f138730dfa15788a46383842cd2f914a1be # v1.3.1
-
-      - name: Install micromamba
-        env:
-          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda'
-        run: |
-          wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-          echo "$(pwd)/bin" >> $GITHUB_PATH
-          echo "$(pwd)/micromamba/bin" >> $GITHUB_PATH
-          ./bin/micromamba shell init -s bash
-          echo $'channels:\n  - conda-forge\n  - bioconda\n  - defaults\nuse_lockfiles: false' >> ~/.mambarc
-
-      - name: Install Singularity with defaults
+      - name: Set up Singularity
         if: matrix.exec_profile == 'singularity'
-        uses: singularityhub/install-singularity@main
+        run: |
+          mkdir -p $NXF_SINGULARITY_CACHEDIR
+          mkdir -p $NXF_SINGULARITY_LIBRARYDIR
+
+      - name: Disk space cleanup
+        uses: jlumbroso/free-disk-space@v1.3.1
 
       - name: Run pipeline with test data in docker/singularity profile
-        if: matrix.exec_profile == 'docker' || matrix.exec_profile == 'singularity'
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
+        if: github.event.pull_request.base.ref != 'master'
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
-
-      - name: Run pipeline with test data in conda profile (and single-threaded)
-        env:
-          MAMBA_ROOT_PREFIX: ${{ github.workspace }}/.micromamba
-        if: matrix.exec_profile == 'conda'
-        # TODO nf-core: You can customise CI pipeline run tests as required
-        # For example: adding multiple test runs with different parameters
-        # Remember that you can parallelise this by using strategy.matrix
-        run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,micromamba --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
+          nextflow run ${GITHUB_WORKSPACE} -profile $TEST_PROFILE,$EXEC_PROFILE,dev --outdir ${TEST_PROFILE}_${EXEC_PROFILE}_results
 
       - name: Gather failed logs
         if: failure() || cancelled()
@@ -103,29 +75,36 @@ jobs:
           failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
 
+      - name: Set timestamp
+        run: |
+          echo "ARTIFACT_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+
       - uses: actions/upload-artifact@v4
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}
+          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_${{ env.ARTIFACT_TIMESTAMP }}
           include-hidden-files: true
           path: failed_logs
           overwrite: false
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: success()
         name: Upload results
         with:
-          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_results
+          name: ${{ matrix.test_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_${{ env.ARTIFACT_TIMESTAMP }}_results
           include-hidden-files: true
           path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
           overwrite: false
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
         if: always()
         name: Upload log
         with:
-          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}.log
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_${{ env.ARTIFACT_TIMESTAMP }}.log
           include-hidden-files: true
           path: .nextflow.log
           overwrite: false
+          if-no-files-found: warn

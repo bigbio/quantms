@@ -3,10 +3,9 @@ process IDRIPPER {
     label 'process_medium'
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
     tuple val(meta), path(id_file), val(qval_score)
@@ -15,7 +14,7 @@ process IDRIPPER {
     val(meta), emit: meta
     path("*.idXML"), emit: id_rippers
     val("MS:1001491"), emit: qval_score
-    path "versions.yml", emit: version
+    path "versions.yml", emit: versions
     path "*.log", emit: log
 
     script:

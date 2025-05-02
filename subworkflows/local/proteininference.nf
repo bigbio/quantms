@@ -15,16 +15,16 @@ workflow PROTEININFERENCE {
 
     if (params.protein_inference_method == "bayesian") {
         EPIFANY(ch_consus_file)
-        ch_version = ch_version.mix(EPIFANY.out.version)
+        ch_version = ch_version.mix(EPIFANY.out.versions)
         ch_inference = EPIFANY.out.epi_inference
     } else {
         PROTEININFERENCER(ch_consus_file)
-        ch_version = ch_version.mix(PROTEININFERENCER.out.version)
+        ch_version = ch_version.mix(PROTEININFERENCER.out.versions)
         ch_inference = PROTEININFERENCER.out.protein_inference
     }
 
     IDFILTER(ch_inference)
-    ch_version = ch_version.mix(IDFILTER.out.version)
+    ch_version = ch_version.mix(IDFILTER.out.versions)
     IDFILTER.out.id_filtered
         .multiMap{ it ->
             meta: it[0]
@@ -35,6 +35,6 @@ workflow PROTEININFERENCE {
     emit:
     epi_idfilter    = ch_epi_results.results
 
-    version         = ch_version
+    versions         = ch_version
 
 }

@@ -4,7 +4,6 @@ process DECOMPRESS {
     label 'process_low'
     label 'error_retry'
 
-    conda "conda-forge::gzip=1.12,conda-forge::tar=1.34,conda-forge::bzip2=1.0.8,conda-forge::unzip=6.0,conda-forge::xz=5.2.6"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/mulled-v2-796b0610595ad1995b121d0b85375902097b78d4:a3a3220eb9ee55710d743438b2ab9092867c98c6-0' :
         'quay.io/biocontainers/mulled-v2-796b0610595ad1995b121d0b85375902097b78d4:a3a3220eb9ee55710d743438b2ab9092867c98c6-0' }"
@@ -32,7 +31,7 @@ process DECOMPRESS {
 
     output:
     tuple val(meta), path('*.d'),   emit: decompressed_files
-    path 'versions.yml',   emit: version
+    path 'versions.yml',   emit: versions
     path '*.log',   emit: log
 
     script:

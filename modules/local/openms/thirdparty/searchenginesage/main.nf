@@ -3,17 +3,16 @@ process SEARCHENGINESAGE {
     label 'process_medium' // we could make it dependent on the number of files
     label 'openms'
 
-    conda "bioconda::openms-thirdparty=3.2.0"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/openms-thirdparty:3.2.0--h9ee0642_4' :
-        'biocontainers/openms-thirdparty:3.2.0--h9ee0642_4' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
     tuple val(key), val(batch), val(metas), path(mzml_files), path(database)
 
     output:
     tuple val(metas), path(meta_order_files), emit: id_files_sage
-    path "versions.yml"                     , emit: version
+    path "versions.yml"                     , emit: versions
     path "*.log"                            , emit: log
 
     script:

@@ -44,14 +44,13 @@ workflow DIA {
         result ->
         meta:   preprocessed_meta(result[0])
         ms_file:result[1]
-    }
-        .set { ch_result }
+    }.set { ch_result }
 
     meta = ch_result.meta.unique { it[0] }
 
     DIANNCFG(meta)
     ch_software_versions = ch_software_versions
-        .mix(DIANNCFG.out.version.ifEmpty(null))
+        .mix(DIANNCFG.out.versions.ifEmpty(null))
 
     //
     // MODULE: SILICOLIBRARYGENERATION
@@ -69,7 +68,6 @@ workflow DIA {
         indiv_fin_analysis_in = ch_file_preparation_results.combine(ch_searchdb)
             .combine(assembly_log)
             .combine(empirical_library)
-
         empirical_lib = empirical_library
     } else {
         //
@@ -77,21 +75,21 @@ workflow DIA {
         //
         if (params.random_preanalysis) {
             preanalysis_subset = ch_file_preparation_results
-                .toSortedList()
+                .toSortedList{ a, b -> file(a[1]).getName() <=> file(b[1]).getName() }
                 .flatMap()
                 .randomSample(params.empirical_assembly_ms_n, params.random_preanalysis_seed)
             empirical_lib_files = preanalysis_subset
                 .map { result -> result[1] }
-                .collect()
+                .collect( sort: { a, b -> file(a).getName() <=> file(b).getName() } )
             DIANN_PRELIMINARY_ANALYSIS(preanalysis_subset.combine(speclib))
         } else {
             empirical_lib_files = ch_file_preparation_results
                 .map { result -> result[1] }
-                .collect()
+                .collect( sort: { a, b -> file(a).getName() <=> file(b).getName() } )
             DIANN_PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
         }
         ch_software_versions = ch_software_versions
-            .mix(DIANN_PRELIMINARY_ANALYSIS.out.version.ifEmpty(null))
+            .mix(DIANN_PRELIMINARY_ANALYSIS.out.versions.ifEmpty(null))
 
         //
         // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
@@ -104,7 +102,7 @@ workflow DIA {
             speclib
         )
         ch_software_versions = ch_software_versions
-            .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.version.ifEmpty(null))
+            .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.versions.ifEmpty(null))
         indiv_fin_analysis_in = ch_file_preparation_results
             .combine(ch_searchdb)
             .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log)
@@ -118,7 +116,7 @@ workflow DIA {
     //
     INDIVIDUAL_FINAL_ANALYSIS(indiv_fin_analysis_in)
     ch_software_versions = ch_software_versions
-        .mix(INDIVIDUAL_FINAL_ANALYSIS.out.version.ifEmpty(null))
+        .mix(INDIVIDUAL_FINAL_ANALYSIS.out.versions.ifEmpty(null))
 
     //
     // MODULE: DIANNSUMMARY
@@ -130,7 +128,7 @@ workflow DIA {
     // locally, evey element in ch_result is a string, whilst on cloud it is a path.
     ch_result
         .ms_file.map { msfile -> file(msfile).getName() }
-        .collect()
+        .collect(sort: true)
         .set { ms_file_names }
 
     DIANNSUMMARY(
@@ -141,22 +139,24 @@ workflow DIA {
         ch_searchdb)
 
     ch_software_versions = ch_software_versions.mix(
-        DIANNSUMMARY.out.version.ifEmpty(null)
+        DIANNSUMMARY.out.versions.ifEmpty(null)
     )
 
     //
     // MODULE: DIANNCONVERT
     //
+    diann_main_report = DIANNSUMMARY.out.main_report.mix(DIANNSUMMARY.out.report_parquet).last()
+
     DIANNCONVERT(
-        DIANNSUMMARY.out.main_report, ch_expdesign,
+        diann_main_report, ch_expdesign,
         DIANNSUMMARY.out.pg_matrix,
         DIANNSUMMARY.out.pr_matrix, ch_ms_info,
         meta,
         ch_searchdb,
-        DIANNSUMMARY.out.version
+        DIANNSUMMARY.out.versions
     )
     ch_software_versions = ch_software_versions
-        .mix(DIANNCONVERT.out.version.ifEmpty(null))
+        .mix(DIANNCONVERT.out.versions.ifEmpty(null))
 
     //
     // MODULE: MSSTATS
@@ -165,7 +165,7 @@ workflow DIA {
         MSSTATS(DIANNCONVERT.out.out_msstats)
         ch_msstats_out = MSSTATS.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(
-            MSSTATS.out.version.ifEmpty(null)
+            MSSTATS.out.versions.ifEmpty(null)
         )
     }
 

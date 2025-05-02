@@ -1,18 +1,17 @@
 process GENERATE_DIANN_CFG {
     tag "$meta.experiment_id"
-    label 'process_low'
+    label 'process_tiny'
 
-    conda "bioconda::quantms-utils=0.0.11"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.11--pyhdfd78af_0' :
-        'biocontainers/quantms-utils:0.0.11--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.21--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.21--pyh7e72e81_0' }"
 
     input:
     val(meta)
 
     output:
     path 'diann_config.cfg', emit: diann_cfg
-    path 'versions.yml', emit: version
+    path 'versions.yml', emit: versions
     path '*.log'
 
     script:
