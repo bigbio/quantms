@@ -107,7 +107,6 @@ workflow FILE_PREPARATION {
     statistics      = ch_statistics     // channel: [ *_ms_info.parquet ]
     ms2_statistics  = ch_ms2_statistics // channel: [ *_ms2_info.parquet ]
     feature_statistics = ch_feature_statistics // channel: [ *_feature_info.parquet ]
-    spectrum_data   = ch_spectrum_df    // channel: [val(mzml_id), *_spectrum_df.parquet]
     versions        = ch_versions       // channel: [ *.versions.yml ]
 }
 
