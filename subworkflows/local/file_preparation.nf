@@ -20,7 +20,6 @@ workflow FILE_PREPARATION {
     ch_ms2_statistics = Channel.empty()
     ch_feature_statistics = Channel.empty()
     ch_mqc_data   = Channel.empty()
-    ch_spectrum_df = Channel.empty()
 
 
     // Divide the compressed files
@@ -87,7 +86,6 @@ workflow FILE_PREPARATION {
 
     MZMLSTATISTICS(ch_results)
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms_statistics.collect())
-    ch_spectrum_df = ch_spectrum_df.mix(MZMLSTATISTICS.out.spectrum_df)
     ch_ms2_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms2_statistics.collect())
     ch_feature_statistics = ch_statistics.mix(MZMLSTATISTICS.out.feature_statistics.collect())
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.versions)

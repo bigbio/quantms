@@ -24,7 +24,7 @@ workflow DDA_ID {
     take:
     ch_file_preparation_results
     ch_database_wdecoy
-    ch_spectrum_data
+    ch_ms2_statistics
     ch_expdesign
 
     main:
@@ -178,14 +178,14 @@ workflow DDA_ID {
         ch_software_versions = ch_software_versions.mix(PSMFDRCONTROL.out.versions.ifEmpty(null))
 
         // Extract PSMs and export parquet format
-        PSMCONVERSION(PSMFDRCONTROL.out.id_filtered.combine(ch_spectrum_data, by: 0))
+        PSMCONVERSION(PSMFDRCONTROL.out.id_filtered.combine(ch_ms2_statistics, by: 0))
         ch_software_versions = ch_software_versions.mix(PSMCONVERSION.out.versions)
 
         ch_rescoring_results
             .map { it -> it[1] }
             .set { ch_pmultiqc_ids }
     } else {
-        PSMCONVERSION(ch_id_files.combine(ch_spectrum_data, by: 0))
+        PSMCONVERSION(ch_id_files.combine(ch_ms2_statistics, by: 0))
     }
 
 
