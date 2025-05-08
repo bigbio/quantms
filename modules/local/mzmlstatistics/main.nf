@@ -12,6 +12,8 @@ process MZMLSTATISTICS {
 
     output:
     path "*_ms_info.parquet", emit: ms_statistics
+    path "*_ms2_info.parquet", emit: ms2_statistics
+    path "*_feature_info.parquet", emit: feature_statistics
     tuple val(meta), path("*_spectrum_df.parquet"), emit: spectrum_df, optional: true
     path "versions.yml", emit: versions
     path "*.log", emit: log
