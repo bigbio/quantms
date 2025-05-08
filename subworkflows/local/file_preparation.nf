@@ -17,8 +17,10 @@ workflow FILE_PREPARATION {
     ch_versions   = Channel.empty()
     ch_results    = Channel.empty()
     ch_statistics = Channel.empty()
+    ch_ms2_statistics = Channel.empty()
+    ch_feature_statistics = Channel.empty()
     ch_mqc_data   = Channel.empty()
-    ch_spectrum_df = Channel.empty()
+
 
     // Divide the compressed files
     ch_rawfiles
@@ -84,8 +86,8 @@ workflow FILE_PREPARATION {
 
     MZMLSTATISTICS(ch_results)
     ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms_statistics.collect())
-    ch_spectrum_df = ch_spectrum_df.mix(MZMLSTATISTICS.out.spectrum_df)
-
+    ch_ms2_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms2_statistics.collect())
+    ch_feature_statistics = ch_statistics.mix(MZMLSTATISTICS.out.feature_statistics.collect())
     ch_versions = ch_versions.mix(MZMLSTATISTICS.out.versions)
 
     if (params.openms_peakpicking) {
@@ -101,8 +103,9 @@ workflow FILE_PREPARATION {
     emit:
     results         = ch_results        // channel: [val(mzml_id), indexedmzml|.d.tar]
     statistics      = ch_statistics     // channel: [ *_ms_info.parquet ]
-    spectrum_data   = ch_spectrum_df    // channel: [val(mzml_id), *_spectrum_df.parquet]
-    versions         = ch_versions       // channel: [ *.versions.yml ]
+    ms2_statistics  = ch_ms2_statistics // channel: [ *_ms2_info.parquet ]
+    feature_statistics = ch_feature_statistics // channel: [ *_feature_info.parquet ]
+    versions        = ch_versions       // channel: [ *.versions.yml ]
 }
 
 //
