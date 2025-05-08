@@ -3,8 +3,8 @@ process MS2RESCORE {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.9--pyhdfd78af_0' :
-    'biocontainers/quantms-rescoring:0.0.9--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.10--pyhdfd78af_0' :
+        'biocontainers/quantms-rescoring:0.0.10--pyhdfd78af_0' }"
 
     // userEmulation settings when docker is specified
     containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
@@ -28,10 +28,10 @@ process MS2RESCORE {
 
     // ms2rescore only supports Da unit. https://ms2rescore.readthedocs.io/en/v3.0.2/userguide/configuration/
     if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da')) {
-        ms2_tolerence = meta['fragmentmasstolerance']
+        ms2_tolerance = meta['fragmentmasstolerance']
     } else {
         log.info "Warning: MS2Rescore only supports Da unit. Set ms2 tolerance in nextflow config!"
-        ms2_tolerence = params.ms2rescore_fragment_tolerance
+        ms2_tolerance = params.ms2rescore_fragment_tolerance
     }
 
     if (params.decoy_string_position == "prefix") {
@@ -50,10 +50,11 @@ process MS2RESCORE {
     rescoring msrescore2feature \\
         --idxml $idxml \\
         --mzml $mzml \\
-        --ms2_tolerance $ms2_tolerence \\
+        --ms2_tolerance $ms2_tolerance \\
         --output ${idxml.baseName}_ms2rescore.idXML \\
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
+        --find_best_model \\
         ${force_model} \\
         $args \\
         2>&1 | tee ${idxml.baseName}_ms2rescore.log

@@ -75,26 +75,36 @@ jobs:
           failed=$(grep "FAILED" ${TEST_PROFILE}_${EXEC_PROFILE}_results/pipeline_info/execution_trace.txt | cut -f 2)
           while read -r line ; do cp $(ls work/${line}*/*.log) failed_logs/ | true ; done <<< "$failed"
 
+      - name: Set timestamp
+        run: |
+          echo "ARTIFACT_TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+
       - uses: actions/upload-artifact@v4
         if: failure() || cancelled()
         name: Upload failed logs
         with:
-          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}
+          name: failed_logs_${{ matrix.test_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_${{ env.ARTIFACT_TIMESTAMP }}
           include-hidden-files: true
           path: failed_logs
+          overwrite: false
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
         if: success()
         name: Upload results
         with:
-          name: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_results
+          name: ${{ matrix.test_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_${{ env.ARTIFACT_TIMESTAMP }}_results
           include-hidden-files: true
           path: ${{ matrix.test_profile }}_${{ matrix.exec_profile }}_results
+          overwrite: false
+          if-no-files-found: warn
 
       - uses: actions/upload-artifact@v4
         if: always()
         name: Upload log
         with:
-          name: nextflow_${{ matrix.test_profile }}_${{ matrix.exec_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}.log
+          name: nextflow_${{ matrix.test_profile }}_${{ matrix.NXF_VER }}_${{ github.run_id }}_${{ github.run_attempt }}_${{ env.ARTIFACT_TIMESTAMP }}.log
           include-hidden-files: true
           path: .nextflow.log
+          overwrite: false
+          if-no-files-found: warn

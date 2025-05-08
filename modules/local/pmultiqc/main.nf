@@ -2,9 +2,8 @@ process PMULTIQC {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.25--pyhdfd78af_0' :
-        'biocontainers/pmultiqc:0.0.25--pyhdfd78af_0' }"
-
+        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.26--pyhdfd78af_0' :
+        'biocontainers/pmultiqc:0.0.26--pyhdfd78af_0' }"
 
     input:
     path 'results/*'

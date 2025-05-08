@@ -3,8 +3,8 @@ process PSMCLEAN {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.9--pyhdfd78af_0' :
-        'biocontainers/quantms-rescoring:0.0.9--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.10--pyhdfd78af_0' :
+        'biocontainers/quantms-rescoring:0.0.10--pyhdfd78af_0' }"
 
     // userEmulation settings when docker is specified
     containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
@@ -35,9 +35,6 @@ process PSMCLEAN {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]')
-        ms2pip: \$(ms2pip --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]')
-        deeplc: \$(deeplc --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]')
-        MS2Rescore: \$(ms2rescore --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]' | head -n 1)
     END_VERSIONS
     """
 }
