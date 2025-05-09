@@ -23,7 +23,7 @@ process PSMCONVERSION {
 
     """
     quantmsutilsc psmconvert --idxml "${idxml_file}" \\
-        --spectra_file ${spectrum_df} \\
+        --ms2_file ${spectrum_df} \\
         ${string_export_decoy_psm} \\
         2>&1 | tee extract_idxml.log
 
