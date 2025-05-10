@@ -55,7 +55,7 @@ process MS2RESCORE {
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
         --find_best_model \\
-        ${force_model} \\
+        ${force_model} \\x
         $args \\
         2>&1 | tee ${idxml.baseName}_ms2rescore.log
 
