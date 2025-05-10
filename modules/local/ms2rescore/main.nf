@@ -55,16 +55,16 @@ process MS2RESCORE {
         --ms2pip_model_dir ${params.ms2pip_model_dir} \\
         --processes $task.cpus \\
         --find_best_model \\
-        ${force_model} \\
+        ${force_model} \\x
         $args \\
         2>&1 | tee ${idxml.baseName}_ms2rescore.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9]+.[0-9]+.[0-9]+')
-        ms2pip: \$(ms2pip --version 2>&1 | grep -Eo '[0-9]+.[0-9]+.[0-9]+')
-        deeplc: \$(deeplc --version 2>&1 | grep -Eo '[0-9]+.[0-9]+.[0-9]+')
-        MS2Rescore: \$(ms2rescore --version 2>&1 | grep -Eo '[0-9]+.[0-9]+.[0-9]+' | head -n 1)
+        quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+')
+        ms2pip: \$(ms2pip --version 2>&1 | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+')
+        deeplc: \$(deeplc --version 2>&1 | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+')
+        MS2Rescore: \$(ms2rescore --version 2>&1 | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+' | head -n 1)
     END_VERSIONS
     """
 }
