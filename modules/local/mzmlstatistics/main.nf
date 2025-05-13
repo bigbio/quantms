@@ -4,15 +4,16 @@ process MZMLSTATISTICS {
     label 'process_single'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.21--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.21--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.22--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.22--pyh7e72e81_0' }"
 
     input:
     tuple val(meta), path(ms_file)
 
     output:
     path "*_ms_info.parquet", emit: ms_statistics
-    tuple val(meta), path("*_spectrum_df.parquet"), emit: spectrum_df, optional: true
+    tuple val(meta), path("*_ms2_info.parquet"), emit: ms2_statistics, optional: true
+    path "*_feature_info.parquet", emit: feature_statistics, optional: true
     path "versions.yml", emit: versions
     path "*.log", emit: log
 

@@ -112,7 +112,7 @@ workflow QUANTMS {
 
     // Only performing id_only subworkflows .
     if (params.id_only) {
-        DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.spectrum_data, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+        DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.ms2_statistics, CREATE_INPUT_CHANNEL.out.ch_expdesign)
         ch_versions = ch_versions.mix(DDA_ID.out.versions.ifEmpty(null))
         ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_ids)
         ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_consensus)
