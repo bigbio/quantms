@@ -174,6 +174,7 @@ workflow DIA {
     diann_report    = DIANNSUMMARY.out.main_report
     msstats_in      = DIANNCONVERT.out.out_msstats
     out_triqler     = DIANNCONVERT.out.out_triqler
+    final_result    = DIANNCONVERT.out.out_mztab
     msstats_out     = ch_msstats_out
 }
 
