@@ -22,7 +22,7 @@ process SPECTRUM2FEATURES {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    rescoring spectrum2feature --mzml "${ms_file}" --idxml "${id_file}" --output "${id_file.baseName}_snr.idXML" 2>&1 | tee add_snr_feature.log
+    rescoring spectrum2feature --mzml "${ms_file}" --idxml "${id_file}" --output "${id_file.baseName}_snr.idXML" 2>&1 | tee ${id_file.baseName}_snr_feature.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
