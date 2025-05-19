@@ -3,8 +3,11 @@ process SPECTRUM2FEATURES {
     label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.23--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.23--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.10--pyhdfd78af_0' :
+        'biocontainers/quantms-rescoring:0.0.10--pyhdfd78af_0' }"
+
+    // userEmulation settings when docker is specified
+    containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
 
     input:
     tuple val(meta), path(id_file), path(ms_file)
@@ -19,11 +22,11 @@ process SPECTRUM2FEATURES {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    quantmsutilsc spectrum2feature --ms_path "${ms_file}" --idxml "${id_file}" --output "${id_file.baseName}_snr.idXML" 2>&1 | tee add_snr_feature.log
+    rescoring spectrum2feature --mzml "${ms_file}" --idxml "${id_file}" --output "${id_file.baseName}_snr.idXML" 2>&1 | tee add_snr_feature.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
+        quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+')
     END_VERSIONS
     """
 }
