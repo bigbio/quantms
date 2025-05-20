@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Dependencies`
 
+- Updated quantms-utils to version 0.0.23
+- Updated bioconductor-msstats to version 4.14.0
+- Updated pmultiqc to version 0.0.28
+
 ## [1.4.0] nfcore/quantms - [07/05/2025] - Tubingen
 
 ### `Added`
