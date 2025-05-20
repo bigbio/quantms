@@ -34,7 +34,7 @@ process PSMCLEAN {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9].[0-9].[0-9]')
+        quantms-rescoring: \$(rescoring --version 2>&1 | grep -Eo '[0-9]+\\.[0-9]+\\.[0-9]+')
     END_VERSIONS
     """
 }
