@@ -3,8 +3,8 @@ process MSSTATS {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/bioconductor-msstats:4.14.0--r43hf17093f_0' :
-        'biocontainers/bioconductor-msstats:4.14.0--r43hf17093f_0' }"
+        'https://depot.galaxyproject.org/singularity/bioconductor-msstats:4.14.0--r44he5774e6_0' :
+        'biocontainers/bioconductor-msstats:4.14.0--r44he5774e6_0' }"
 
     input:
     path msstats_csv_input
