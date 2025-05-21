@@ -1,4 +1,4 @@
-process MSSTATSCONVERTER {
+process MSSTATS_CONVERTER {
     tag "$exp_file.Name"
     label 'process_low'
     label 'openms'

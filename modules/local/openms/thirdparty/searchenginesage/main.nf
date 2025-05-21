@@ -1,4 +1,4 @@
-process SEARCHENGINESAGE {
+process SEARCH_ENGINE_SAGE {
     tag "${metas.toList().collect{it.mzml_id}}"
     label 'process_medium' // we could make it dependent on the number of files
     label 'openms'

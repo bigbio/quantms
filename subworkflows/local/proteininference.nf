@@ -4,7 +4,7 @@
 
 include { EPIFANY                                } from '../../modules/local/openms/epifany/main'
 include { PROTEININFERENCE as PROTEININFERENCER  } from '../../modules/local/openms/proteininference/main'
-include { IDFILTER                               } from '../../modules/local/openms/idfilter/main'
+include { ID_FILTER as IDFILTER                  } from '../../modules/local/openms/idfilter/main'
 
 workflow PROTEININFERENCE {
     take:

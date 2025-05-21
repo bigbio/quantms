@@ -1,4 +1,4 @@
-process FILEMERGE {
+process FILE_MERGE {
     label 'process_medium'
     label 'process_single'
     label 'openms'

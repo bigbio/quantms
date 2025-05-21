@@ -1,4 +1,4 @@
-process IDFILTER {
+process ID_FILTER {
     tag {task.ext.suffix == ".idXML" ? "$meta.mzml_id" : "$id_file.baseName"}
     label 'process_very_low'
     label 'process_single'

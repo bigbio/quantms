@@ -1,4 +1,4 @@
-process IDMAPPER {
+process ID_MAPPER {
     tag "$meta.mzml_id"
     label 'process_medium'
     label 'openms'

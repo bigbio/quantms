@@ -2,9 +2,9 @@
 // fdr control based on psm/peptide
 //
 
-include { IDSCORESWITCHER                      } from '../../modules/local/openms/idscoreswitcher/main'
-include { FALSEDISCOVERYRATE as FDRCONSENSUSID } from '../../modules/local/openms/falsediscoveryrate/main'
-include { IDFILTER                             } from '../../modules/local/openms/idfilter/main'
+include { ID_SCORE_SWITCHER as IDSCORESWITCHER } from '../../modules/local/openms/idscoreswitcher/main'
+include { FALSE_DISCOVERY_RATE as FDRCONSENSUSID } from '../../modules/local/openms/falsediscoveryrate/main'
+include { ID_FILTER as IDFILTER                } from '../../modules/local/openms/idfilter/main'
 
 workflow PSMFDRCONTROL {
 

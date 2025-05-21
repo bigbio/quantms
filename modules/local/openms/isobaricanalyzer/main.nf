@@ -1,4 +1,4 @@
-process ISOBARICANALYZER {
+process ISOBARIC_ANALYZER {
     tag "$meta.mzml_id"
     label 'process_medium'
     label 'openms'

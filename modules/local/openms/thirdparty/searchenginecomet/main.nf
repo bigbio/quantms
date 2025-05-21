@@ -1,4 +1,4 @@
-process SEARCHENGINECOMET {
+process SEARCH_ENGINE_COMET {
     tag "$meta.mzml_id"
     label 'process_medium'
     label 'openms'

@@ -1,4 +1,4 @@
-process IDCONFLICTRESOLVER {
+process ID_CONFLICT_RESOLVER {
     label 'process_low'
     label 'openms'
 

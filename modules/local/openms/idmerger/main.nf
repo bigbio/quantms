@@ -1,4 +1,4 @@
-process IDMERGER {
+process ID_MERGER {
     tag "$meta.mzml_id"
     label 'process_medium'
     label 'openms'

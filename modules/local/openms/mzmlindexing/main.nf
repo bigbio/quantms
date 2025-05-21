@@ -1,4 +1,4 @@
-process MZMLINDEXING {
+process MZML_INDEXING {
     tag "$meta.mzml_id"
     label 'process_low'
     label 'openms'

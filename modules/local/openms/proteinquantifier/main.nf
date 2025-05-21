@@ -1,4 +1,4 @@
-process PROTEINQUANTIFIER {
+process PROTEIN_QUANTIFIER {
     tag "${pro_quant_exp.baseName}"
     label 'process_medium'
     label 'openms'

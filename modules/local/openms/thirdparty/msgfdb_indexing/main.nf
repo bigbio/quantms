@@ -1,4 +1,4 @@
-process MSGFDBINDEXING {
+process MSGF_DB_INDEXING {
     tag "$database.baseName"
     label 'process_low'
 

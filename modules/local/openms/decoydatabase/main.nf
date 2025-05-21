@@ -1,4 +1,4 @@
-process DECOYDATABASE {
+process GENERATE_DECOY_DATABASE {
     label 'process_very_low'
     label 'openms'
 

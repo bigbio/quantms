@@ -1,4 +1,4 @@
-process IDRIPPER {
+process ID_RIPPER {
     tag "$meta.mzml_id"
     label 'process_medium'
     label 'openms'

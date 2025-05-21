@@ -1,4 +1,4 @@
-process OPENMSPEAKPICKER {
+process OPENMS_PEAK_PICKER {
     tag "$meta.mzml_id"
     label 'process_low'
     label 'openms'

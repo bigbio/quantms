@@ -1,4 +1,4 @@
-process IDSCORESWITCHER {
+process ID_SCORE_SWITCHER {
     tag "$meta.mzml_id"
     label 'process_very_low'
     label 'process_single'

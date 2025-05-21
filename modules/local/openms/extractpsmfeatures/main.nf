@@ -1,4 +1,4 @@
-process EXTRACTPSMFEATURES {
+process EXTRACT_PSM_FEATURES {
     tag "$meta.mzml_id"
     label 'process_very_low'
     label 'process_single'

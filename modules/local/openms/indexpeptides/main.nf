@@ -1,4 +1,4 @@
-process INDEXPEPTIDES {
+process INDEX_PEPTIDES {
     tag "$meta.mzml_id"
     label 'process_low'
     label 'openms'

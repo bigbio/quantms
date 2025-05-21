@@ -1,4 +1,4 @@
-process SEARCHENGINEMSGF {
+process SEARCH_ENGINE_MSGF {
     tag "$meta.mzml_id"
     label 'process_medium'
     label 'openms'

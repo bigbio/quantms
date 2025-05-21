@@ -1,4 +1,4 @@
-process LUCIPHORADAPTER {
+process LUCIPHOR {
     tag "$meta.mzml_id"
     label 'process_medium'
     label 'openms'

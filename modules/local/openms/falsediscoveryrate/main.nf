@@ -1,4 +1,4 @@
-process FALSEDISCOVERYRATE {
+process FALSE_DISCOVERY_RATE {
     tag "$meta.mzml_id"
     label 'process_low'
     label 'process_single'
