@@ -2,12 +2,12 @@
 // Raw file conversion and mzml indexing
 //
 
-include { THERMORAWFILEPARSER } from '../../../modules/local/utils/thermorawfileparser/main'
+include { THERMORAWFILEPARSER } from '../../../modules/local/thermorawfileparser/main'
 include { TDF2MZML            } from '../../../modules/local/utils/tdf2mzml/main'
 include { DECOMPRESS          } from '../../../modules/local/utils/decompress_dotd/main'
 include { MZML_INDEXING       } from '../../../modules/local/openms/mzml_indexing/main'
 include { MZML_STATISTICS     } from '../../../modules/local/utils/mzml_statistics/main'
-include { OPENMSPEAKPICKER    } from '../../../modules/local/openms/openms_peak_picker/main'
+include { OPENMS_PEAK_PICKER  } from '../../../modules/local/openms/openms_peak_picker/main'
 
 workflow FILE_PREPARATION {
     take:
