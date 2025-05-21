@@ -7,7 +7,7 @@
 //
 // MODULES: Local to the pipeline
 //
-include { FILE_MERGE  } from '../modules/local/openms/filemerge/main'
+include { FILE_MERGE  } from '../modules/local/openms/file_merge/main'
 include { MSSTATS_TMT as MSSTATSTMT } from '../modules/local/msstats/msstats_tmt/main'
 
 //
