@@ -2,7 +2,7 @@
 // Phospho modification site localisation and scoring.
 //
 
-include { ID_SCORE_SWITCHER as IDSCORESWITCHERFORLUCIPHOR } from '../../modules/local/openms/idscoreswitcher/main'
+include { ID_SCORE_SWITCHER as IDSCORESWITCHERFORLUCIPHOR } from '../../modules/local/openms/id_score_switcher/main'
 include { LUCIPHORADAPTER                               } from '../../modules/local/openms/thirdparty/luciphoradapter/main'
 
 workflow PHOSPHOSCORING {

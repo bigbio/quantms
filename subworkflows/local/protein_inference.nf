@@ -3,8 +3,8 @@
 //
 
 include { EPIFANY                                } from '../../modules/local/openms/epifany/main'
-include { PROTEININFERENCE as PROTEININFERENCER  } from '../../modules/local/openms/proteininference/main'
-include { ID_FILTER as IDFILTER                  } from '../../modules/local/openms/idfilter/main'
+include { PROTEIN_INFERENCE as PROTEININFERENCER  } from '../../modules/local/openms/protein_inference/main'
+include { ID_FILTER as IDFILTER                  } from '../../modules/local/openms/id_filter/main'
 
 workflow PROTEININFERENCE {
     take:

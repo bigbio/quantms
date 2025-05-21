@@ -5,9 +5,9 @@
 include { THERMORAWFILEPARSER } from '../../modules/local/utils/thermorawfileparser/main'
 include { TDF2MZML            } from '../../modules/local/utils/tdf2mzml/main'
 include { DECOMPRESS          } from '../../modules/local/utils/decompress_dotd/main'
-include { MZMLINDEXING        } from '../../modules/local/openms/mzmlindexing/main'
+include { MZMLINDEXING        } from '../../modules/local/openms/mzml_indexing/main'
 include { MZMLSTATISTICS      } from '../../modules/local/utils/mzmlstatistics/main'
-include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openmspeakpicker/main'
+include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openms_peak_picker/main'
 
 workflow FILE_PREPARATION {
     take:

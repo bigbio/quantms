@@ -2,12 +2,12 @@
 // Extract psm feature and ReScoring psm
 //
 
-include { EXTRACTPSMFEATURES             } from '../../modules/local/openms/extractpsmfeatures/main'
+include { EXTRACTPSMFEATURES             } from '../../modules/local/openms/extract_psm_features/main'
 include { PERCOLATOR                     } from '../../modules/local/openms/thirdparty/percolator/main'
 include { MS2RESCORE                     } from '../../modules/local/utils/ms2rescore/main'
 include { GETSAMPLE                      } from '../../modules/local/utils/extract_sample/main'
-include { IDMERGER                       } from '../../modules/local/openms/idmerger/main'
-include { IDRIPPER                       } from '../../modules/local/openms/idripper/main'
+include { IDMERGER                       } from '../../modules/local/openms/id_merger/main'
+include { IDRIPPER                       } from '../../modules/local/openms/id_ripper/main'
 include { SPECTRUM2FEATURES              } from '../../modules/local/utils/spectrum2features/main'
 include { PSMCLEAN                       } from '../../modules/local/utils/psm_clean/main'
 

@@ -2,14 +2,14 @@
 // MODULE: Local to the pipeline
 //
 include { CONSENSUSID   } from '../../modules/local/openms/consensusid/main'
-include { EXTRACTPSMFEATURES } from '../../modules/local/openms/extractpsmfeatures/main'
+include { EXTRACTPSMFEATURES } from '../../modules/local/openms/extract_psm_features/main'
 include { PERCOLATOR         } from '../../modules/local/openms/thirdparty/percolator/main'
-include { IDMERGER           } from '../../modules/local/openms/idmerger/main'
-include { IDRIPPER           } from '../../modules/local/openms/idripper/main'
-include { FALSE_DISCOVERY_RATE as FDRIDPEP } from '../../modules/local/openms/falsediscoveryrate/main'
+include { IDMERGER           } from '../../modules/local/openms/id_merger/main'
+include { IDRIPPER           } from '../../modules/local/openms/id_ripper/main'
+include { FALSE_DISCOVERY_RATE as FDRIDPEP } from '../../modules/local/openms/false_discovery_rate/main'
 include { PSMCONVERSION                  } from '../../modules/local/utils/extract_psm/main'
 include { MS2RESCORE                     } from '../../modules/local/utils/ms2rescore/main'
-include { ID_SCORE_SWITCHER as IDSCORESWITCHER } from '../../modules/local/openms/idscoreswitcher/main'
+include { ID_SCORE_SWITCHER as IDSCORESWITCHER } from '../../modules/local/openms/id_score_switcher/main'
 include { GETSAMPLE                      } from '../../modules/local/utils/extract_sample/main'
 include { SPECTRUM2FEATURES              } from '../../modules/local/utils/spectrum2features/main'
 include { PSMCLEAN                       } from '../../modules/local/utils/psm_clean/main'
@@ -17,8 +17,8 @@ include { PSMCLEAN                       } from '../../modules/local/utils/psm_c
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DATABASESEARCHENGINES } from './databasesearchengines'
-include { PSMFDRCONTROL         } from './psmfdrcontrol'
+include { DATABASESEARCHENGINES } from './database_search_engines'
+include { PSMFDRCONTROL         } from './psm_fdr_control'
 
 workflow DDA_ID {
     take:

@@ -6,10 +6,10 @@ include { CONSENSUSID   } from '../../modules/local/openms/consensusid/main'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DATABASESEARCHENGINES } from './databasesearchengines'
-include { PSMRESCORING          } from './psmrescoring'
-include { PSMFDRCONTROL         } from './psmfdrcontrol'
-include { PHOSPHOSCORING        } from './phosphoscoring'
+include { DATABASESEARCHENGINES } from './database_search_engines'
+include { PSMRESCORING          } from './psm_rescoring'
+include { PSMFDRCONTROL         } from './psm_fdr_control'
+include { PHOSPHOSCORING        } from './phospho_scoring'
 
 workflow ID {
     take:

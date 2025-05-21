@@ -13,7 +13,7 @@ include { TMT } from './tmt'
 include { LFQ } from './lfq'
 include { DIA } from './dia'
 include { PMULTIQC as SUMMARYPIPELINE } from '../modules/local/pmultiqc/main'
-include { GENERATE_DECOY_DATABASE as DECOYDATABASE } from '../modules/local/openms/decoydatabase/main'
+include { GENERATE_DECOY_DATABASE as DECOYDATABASE } from '../modules/local/openms/generate_decoy_database/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
