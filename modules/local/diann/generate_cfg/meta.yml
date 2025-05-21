@@ -1,4 +1,4 @@
-name: DIANN_GENERATE_CFG
+name: generate_cfg
 description: A module to generate DIA-NN configuration files, based on input files and params.
 keywords:
   - configure

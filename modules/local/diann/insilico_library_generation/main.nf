@@ -1,4 +1,4 @@
-process DIANN_INSILICO_LIBRARY_GENERATION {
+process INSILICO_LIBRARY_GENERATION {
     tag "$fasta.Name"
     label 'process_medium'
     label 'diann'

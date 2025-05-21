@@ -1,4 +1,4 @@
-process GETSAMPLE {
+process GET_SAMPLE {
     tag "$design.Name"
     label 'process_low'
 

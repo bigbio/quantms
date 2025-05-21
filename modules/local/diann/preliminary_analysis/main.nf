@@ -1,4 +1,4 @@
-process DIANN_PRELIMINARY_ANALYSIS {
+process PRELIMINARY_ANALYSIS {
     tag "$ms_file.baseName"
     label 'process_high'
     label 'diann'
