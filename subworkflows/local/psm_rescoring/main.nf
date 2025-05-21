@@ -3,7 +3,7 @@
 //
 
 include { EXTRACT_PSM_FEATURES    } from '../../../modules/local/openms/extract_psm_features/main'
-include { PERCOLATOR              } from '../../../modules/local/openms/thirdparty/percolator/main'
+include { PERCOLATOR              } from '../../../modules/local/openms/percolator/main'
 include { MSRESCORE_FEATURES      } from '../../../modules/local/utils/msrescore_features/main'
 include { GET_SAMPLE              } from '../../../modules/local/utils/extract_sample/main'
 include { ID_MERGER               } from '../../../modules/local/openms/id_merger/main'

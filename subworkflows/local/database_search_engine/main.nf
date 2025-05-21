@@ -2,10 +2,10 @@
 // search engines msgf,comet and index peptide
 //
 
-include { SEARCHENGINEMSGF  } from '../../../modules/local/openms/thirdparty/searchenginemsgf/main'
-include { SEARCHENGINECOMET } from '../../../modules/local/openms/thirdparty/searchenginecomet/main'
-include { SEARCHENGINESAGE  } from '../../../modules/local/openms/thirdparty/searchenginesage/main'
-include { MSGFDBINDEXING    } from '../../../modules/local/openms/thirdparty/msgfdb_indexing/main'
+include { SEARCH_ENGINE_MSGF  } from '../../../modules/local/openms/msgf/main'
+include { SEARCH_ENGINE_COMET } from '../../../modules/local/openms/comet/main'
+include { SEARCH_ENGINE_SAGE  } from '../../../modules/local/openms/sage/main'
+include { MSGF_DB_INDEXING    } from '../../../modules/local/openms/msgf_db_indexing/main'
 
 workflow DATABASE_SEARCH_ENGINE {
     take:
@@ -16,18 +16,18 @@ workflow DATABASE_SEARCH_ENGINE {
     (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty(), Channel.empty() ]
 
     if (params.search_engines.contains("msgf")) {
-        MSGFDBINDEXING(ch_searchengine_in_db)
-        ch_versions = ch_versions.mix(MSGFDBINDEXING.out.versions)
+        MSGF_DB_INDEXING(ch_searchengine_in_db)
+        ch_versions = ch_versions.mix(MSGF_DB_INDEXING.out.versions)
 
-        SEARCHENGINEMSGF(ch_mzmls_search.combine(ch_searchengine_in_db).combine(MSGFDBINDEXING.out.msgfdb_idx))
-        ch_versions = ch_versions.mix(SEARCHENGINEMSGF.out.versions)
-        ch_id_msgf = ch_id_msgf.mix(SEARCHENGINEMSGF.out.id_files_msgf)
+        SEARCH_ENGINE_MSGF(ch_mzmls_search.combine(ch_searchengine_in_db).combine(MSGF_DB_INDEXING.out.msgfdb_idx))
+        ch_versions = ch_versions.mix(SEARCH_ENGINE_MSGF.out.versions)
+        ch_id_msgf = ch_id_msgf.mix(SEARCH_ENGINE_MSGF.out.id_files_msgf)
     }
 
     if (params.search_engines.contains("comet")) {
-        SEARCHENGINECOMET(ch_mzmls_search.combine(ch_searchengine_in_db))
-        ch_versions = ch_versions.mix(SEARCHENGINECOMET.out.versions)
-        ch_id_comet = ch_id_comet.mix(SEARCHENGINECOMET.out.id_files_comet)
+        SEARCH_ENGINE_COMET(ch_mzmls_search.combine(ch_searchengine_in_db))
+        ch_versions = ch_versions.mix(SEARCH_ENGINE_COMET.out.versions)
+        ch_id_comet = ch_id_comet.mix(SEARCH_ENGINE_COMET.out.id_files_comet)
     }
 
     // sorted mzmls to generate same batch ids when enable cache
@@ -62,10 +62,10 @@ workflow DATABASE_SEARCH_ENGINE {
         //  save this value and pass it along the pipeline.
         ch_meta_mzml_db_chunked = ch_meta_mzml_db.groupTuple(by: [0,1])
 
-        SEARCHENGINESAGE(ch_meta_mzml_db_chunked.combine(ch_searchengine_in_db))
-        ch_versions = ch_versions.mix(SEARCHENGINESAGE.out.versions)
+        SEARCH_ENGINE_SAGE(ch_meta_mzml_db_chunked.combine(ch_searchengine_in_db))
+        ch_versions = ch_versions.mix(SEARCH_ENGINE_SAGE.out.versions)
         // we can safely use merge here since it is the same process
-        ch_id_sage = ch_id_sage.mix(SEARCHENGINESAGE.out.id_files_sage.transpose())
+        ch_id_sage = ch_id_sage.mix(SEARCH_ENGINE_SAGE.out.id_files_sage.transpose())
     }
 
     emit:

@@ -3,7 +3,7 @@
 //
 include { CONSENSUSID   } from '../../../modules/local/openms/consensusid/main'
 include { EXTRACT_PSM_FEATURES } from '../../../modules/local/openms/extract_psm_features/main'
-include { PERCOLATOR } from '../../../modules/local/openms/thirdparty/percolator/main'
+include { PERCOLATOR } from '../../../modules/local/openms/percolator/main'
 include { ID_MERGER  } from '../../../modules/local/openms/id_merger/main'
 include { ID_RIPPER  } from '../../../modules/local/openms/id_ripper/main'
 include { FALSE_DISCOVERY_RATE as FDRIDPEP } from '../../../modules/local/openms/false_discovery_rate/main'

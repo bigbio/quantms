@@ -1,15 +1,15 @@
-name: searchenginecomet
-description: Identifies peptides in MS/MS spectra via Comet.
+name: msgf
+description: the MS-GF+ protein identification (database search) engine.
 keywords:
   - identification
   - OpenMS
-  - comet
+  - msgf
 tools:
-  - CometAdapter:
+  - MSGFPlusAdapter:
       description: |
-        Identifies peptides in MS/MS spectra via Comet.
-      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_CometAdapter.html
-      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_CometAdapter.html
+        Adapter for the MS-GF+ protein identification (database search) engine.
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
 input:
   - meta:
       type: map
@@ -26,7 +26,7 @@ output:
   - meta:
       type: map
       description: Groovy Map containing sample information
-  - id_files_comet:
+  - id_files_msgf:
       type: file
       description: Output file
       pattern: "*.idXML"

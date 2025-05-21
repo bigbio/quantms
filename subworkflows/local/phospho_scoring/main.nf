@@ -3,7 +3,7 @@
 //
 
 include { ID_SCORE_SWITCHER as ID_SCORE_SWITCHER_LUCIPHOR } from '../../../modules/local/openms/id_score_switcher/main'
-include { LUCIPHOR                               } from '../../../modules/local/openms/thirdparty/luciphor/main'
+include { LUCIPHOR                               } from '../../../modules/local/openms/luciphor/main'
 
 workflow PHOSPHO_SCORING_WORKFLOW {
     take:
