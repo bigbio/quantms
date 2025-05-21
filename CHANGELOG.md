@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Fixed`
 
-- [#546](https://github.com/bigbio/quantms/pull/546) Refinements of quantms code style
+- [#547](https://github.com/bigbio/quantms/pull/547) Refinements of quantms code style
 - [#545](https://github.com/bigbio/quantms/pull/545) small bug in SNR step
 - [#544](https://github.com/bigbio/quantms/pull/544) Fixing bug issues with SNR; quantms-utils -> quantms-rescoring
 - [#543](https://github.com/bigbio/quantms/pull/543) add Fabian Egli as contributor
