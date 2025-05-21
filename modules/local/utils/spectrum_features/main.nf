@@ -1,4 +1,4 @@
-process SPECTRUM2FEATURES {
+process SPECTRUM_FEATURES {
     tag "$meta.mzml_id"
     label 'process_low'
 

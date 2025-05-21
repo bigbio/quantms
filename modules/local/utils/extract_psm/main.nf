@@ -1,4 +1,4 @@
-process PSMCONVERSION {
+process PSM_CONVERSION {
     tag "$meta.mzml_id"
     label 'process_medium'
 

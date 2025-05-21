@@ -1,4 +1,4 @@
-process MZMLSTATISTICS {
+process MZML_STATISTICS {
     tag "$meta.mzml_id"
     label 'process_very_low'
     label 'process_single'

@@ -1,5 +1,5 @@
-name: MS2RESCORE
-description: A module to perform MS2 rescoring step
+name: MSRESCORE_FEATURES
+description: A module to perform add features from MS2PIP and DeepLC
 keywords:
   - MS2
   - rescoring

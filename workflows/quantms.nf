@@ -9,20 +9,20 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_quantms_pipeline'
 
+// Main subworkflows imported from the pipeline TMT, LFQ, DIA
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
 include { DIA } from './dia'
-include { PMULTIQC as SUMMARYPIPELINE } from '../modules/local/pmultiqc/main'
-include { GENERATE_DECOY_DATABASE as DECOYDATABASE } from '../modules/local/openms/generate_decoy_database/main'
 
-//
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
 include { INPUT_CHECK } from '../subworkflows/local/input_check'
 include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
-include { DDA_ID } from '../subworkflows/local/dda_id'
+include { DDA_ID_WORKFLOW } from '../subworkflows/local/dda_id'
 
+// Modules import from the pipeline
+include { PMULTIQC as SUMMARY_PIPELINE } from '../modules/local/pmultiqc/main'
+include { GENERATE_DECOY_DATABASE } from '../modules/local/openms/generate_decoy_database/main'
 
 /*
 ========================================================================================
@@ -95,11 +95,11 @@ workflow QUANTMS {
 
     ch_searchengine_in_db = params.add_decoys ? Channel.empty() : Channel.fromPath(params.database)
     if (params.add_decoys) {
-        DECOYDATABASE(
+        GENERATE_DECOY_DATABASE(
             ch_db_for_decoy_creation_or_null
         )
-        ch_searchengine_in_db = DECOYDATABASE.out.db_decoy
-        ch_versions = ch_versions.mix(DECOYDATABASE.out.versions.ifEmpty(null))
+        ch_searchengine_in_db = GENERATE_DECOY_DATABASE.out.db_decoy
+        ch_versions = ch_versions.mix(GENERATE_DECOY_DATABASE.out.versions.ifEmpty(null))
     }
 
     // Check that there is no duplicated search engines
@@ -112,7 +112,7 @@ workflow QUANTMS {
 
     // Only performing id_only subworkflows .
     if (params.id_only) {
-        DDA_ID( FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.ms2_statistics, CREATE_INPUT_CHANNEL.out.ch_expdesign)
+        DDA_ID(FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.ms2_statistics, CREATE_INPUT_CHANNEL.out.ch_expdesign)
         ch_versions = ch_versions.mix(DDA_ID.out.versions.ifEmpty(null))
         ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_ids)
         ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_consensus)
@@ -164,7 +164,7 @@ workflow QUANTMS {
     ch_multiqc_files                      = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
     ch_multiqc_quantms_logo               = file("$projectDir/assets/nf-core-quantms_logo_light.png")
 
-    SUMMARYPIPELINE (
+    SUMMARY_PIPELINE (
         CREATE_INPUT_CHANNEL.out.ch_expdesign
             .combine(ch_pipeline_results.ifEmpty([]).combine(ch_multiqc_files.collect())
             .combine(ch_ids_pmultiqc.collect().ifEmpty([]))
@@ -174,7 +174,7 @@ workflow QUANTMS {
     )
 
     emit:
-    multiqc_report      = SUMMARYPIPELINE.out.ch_pmultiqc_report.toList()
+    multiqc_report      = SUMMARY_PIPELINE.out.ch_pmultiqc_report.toList()
     versions            = ch_versions
 }
 

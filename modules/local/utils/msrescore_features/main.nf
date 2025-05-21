@@ -1,4 +1,4 @@
-process MS2RESCORE {
+process MSRESCORE_FEATURES {
     tag "$meta.mzml_id"
     label 'process_high'
 
