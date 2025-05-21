@@ -1,4 +1,4 @@
-process MSSTATS {
+process MSSTATS_LFQ {
     tag "$msstats_csv_input.Name"
     label 'process_medium'
 

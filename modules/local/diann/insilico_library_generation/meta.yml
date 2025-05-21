@@ -1,4 +1,4 @@
-name: silicolibrarygeneration
+name: DIANN_INSILICO_LIBRARY_GENERATION
 description: A module for in silico predicted library generation based on DIA-NN.
 keywords:
   - DIA-NN

@@ -8,7 +8,7 @@
 // MODULES: Local to the pipeline
 //
 include { FILEMERGE  } from '../modules/local/openms/filemerge/main'
-include { MSSTATSTMT } from '../modules/local/msstatstmt/main'
+include { MSSTATS_TMT as MSSTATSTMT } from '../modules/local/msstats/msstats_tmt/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules

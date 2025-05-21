@@ -1,4 +1,4 @@
-name: MSSTATSTMT
+name: MSSTATS_TMT
 description: |
   A module to performance proteomics statistical analysis with tandem mass tag (TMT) labeling using MSstatsTMT tool.
   - MSstatsTMT

@@ -1,4 +1,4 @@
-process GENERATE_DIANN_CFG {
+process DIANN_GENERATE_CFG {
     tag "$meta.experiment_id"
     label 'process_tiny'
 

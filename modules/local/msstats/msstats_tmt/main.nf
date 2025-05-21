@@ -1,4 +1,4 @@
-process MSSTATSTMT {
+process MSSTATS_TMT {
     tag "$msstatstmt_csv_input.Name"
     label 'process_medium'
 

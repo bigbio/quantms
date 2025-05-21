@@ -1,4 +1,4 @@
-process ASSEMBLE_EMPIRICAL_LIBRARY {
+process DIANN_ASSEMBLE_EMPIRICAL_LIBRARY {
     tag "$meta.experiment_id"
     label 'process_low'
     label 'diann'
