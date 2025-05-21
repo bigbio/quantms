@@ -8,7 +8,7 @@ include { MSRESCORE_FEATURES      } from '../../../modules/local/utils/msrescore
 include { GET_SAMPLE              } from '../../../modules/local/utils/extract_sample/main'
 include { ID_MERGER               } from '../../../modules/local/openms/id_merger/main'
 include { ID_RIPPER               } from '../../../modules/local/openms/id_ripper/main'
-include { SPECTRUM_FEATURES       } from '../../../modules/local/utils/spectrum2features/main'
+include { SPECTRUM_FEATURES       } from '../../../modules/local/utils/spectrum_features/main'
 include { PSM_CLEAN               } from '../../../modules/local/utils/psm_clean/main'
 
 workflow PSM_RESCORING {
