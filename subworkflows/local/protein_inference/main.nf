@@ -2,9 +2,9 @@
 // ProteinInference
 //
 
-include { EPIFANY                                } from '../../modules/local/openms/epifany/main'
-include { PROTEIN_INFERENCE as PROTEIN_INFERENCE  } from '../../modules/local/openms/protein_inference/main'
-include { ID_FILTER as IDFILTER                  } from '../../modules/local/openms/id_filter/main'
+include { EPIFANY                                } from '../../../modules/local/openms/epifany/main'
+include { PROTEIN_INFERENCE as PROTEIN_INFERENCE  } from '../../../modules/local/openms/protein_inference/main'
+include { ID_FILTER as IDFILTER                  } from '../../../modules/local/openms/id_filter/main'
 
 workflow PROTEIN_INFERENCE_WORKFLOW {
     take:

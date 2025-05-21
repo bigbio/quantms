@@ -1,7 +1,7 @@
 //
 // MODULE: Local to the pipeline
 //
-include { CONSENSUSID   } from '../../modules/local/openms/consensusid/main'
+include { CONSENSUSID   } from '../../../modules/local/openms/consensusid/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules

@@ -1,8 +1,8 @@
 
-include { MSGF_DB_INDEXING } from '../../modules/local/utils/msgf_db_indexing/main'
-include { MSGF  } from '../../modules/local/openms/msgf/main'
-include { COMET } from '../../modules/local/openms/comet/main'
-include { SAGE  } from '../../modules/local/openms/sage/main'
+include { MSGF_DB_INDEXING } from '../../../modules/local/utils/msgf_db_indexing/main'
+include { MSGF  } from '../../../modules/local/openms/msgf/main'
+include { COMET } from '../../../modules/local/openms/comet/main'
+include { SAGE  } from '../../../modules/local/openms/sage/main'
 
 
 workflow DATABASE_SEARCH_ENGINE {
