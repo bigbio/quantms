@@ -12,13 +12,13 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_quan
 // Main subworkflows imported from the pipeline TMT, LFQ, DIA
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
-include { DIA } from './dia'
+include { DIA } from './dia/main'
 
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-include { INPUT_CHECK } from '../subworkflows/local/input_check'
-include { FILE_PREPARATION } from '../subworkflows/local/file_preparation'
-include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel'
-include { DDA_ID_WORKFLOW } from '../subworkflows/local/dda_id'
+include { INPUT_CHECK } from '../subworkflows/local/input_check/main'
+include { FILE_PREPARATION } from '../subworkflows/local/file_preparation/main'
+include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel/main'
+include { DDA_ID } from '../subworkflows/local/dda_id/main'
 
 // Modules import from the pipeline
 include { PMULTIQC as SUMMARY_PIPELINE } from '../modules/local/pmultiqc/main'

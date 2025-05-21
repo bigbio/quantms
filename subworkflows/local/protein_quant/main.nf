@@ -2,11 +2,11 @@
 // ProteinQuant
 //
 
-include { ID_CONFLICT_RESOLVER as ID_CONFLICT_RESOLVER } from '../../modules/local/openms/id_conflict_resolver/main'
-include { PROTEIN_QUANTIFIER as PROTEIN_QUANTIFIER  } from '../../modules/local/openms/protein_quantifier/main'
-include { MSSTATS_CONVERTER as MSSTATS_CONVERTER   } from '../../modules/local/openms/msstats_converter/main'
+include { ID_CONFLICT_RESOLVER as ID_CONFLICT_RESOLVER } from '../../../modules/local/openms/id_conflict_resolver/main'
+include { PROTEIN_QUANTIFIER as PROTEIN_QUANTIFIER  } from '../../../modules/local/openms/protein_quantifier/main'
+include { MSSTATS_CONVERTER as MSSTATS_CONVERTER   } from '../../../modules/local/openms/msstats_converter/main'
 
-workflow PROTEINQUANT {
+workflow PROTEIN_QUANT {
     take:
     ch_conflict_file
     ch_expdesign_file

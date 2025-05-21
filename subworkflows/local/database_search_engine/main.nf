@@ -2,12 +2,12 @@
 // search engines msgf,comet and index peptide
 //
 
-include { SEARCHENGINEMSGF  } from '../../modules/local/openms/thirdparty/searchenginemsgf/main'
-include { SEARCHENGINECOMET } from '../../modules/local/openms/thirdparty/searchenginecomet/main'
-include { SEARCHENGINESAGE  } from '../../modules/local/openms/thirdparty/searchenginesage/main'
-include { MSGFDBINDEXING    } from '../../modules/local/openms/thirdparty/msgfdb_indexing/main'
+include { SEARCHENGINEMSGF  } from '../../../modules/local/openms/thirdparty/searchenginemsgf/main'
+include { SEARCHENGINECOMET } from '../../../modules/local/openms/thirdparty/searchenginecomet/main'
+include { SEARCHENGINESAGE  } from '../../../modules/local/openms/thirdparty/searchenginesage/main'
+include { MSGFDBINDEXING    } from '../../../modules/local/openms/thirdparty/msgfdb_indexing/main'
 
-workflow DATABASESEARCHENGINES {
+workflow DATABASE_SEARCH_ENGINE {
     take:
     ch_mzmls_search
     ch_searchengine_in_db

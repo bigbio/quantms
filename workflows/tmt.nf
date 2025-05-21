@@ -14,7 +14,7 @@ include { MSSTATS_TMT } from '../modules/local/msstats/msstats_tmt/main'
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 //
 include { FEATURE_MAPPER    } from '../subworkflows/local/feature_mapper/main'
-include { PROTEIN_INFERENCE } from '../subworkflows/local/protein_inference/main'
+include { PROTEIN_INFERENCE_WORKFLOW as PROTEIN_INFERENCE } from '../subworkflows/local/protein_inference/main'
 include { PROTEIN_QUANT     } from '../subworkflows/local/protein_quant/main'
 include { ID               } from '../subworkflows/local/id/main'
 
