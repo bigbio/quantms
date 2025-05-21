@@ -1,8 +1,8 @@
 //
 // Create channel for input file
 //
-include { SDRFPARSING          } from '../../../modules/local/sdrfparsing/main'
-include { PREPROCESS_EXPDESIGN } from '../../../modules/local/preprocess_expdesign'
+include { SDRFPARSING          } from '../../modules/local/sdrfparsing/main'
+include { PREPROCESS_EXPDESIGN } from '../../modules/local/preprocess_expdesign'
 
 class Wrapper {
     def labelling_type = ""

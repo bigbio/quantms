@@ -2,8 +2,8 @@
 // Assigns protein/peptide identifications to features or consensus features.
 //
 
-include { ISOBARIC_ANALYZER } from '../../../modules/local/openms/isobaric_analyzer/main'
-include { ID_MAPPER         } from '../../../modules/local/openms/id_mapper/main'
+include { ISOBARIC_ANALYZER } from '../../modules/local/openms/isobaric_analyzer/main'
+include { ID_MAPPER         } from '../../modules/local/openms/id_mapper/main'
 
 workflow FEATURE_MAPPER {
     take:

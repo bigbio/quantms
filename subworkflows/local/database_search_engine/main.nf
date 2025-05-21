@@ -2,10 +2,10 @@
 // search engines msgf,comet and index peptide
 //
 
-include { SEARCH_ENGINE_MSGF  } from '../../../modules/local/openms/msgf/main'
-include { SEARCH_ENGINE_COMET } from '../../../modules/local/openms/comet/main'
-include { SEARCH_ENGINE_SAGE  } from '../../../modules/local/openms/sage/main'
-include { MSGF_DB_INDEXING    } from '../../../modules/local/openms/msgf_db_indexing/main'
+include { SEARCH_ENGINE_MSGF  } from '../../modules/local/openms/msgf/main'
+include { SEARCH_ENGINE_COMET } from '../../modules/local/openms/comet/main'
+include { SEARCH_ENGINE_SAGE  } from '../../modules/local/openms/sage/main'
+include { MSGF_DB_INDEXING    } from '../../modules/local/openms/msgf_db_indexing/main'
 
 workflow DATABASE_SEARCH_ENGINE {
     take:
