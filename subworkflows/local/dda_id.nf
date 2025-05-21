@@ -7,12 +7,12 @@ include { PERCOLATOR         } from '../../modules/local/openms/thirdparty/perco
 include { IDMERGER           } from '../../modules/local/openms/idmerger/main'
 include { IDRIPPER           } from '../../modules/local/openms/idripper/main'
 include { FALSEDISCOVERYRATE as FDRIDPEP } from '../../modules/local/openms/falsediscoveryrate/main'
-include { PSMCONVERSION                  } from '../../modules/local/extract_psm/main'
-include { MS2RESCORE                     } from '../../modules/local/ms2rescore/main'
+include { PSMCONVERSION                  } from '../../modules/local/utils/extract_psm/main'
+include { MS2RESCORE                     } from '../../modules/local/utils/ms2rescore/main'
 include { IDSCORESWITCHER                } from '../../modules/local/openms/idscoreswitcher/main'
-include { GETSAMPLE                      } from '../../modules/local/extract_sample/main'
-include { SPECTRUM2FEATURES              } from '../../modules/local/spectrum2features/main'
-include { PSMCLEAN                       } from '../../modules/local/psm_clean/main'
+include { GETSAMPLE                      } from '../../modules/local/utils/extract_sample/main'
+include { SPECTRUM2FEATURES              } from '../../modules/local/utils/spectrum2features/main'
+include { PSMCLEAN                       } from '../../modules/local/utils/psm_clean/main'
 
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules

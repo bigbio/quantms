@@ -2,11 +2,11 @@
 // Raw file conversion and mzml indexing
 //
 
-include { THERMORAWFILEPARSER } from '../../modules/local/thermorawfileparser/main'
-include { TDF2MZML            } from '../../modules/local/tdf2mzml/main'
-include { DECOMPRESS          } from '../../modules/local/decompress_dotd/main'
+include { THERMORAWFILEPARSER } from '../../modules/local/utils/thermorawfileparser/main'
+include { TDF2MZML            } from '../../modules/local/utils/tdf2mzml/main'
+include { DECOMPRESS          } from '../../modules/local/utils/decompress_dotd/main'
 include { MZMLINDEXING        } from '../../modules/local/openms/mzmlindexing/main'
-include { MZMLSTATISTICS      } from '../../modules/local/mzmlstatistics/main'
+include { MZMLSTATISTICS      } from '../../modules/local/utils/mzmlstatistics/main'
 include { OPENMSPEAKPICKER    } from '../../modules/local/openms/openmspeakpicker/main'
 
 workflow FILE_PREPARATION {
