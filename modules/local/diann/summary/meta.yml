@@ -1,4 +1,4 @@
-name: DIANN_SUMMARY
+name: diannsummary
 description: A module for summarization of results from DIA-NN analysis.
 keywords:
   - DIA-NN

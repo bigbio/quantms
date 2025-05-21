@@ -1,4 +1,4 @@
-name: PMULTIQC
+name: pmultiqc
 description: A library for proteomics QC report based on MultiQC framework.
 keywords:
   - MultiQC
