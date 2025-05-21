@@ -12,7 +12,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_quan
 // Main subworkflows imported from the pipeline TMT, LFQ, DIA
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
-include { DIA } from './dia/main'
+include { DIA } from './dia'
 
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 include { INPUT_CHECK } from '../subworkflows/local/input_check/main'
