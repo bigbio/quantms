@@ -54,9 +54,9 @@ workflow FILE_PREPARATION {
     //  when re-running.
 
     if (params.reindex_mzml) {
-        MZMLINDEXING( ch_branched_input.mzML )
-        ch_versions = ch_versions.mix(MZMLINDEXING.out.versions)
-        ch_results  = ch_results.mix(MZMLINDEXING.out.mzmls_indexed)
+        MZML_INDEXING( ch_branched_input.mzML )
+        ch_versions = ch_versions.mix(MZML_INDEXING.out.versions)
+        ch_results  = ch_results.mix(MZML_INDEXING.out.mzmls_indexed)
     } else {
         ch_results = ch_results.mix(ch_branched_input.mzML)
     }
@@ -85,19 +85,19 @@ workflow FILE_PREPARATION {
 
 
     MZMLSTATISTICS(ch_results)
-    ch_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms_statistics.collect())
-    ch_ms2_statistics = ch_statistics.mix(MZMLSTATISTICS.out.ms2_statistics)
-    ch_feature_statistics = ch_statistics.mix(MZMLSTATISTICS.out.feature_statistics.collect())
-    ch_versions = ch_versions.mix(MZMLSTATISTICS.out.versions)
+    ch_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms_statistics.collect())
+    ch_ms2_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms2_statistics)
+    ch_feature_statistics = ch_statistics.mix(MZML_STATISTICS.out.feature_statistics.collect())
+    ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
 
     if (params.openms_peakpicking) {
         // If the peak picker is enabled, it will over-write not bypass the .d files
-        OPENMSPEAKPICKER (
+        OPENMS_PEAK_PICKER (
             indexed_mzml_bundle
         )
 
-        ch_versions = ch_versions.mix(OPENMSPEAKPICKER.out.versions)
-        ch_results = OPENMSPEAKPICKER.out.mzmls_picked
+        ch_versions = ch_versions.mix(OPENMS_PEAK_PICKER.out.versions)
+        ch_results = OPENMS_PEAK_PICKER.out.mzmls_picked
     }
 
     emit:
