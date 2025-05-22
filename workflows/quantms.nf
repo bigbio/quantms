@@ -19,9 +19,9 @@ include { INPUT_CHECK } from '../subworkflows/local/input_check/main'
 include { FILE_PREPARATION } from '../subworkflows/local/file_preparation/main'
 include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel/main'
 include { DDA_ID } from '../subworkflows/local/dda_id/main'
+include { SUMMARY_PIPELINE } from '../subworkflows/local/summary_pipeline/main'
 
 // Modules import from the pipeline
-include { PMULTIQC as SUMMARY_PIPELINE } from '../modules/local/pmultiqc/main'
 include { GENERATE_DECOY_DATABASE } from '../modules/local/openms/generate_decoy_database/main'
 
 /*
