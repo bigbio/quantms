@@ -1,4 +1,4 @@
-process DIANN_CONVERT {
+process CONVERT_RESULTS {
     tag "$meta.experiment_id"
     label 'process_medium'
 

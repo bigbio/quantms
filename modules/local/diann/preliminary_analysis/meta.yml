@@ -1,4 +1,4 @@
-name: diann_preliminary_analysis
+name: preliminary_analysis
 description: A module for preliminary analysis of individual raw files with DIA-NN using the in-silico generated library (also from DIA-NN).
 keywords:
   - DIA-NN

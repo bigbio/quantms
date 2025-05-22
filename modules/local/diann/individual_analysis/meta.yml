@@ -1,4 +1,4 @@
-name: INDIVIDUAL_FINAL_ANALYSIS
+name: individual_analysis
 description: A module for final analysis of individual raw files based on DIA-NN.
 keywords:
   - DIA-NN

@@ -1,4 +1,4 @@
-name: diannconvert
+name: convert_results
 description: A module to convert DIA report files to MSstats, Triqler and mzTab
 keywords:
   - DIA-NN

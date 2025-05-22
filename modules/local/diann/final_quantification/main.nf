@@ -1,4 +1,4 @@
-process DIANN_SUMMARY {
+process FINAL_QUANTIFICATION {
     tag "$meta.experiment_id"
     label 'process_high'
     label 'diann'

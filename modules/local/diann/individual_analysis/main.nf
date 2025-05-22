@@ -1,4 +1,4 @@
-process INDIVIDUAL_FINAL_ANALYSIS {
+process INDIVIDUAL_ANALYSIS {
     tag "$ms_file.baseName"
     label 'process_high'
     label 'diann'
