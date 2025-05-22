@@ -156,7 +156,7 @@ workflow DDA_ID {
         ch_rescoring_results = ch_consensus_input
 
         //
-        // SUBWORKFLOW: PSMFDRCONTROL
+        // SUBWORKFLOW: PSM_FDR_CONTROL
         //
         ch_psmfdrcontrol     = Channel.empty()
         ch_consensus_results = Channel.empty()

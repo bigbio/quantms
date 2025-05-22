@@ -37,7 +37,7 @@ workflow ID {
     ch_software_versions = ch_software_versions.mix(PSM_RESCORING.out.versions.ifEmpty(null))
 
     //
-    // SUBWORKFLOW: PSMFDRCONTROL
+    // SUBWORKFLOW: PSM_FDR_CONTROL
     //
     ch_psmfdrcontrol     = Channel.empty()
     ch_consensus_results = Channel.empty()
@@ -55,7 +55,7 @@ workflow ID {
         ch_psmfdrcontrol = PSM_RESCORING.out.results
     }
 
-    PSMFDRCONTROL(ch_psmfdrcontrol)
+    PSM_FDR_CONTROL(ch_psmfdrcontrol)
     ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions.ifEmpty(null))
 
     //
