@@ -1,4 +1,4 @@
-name: proteininference
+name: protein_inference_generic
 description: Computes a protein identification score based on an aggregation of scores of identified peptides.
 keywords:
   - protein

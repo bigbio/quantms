@@ -2,11 +2,11 @@
 // ProteinInference
 //
 
-include { EPIFANY                                } from '../../../modules/local/openms/epifany/main'
-include { PROTEIN_INFERENCE as PROTEIN_INFERENCE  } from '../../../modules/local/openms/protein_inference/main'
-include { ID_FILTER as IDFILTER                  } from '../../../modules/local/openms/id_filter/main'
+include { PROTEIN_INFERENCE_EPIFANY } from '../../../modules/local/openms/protein_inference_epifany/main'
+include { PROTEIN_INFERENCE_GENERIC } from '../../../modules/local/openms/protein_inference_generic/main'
+include { ID_FILTER                 } from '../../../modules/local/openms/id_filter/main'
 
-workflow PROTEIN_INFERENCE_WORKFLOW {
+workflow PROTEIN_INFERENCE {
     take:
     ch_consus_file
 
@@ -14,18 +14,18 @@ workflow PROTEIN_INFERENCE_WORKFLOW {
     ch_version = Channel.empty()
 
     if (params.protein_inference_method == "bayesian") {
-        EPIFANY(ch_consus_file)
-        ch_version = ch_version.mix(EPIFANY.out.versions)
-        ch_inference = EPIFANY.out.epi_inference
+        PROTEIN_INFERENCE_EPIFANY(ch_consus_file)
+        ch_version = ch_version.mix(PROTEIN_INFERENCE_EPIFANY.out.versions)
+        ch_inference = PROTEIN_INFERENCE_EPIFANY.out.epi_inference
     } else {
-        PROTEIN_INFERENCE(ch_consus_file)
-        ch_version = ch_version.mix(PROTEIN_INFERENCE.out.versions)
-        ch_inference = PROTEIN_INFERENCE.out.protein_inference
+        PROTEIN_INFERENCE_GENERIC(ch_consus_file)
+        ch_version = ch_version.mix(PROTEIN_INFERENCE_GENERIC.out.versions)
+        ch_inference = PROTEIN_INFERENCE_GENERIC.out.protein_inference
     }
 
-    IDFILTER(ch_inference)
+    ID_FILTER(ch_inference)
     ch_version = ch_version.mix(ID_FILTER.out.versions)
-    IDFILTER.out.id_filtered
+    ID_FILTER.out.id_filtered
         .multiMap{ it ->
             meta: it[0]
             results: it[1]

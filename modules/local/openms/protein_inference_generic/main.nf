@@ -1,4 +1,4 @@
-process PROTEIN_INFERENCE {
+process PROTEIN_INFERENCE_GENERIC {
     label 'process_medium'
     label 'openms'
 

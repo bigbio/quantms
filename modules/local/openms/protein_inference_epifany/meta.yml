@@ -1,4 +1,4 @@
-name: epifany
+name: protein_inference_epifany
 description: Runs a Bayesian protein inference.
 keywords:
   - Bayesian

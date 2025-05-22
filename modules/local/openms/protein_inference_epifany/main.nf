@@ -1,4 +1,4 @@
-process EPIFANY {
+process PROTEIN_INFERENCE_EPIFANY {
     label 'process_medium'
     label 'openms'
 
