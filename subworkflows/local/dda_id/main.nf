@@ -10,7 +10,7 @@ include { FALSE_DISCOVERY_RATE as FDRIDPEP } from '../../../modules/local/openms
 include { PSM_CONVERSION } from '../../../modules/local/utils/extract_psm/main'
 include { MSRESCORE_FEATURES } from '../../../modules/local/utils/msrescore_features/main'
 include { ID_SCORE_SWITCHER as IDSCORESWITCHER } from '../../../modules/local/openms/id_score_switcher/main'
-include { GETSAMPLE } from '../../../modules/local/utils/extract_sample/main'
+include { GET_SAMPLE } from '../../../modules/local/utils/extract_sample/main'
 include { SPECTRUM_FEATURES              } from '../../../modules/local/utils/spectrum_features/main'
 include { PSM_CLEAN                       } from '../../../modules/local/utils/psm_clean/main'
 
@@ -82,10 +82,10 @@ workflow DDA_ID {
             ch_consensus_input = PERCOLATOR.out.id_files_perc
         } else if (params.rescore_range == "by_sample") {
             // Sample map
-            GETSAMPLE(ch_expdesign)
-            ch_software_versions = ch_software_versions.mix(GETSAMPLE.out.versions)
+            GET_SAMPLE(ch_expdesign)
+            ch_software_versions = ch_software_versions.mix(GET_SAMPLE.out.versions)
 
-            ch_expdesign_sample = GETSAMPLE.out.ch_expdesign_sample
+            ch_expdesign_sample = GET_SAMPLE.out.ch_expdesign_sample
             ch_expdesign_sample.splitCsv(header: true, sep: '\t')
                 .map { get_sample_map(it) }.set{ sample_map_idv }
 
