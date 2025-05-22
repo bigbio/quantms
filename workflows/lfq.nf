@@ -61,7 +61,7 @@ workflow LFQ {
     //
     ch_msstats_out = Channel.empty()
     if(!params.skip_post_msstats && params.quantification_method == "feature_intensity"){
-        MSSTATS(PROTEOMICSLFQ.out.out_msstats)
+        MSSTATS_LFQ(PROTEOMICSLFQ.out.out_msstats)
         ch_msstats_out = MSSTATS_LFQ.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(MSSTATS_LFQ.out.versions.ifEmpty(null))
     }
