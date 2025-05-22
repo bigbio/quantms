@@ -15,7 +15,7 @@ include { PSM_CLEAN            } from '../../../modules/local/utils/psm_clean/ma
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DATABASE_SEARCH_ENGINE } from '../database_search_engine/main'
+include { PEPTIDE_DATABASE_SEARCH } from '../peptide_database_search/main'
 include { PSM_FDR_CONTROL         } from '../psm_fdr_control/main'
 
 workflow DDA_ID {
@@ -32,12 +32,12 @@ workflow DDA_ID {
     //
     // SUBWORKFLOW: DatabaseSearchEngines
     //
-    DATABASE_SEARCH_ENGINES (
+    PEPTIDE_DATABASE_SEARCH (
         ch_file_preparation_results,
         ch_database_wdecoy
     )
-    ch_software_versions = ch_software_versions.mix(DATABASE_SEARCH_ENGINES.out.versions.ifEmpty(null))
-    ch_id_files = DATABASE_SEARCH_ENGINES.out.ch_id_files_idx
+    ch_software_versions = ch_software_versions.mix(PEPTIDE_DATABASE_SEARCH.out.versions.ifEmpty(null))
+    ch_id_files = PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx
 
     ch_id_files.branch{ meta, filename ->
         sage: filename.name.contains('sage')

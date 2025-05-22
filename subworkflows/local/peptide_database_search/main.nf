@@ -5,7 +5,7 @@ include { COMET } from '../../../modules/local/openms/comet/main'
 include { SAGE  } from '../../../modules/local/openms/sage/main'
 
 
-workflow DATABASE_SEARCH_ENGINE {
+workflow PEPTIDE_DATABASE_SEARCH {
     take:
     ch_mzmls_search
     ch_searchengine_in_db

@@ -6,7 +6,7 @@ include { CONSENSUSID   } from '../../../modules/local/openms/consensusid/main'
 //
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
-include { DATABASE_SEARCH_ENGINE } from '../database_search_engine/main'
+include { PEPTIDE_DATABASE_SEARCH } from '../peptide_database_search/main'
 include { PSM_RESCORING          } from '../psm_rescoring/main'
 include { PSM_FDR_CONTROL         } from '../psm_fdr_control/main'
 include { PHOSPHO_SCORING_WORKFLOW as PHOSPHO_SCORING } from '../phospho_scoring/main'
@@ -24,16 +24,16 @@ workflow ID {
     //
     // SUBWORKFLOW: DatabaseSearchEngines
     //
-    DATABASE_SEARCH_ENGINES (
+    PEPTIDE_DATABASE_SEARCH (
         ch_file_preparation_results,
         ch_database_wdecoy
     )
-    ch_software_versions = ch_software_versions.mix(DATABASE_SEARCH_ENGINES.out.versions.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(PEPTIDE_DATABASE_SEARCH.out.versions.ifEmpty(null))
 
     //
     // SUBWORKFLOW: PSMReScoring
     //
-    PSM_RESCORING (ch_file_preparation_results, DATABASE_SEARCH_ENGINES.out.ch_id_files_idx, ch_expdesign)
+    PSM_RESCORING (ch_file_preparation_results, PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx, ch_expdesign)
     ch_software_versions = ch_software_versions.mix(PSM_RESCORING.out.versions.ifEmpty(null))
 
     //
