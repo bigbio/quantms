@@ -114,9 +114,9 @@ workflow DIA {
     //
     // MODULE: INDIVIDUAL_ANALYSIS
     //
-    DIANN_INDIVIDUAL_ANALYSIS(indiv_fin_analysis_in)
+    INDIVIDUAL_ANALYSIS(indiv_fin_analysis_in)
     ch_software_versions = ch_software_versions
-        .mix(DIANN_INDIVIDUAL_ANALYSIS.out.versions.ifEmpty(null))
+        .mix(INDIVIDUAL_ANALYSIS.out.versions.ifEmpty(null))
 
     //
     // MODULE: DIANNSUMMARY
@@ -131,29 +131,29 @@ workflow DIA {
         .collect(sort: true)
         .set { ms_file_names }
 
-    final_quantification(
+    FINAL_QUANTIFICATION(
         ms_file_names,
         meta,
         empirical_lib,
-        DIANN_INDIVIDUAL_ANALYSIS.out.diann_quant.collect(),
+        INDIVIDUAL_ANALYSIS.out.diann_quant.collect(),
         ch_searchdb)
 
     ch_software_versions = ch_software_versions.mix(
-        final_quantification.out.versions.ifEmpty(null)
+        FINAL_QUANTIFICATION.out.versions.ifEmpty(null)
     )
 
     //
     // MODULE: DIANNCONVERT
     //
-    diann_main_report = final_quantification.out.main_report.mix(final_quantification.out.report_parquet).last()
+    diann_main_report = FINAL_QUANTIFICATION.out.main_report.mix(FINAL_QUANTIFICATION.out.report_parquet).last()
 
     CONVERT_RESULTS(
         diann_main_report, ch_expdesign,
-        final_quantification.out.pg_matrix,
-        final_quantification.out.pr_matrix, ch_ms_info,
+        FINAL_QUANTIFICATION.out.pg_matrix,
+        FINAL_QUANTIFICATION.out.pr_matrix, ch_ms_info,
         meta,
         ch_searchdb,
-        final_quantification.out.versions
+        FINAL_QUANTIFICATION.out.versions
     )
     ch_software_versions = ch_software_versions
         .mix(CONVERT_RESULTS.out.versions.ifEmpty(null))
@@ -171,7 +171,7 @@ workflow DIA {
 
     emit:
     versions        = ch_software_versions
-    diann_report    = final_quantification.out.main_report
+    diann_report    = FINAL_QUANTIFICATION.out.main_report
     msstats_in      = CONVERT_RESULTS.out.out_msstats
     out_triqler     = CONVERT_RESULTS.out.out_triqler
     final_result    = CONVERT_RESULTS.out.out_mztab
