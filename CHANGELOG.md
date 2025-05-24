@@ -3,11 +3,31 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.1] bigbio/quantms - [--/--/2025] - Zürich
+## [1.4.1] bigbio/quantms - [21/05/2025] - Zürich
+
+### `Changed`
+
+- [#547](https://github.com/bigbio/quantms/pull/547) Minor refinements with quantms code style, update msstats LFQ -> 4.14.0
+- [#539](https://github.com/bigbio/quantms/pull/539) quantms-utils 0.0.23 & sdrf-pipelines 0.0.32. This includes a fix for TMT labelled samples.
+- [#541](https://github.com/bigbio/quantms/pull/541) add mztab to results for pmultiqc
 
 ### `Fixed`
 
+- [#547](https://github.com/bigbio/quantms/pull/547) Refinements of quantms code style
+- [#545](https://github.com/bigbio/quantms/pull/545) small bug in SNR step
+- [#544](https://github.com/bigbio/quantms/pull/544) Fixing bug issues with SNR; quantms-utils -> quantms-rescoring
+- [#543](https://github.com/bigbio/quantms/pull/543) add Fabian Egli as contributor
+- [#542](https://github.com/bigbio/quantms/pull/542) pmultiqc version increased to 0.0.28. Error fixed with diann_report.tsv
+- [#537](https://github.com/bigbio/quantms/pull/537) pmultiqc updated 0.0.27 version
+- [#536](https://github.com/bigbio/quantms/pull/536) update pmultiqc to 0.0.27
+- [#531](https://github.com/bigbio/quantms/pull/531) Update for README.md **Review effort 1/5**
+
 ### `Dependencies`
+
+- Updated quantms-utils to version 0.0.23
+- Updated bioconductor-msstats to version 4.14.0
+- Updated pmultiqc to version 0.0.28
+- Updated sdrf-pipelines to version 0.0.32
 
 ## [1.4.0] nfcore/quantms - [07/05/2025] - Tubingen
 
