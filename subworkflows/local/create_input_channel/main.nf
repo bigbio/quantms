@@ -20,7 +20,7 @@ workflow CREATE_INPUT_CHANNEL {
 
     if (is_sdrf.toString().toLowerCase().contains("true")) {
         SDRF_PARSING ( ch_sdrf_or_design )
-        ch_versions = ch_versions.mix(SDR_FPARSING.out.versions)
+        ch_versions = ch_versions.mix(SDR_PARSING.out.versions)
         ch_config = SDRF_PARSING.out.ch_sdrf_config_file
 
         ch_expdesign    = SDRF_PARSING.out.ch_expdesign
