@@ -1,4 +1,4 @@
-name: SDRFPARSING
+name: sdrf_parsing
 description: Convert SDRF proteomics files into pipelines config files
 keywords:
   - SDRF

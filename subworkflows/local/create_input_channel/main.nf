@@ -1,7 +1,7 @@
 //
 // Create channel for input file
 //
-include { SDRFPARSING          } from '../../../modules/local/sdrfparsing/main'
+include { SDRF_PARSING          } from '../../../modules/local/sdrf_parsing/main'
 include { PREPROCESS_EXPDESIGN } from '../../../modules/local/preprocess_expdesign'
 
 class Wrapper {
@@ -19,11 +19,11 @@ workflow CREATE_INPUT_CHANNEL {
     ch_versions = Channel.empty()
 
     if (is_sdrf.toString().toLowerCase().contains("true")) {
-        SDRFPARSING ( ch_sdrf_or_design )
-        ch_versions = ch_versions.mix(SDRFPARSING.out.versions)
-        ch_config = SDRFPARSING.out.ch_sdrf_config_file
+        SDRF_PARSING ( ch_sdrf_or_design )
+        ch_versions = ch_versions.mix(SDR_FPARSING.out.versions)
+        ch_config = SDRF_PARSING.out.ch_sdrf_config_file
 
-        ch_expdesign    = SDRFPARSING.out.ch_expdesign
+        ch_expdesign    = SDRF_PARSING.out.ch_expdesign
     } else {
         PREPROCESS_EXPDESIGN( ch_sdrf_or_design )
         ch_versions = ch_versions.mix(PREPROCESS_EXPDESIGN.out.versions)

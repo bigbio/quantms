@@ -1,4 +1,4 @@
-process SDRFPARSING {
+process SDRF_PARSING {
     tag "$sdrf.Name"
     label 'process_tiny'
 
