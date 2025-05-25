@@ -1,4 +1,4 @@
-name: idconflictresolver
+name: id_conflict_resolver
 description: Resolves ambiguous annotations of features with peptide identifications.
 keywords:
   - ambiguous

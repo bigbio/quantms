@@ -1,4 +1,4 @@
-name: idscoreswitcher
+name: id_score_switcher
 description: Switches between different scores of peptide hits (PSMs) or protein hits in identification data.
 keywords:
   - Switches

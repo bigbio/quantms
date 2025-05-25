@@ -1,4 +1,4 @@
-name: idmerger
+name: id_merger
 description: Merges several idXML files into one file.
 keywords:
   - merge

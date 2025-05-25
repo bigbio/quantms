@@ -1,4 +1,4 @@
-name: openmspeakpicker
+name: openms_peak_picker
 description: Finds mass spectrometric peaks in profile mass spectra. I.e., converts spectra in profile mode to centroided.
 keywords:
   - peak

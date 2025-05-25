@@ -1,4 +1,4 @@
-name: indexpeptides
+name: index_peptides
 description: Refreshes the protein references for all peptide hits from an idXML file and adds target/decoy information.
 keywords:
   - decoy

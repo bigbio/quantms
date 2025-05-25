@@ -1,4 +1,4 @@
-name: isobaricanalyzer
+name: isobaric_analyzer
 description: Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
 keywords:
   - peak

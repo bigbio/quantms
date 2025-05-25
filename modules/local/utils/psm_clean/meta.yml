@@ -1,4 +1,4 @@
-name: PSMCLEAN
+name: psm_clean
 description: A module to clean invalid PSMs
 keywords:
   - PSMs

@@ -1,4 +1,4 @@
-name: decompression
+name: decompress_dotd
 description: Decompress .tar/.gz files that contain a .d file/directory
 keywords:
   - raw

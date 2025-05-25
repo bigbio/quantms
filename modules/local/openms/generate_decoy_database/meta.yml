@@ -1,4 +1,4 @@
-name: decoydatabase
+name: generate_decoy_database
 description: Create a decoy peptide database from standard FASTA databases.
 keywords:
   - decoy

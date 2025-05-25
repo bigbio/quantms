@@ -1,4 +1,4 @@
-name: idmapper
+name: id_mapper
 description: Assigns protein/peptide identifications to features or consensus features.
 keywords:
   - feature

@@ -1,4 +1,4 @@
-name: extracpsmfeatures
+name: extract_psm_features
 description: Computes extra features for each input PSM.
 keywords:
   - PSM

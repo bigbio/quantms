@@ -1,4 +1,4 @@
-name: idripper
+name: id_ripper
 description: Splits the protein/peptide identifications of an idXML file into several idXML files according their annotated file origin.
 keywords:
   - split

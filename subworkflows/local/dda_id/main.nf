@@ -6,7 +6,7 @@ include { EXTRACT_PSM_FEATURES } from '../../../modules/local/openms/extract_psm
 include { PERCOLATOR           } from '../../../modules/local/openms/percolator/main'
 include { ID_MERGER            } from '../../../modules/local/openms/id_merger/main'
 include { ID_RIPPER            } from '../../../modules/local/openms/id_ripper/main'
-include { PSM_CONVERSION       } from '../../../modules/local/utils/extract_psm/main'
+include { PSM_CONVERSION       } from '../../../modules/local/utils/psm_conversion/main'
 include { MSRESCORE_FEATURES   } from '../../../modules/local/utils/msrescore_features/main'
 include { GET_SAMPLE           } from '../../../modules/local/utils/extract_sample/main'
 include { SPECTRUM_FEATURES    } from '../../../modules/local/utils/spectrum_features/main'

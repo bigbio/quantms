@@ -1,4 +1,4 @@
-name: MSRESCORE_FEATURES
+name: msrescore_features
 description: A module to perform add features from MS2PIP and DeepLC
 keywords:
   - MS2

@@ -1,4 +1,4 @@
-name: GETSAMPLE
+name: get_sample
 description: A module to extract sample information from experimental design file
 keywords:
   - sample

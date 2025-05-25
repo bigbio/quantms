@@ -1,4 +1,4 @@
-name: proteinquantifier
+name: protein_quantifier
 description: Compute peptide and protein abundances from annotated feature/consensus maps or from identification results.
 keywords:
   - abundances

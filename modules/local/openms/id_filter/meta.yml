@@ -1,4 +1,4 @@
-name: idfilter
+name: id_filter
 description: Filters peptide/protein identification results by different criteria.
 keywords:
   - Filter

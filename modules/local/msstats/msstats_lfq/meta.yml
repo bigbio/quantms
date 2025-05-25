@@ -1,4 +1,4 @@
-name: MSSTATS_LFQ
+name: msstats_lfq
 description: A module to performance proteomics statistical analysis using MSstats tool.
 keywords:
   - MSstats

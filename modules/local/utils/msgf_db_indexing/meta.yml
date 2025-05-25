@@ -1,4 +1,4 @@
-name: msgfdb_indexing
+name: msgf_db_indexing
 description: Indexing the database prior to the database search for MS-GF+.
 keywords:
   - Indexing

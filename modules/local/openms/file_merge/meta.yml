@@ -1,4 +1,4 @@
-name: filemerge
+name: file_merge
 description: Merges several MS files into one file.
 keywords:
   - merge

@@ -1,4 +1,4 @@
-name: falsediscoveryrate
+name: false_discovery_rate
 description: Estimates the false discovery rate on peptide and protein level using decoy searches.
 keywords:
   - FDR

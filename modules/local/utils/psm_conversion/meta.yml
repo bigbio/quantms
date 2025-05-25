@@ -1,4 +1,4 @@
-name: PSMCONVERSION
+name: psm_conversion
 description: A module to extract PSM information from idXML file
 keywords:
   - PSM

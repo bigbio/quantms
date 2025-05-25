@@ -1,4 +1,4 @@
-name: SPECTRUM2FEATURES
+name: spectrum_features
 description: A module to add signal-to-noise ratio features for percolator
 keywords:
   - features

@@ -1,4 +1,4 @@
-name: msstatsconverter
+name: msstats_converter
 description: Converter to input for MSstats
 keywords:
   - MSstats

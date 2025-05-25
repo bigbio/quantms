@@ -1,4 +1,4 @@
-name: mzmlindexing
+name: mzml_indexing
 description: Converts mzML to indexed mzML
 keywords:
   - raw
