@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.1] bigbio/quantms - [21/05/2025] - Zürich
+## [1.5.0dev] bigbio/quantms - [21/05/2025] - Zürich
 
 ### `Changed`
 
