@@ -9,6 +9,7 @@ lint:
     - .github/workflows/download_pipeline.yml
     - .gitignore
     - conf/modules.config
+    - conf/igenomes_ignored.config
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/CONTRIBUTING.md
@@ -17,9 +18,11 @@ lint:
     - .github/workflows/awsfulltest.yml
     - .github/workflows/download_pipeline.yml
     - conf/modules.config
+    - conf/igenomes_ignored.config
   included_configs: false
   multiqc_config: false
   nextflow_config: false
+  modules_config: false
 nf_core_version: 3.2.1
 repository_type: pipeline
 template:
