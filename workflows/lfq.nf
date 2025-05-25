@@ -66,7 +66,6 @@ workflow LFQ {
         ch_software_versions = ch_software_versions.mix(MSSTATS_LFQ.out.versions.ifEmpty(null))
     }
 
-
     ID.out.psmrescoring_results
         .map { it -> it[1] }
         .set { ch_pmultiqc_ids }
