@@ -8,6 +8,7 @@ lint:
     - .github/workflows/ci.yml
     - .github/workflows/download_pipeline.yml
     - .gitignore
+    - conf/modules.config
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/CONTRIBUTING.md
