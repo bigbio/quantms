@@ -8,12 +8,12 @@
 // MODULES: Local to the pipeline
 //
 include { PROTEOMICSLFQ } from '../modules/local/openms/proteomicslfq/main'
-include { MSSTATS       } from '../modules/local/msstats/main'
+include { MSSTATS_LFQ   } from '../modules/local/msstats/msstats_lfq/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 //
-include { ID } from '../subworkflows/local/id'
+include { ID } from '../subworkflows/local/id/main'
 
 /*
 ========================================================================================
@@ -61,11 +61,10 @@ workflow LFQ {
     //
     ch_msstats_out = Channel.empty()
     if(!params.skip_post_msstats && params.quantification_method == "feature_intensity"){
-        MSSTATS(PROTEOMICSLFQ.out.out_msstats)
-        ch_msstats_out = MSSTATS.out.msstats_csv
-        ch_software_versions = ch_software_versions.mix(MSSTATS.out.versions.ifEmpty(null))
+        MSSTATS_LFQ(PROTEOMICSLFQ.out.out_msstats)
+        ch_msstats_out = MSSTATS_LFQ.out.msstats_csv
+        ch_software_versions = ch_software_versions.mix(MSSTATS_LFQ.out.versions.ifEmpty(null))
     }
-
 
     ID.out.psmrescoring_results
         .map { it -> it[1] }
