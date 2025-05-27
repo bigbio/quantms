@@ -58,7 +58,7 @@ By default, quantms organizes output files in a structured way, with specific di
   - `multiqc_plots/`: Visualizations in different formats
     - `png/`: PNG format plots
     - `svg/`: SVG format plots
-    - `pdf/`: PDF format plots    
+    - `pdf/`: PDF format plots
 
 #### DIA workflow output structure:
 
@@ -212,18 +212,21 @@ Depending on the workflow type, the main output files will be found in the follo
 The specific files include:
 
 - DDA-LFQ quantification results:
+
   - `quant_tables/out.consensusXML` - [ConsensusXML](#consensusxml) format with quantification data
   - `quant_tables/msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
   - `quant_tables/out_triqler.tsv` - [Triqler](#triqler) input format
   - `quant_tables/out.mzTab` - [mzTab](#mztab) format with identifications and quantities
 
 - DDA-ISO quantification results:
+
   - `quant_tables/out.mzTab` - [mzTab](#mztab) format with identifications and quantities
   - `quant_tables/peptide_out.csv` - [Tab-based](#tab-based-openms-formats) peptide quantities
   - `quant_tables/protein_out.csv` - [Tab-based](#tab-based-openms-formats) protein quantities
   - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
 
 - DIA-LFQ quantification results:
+
   - `quant_tables/diann_report.tsv` - DIA-NN main report with peptide and protein quantification
   - `quant_tables/diann_report.pr_matrix.tsv` - Protein quantification matrix from DIA-NN
   - `quant_tables/diann_report.pg_matrix.tsv` - Protein group quantification matrix from DIA-NN
