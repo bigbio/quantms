@@ -142,7 +142,7 @@ results_localize/
 
 ### Verbose Output Structure
 
-For more detailed output with all intermediate files, you can use the verbose output configuration by providing the `-c verbose_modules` parameter when running the pipeline. This is useful for debugging or detailed analysis of the pipeline's steps.
+For more detailed output with all intermediate files, you can use the verbose output configuration by providing the config parameter `-c verbose_modules` when running the pipeline. This will use  the `verbose_modules` configuration. It can be useful for debugging or detailed analysis of the pipeline's steps.
 
 The verbose output structure preserves all intermediate files and organizes them in a more detailed directory structure. Here's an example of the verbose output structure for an LFQ analysis:
 
