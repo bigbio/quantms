@@ -14,7 +14,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 2. (optional) Decoy database generation for the provided DB (fasta) with OpenMS
 3. Database search with either MSGF+ and/or Comet through OpenMS adapters
 4. (optional) Performs LC-MS predictors such as MS²PIP and DeepLC to add new peptide spectrum match (PSM) features by MS2Rescore
-5. (optional) Add spectrum SNR features for Percolator rescore
+5. (optional) Add spectrum signal-to-noise (SNR) features for Percolator rescore
 6. (optional) Merge different MS runs by samples or whole projects
 7. PSM rescoring Percolator
 8. If multiple search engines were chosen, the results are combined with OpenMS' ConsensusID
