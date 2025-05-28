@@ -574,11 +574,12 @@
                     "default": 0,
                     "hidden": true
                 },
-                "psm_clean" : {
+                "psm_clean": {
                     "type": "boolean",
-                    "description": "Whether remove invalid PSM with empty spectra and with invalid features",
+                    "description": "Whether remove invalid PSM with empty spectra and invalid feature values",
+                    "fa_icon": "far fa-check-square",
                     "default": false,
-                    "fa_icon": "far fa-check-square"
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-star-half-alt"
