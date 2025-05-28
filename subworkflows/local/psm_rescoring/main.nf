@@ -25,10 +25,12 @@ workflow PSM_RESCORING {
         MSRESCORE_FEATURES(ch_id_files.combine(ch_file_preparation_results, by: 0))
         ch_software_versions = ch_software_versions.mix(MSRESCORE_FEATURES.out.versions)
         ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
-    } else {
+    } else if (params.psm_clean == true) {
         PSM_CLEAN(ch_id_files.combine(ch_file_preparation_results, by: 0))
         ch_id_files_feats = PSM_CLEAN.out.idxml
         ch_software_versions = ch_software_versions.mix(PSM_CLEAN.out.versions)
+    } else {
+        ch_id_files_feats = ch_id_files
     }
 
     // Add SNR features to percolator

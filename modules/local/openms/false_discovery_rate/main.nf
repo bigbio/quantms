@@ -25,6 +25,7 @@ process FALSE_DISCOVERY_RATE {
         -in ${id_file} \\
         -out ${id_file.baseName}_fdr.idXML \\
         -threads $task.cpus \\
+        -FDR:PSM ${params.run_fdr_cutoff} \\
         -algorithm:add_decoy_peptides \\
         -algorithm:add_decoy_proteins \\
         $args \\
