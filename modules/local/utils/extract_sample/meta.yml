@@ -1,0 +1,27 @@
+name: get_sample
+description: A module to extract sample information from experimental design file
+keywords:
+  - sample
+  - conversion
+tools:
+  - custom:
+      description: |
+        A custom module for sample extraction.
+      homepage: https://github.com/bigbio/quantms
+      documentation: https://github.com/bigbio/quantms/tree/readthedocs
+input:
+  - design:
+      type: file
+      description: experimental design file
+      pattern: "*.csv"
+output:
+  - ch_expdesign_sample:
+      type: file
+      description: sample csv file
+      pattern: "*_sample.csv"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
