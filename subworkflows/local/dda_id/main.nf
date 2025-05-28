@@ -174,7 +174,7 @@ workflow DDA_ID {
         }
 
         // Extract PSMs and export parquet format
-        PSM_CONVERSION(PSM_FDR_CONTROL.out.id_filtered.combine(ch_ms2_statistics, by: 0))
+        PSM_CONVERSION(ch_id_results.combine(ch_ms2_statistics, by: 0))
         ch_software_versions = ch_software_versions.mix(PSM_CONVERSION.out.versions)
 
         ch_rescoring_results
