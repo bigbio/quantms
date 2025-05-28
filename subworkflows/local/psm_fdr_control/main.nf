@@ -17,6 +17,7 @@ workflow PSM_FDR_CONTROL {
     if (params.search_engines.split(",").size() == 1) {
         ID_FILTER(ch_id_files.combine(Channel.value("-score:type_peptide q-value")))
         ch_version = ch_version.mix(ID_FILTER.out.versions)
+        ch_idfilter = ID_FILTER.out.id_filtered
     } else {
         FDR_CONSENSUSID(ch_id_files)
         ch_version = ch_version.mix(FDR_CONSENSUSID.out.versions)
@@ -24,6 +25,6 @@ workflow PSM_FDR_CONTROL {
     }
 
     emit:
-    id_filtered =ID_FILTER.out.id_filtered
+    id_filtered = ch_idfilter
     versions = ch_version
 }
