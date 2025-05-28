@@ -573,6 +573,13 @@
                     "fa_icon": "fas fa-bug",
                     "default": 0,
                     "hidden": true
+                },
+                "psm_clean": {
+                    "type": "boolean",
+                    "description": "Whether remove invalid PSM with empty spectra and invalid feature values",
+                    "fa_icon": "far fa-check-square",
+                    "default": false,
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-star-half-alt"

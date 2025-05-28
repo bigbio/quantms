@@ -8,7 +8,7 @@ process CONSENSUSID {
         'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
-    tuple val(meta), path(id_file), val(qval_score)
+    tuple val(meta), path(id_file)
 
     output:
     tuple val(meta), path("${meta.mzml_id}_consensus.idXML"), emit: consensusids

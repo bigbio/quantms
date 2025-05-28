@@ -9,7 +9,7 @@ process ID_FILTER {
         'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
-    tuple val(meta), path(id_file)
+    tuple val(meta), path(id_file), val(score_type)
 
     output:
     tuple val(meta), path("${id_file.baseName}_filter$task.ext.suffix"), emit: id_filtered
@@ -25,6 +25,7 @@ process ID_FILTER {
         -in ${id_file} \\
         -out ${id_file.baseName}_filter$suffix \\
         -threads $task.cpus \\
+        ${score_type} \\
         $args \\
         2>&1 | tee ${id_file.baseName}_idfilter.log
 
