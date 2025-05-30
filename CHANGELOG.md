@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0] bigbio/quantms - [21/05/2025] - Zürich
 
+### `Added`
+
+- [#555](https://github.com/bigbio/quantms/pull/555) Added support for methionine excision to COMET and DIANN.
+
 ### `Changed`
 
 - [551](https://github.com/bigbio/quantms/pull/551) Standardization of names in meta.yml for all tools & Big refactoring for all modules to subfolders
