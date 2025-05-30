@@ -2,7 +2,6 @@
 // MODULE: Local to the pipeline
 //
 include { CONSENSUSID          } from '../../../modules/local/openms/consensusid/main'
-include { EXTRACT_PSM_FEATURES } from '../../../modules/local/openms/extract_psm_features/main'
 include { PERCOLATOR           } from '../../../modules/local/openms/percolator/main'
 include { ID_MERGER            } from '../../../modules/local/openms/id_merger/main'
 include { ID_RIPPER            } from '../../../modules/local/openms/id_ripper/main'
@@ -39,13 +38,6 @@ workflow DDA_ID {
     ch_software_versions = ch_software_versions.mix(PEPTIDE_DATABASE_SEARCH.out.versions.ifEmpty(null))
     ch_id_files = PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx
 
-    ch_id_files.branch{ meta, filename ->
-        sage: filename.name.contains('sage')
-            return [meta, filename]
-        nosage: true
-            return [meta, filename]
-    }.set{ch_id_files_branched}
-
     ch_pmultiqc_consensus = Channel.empty()
     ch_pmultiqc_ids = Channel.empty()
 
@@ -59,9 +51,7 @@ workflow DDA_ID {
             ch_software_versions = ch_software_versions.mix(MSRESCORE_FEATURES.out.versions)
             ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
         } else {
-            EXTRACT_PSM_FEATURES(ch_id_files_branched.nosage)
-            ch_software_versions = ch_software_versions.mix(EXTRACT_PSM_FEATURES.out.versions)
-            PSM_CLEAN(ch_id_files_branched.sage.mix(EXTRACT_PSM_FEATURES.out.id_files_feat).combine(ch_file_preparation_results, by: 0))
+            PSM_CLEAN(ch_id_files.combine(ch_file_preparation_results, by: 0))
             ch_id_files_feats = PSM_CLEAN.out.idxml
             ch_software_versions = ch_software_versions.mix(PSM_CLEAN.out.versions)
         }
@@ -175,8 +165,16 @@ workflow DDA_ID {
         PSM_FDR_CONTROL(ch_psmfdrcontrol)
         ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions.ifEmpty(null))
 
+        if (params.enable_mod_localization) {
+            PHOSPHO_SCORING(ch_file_preparation_results, PSM_FDR_CONTROL.out.id_filtered)
+            ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
+            ch_id_results = PHOSPHO_SCORING.out.id_luciphor
+        } else {
+            ch_id_results = PSM_FDR_CONTROL.out.id_filtered
+        }
+
         // Extract PSMs and export parquet format
-        PSM_CONVERSION(PSM_FDR_CONTROL.out.id_filtered.combine(ch_ms2_statistics, by: 0))
+        PSM_CONVERSION(ch_id_results.combine(ch_ms2_statistics, by: 0))
         ch_software_versions = ch_software_versions.mix(PSM_CONVERSION.out.versions)
 
         ch_rescoring_results

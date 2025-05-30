@@ -30,7 +30,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 For DIA-LFQ experiments, the workflow is different:
 
 1. RAW data is converted to mzML using the ThermoRawFileParser
-2. DIA-NN is used to for identification and quantification of the peptides and proteins
+2. DIA-NN is used for identification and quantification of the peptides and proteins
 3. Generation of output files
 4. Generation of QC reports using pMultiQC a library for QC proteomics data analysis.
 
