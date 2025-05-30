@@ -79,6 +79,8 @@ process COMET {
 
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
+    met_excision = params.met_excision ? "-clip_nterm_methionine true" : ""
+
     """
     CometAdapter \\
         -in ${mzml_file} \\
@@ -102,6 +104,7 @@ process COMET {
         -fragment_mass_tolerance ${bin_tol} \\
         -fragment_bin_offset ${bin_offset} \\
         -minimum_peaks $params.min_peaks \\
+        ${met_excision} \\
         ${il_equiv} \\
         -PeptideIndexing:unmatched_action ${params.unmatched_action} \\
         -debug $params.db_debug \\

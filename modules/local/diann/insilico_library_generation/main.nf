@@ -26,9 +26,10 @@ process INSILICO_LIBRARY_GENERATION {
     max_pr_mz = params.max_pr_mz ? "--max-pr-mz $params.max_pr_mz":""
     min_fr_mz = params.min_fr_mz ? "--min-fr-mz $params.min_fr_mz":""
     max_fr_mz = params.max_fr_mz ? "--max-fr-mz $params.max_fr_mz":""
+    met_excision = params.met_excision ? "--met-excision" : ""
 
     """
-    diann   `cat diann_config.cfg` \\
+    diann `cat diann_config.cfg` \\
             --fasta ${fasta} \\
             --fasta-search \\
             ${min_pr_mz} \\
@@ -45,6 +46,7 @@ process INSILICO_LIBRARY_GENERATION {
             --predictor \\
             --verbose $params.diann_debug \\
             --gen-spec-lib \\
+            ${met_excision} \\
             ${args}
 
     cp *lib.log.txt silicolibrarygeneration.log
