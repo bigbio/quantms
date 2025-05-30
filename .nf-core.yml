@@ -33,4 +33,4 @@ template:
   name: quantms
   org: bigbio
   outdir: .
-  version: 1.5.0dev
+  version: 1.5.0
