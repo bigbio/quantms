@@ -253,10 +253,10 @@
                 },
                 "met_excision": {
                     "type": "boolean",
-                    "description": "Methionine Excision: Whether to remove methionine from the N-terminus of peptides",
+                    "description": "Database searches accounted for N-terminal methionine excision, a common co-translational modification where the initial methionine is enzymatically removed from proteins.",
                     "default": true,
                     "fa_icon": "far fa-check-square",
-                    "help_text": "Database searches accounted for N-terminal methionine excision, a common co-translational modification where the initial methionine is enzymatically removed from proteins."
+                    "help_text": "Warning: not supported by sage yet."
                 },
                 "num_enzyme_termini": {
                     "type": "string",
