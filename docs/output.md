@@ -4,7 +4,7 @@
 
 This document describes the output produced by the pipeline. Most plots are taken from the pMultiQC report, which summarises results at the end of the pipeline.
 
-The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results' directory.
+The directories listed below will be created in the results directory after the pipeline has finished. All paths are relative to the top-level results directory.
 
 ## Pipeline overview
 
@@ -34,7 +34,7 @@ For DIA-LFQ experiments, the workflow is different:
 3. Generation of output files
 4. Generation of QC reports using pMultiQC, a library for QC proteomics data analysis.
 
-As an example, a rough visualisation of the DDA identification subworkflow can be seen here:
+As an example, a rough visualization of the DDA identification subworkflow can be seen here:
 
 ![quantms LFQ workflow](./images/id-dda-pipeline.png)
 
