@@ -25,14 +25,14 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 13. (**DDA-ISO**) Extracts and normalizes isobaric labeling
 14. (**DDA-ISO**) Protein inference using the OpenMS ProteinInference tool. In addition, protein FDR filtering is performed in this step for Isobaric datasets (TMT, iTRAQ).
 15. (**DDA-ISO**) Protein Quantification
-16. Generation of QC reports using pMultiQC a library for QC proteomics data analysis.
+16. Generation of QC reports using pMultiQC, a library for QC proteomics data analysis.
 
 For DIA-LFQ experiments, the workflow is different:
 
 1. RAW data is converted to mzML using the ThermoRawFileParser
 2. DIA-NN is used for identification and quantification of the peptides and proteins
 3. Generation of output files
-4. Generation of QC reports using pMultiQC a library for QC proteomics data analysis.
+4. Generation of QC reports using pMultiQC, a library for QC proteomics data analysis.
 
 As an example, a rough visualization of the DDA identification subworkflow can be seen here:
 
