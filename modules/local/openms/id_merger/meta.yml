@@ -1,0 +1,33 @@
+name: id_merger
+description: Merges several idXML files into one file.
+keywords:
+  - merge
+  - idXML
+  - OpenMS
+tools:
+  - IDMerger:
+      description: |
+        Merges several idXML files into one file.
+      homepage: https://www.openms.org/documentation/html/TOPP_IDMerger.html
+      documentation: https://www.openms.org/documentation/html/TOPP_IDMerger.html
+input:
+  - id_files:
+      type: file
+      description: |
+        Input files separated by blank.
+      pattern: "*.{idXML}"
+output:
+  - id_merge:
+      type: file
+      description: Output Merged file
+      pattern: "*.{idXML}"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

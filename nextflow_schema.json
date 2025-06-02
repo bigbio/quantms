@@ -251,6 +251,13 @@
                     "fa_icon": "fas fa-list-ol",
                     "help_text": "Specify which enzymatic restriction should be applied, e.g. 'unspecific cleavage', 'Trypsin' (default), see OpenMS\n[enzymes](https://github.com/OpenMS/OpenMS/blob/develop/share/OpenMS/CHEMISTRY/Enzymes.xml). Note: MSGF does not support extended\ncutting rules, as used by default with `Trypsin`. I.e. if you specify `Trypsin` with MSGF, it will be automatically converted to\n`Trypsin/P`= 'Trypsin without proline rule'."
                 },
+                "met_excision": {
+                    "type": "boolean",
+                    "description": "Database searches accounted for N-terminal methionine excision, a common co-translational modification where the initial methionine is enzymatically removed from proteins.",
+                    "default": true,
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "Warning: not supported by sage yet."
+                },
                 "num_enzyme_termini": {
                     "type": "string",
                     "description": "Specify the amount of termini matching the enzyme cutting rules for a peptide to be considered. Valid values are `fully` (default), `semi`, or `none`",
@@ -572,6 +579,13 @@
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
                     "fa_icon": "fas fa-bug",
                     "default": 0,
+                    "hidden": true
+                },
+                "psm_clean": {
+                    "type": "boolean",
+                    "description": "Whether remove invalid PSM with empty spectra and invalid feature values",
+                    "fa_icon": "far fa-check-square",
+                    "default": false,
                     "hidden": true
                 }
             },
