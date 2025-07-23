@@ -13,7 +13,7 @@ report_section_order:
     order: -1002
 
 thousandsSep_format: ","
-export_plots: true
+export_plots: false
 custom_logo: "./nf-core-quantms_logo_light.png"
 custom_logo_url: "https://github.com/bigbio/quantms"
 custom_logo_title: "quantms"
@@ -63,27 +63,30 @@ sp:
     fn: "ms1_peaks_*"
   general_stats:
     fn: "general_stats.tsv"
-  quantms/exp_design:
+  pmultiqc/exp_design:
     fn: "*_design.tsv"
-  quantms/sdrf:
+  pmultiqc/sdrf:
     fn: "*.sdrf.tsv"
-  quantms/mztab:
+  pmultiqc/mztab:
     fn: "*.mzTab"
     num_lines: 0
-  quantms/mzML:
+  pmultiqc/mzML:
     fn: "*.mzML"
     num_lines: 0
-  quantms/ms_info:
+  pmultiqc/ms_info:
     fn: "*_ms_info.parquet"
     num_lines: 0
-  quantms/idXML:
+  pmultiqc/idXML:
     fn: "*.idXML"
     num_lines: 0
-  quantms/msstats:
+  pmultiqc/msstats:
     fn: "*msstats_in.csv"
     num_lines: 0
-  quantms/diann_report:
+  pmultiqc/diann_report_tsv:
     fn: "*report.tsv"
+    num_lines: 0
+  pmultiqc/diann_report_parquet:
+    fn: "diann_report.parquet"
     num_lines: 0
 
 disable_version_detection: true
