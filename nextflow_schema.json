@@ -1138,7 +1138,7 @@
                     "type": "integer",
                     "description": "Set the random seed for the random selection of spectrum files to generate the empirical library.",
                     "default": 42,
-                    "fa_icon": false
+                    "fa_icon": "fas fa-filter"
                 },
                 "empirical_assembly_ms_n": {
                     "type": "integer",
