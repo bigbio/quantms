@@ -2,8 +2,8 @@ process PMULTIQC {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.33--pyhdfd78af_0' :
-        'biocontainers/pmultiqc:0.0.33--pyhdfd78af_0' }"
+        'https://depot.galaxyproject.org/singularity/pmultiqc:0.0.36--pyhdfd78af_1' :
+        'biocontainers/pmultiqc:0.0.36--pyhdfd78af_1' }"
 
     input:
     path 'results/*'
@@ -33,6 +33,7 @@ process PMULTIQC {
     multiqc \\
         -f \\
         --config ./results/multiqc_config.yml \\
+        --quantms_plugin \\
         ${args} \\
         ${disable_pmultiqc} \\
         ${disable_table_plots} \\

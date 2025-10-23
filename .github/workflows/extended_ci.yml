@@ -28,7 +28,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "24.10.5"
+          - "25.04.0"
           - "latest-everything"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
     env:
@@ -111,7 +111,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "24.10.5"
+          - "25.04.0"
           - "latest-everything"
         test_profile: ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id", "test_tmt_corr"]
     env:

@@ -16,14 +16,14 @@ process PROTEOMICSLFQ {
     output:
     path "${expdes.baseName}_openms.mzTab", emit: out_mztab
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
-    path "*msstats_in.csv", emit: out_msstats optional true
-    path "*triqler_in.tsv", emit: out_triqler optional true
-    path "debug_mergedIDs.idXML", emit: debug_mergedIDs optional true
-    path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference optional true
-    path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved optional true
-    path "debug_mergedIDsGreedyResolvedFDR.idXML", emit: debug_mergedIDsGreedyResolvedFDR optional true
-    path "debug_mergedIDsGreedyResolvedFDRFiltered.idXML", emit: debug_mergedIDsGreedyResolvedFDRFiltered optional true
-    path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idXML", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved optional true
+    path "*msstats_in.csv", emit: out_msstats, optional: true
+    path "*triqler_in.tsv", emit: out_triqler, optional: true
+    path "debug_mergedIDs.idXML", emit: debug_mergedIDs, optional: true
+    path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference, optional: true
+    path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved, optional: true
+    path "debug_mergedIDsGreedyResolvedFDR.idXML", emit: debug_mergedIDsGreedyResolvedFDR, optional: true
+    path "debug_mergedIDsGreedyResolvedFDRFiltered.idXML", emit: debug_mergedIDsGreedyResolvedFDRFiltered, optional: true
+    path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idXML", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved, optional: true
     path "*.log", emit: log
     path "versions.yml", emit: versions
 

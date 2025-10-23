@@ -12,7 +12,7 @@ process MSSTATS_LFQ {
     output:
     // The generation of the PDFs from MSstats are very unstable, especially with auto-contrasts.
     // And users can easily fix anything based on the csv and the included script -> make optional
-    path "*.pdf" optional true
+    path "*.pdf", optional: true
     path "*.csv", emit: msstats_csv
     path "*.log", emit: log
     path "versions.yml" , emit: versions

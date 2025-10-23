@@ -7,7 +7,9 @@ keywords:
   - discovery
   - rate
   - proteomics
-components: []
+components:
+  - false_discovery_rate
+  - id_filter
 input:
   - ch_input:
       type: file
