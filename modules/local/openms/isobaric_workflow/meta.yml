@@ -1,0 +1,42 @@
+name: isobaric_workflow
+description: Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
+keywords:
+  - OpenMS
+  - quantification
+tools:
+  - IsobaricWorkflow:
+      description: |
+        Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_IsobaricWorkflow.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_IsobaricWorkflow.html
+  - mzmls:
+      type: file
+      description: Input Spectra in mzML format
+      pattern: "*.mzML"
+  - id_files:
+      type: file
+      description: Identifications in idXML or mzIdentML format with posterior error probabilities as score type.
+      pattern: "*.idXML"
+  - expdes:
+      type: file
+      description: An experimental design file
+      pattern: "*.tsv"
+output:
+  - out_mztab:
+      type: file
+      description: mzTab file with analysis results
+      pattern: "*.mzTab"
+  - out_consensusXML:
+      type: file
+      description: ConsensusXML file for visualization and further processing in OpenMS.
+      pattern: "*.consensusXML"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@MaLLLiYA"
