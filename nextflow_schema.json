@@ -802,7 +802,7 @@
                     "type": "string",
                     "description": "The reference channel, e.g. for calculating ratios.",
                     "fa_icon": "fas fa-list-ol",
-                    "default": 126
+                    "default": "126"
                 },
                 "iso_debug": {
                     "type": "integer",
