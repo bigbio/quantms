@@ -500,31 +500,34 @@
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
-                "ms2rescore": {
+                "ms2features_enable": {
                     "type": "boolean",
-                    "description": "Whether performing peptide identification rescoring with LC-MS predictors such as MS²PIP and DeepLC.",
+                    "description": "Whether to enable MS2-based features for Percolator using deep learning predictors such as ms2pip, alphapeptdeep, and DeepLC.",
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
-                "add_snr_feature_percolator": {
+                "ms2features_snr": {
                     "type": "boolean",
-                    "description": "Whether add signal-to-noise ratio features for identification rescoring in percolator",
+                    "description": "Whether to add signal-to-noise ratio features for identification rescoring in percolator",
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
-                "rescore_range": {
+                "ms2features_range": {
                     "type": "string",
-                    "description": "Rescoring for independent run, Sample or whole experiments",
+                    "description": "MS2Features processing range: independent run, Sample or whole experiments",
+                    "help_text": "independent_run: Process each run separately (default, fastest). by_sample: Group runs by sample for better statistics. by_project: Use all runs together for maximum statistical power (slowest but most accurate).",
                     "fa_icon": "fas fa-font",
                     "default": "independent_run",
                     "enum": ["independent_run", "by_sample", "by_project"]
                 },
-                "ms2_model": {
+                "ms2features_model": {
                     "type": "string",
-                    "description": "Which deep learning model to generate feature.",
+                    "description": "Deep learning model for MS2 prediction. Choose based on your feature generator: alphapeptdeep uses 'generic' model, ms2pip uses instrument-specific models.",
+                    "help_text": "alphapeptdeep models: 'generic' (default, works for most instruments). ms2pip models: 'HCD2021' (modern HCD), 'TMT' (TMT labeling), 'CID' (collision-induced dissociation), 'iTRAQ' (iTRAQ labeling), etc. Select the model that best matches your instrument and fragmentation method.",
                     "fa_icon": "fas fa-font",
-                    "default": "HCD2021",
+                    "default": "generic",
                     "enum": [
+                        "generic",
                         "HCD2021",
                         "HCD2019",
                         "CID",
@@ -540,46 +543,65 @@
                         "timsTOF2024"
                     ]
                 },
-                "ms2_model_dir": {
+                "ms2features_model_dir": {
                     "type": "string",
                     "description": "The path of ms2 prediction model files. Providing model file to avoid repeated download and slow internet connection",
                     "fa_icon": "fas fa-font"
                 },
-                "feature_generators": {
+                "ms2features_generators": {
                     "type": "string",
-                    "description": "Which feature generator to generate feature.",
+                    "description": "Feature generators for MS2-based rescoring. Comma-separated list of tools to use.",
+                    "help_text": "Available generators: 'deeplc' (retention time prediction, always recommended), 'alphapeptdeep' (MS2 prediction, supports both Da and ppm), 'ms2pip' (MS2 prediction, Da only). Order matters: deeplc should be first. Examples: 'deeplc,alphapeptdeep' (default), 'deeplc,ms2pip', 'deeplc' (only retention time).",
                     "fa_icon": "fas fa-font",
-                    "default": "deeplc,ms2pip"
+                    "default": "deeplc,alphapeptdeep"
                 },
-                "calibration_set_size": {
+                "ms2features_calibration": {
                     "type": "number",
-                    "description": "Percentage of number of calibration set for DeepLC",
+                    "description": "Percentage of PSMs used for DeepLC calibration set (retention time prediction)",
+                    "help_text": "DeepLC uses a subset of high-confidence PSMs to calibrate retention time prediction. Higher values (0.2-0.3) provide better calibration but slower processing. Lower values (0.1-0.15) are faster but may reduce accuracy. Recommended: 0.15 for most datasets.",
                     "default": 0.15,
                     "fa_icon": "fas fa-filter"
                 },
-                "ms2rescore_fragment_tolerance": {
+                "ms2features_tolerance": {
                     "type": "number",
-                    "description": "Fragment mass tolerance used for MS2PIP",
+                    "description": "Fragment mass tolerance for MS2Features (fallback when SDRF values are incompatible)",
+                    "help_text": "Fallback tolerance value used when SDRF fragment tolerance cannot be used (e.g., ppm values with ms2pip). Should match your instrument's fragment mass accuracy. Typical values: 0.02-0.05 Da for high-resolution instruments, 0.1-0.5 Da for low-resolution instruments.",
                     "default": 0.05,
                     "fa_icon": "fas fa-sliders-h"
                 },
-                "force_model": {
+                "ms2features_tolerance_unit": {
+                    "type": "string",
+                    "description": "Unit for ms2features_tolerance (Da or ppm)",
+                    "default": "Da",
+                    "enum": ["Da", "ppm"],
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "ms2features_force": {
                     "type": "boolean",
-                    "description": "Force to run with provided MS2PIP model. Don't look for the best model and validation",
+                    "description": "Force use of specified MS2 model without validation or best model selection",
+                    "help_text": "When enabled, uses the exact model specified in ms2features_model without checking if it's the best available model or validating its performance. Faster but may use suboptimal models. Use with caution.",
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
-                "consider_modloss": {
+                "ms2features_modloss": {
                     "type": "boolean",
-                    "description": "If modloss ions are masked to zeros in the ms2 model. modloss ions are mostly useful for phospho MS2 prediction model.",
+                    "description": "Enable modification loss ion features for MS2 prediction",
+                    "help_text": "When enabled, includes modification loss ions (e.g., phosphate loss from phosphopeptides) in MS2 prediction. Essential for phosphoproteomics and other PTM studies. Disable for standard proteomics to reduce noise.",
                     "default": false,
                     "fa_icon": "far fa-check-square"
                 },
-                "find_best_model": {
+                "ms2features_best": {
                     "type": "boolean",
-                    "description": "If find best MS2 model.",
+                    "description": "Automatically find and use the best available MS2 model for your data",
+                    "help_text": "When enabled, automatically selects the best performing model from available options and validates its performance. This is the recommended approach for optimal results. Disable only if you want to use a specific model (see ms2features_force).",
                     "default": true,
                     "fa_icon": "far fa-check-square"
+                },
+                "ms2features_debug": {
+                    "type": "boolean",
+                    "description": "Enable debug logging for quantms-rescoring tool.",
+                    "default": false,
+                    "fa_icon": "fas fa-bug"
                 },
                 "run_fdr_cutoff": {
                     "type": "number",

@@ -46,7 +46,7 @@ workflow DDA_ID {
     //
     if (params.skip_rescoring == false) {
 
-        if (params.ms2rescore == true) {
+        if (params.ms2features_enable == true) {
             MSRESCORE_FEATURES(ch_id_files.combine(ch_file_preparation_results, by: 0))
             ch_software_versions = ch_software_versions.mix(MSRESCORE_FEATURES.out.versions)
             ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
@@ -57,18 +57,18 @@ workflow DDA_ID {
         }
 
         // Add SNR features to percolator
-        if (params.add_snr_feature_percolator) {
+        if (params.ms2features_snr) {
             SPECTRUM_FEATURES(ch_id_files_feats.combine(ch_file_preparation_results, by: 0))
             ch_id_files_feats = SPECTRUM_FEATURES.out.id_files_snr
             ch_software_versions = ch_software_versions.mix(SPECTRUM_FEATURES.out.versions)
         }
 
         // Rescoring for independent run, Sample or whole experiments
-        if (params.rescore_range == "independent_run") {
+        if (params.ms2features_range == "independent_run") {
             PERCOLATOR(ch_id_files_feats)
             ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
             ch_consensus_input = PERCOLATOR.out.id_files_perc
-        } else if (params.rescore_range == "by_sample") {
+        } else if (params.ms2features_range == "by_sample") {
             // Sample map
             GET_SAMPLE(ch_expdesign)
             ch_software_versions = ch_software_versions.mix(GET_SAMPLE.out.versions)
