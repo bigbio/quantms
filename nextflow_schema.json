@@ -220,7 +220,6 @@
                 },
                 "mzml_features": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Compute with mzmlstatistics step the features at MS1 level and output to a RAW file, only available for mzML files",
                     "help_text": "Compute with mzmlstatistics step the features at MS1 level and output to a RAW file, only available for mzML files",
                     "fa_icon": "far fa-check-square"
@@ -497,19 +496,16 @@
                 "skip_rescoring": {
                     "type": "boolean",
                     "description": "Skip PSM rescoring steps for specific cases, such as studying pure search engine results and search engine ranks",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "ms2features_enable": {
                     "type": "boolean",
                     "description": "Whether to enable MS2-based features for Percolator using deep learning predictors such as ms2pip, alphapeptdeep, and DeepLC.",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "ms2features_snr": {
                     "type": "boolean",
                     "description": "Whether to add signal-to-noise ratio features for identification rescoring in percolator",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "ms2features_range": {
@@ -580,14 +576,12 @@
                     "type": "boolean",
                     "description": "Force use of specified MS2 model without validation or best model selection",
                     "help_text": "When enabled, uses the exact model specified in ms2features_model without checking if it's the best available model or validating its performance. Faster but may use suboptimal models. Use with caution.",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "ms2features_modloss": {
                     "type": "boolean",
                     "description": "Enable modification loss ion features for MS2 prediction",
                     "help_text": "When enabled, includes modification loss ions (e.g., phosphate loss from phosphopeptides) in MS2 prediction. Essential for phosphoproteomics and other PTM studies. Disable for standard proteomics to reduce noise.",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "ms2features_best": {
@@ -600,7 +594,6 @@
                 "ms2features_debug": {
                     "type": "boolean",
                     "description": "Enable debug logging for quantms-rescoring tool.",
-                    "default": false,
                     "fa_icon": "fas fa-bug"
                 },
                 "run_fdr_cutoff": {
@@ -641,7 +634,6 @@
                     "type": "boolean",
                     "description": "Whether remove invalid PSM with empty spectra and invalid feature values",
                     "fa_icon": "far fa-check-square",
-                    "default": false,
                     "hidden": true
                 }
             },
@@ -869,7 +861,6 @@
                 "update_PSM_probabilities": {
                     "type": "boolean",
                     "description": "[Bayesian-only; Experimental] Update PSM probabilities with their posteriors under consideration of the protein probabilities.",
-                    "default": false,
                     "fa_icon": "fas fa-list-ol",
                     "hidden": true
                 },
@@ -945,19 +936,16 @@
                 "ratios": {
                     "type": "boolean",
                     "description": "Add the log2 ratios of the abundance values to the output.",
-                    "default": "false",
                     "fa_icon": "fas fa-list-ol"
                 },
                 "normalize": {
                     "type": "boolean",
                     "description": "Scale peptide abundances so that medians of all samples are equal.(Default false)",
-                    "default": "false",
                     "fa_icon": "far fa-check-square"
                 },
                 "fix_peptides": {
                     "type": "boolean",
                     "description": "Use the same peptides for protein quantification across all samples.(Default false)",
-                    "default": "false",
                     "fa_icon": "fas fa-bug"
                 },
                 "include_all": {
@@ -1043,7 +1031,6 @@
                 },
                 "quantify_decoys": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Also quantify decoys? (Usually only needed for Triqler post-processing output with [`--add_triqler_output`](#add_triqler_output), where it is auto-enabled)",
                     "fa_icon": "far fa-check-square"
                 },
@@ -1104,8 +1091,7 @@
                 "species_genes": {
                     "type": "boolean",
                     "description": "Instructs DIA-NN to add the organism identifier to the gene names",
-                    "fa_icon": "far fa-check-square",
-                    "default": false
+                    "fa_icon": "far fa-check-square"
                 },
                 "diann_speclib": {
                     "type": "string",
@@ -1118,21 +1104,18 @@
                     "type": "boolean",
                     "description": "Save decoy PSMs to the main .parquet report for DIA-NN 2.0.*",
                     "fa_icon": "far fa-check-square",
-                    "default": false,
                     "hidden": false
                 },
                 "diann_export_xic": {
                     "type": "boolean",
                     "description": "instructs DIA-NN to extract MS1/fragment chromatograms for identified precursors within X seconds from the elution apex, with X set to 10s if not provided;equivalent to the 'XICs' option in the GUI",
                     "fa_icon": "far fa-check-square",
-                    "default": false,
                     "hidden": false
                 },
                 "skip_preliminary_analysis": {
                     "type": "boolean",
                     "description": "Skip the preliminary analysis step, thus use the passed spectral library as-is insted of generating a local concensus library.",
                     "fa_icon": "fas fa-forward",
-                    "default": false,
                     "hidden": false
                 },
                 "empirical_assembly_log": {
@@ -1159,7 +1142,6 @@
                 "random_preanalysis": {
                     "type": "boolean",
                     "description": "Enable random selection of spectrum files to generate empirical library.",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "random_preanalysis_seed": {
@@ -1215,7 +1197,6 @@
                 "add_triqler_output": {
                     "type": "boolean",
                     "description": "Also create an output in Triqler's format for an alternative manual post-processing with that tool",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "msstatslfq_feature_subset_protein": {
@@ -1291,8 +1272,7 @@
                 "msstats_plot_profile_qc": {
                     "type": "boolean",
                     "description": "Export MSstats profile QC plots including all proteins",
-                    "fa_icon": "far fa-check-square",
-                    "default": false
+                    "fa_icon": "far fa-check-square"
                 }
             },
             "fa_icon": "fab fa-r-project"
@@ -1431,8 +1411,7 @@
                 "skip_table_plots": {
                     "type": "boolean",
                     "description": "Skip protein/peptide table plots with pmultiqc for large dataset.",
-                    "fa_icon": "fas fa-toggle-on",
-                    "default": false
+                    "fa_icon": "fas fa-toggle-on"
                 },
                 "multiqc_logo": {
                     "type": "string",
