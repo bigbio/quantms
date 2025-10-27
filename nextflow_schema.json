@@ -390,25 +390,25 @@
                     "type": "number",
                     "description": "The minimum precursor m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 400
+                    "default": 400.0
                 },
                 "max_pr_mz": {
                     "type": "number",
                     "description": "The maximum precursor m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 2400
+                    "default": 2400.0
                 },
                 "min_fr_mz": {
                     "type": "number",
                     "description": "The minimum fragment m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 100
+                    "default": 100.0
                 },
                 "max_fr_mz": {
                     "type": "number",
                     "description": "The maximum fragment m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 1800
+                    "default": 1800.0
                 },
                 "db_debug": {
                     "type": "integer",
@@ -758,32 +758,31 @@
                 "min_precursor_intensity": {
                     "type": "number",
                     "description": "Minimum intensity of the precursor to be extracted",
-                    "default": 1,
+                    "default": 1.0,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "min_precursor_purity": {
                     "type": "number",
                     "description": "Minimum fraction of the total intensity. 0.0:1.0",
-                    "default": 0,
+                    "default": 0.0,
                     "fa_icon": "fas fa-sliders-h",
                     "help_text": "Minimum fraction of the total intensity in the isolation window of the precursor spectrum"
                 },
                 "min_reporter_intensity": {
                     "type": "number",
                     "description": "Minimum intensity of the individual reporter ions to be extracted.",
-                    "default": 0,
+                    "default": 0.0,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "precursor_isotope_deviation": {
                     "type": "number",
                     "description": "Maximum allowed deviation (in ppm) between theoretical and observed isotopic peaks of the precursor peak",
-                    "default": 10,
+                    "default": 10.0,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "isotope_correction": {
                     "type": "boolean",
                     "description": "Enable isotope correction (highly recommended)",
-                    "default": false,
                     "fa_icon": "fas fa-toggle-on"
                 },
                 "plex_corr_matrix_file": {
@@ -794,7 +793,6 @@
                 "iso_normalization": {
                     "type": "boolean",
                     "description": "Enable normalization of the channel intensities",
-                    "default": false,
                     "fa_icon": "fas fa-toggle-on",
                     "help_text": "The normalization is done by using the Median of Ratios. Also the ratios the medians is provided as control measure."
                 },
@@ -802,7 +800,7 @@
                     "type": "string",
                     "description": "The reference channel, e.g. for calculating ratios.",
                     "fa_icon": "fas fa-list-ol",
-                    "default": "126"
+                    "default": 126
                 },
                 "iso_debug": {
                     "type": "integer",
@@ -1032,7 +1030,7 @@
                 "lfq_intensity_threshold": {
                     "type": "number",
                     "description": "The minimum intensity for a feature to be considered for quantification. (default: '10000')",
-                    "default": 1000,
+                    "default": 1000.0,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum intensity for a feature to be considered for quantification. (default: '10000')"
                 },
@@ -1101,7 +1099,7 @@
                     "description": "Controls the protein inference mode",
                     "fa_icon": "fas fa-list-ol",
                     "enum": [0, 1, 2],
-                    "default": 2
+                    "default": 2.0
                 },
                 "species_genes": {
                     "type": "boolean",
