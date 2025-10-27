@@ -1286,12 +1286,14 @@
                 "enable_pmultiqc": {
                     "type": "boolean",
                     "description": "Enable generation of pmultiqc report? default: 'false'",
-                    "fa_icon": "fas fa-toggle-on"
+                    "fa_icon": "fas fa-toggle-on",
+                    "default": true
                 },
                 "pmultiqc_idxml_skip": {
                     "type": "boolean",
                     "description": "Skip idXML files (do not generate search engine scores) in pmultiqc report? default: 'true'",
-                    "fa_icon": "fas fa-toggle-on"
+                    "fa_icon": "fas fa-toggle-on",
+                    "default": true
                 }
             },
             "fa_icon": "fas fa-file-medical-alt"
