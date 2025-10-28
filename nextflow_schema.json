@@ -26,7 +26,8 @@
                     "type": "string",
                     "description": "The output directory where the results will be saved.",
                     "default": "./results",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "format": "directory-path"
                 },
                 "email": {
                     "type": "string",
