@@ -50,7 +50,7 @@ workflow DIA {
 
     GENERATE_CFG(meta)
     ch_software_versions = ch_software_versions
-        .mix(GENERATE_CFG.out.versions.ifEmpty(null))
+        .mix(GENERATE_CFG.out.versions)
 
     //
     // MODULE: SILICOLIBRARYGENERATION
@@ -89,7 +89,7 @@ workflow DIA {
             PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib))
         }
         ch_software_versions = ch_software_versions
-            .mix(PRELIMINARY_ANALYSIS.out.versions.ifEmpty(null))
+            .mix(PRELIMINARY_ANALYSIS.out.versions)
 
         //
         // MODULE: ASSEMBLE_EMPIRICAL_LIBRARY
@@ -102,7 +102,7 @@ workflow DIA {
             speclib
         )
         ch_software_versions = ch_software_versions
-            .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.versions.ifEmpty(null))
+            .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.versions)
         indiv_fin_analysis_in = ch_file_preparation_results
             .combine(ch_searchdb)
             .combine(ASSEMBLE_EMPIRICAL_LIBRARY.out.log)
@@ -116,7 +116,7 @@ workflow DIA {
     //
     INDIVIDUAL_ANALYSIS(indiv_fin_analysis_in)
     ch_software_versions = ch_software_versions
-        .mix(INDIVIDUAL_ANALYSIS.out.versions.ifEmpty(null))
+        .mix(INDIVIDUAL_ANALYSIS.out.versions)
 
     //
     // MODULE: DIANNSUMMARY
@@ -139,7 +139,7 @@ workflow DIA {
         ch_searchdb)
 
     ch_software_versions = ch_software_versions.mix(
-        FINAL_QUANTIFICATION.out.versions.ifEmpty(null)
+        FINAL_QUANTIFICATION.out.versions
     )
 
     //
@@ -156,7 +156,7 @@ workflow DIA {
         FINAL_QUANTIFICATION.out.versions
     )
     ch_software_versions = ch_software_versions
-        .mix(CONVERT_RESULTS.out.versions.ifEmpty(null))
+        .mix(CONVERT_RESULTS.out.versions)
 
     //
     // MODULE: MSSTATS
@@ -165,7 +165,7 @@ workflow DIA {
         MSSTATS_LFQ(CONVERT_RESULTS.out.out_msstats)
         ch_msstats_out = MSSTATS_LFQ.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(
-            MSSTATS_LFQ.out.versions.ifEmpty(null)
+            MSSTATS_LFQ.out.versions
         )
     }
 

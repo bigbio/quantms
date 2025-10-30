@@ -56,7 +56,7 @@ workflow QUANTMS {
         INPUT_CHECK.out.ch_input_file,
         INPUT_CHECK.out.is_sdrf
     )
-    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.versions)
 
     //
     // SUBWORKFLOW: File preparation
@@ -65,7 +65,7 @@ workflow QUANTMS {
         CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
     )
 
-    ch_versions = ch_versions.mix(FILE_PREPARATION.out.versions.ifEmpty(null))
+    ch_versions = ch_versions.mix(FILE_PREPARATION.out.versions)
 
     FILE_PREPARATION.out.results
             .branch {
@@ -99,7 +99,7 @@ workflow QUANTMS {
             ch_db_for_decoy_creation_or_null
         )
         ch_searchengine_in_db = GENERATE_DECOY_DATABASE.out.db_decoy
-        ch_versions = ch_versions.mix(GENERATE_DECOY_DATABASE.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(GENERATE_DECOY_DATABASE.out.versions)
     }
 
     // Check that there is no duplicated search engines
@@ -113,7 +113,7 @@ workflow QUANTMS {
     // Only performing id_only subworkflows .
     if (params.id_only) {
         DDA_ID(FILE_PREPARATION.out.results, ch_searchengine_in_db, FILE_PREPARATION.out.ms2_statistics, CREATE_INPUT_CHANNEL.out.ch_expdesign)
-        ch_versions = ch_versions.mix(DDA_ID.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(DDA_ID.out.versions)
         ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_ids)
         ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_consensus)
     } else {
@@ -122,20 +122,20 @@ workflow QUANTMS {
         ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(TMT.out.ch_pmultiqc_consensus)
         ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
         ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
-        ch_versions = ch_versions.mix(TMT.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(TMT.out.versions)
 
         LFQ(ch_fileprep_result.lfq, CREATE_INPUT_CHANNEL.out.ch_expdesign, ch_searchengine_in_db)
         ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
         ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(LFQ.out.ch_pmultiqc_consensus)
         ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
         ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
-        ch_versions = ch_versions.mix(LFQ.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(LFQ.out.versions)
 
         DIA(ch_fileprep_result.dia, CREATE_INPUT_CHANNEL.out.ch_expdesign, FILE_PREPARATION.out.statistics)
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report_parquet)
         ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
-        ch_versions = ch_versions.mix(DIA.out.versions.ifEmpty(null))
+        ch_versions = ch_versions.mix(DIA.out.versions)
     }
 
     // Other subworkflow will return null when performing another subworkflow due to unknown reason.

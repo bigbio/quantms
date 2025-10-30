@@ -35,7 +35,7 @@ workflow DDA_ID {
         ch_file_preparation_results,
         ch_database_wdecoy
     )
-    ch_software_versions = ch_software_versions.mix(PEPTIDE_DATABASE_SEARCH.out.versions.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(PEPTIDE_DATABASE_SEARCH.out.versions)
     ch_id_files = PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx
 
     ch_pmultiqc_consensus = Channel.empty()
@@ -46,7 +46,7 @@ workflow DDA_ID {
     //
     if (params.skip_rescoring == false) {
 
-        if (params.ms2rescore == true) {
+        if (params.ms2features_enable == true) {
             MSRESCORE_FEATURES(ch_id_files.combine(ch_file_preparation_results, by: 0))
             ch_software_versions = ch_software_versions.mix(MSRESCORE_FEATURES.out.versions)
             ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
@@ -57,18 +57,18 @@ workflow DDA_ID {
         }
 
         // Add SNR features to percolator
-        if (params.add_snr_feature_percolator) {
+        if (params.ms2features_snr) {
             SPECTRUM_FEATURES(ch_id_files_feats.combine(ch_file_preparation_results, by: 0))
             ch_id_files_feats = SPECTRUM_FEATURES.out.id_files_snr
             ch_software_versions = ch_software_versions.mix(SPECTRUM_FEATURES.out.versions)
         }
 
         // Rescoring for independent run, Sample or whole experiments
-        if (params.rescore_range == "independent_run") {
+        if (params.ms2features_range == "independent_run") {
             PERCOLATOR(ch_id_files_feats)
             ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
             ch_consensus_input = PERCOLATOR.out.id_files_perc
-        } else if (params.rescore_range == "by_sample") {
+        } else if (params.ms2features_range == "by_sample") {
             // Sample map
             GET_SAMPLE(ch_expdesign)
             ch_software_versions = ch_software_versions.mix(GET_SAMPLE.out.versions)
@@ -106,7 +106,7 @@ workflow DDA_ID {
             ch_file_preparation_results.map{[it[0].mzml_id, it[0]]}.set{meta}
             ID_RIPPER.out.id_rippers.flatten().map { add_file_prefix (it)}.set{id_rippers}
             meta.combine(id_rippers, by: 0)
-                    .map{ [it[1], it[2], "MS:1001491"]}
+                    .map{ [it[1], it[2]]}
                     .set{ ch_consensus_input }
             ch_software_versions = ch_software_versions.mix(ID_RIPPER.out.versions)
 
@@ -137,7 +137,7 @@ workflow DDA_ID {
             ch_file_preparation_results.map{[it[0].mzml_id, it[0]]}.set{meta}
             ID_RIPPER.out.id_rippers.flatten().map { add_file_prefix (it)}.set{id_rippers}
             meta.combine(id_rippers, by: 0)
-                    .map{ [it[1], it[2], "MS:1001491"]}
+                    .map{ [it[1], it[2]]}
                     .set{ ch_consensus_input }
             ch_software_versions = ch_software_versions.mix(ID_RIPPER.out.versions)
 
@@ -153,7 +153,7 @@ workflow DDA_ID {
         // see comments in id.nf
         if (params.search_engines.tokenize(",").unique().size() > 1) {
             CONSENSUSID(ch_consensus_input.groupTuple(size: params.search_engines.tokenize(",").unique().size()))
-            ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions.ifEmpty(null))
+            ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions)
             ch_psmfdrcontrol = CONSENSUSID.out.consensusids
             ch_psmfdrcontrol
                 .map { it -> it[1] }
@@ -163,11 +163,11 @@ workflow DDA_ID {
         }
 
         PSM_FDR_CONTROL(ch_psmfdrcontrol)
-        ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions)
 
         if (params.enable_mod_localization) {
             PHOSPHO_SCORING(ch_file_preparation_results, PSM_FDR_CONTROL.out.id_filtered)
-            ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
+            ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions)
             ch_id_results = PHOSPHO_SCORING.out.id_luciphor
         } else {
             ch_id_results = PSM_FDR_CONTROL.out.id_filtered

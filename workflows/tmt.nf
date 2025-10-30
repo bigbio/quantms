@@ -36,7 +36,7 @@ workflow TMT {
     // SUBWORKFLOWS: ID
     //
     ID(ch_file_preparation_results, ch_database_wdecoy, ch_expdesign)
-    ch_software_versions = ch_software_versions.mix(ID.out.versions.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(ID.out.versions)
 
     //
     // SUBWORKFLOW: ISOBARIC_WORKFLOW
@@ -66,7 +66,7 @@ workflow TMT {
     if(!params.skip_post_msstats){
         MSSTATS_TMT(MSSTATS_CONVERTER.out.out_msstats)
         ch_msstats_out = MSSTATS_TMT.out.msstats_csv
-        ch_software_versions = ch_software_versions.mix(MSSTATS_TMT.out.versions.ifEmpty(null))
+        ch_software_versions = ch_software_versions.mix(MSSTATS_TMT.out.versions)
     }
 
     ID.out.psmrescoring_results

@@ -12,7 +12,7 @@ process MSSTATS_TMT {
     output:
     // The generation of the PDFs from MSstatsTMT are very unstable, especially with auto-contrasts.
     // And users can easily fix anything based on the csv and the included script -> make optional
-    path "*.pdf" optional true
+    path "*.pdf", optional: true
     path "*.csv", emit: msstats_csv
     path "*.log"
     path "versions.yml" , emit: versions

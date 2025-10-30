@@ -40,7 +40,12 @@ process ISOBARIC_ANALYZER {
         .drop(1) // Assuming the first non-comment line is a header
         .collect { line ->
             def values = line.split('/')
-            return "\"${values[1]}/${values[2]}/${values[3]}/${values[4]}\""
+            // Handle different labelling types
+            if (meta.labelling_type == 'tmt18plex' || meta.labelling_type == 'tmt16plex') {
+                return "\"${values[1]}/${values[2]}/${values[3]}/${values[4]}/${values[5]}/${values[6]}/${values[7]}/${values[8]}\""
+            } else {
+                return "\"${values[1]}/${values[2]}/${values[3]}/${values[4]}\""
+            }
         }
 
     // Join the matrix lines into a format for the C++ tool

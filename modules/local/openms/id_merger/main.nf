@@ -19,7 +19,7 @@ process ID_MERGER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${groupkey}"
 
-    if (params.rescore_range == "by_project") {
+    if (params.ms2features_range == "by_project") {
         if (id_files[0].baseName.contains('sage')){
             prefix = "${groupkey}_sage"
         } else if (id_files[0].baseName.contains('comet')){
@@ -27,7 +27,7 @@ process ID_MERGER {
         } else {
             prefix = "${groupkey}_msgf"
         }
-    } else if (params.rescore_range == "by_sample") {
+    } else if (params.ms2features_range == "by_sample") {
         if (id_files[0].baseName.contains('sage')){
             prefix = "${groupkey}_sage"
         } else if (id_files[0].baseName.contains('comet')){

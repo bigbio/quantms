@@ -22,7 +22,7 @@ process PROTEIN_QUANTIFIER {
     def args = task.ext.args ?: ''
 
     include_all = params.include_all ? "-top:include_all" : ""
-    fix_peptides = params.fix_peptides ? "-fix_peptides" : ""
+    fix_peptides = params.fix_peptides ? "-consensus:fix_peptides" : ""
     normalize = params.normalize ? "-consensus:normalize" : ""
     export_mztab = params.export_mztab ? "-mztab ${pro_quant_exp.baseName}_openms.mzTab" : ""
 

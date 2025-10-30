@@ -5,18 +5,18 @@ process THERMORAWFILEPARSER {
     label 'error_retry'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.3.4--ha8f3691_0' :
-        'biocontainers/thermorawfileparser:1.3.4--ha8f3691_0' }"
+        'https://depot.galaxyproject.org/singularity/thermorawfileparser:1.4.5--h05cac1d_1' :
+        'biocontainers/thermorawfileparser:1.4.5--h05cac1d_1' }"
 
     stageInMode {
         if (task.attempt == 1) {
-            if (executor == "awsbatch") {
+            if (task.executor == "awsbatch") {
                 'symlink'
             } else {
                 'link'
             }
         } else if (task.attempt == 2) {
-            if (executor == "awsbatch") {
+            if (task.executor == "awsbatch") {
                 'copy'
             } else {
                 'symlink'

@@ -8,12 +8,11 @@ process ID_RIPPER {
         'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
 
     input:
-    tuple val(meta), path(id_file), val(qval_score)
+    tuple val(meta), path(id_file)
 
     output:
     val(meta), emit: meta
     path("*.idXML"), emit: id_rippers
-    val("MS:1001491"), emit: qval_score
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
