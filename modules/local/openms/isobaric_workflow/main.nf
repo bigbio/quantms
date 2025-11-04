@@ -11,7 +11,7 @@ process ISOBARIC_WORKFLOW {
     path(mzmls)
     path(id_files)
     path(expdes)
-    
+
     output:
     path "${expdes.baseName}_openms.mzTab", emit: out_mztab
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
