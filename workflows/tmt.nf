@@ -51,7 +51,7 @@ workflow TMT {
                 ch_iso_workflow.ids.collect(),
                 ch_expdesign
             )
-    ch_software_versions = ch_software_versions.mix(ISOBARIC_WORKFLOW.out.versions.ifEmpty(null))
+    ch_software_versions = ch_software_versions.mix(ISOBARIC_WORKFLOW.out.versions)
 
     //
     // MODULE: MSSTATS_CONVERTER    
