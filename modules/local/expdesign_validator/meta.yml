@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "expdesign_validator"
+description: Validates OpenMS experimental design files for duplicate (Fraction_Group, Fraction, Label) combinations
+keywords:
+  - validation
+  - experimental design
+  - openms
+  - proteomics
+tools:
+  - "quantms-utils":
+      description: "Utility tools for the quantms pipeline"
+      homepage: "https://github.com/bigbio/quantms-utils"
+      documentation: "https://github.com/bigbio/quantms-utils"
+
+input:
+  - expdesign:
+      type: file
+      description: OpenMS experimental design file in TSV format
+      pattern: "*.tsv"
+
+output:
+  - ch_validated_expdesign:
+      type: file
+      description: Validated experimental design file
+      pattern: "*.tsv"
+  - log:
+      type: file
+      description: Validation log file
+      pattern: "*.log"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"
