@@ -28,7 +28,7 @@ process PREPROCESS_EXPDESIGN {
     sed 's/.raw\\t/.mzML\\t/I' ${design} > ${design.baseName}_openms_design.tsv
 
     # Validate the experimental design for duplicate combinations
-    validate_expdesign.py --expdesign ${design.baseName}_openms_design.tsv 2>&1 | tee validation.log
+    quantmsutilsc validateexpdesign --expdesign ${design.baseName}_openms_design.tsv 2>&1 | tee validation.log
 
     # here we extract the filenames and fake an empty config (since the config values will be deduced from the workflow params)
     a=\$(grep -n '^\$' ${design} | head -n 1 | awk -F ":" '{print \$1}')
@@ -36,7 +36,7 @@ process PREPROCESS_EXPDESIGN {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(parse_sdrf --version 2>/dev/null | awk -F ' ' '{print \$2}')
+        quantms-utils: \$(pip show quantms-utils | grep "Version" | awk -F ': ' '{print \$2}')
     END_VERSIONS
     """
 }
