@@ -37,6 +37,9 @@ process SDRF_PARSING {
     mv openms.tsv ${sdrf.baseName}_config.tsv
     mv experimental_design.tsv ${sdrf.baseName}_openms_design.tsv
 
+    # Validate the experimental design for duplicate combinations
+    validate_expdesign.py --expdesign ${sdrf.baseName}_openms_design.tsv 2>&1 | tee -a ${sdrf.baseName}_parsing.log
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         sdrf-pipelines: \$(parse_sdrf --version 2>/dev/null | awk -F ' ' '{print \$2}')

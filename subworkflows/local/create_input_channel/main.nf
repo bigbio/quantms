@@ -3,7 +3,6 @@
 //
 include { SDRF_PARSING } from '../../../modules/local/sdrf_parsing/main'
 include { PREPROCESS_EXPDESIGN } from '../../../modules/local/preprocess_expdesign'
-include { EXPDESIGN_VALIDATOR } from '../../../modules/local/expdesign_validator/main'
 
 
 
@@ -20,21 +19,14 @@ workflow CREATE_INPUT_CHANNEL {
         ch_versions = ch_versions.mix(SDRF_PARSING.out.versions)
         ch_config = SDRF_PARSING.out.ch_sdrf_config_file
 
-        // Validate the experimental design for duplicate combinations
-        EXPDESIGN_VALIDATOR(SDRF_PARSING.out.ch_expdesign)
-        ch_versions = ch_versions.mix(EXPDESIGN_VALIDATOR.out.versions)
-        ch_expdesign = EXPDESIGN_VALIDATOR.out.ch_validated_expdesign
+        ch_expdesign = SDRF_PARSING.out.ch_expdesign
     }
     else {
         PREPROCESS_EXPDESIGN(ch_sdrf_or_design)
         ch_versions = ch_versions.mix(PREPROCESS_EXPDESIGN.out.versions)
 
         ch_config = PREPROCESS_EXPDESIGN.out.ch_config
-        
-        // Validate the experimental design for duplicate combinations
-        EXPDESIGN_VALIDATOR(PREPROCESS_EXPDESIGN.out.ch_expdesign)
-        ch_versions = ch_versions.mix(EXPDESIGN_VALIDATOR.out.versions)
-        ch_expdesign = EXPDESIGN_VALIDATOR.out.ch_validated_expdesign
+        ch_expdesign = PREPROCESS_EXPDESIGN.out.ch_expdesign
     }
 
     def Set enzymes = []

@@ -27,6 +27,9 @@ process PREPROCESS_EXPDESIGN {
     # we edit the design here and change the endings.
     sed 's/.raw\\t/.mzML\\t/I' ${design} > ${design.baseName}_openms_design.tsv
 
+    # Validate the experimental design for duplicate combinations
+    validate_expdesign.py --expdesign ${design.baseName}_openms_design.tsv
+
     # here we extract the filenames and fake an empty config (since the config values will be deduced from the workflow params)
     a=\$(grep -n '^\$' ${design} | head -n 1 | awk -F ":" '{print \$1}')
     sed -e ''"\${a}"',\$d' ${design} > ${design.baseName}_config.tsv
