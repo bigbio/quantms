@@ -1,5 +1,5 @@
 process EXPDESIGN_VALIDATOR {
-    tag "$expdesign.Name"
+    tag "$expdesign.name"
     label 'process_tiny'
 
     conda "${moduleDir}/environment.yml"

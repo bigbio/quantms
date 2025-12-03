@@ -30,7 +30,7 @@ def validate_expdesign(expdesign_file):
     
     # Read the file
     try:
-        with open(expdesign_file, 'r') as f:
+        with open(expdesign_file, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f, delimiter='\t')
             
             # Check if required columns exist
