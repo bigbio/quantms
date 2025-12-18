@@ -6,9 +6,6 @@ process SPECTRUM_FEATURES {
         'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.10--pyhdfd78af_0' :
         'biocontainers/quantms-rescoring:0.0.10--pyhdfd78af_0' }"
 
-    // userEmulation settings when docker is specified
-    containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
-
     input:
     tuple val(meta), path(id_file), path(ms_file)
 

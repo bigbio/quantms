@@ -1,15 +1,17 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
-name: "psm_fdr_control"
-description: Subworkflow for PSM-level false discovery rate control
+name: "pipeline_completion"
+description: Subworkflow for utils in the nf-core quantms pipeline
 keywords:
-  - psm
-  - fdr
-  - discovery
-  - rate
-  - proteomics
+  - utils
+  - nf-core
+  - quantms
 components:
-  - false/discovery/rate
-  - id/filter
+  - completionemail
+  - completionsummary
+  - imnotification
+  - utils_nextflow_pipeline
+  - utils_nfcore_pipeline
+  - utils_nfschema_plugin
 input:
   - ch_input:
       type: file

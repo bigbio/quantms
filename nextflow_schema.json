@@ -52,7 +52,7 @@
                     "description": "Overwrite the file type/extension of the filename as specified in the SDRF/design",
                     "fa_icon": "fas fa-file-invoice",
                     "default": "mzML",
-                    "help_text": "If the above [`--root_folder`](#root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF/design. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML' or 'raw' (the letter cases should match your files exactly)."
+                    "help_text": "If the above [`--root_folder`](#root_folder) was given to load local input files, this overwrites the file type/extension of\nthe filename as specified in the SDRF/design. Usually used in case you have an mzML-converted version of the files already. Needs to be\none of 'mzML', 'raw', 'd', or 'dia' (the letter cases should match your files exactly). Compressed variants (.gz, .tar, .tar.gz, .zip) are supported for 'mzML', 'raw', and 'd' formats."
                 },
                 "acquisition_method": {
                     "type": "string",
@@ -1161,7 +1161,7 @@
                 "enable_diann_mztab": {
                     "type": "boolean",
                     "description": "Export the DIA-NN and DIA results to mzTab",
-                    "default": true,
+                    "default": false,
                     "fa_icon": "far fa-check-square"
                 }
             },
@@ -1295,6 +1295,11 @@
                     "description": "Skip idXML files (do not generate search engine scores) in pmultiqc report? default: 'true'",
                     "fa_icon": "fas fa-toggle-on",
                     "default": true
+                },
+                "contaminant_string": {
+                    "type": "string",
+                    "description": "Contaminant affix string for pmultiqc report. This parameter maps to --contaminant_affix in pmultiqc. default: 'CONT'",
+                    "default": "CONT"
                 }
             },
             "fa_icon": "fas fa-file-medical-alt"

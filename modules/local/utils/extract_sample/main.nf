@@ -3,8 +3,8 @@ process GET_SAMPLE {
     label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.23--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.23--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.24--pyh7e72e81_0' :
+        'biocontainers/quantms-utils:0.0.24--pyh7e72e81_0' }"
 
 
     input:
@@ -23,7 +23,7 @@ process GET_SAMPLE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sdrf-pipelines: \$(parse_sdrf --version 2>&1 | awk -F ' ' '{print \$2}')
+        sdrf-pipelines: \$(parse_sdrf --version 2>/dev/null | awk -F ' ' '{print \$2}')
     END_VERSIONS
     """
 }
