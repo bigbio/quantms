@@ -23,18 +23,18 @@ process ISOBARIC_WORKFLOW {
     def extractBaseName = { filename ->
         def name = filename.toString()
         name = name.replaceAll(/\.mzML$/, '')
-        
+
         if (name.endsWith('.idXML')) {
             name = name.replaceAll(/\.idXML$/, '')
             name = name.replaceAll(/_(comet|msgf|sage|consensus)(_perc)?(_filter)?(_fdr)?$/, '')
         }
         return name
     }
-    
-    def mzml_sorted = mzmls.collect().sort{ a, b -> 
+
+    def mzml_sorted = mzmls.collect().sort{ a, b ->
         extractBaseName(a.name) <=> extractBaseName(b.name)
     }
-    def id_sorted = id_files.collect().sort{ a, b -> 
+    def id_sorted = id_files.collect().sort{ a, b ->
         extractBaseName(a.name) <=> extractBaseName(b.name)
     }
 
