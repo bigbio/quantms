@@ -6,9 +6,6 @@ process MSRESCORE_FEATURES {
         'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.12' :
         'ghcr.io/bigbio/quantms-rescoring:0.0.12' }"
 
-    // userEmulation settings when docker is specified
-    containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
-
     input:
     tuple val(meta), path(idxml), path(mzml)
 
@@ -25,7 +22,10 @@ process MSRESCORE_FEATURES {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}_ms2rescore"
 
-    def ms2_model_dir = params.ms2features_model_dir ? "--ms2_model_dir ${params.ms2features_model_dir}" : ""
+    // Only add ms2_model_dir if it's actually set and not empty
+    // Handle cases where parameter might be empty string, null, boolean true, or whitespace
+    // When --ms2features_model_dir is passed with no value, Nextflow may set it to boolean true
+    def ms2_model_dir = (params.ms2features_model_dir && params.ms2features_model_dir != true) ? "--ms2_model_dir ${params.ms2features_model_dir}" : ""
 
     // Determine if using ms2pip or alphapeptdeep based on ms2features_generators
     def using_ms2pip = params.ms2features_generators.toLowerCase().contains('ms2pip')

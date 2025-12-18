@@ -78,6 +78,22 @@ A graphical overview of suggested routes through the pipeline depending on conte
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
+### Supported file formats
+
+The pipeline supports the following mass spectrometry data file formats:
+
+- **`.raw`** - Thermo RAW files (automatically converted to mzML)
+- **`.mzML`** - Open standard mzML files
+- **`.d`** - Bruker timsTOF files (optionally converted to mzML when `--convert_dotd` is set)
+- **`.dia`** - DIA-NN native binary format (passed through without conversion)
+
+Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
+
+- `.gz` (gzip compressed)
+- `.tar` (tar archive)
+- `.tar.gz` or `.tgz` (tar gzip compressed)
+- `.zip` (zip compressed)
+
 First, find or create a sample-to-data relationship file ([SDRF](https://github.com/bigbio/proteomics-sample-metadata)).
 Have a look at public datasets that were already annotated [here](https://github.com/bigbio/proteomics-sample-metadata/tree/master/annotated-projects).
 Those SDRFs should be ready for one-command re-analysis and you can just use the URL to the file on GitHub,
@@ -87,8 +103,6 @@ If you create your own, please adhere to the specifications and point the pipeli
 The second requirement is a protein sequence database. We suggest downloading a database for the organism(s)/proteins of interest from [Uniprot](https://www.uniprot.org/proteomes?query=*).
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run bigbio/quantms \
