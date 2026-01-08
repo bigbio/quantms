@@ -1,0 +1,112 @@
+nextflow_process {
+
+    name "Test Process ONSITE"
+    script "../main.nf"
+    process "ONSITE"
+    tag "modules"
+    tag "modules_onsite"
+    tag "onsite"
+
+    test("Should run AScore algorithm") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', mzml_id: 'test_sample' ],
+                    file(params.test_data['proteomics']['onsite']['mzml'], checkIfExists: true),
+                    file(params.test_data['proteomics']['onsite']['idxml'], checkIfExists: true)
+                ]
+                """
+            }
+            params {
+                onsite_algorithm = 'ascore'
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.versions).match("versions_ascore")
+            assert process.out.ptm_in_id_onsite.size() == 1
+            assert process.out.log.size() == 1
+            // Check output file has correct naming
+            assert process.out.ptm_in_id_onsite[0][1].toString().endsWith('_ascore.idXML')
+        }
+    }
+
+    test("Should run PhosphoRS algorithm") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', mzml_id: 'test_sample' ],
+                    file(params.test_data['proteomics']['onsite']['mzml'], checkIfExists: true),
+                    file(params.test_data['proteomics']['onsite']['idxml'], checkIfExists: true)
+                ]
+                """
+            }
+            params {
+                onsite_algorithm = 'phosphors'
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.versions).match("versions_phosphors")
+            assert process.out.ptm_in_id_onsite.size() == 1
+            assert process.out.log.size() == 1
+            // Check output file has correct naming
+            assert process.out.ptm_in_id_onsite[0][1].toString().endsWith('_phosphors.idXML')
+        }
+    }
+
+    test("Should run LucXor algorithm") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', mzml_id: 'test_sample' ],
+                    file(params.test_data['proteomics']['onsite']['mzml'], checkIfExists: true),
+                    file(params.test_data['proteomics']['onsite']['idxml'], checkIfExists: true)
+                ]
+                """
+            }
+            params {
+                onsite_algorithm = 'lucxor'
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.versions).match("versions_lucxor")
+            assert process.out.ptm_in_id_onsite.size() == 1
+            assert process.out.log.size() == 1
+            // Check output file has correct naming
+            assert process.out.ptm_in_id_onsite[0][1].toString().endsWith('_lucxor.idXML')
+        }
+    }
+
+    test("Should run stub mode") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', mzml_id: 'test_sample' ],
+                    file(params.test_data['proteomics']['onsite']['mzml'], checkIfExists: true),
+                    file(params.test_data['proteomics']['onsite']['idxml'], checkIfExists: true)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.versions).match("versions_stub")
+        }
+    }
+}

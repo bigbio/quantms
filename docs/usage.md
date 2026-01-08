@@ -19,7 +19,23 @@ where the experimental design file has to be one of:
 - [Sample-to-data-relationship format](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.0c00376) (.sdrf.tsv)
 - [OpenMS experimental design format](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) (.tsv)
 
-In the respective "comment[file uri]" or "Spectra_Filepath" columns, the raw or mzML files with the mass spectra to be staged have to be listed. URIs are possible,
+### Supported file formats
+
+The pipeline supports the following mass spectrometry data file formats:
+
+- **`.raw`** - Thermo RAW files (automatically converted to mzML)
+- **`.mzML`** - Open standard mzML files
+- **`.d`** - Bruker timsTOF files (optionally converted to mzML when `--convert_dotd` is set)
+- **`.dia`** - DIA-NN native binary format (passed through without conversion)
+
+Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
+
+- `.gz` (gzip compressed)
+- `.tar` (tar archive)
+- `.tar.gz` or `.tgz` (tar gzip compressed)
+- `.zip` (zip compressed)
+
+In the respective "comment[file uri]" or "Spectra_Filepath" columns, the mass spectra files to be processed have to be listed. URIs are possible,
 and the root folder as well as the file endings can be changed in the options in case of previously downloaded, moved or converted experiments.
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

@@ -3,17 +3,14 @@ process SPECTRUM_FEATURES {
     label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.10--pyhdfd78af_0' :
-        'biocontainers/quantms-rescoring:0.0.10--pyhdfd78af_0' }"
-
-    // userEmulation settings when docker is specified
-    containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.13' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.13' }"
 
     input:
-    tuple val(meta), path(id_file), path(ms_file)
+    tuple val(meta), path(id_file), val(search_engine), path(ms_file)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_snr.idXML"), emit: id_files_snr
+    tuple val(meta), path("${id_file.baseName}_snr.idXML"), val(search_engine), emit: id_files_snr
     path "versions.yml", emit: versions
     path "*.log", emit: log
 

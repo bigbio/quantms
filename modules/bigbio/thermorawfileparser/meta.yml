@@ -1,0 +1,49 @@
+name: thermorawfileparser
+description: Convert RAW file to mzML or MGF files
+keywords:
+  - raw
+  - mzML
+  - MGF
+  - OpenMS
+tools:
+  - thermorawfileparser:
+      description: |
+        ThermoRawFileParser converts Thermo RAW files to open standard formats like mzML, producing indexed output files.
+        Use `task.ext.args` to pass additional arguments, e.g.:
+        - `-f=0` for MGF output, `-f=1` for mzML, `-f=2` for indexed mzML (default), `-f=3` for Parquet, `-f=4` for None
+        - `-L` or `--msLevel=VALUE` to select MS levels (e.g., `-L=1,2` or `--msLevel=1-3`)
+      homepage: https://github.com/compomics/ThermoRawFileParser
+      documentation: https://github.com/compomics/ThermoRawFileParser
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+  - rawfile:
+      type: file
+      description: |
+        Thermo RAW file
+      pattern: "*.{raw,RAW}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'sample1', mzml_id:'UPS1_50amol_R3' ]
+  - convert_files:
+      type: file
+      description: |
+        Converted files in mzML or MGF format depending on the format parameter (-f).
+        Format options: 0 for MGF, 1 for mzML, 2 for indexed mzML (default), 3 for Parquet, 4 for None.
+      pattern: "*.{mzML,mgf,parquet}"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - versions:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
+  - "@ypriverol"

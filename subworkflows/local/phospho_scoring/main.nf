@@ -3,7 +3,7 @@
 //
 
 include { ID_SCORE_SWITCHER } from '../../../modules/local/openms/id_score_switcher/main'
-include { LUCIPHOR          } from '../../../modules/local/openms/luciphor/main'
+include { ONSITE            } from '../../../modules/bigbio/onsite/main'
 
 workflow PHOSPHO_SCORING {
     take:
@@ -15,17 +15,17 @@ workflow PHOSPHO_SCORING {
     if (params.search_engines.split(",").size() != 1){
         ID_SCORE_SWITCHER(ch_id_files.combine(Channel.value("\"Posterior Error Probability_score\"")))
         ch_version = ch_version.mix(ID_SCORE_SWITCHER.out.versions)
-        LUCIPHOR(ch_mzml_files.join(ID_SCORE_SWITCHER.out.id_score_switcher))
-        ch_version = ch_version.mix(LUCIPHOR.out.versions)
+        ONSITE(ch_mzml_files.join(ID_SCORE_SWITCHER.out.id_score_switcher))
+        ch_version = ch_version.mix(ONSITE.out.versions)
     } else{
-        LUCIPHOR(ch_mzml_files.join(ch_id_files))
-        ch_version = ch_version.mix(LUCIPHOR.out.versions)
+        ONSITE(ch_mzml_files.join(ch_id_files))
+        ch_version = ch_version.mix(ONSITE.out.versions)
     }
 
 
 
     emit:
-    id_luciphor = LUCIPHOR.out.ptm_in_id_luciphor
+    id_onsite = ONSITE.out.ptm_in_id_onsite
 
     versions = ch_version
 }

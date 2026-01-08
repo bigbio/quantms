@@ -37,6 +37,7 @@ jobs:
             "test_localize",
             "test_tmt",
             "test_dda_id_alphapeptdeep",
+            "test_dda_id_fine_tuning",
             "test_dda_id_ms2pip",
             "test_tmt_corr",
           ]
@@ -122,7 +123,16 @@ jobs:
           - "25.04.0"
           - "latest-everything"
         test_profile:
-          ["test_lfq", "test_dia", "test_localize", "test_tmt", "test_dda_id_alphapeptdeep", "test_tmt_corr"]
+          [
+            "test_lfq",
+            "test_dia",
+            "test_localize",
+            "test_tmt",
+            "test_dda_id_ms2pip",
+            "test_dda_id_alphapeptdeep",
+            "test_tmt_corr",
+            "test_dda_id_fine_tuning",
+          ]
     env:
       NXF_ANSI_LOG: false
       CAPSULE_LOG: none

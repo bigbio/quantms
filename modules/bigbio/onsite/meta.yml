@@ -1,0 +1,57 @@
+name: onsite
+description: Post-translational modification (PTM) localization using onsite algorithms (AScore, PhosphoRS, LucXor)
+keywords:
+  - onsite
+  - PTM
+  - phosphorylation
+  - AScore
+  - PhosphoRS
+  - LucXor
+  - modification
+  - localization
+tools:
+  - onsite:
+      description: |
+        Comprehensive Python package for mass spectrometry post-translational modification (PTM) localization.
+        Provides algorithms for confident phosphorylation site localization and scoring, including
+        implementations of AScore, PhosphoRS, and LucXor (LuciPHOr2).
+      homepage: https://github.com/bigbio/onsite
+      documentation: https://github.com/bigbio/onsite/blob/main/README.md
+      tool_dev_url: https://github.com/bigbio/onsite
+      doi: ""
+      licence: ["MIT"]
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', mzml_id:'sample1' ]
+  - mzml_file:
+      type: file
+      description: Input spectrum file in mzML format
+      pattern: "*.mzML"
+  - id_file:
+      type: file
+      description: Protein/peptide identifications file in idXML format
+      pattern: "*.idXML"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'test', mzml_id:'sample1' ]
+  - ptm_in_id_onsite:
+      type: file
+      description: Protein/peptide identifications file with PTM localization scores
+      pattern: "*_{ascore,phosphors,lucxor}.idXML"
+  - log:
+      type: file
+      description: Log file from onsite execution
+      pattern: "*.log"
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+authors:
+  - "@ypriverol"
+  - "@weizhongchun"

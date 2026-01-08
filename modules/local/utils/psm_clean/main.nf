@@ -3,11 +3,8 @@ process PSM_CLEAN {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-rescoring:0.0.10--pyhdfd78af_0' :
-        'biocontainers/quantms-rescoring:0.0.10--pyhdfd78af_0' }"
-
-    // userEmulation settings when docker is specified
-    containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.13' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.13' }"
 
     input:
     tuple val(meta), path(idxml), path(mzml)

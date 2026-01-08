@@ -3,9 +3,30 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.0] bigbio/quantms - [] -
+## [1.7.0] bigbio/quantms - [08/01/2026] - [Guangzhou]
 
-## `Changed`
+### `Added`
+
+- [626](https://github.com/bigbio/quantms/pull/626) Added onsite module to quantms
+- [629](https://github.com/bigbio/quantms/pull/629) Added transfer learning module for MS2 intensity prediction
+
+### `Changed`
+
+- [627](https://github.com/bigbio/quantms/pull/627) Move thermorawfileparser from local to bigbio nf-core
+- [629](https://github.com/bigbio/quantms/pull/629) Update quantms-rescoring to 0.0.13 to support transfer learning
+- [615](https://github.com/bigbio/quantms/pull/615) Update quantms-utils 0.0.24 and pmultiqc 0.0.39
+
+### `Fixed`
+
+- [619](https://github.com/bigbio/quantms/pull/619) quantms-rescoring bug fixed
+- [614](https://github.com/bigbio/quantms/pull/614) Multiple bugs fixed about diann, ptms and pmultiqc
+
+### `Dependencies`
+
+- Updated quantms-rescoring==0.0.13
+- Updated pmultiqc==0.0.39
+- Updated pyonsite==0.0.2
+- Updated quantms-utils==0.0.24
 
 ## [1.6.0] bigbio/quantms - [13/08/2025] - Munich
 

@@ -34,8 +34,8 @@
 	<g id="g176441" transform="translate(-0.5 -0.5)">
 		<text id="text176437" transform="matrix(1 0 0 1 37.1611 240.5)" class="st3 st4">ID Comet</text>
 	</g>
-	<path id="path176443" pointer-events="stroke" class="st0" d="M142.5,316.5v14.1h-80v58.9"/>
-	<path id="path176445" pointer-events="all" class="st1" d="M64,343.5l-3.5-7l3.5,1.8l3.5-1.8L64,343.5z"/>
+	<path id="path176443" pointer-events="stroke" class="st0" d="M141.1,310v19.2h-3.5v80.3"/>
+	<path id="path176445" pointer-events="all" class="st1" d="M139,343.5l-3.5-7l3.5,1.8l3.5-1.8L139,343.5z"/>
 	<path id="path176447" pointer-events="all" class="st5" d="M142.5,286.5l22.5,15l-22.5,15l-22.5-15L142.5,286.5z"/>
 	<g id="g176453" transform="translate(-0.5 -0.5)">
 		<text id="text176449" transform="matrix(1 0 0 1 133.1689 303.5)" class="st6 st3 st4">mix</text>
@@ -54,12 +54,12 @@
 	<g id="g176481" transform="translate(-0.5 -0.5)">
 		<text id="text176477" transform="matrix(1 0 0 1 125.4932 488.5)" class="st6 st3 st4">merge</text>
 	</g>
-	<path id="path176483" pointer-events="stroke" class="st0" d="M62.5,414.5v42h80v3.6"/>
+	<path id="path176483" pointer-events="stroke" class="st0" d="M141.1,434.6v26.1h3.2v2.2"/>
 	<path id="path176485" pointer-events="all" class="st1" d="M142.5,465.4l-3.5-7l3.5,1.8l3.5-1.8L142.5,465.4z"/>
-	<path id="rect176487" pointer-events="all" class="st2" d="M10,399h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H10c-3.3,0-6-2.7-6-6
-		v-28C4,401.7,6.7,399,10,399z"/>
+	<path id="rect176487" pointer-events="all" class="st2" d="M82.6,399h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C76.6,401.7,79.3,399,82.6,399z"/>
 	<g id="g176493" transform="translate(-0.5 -0.5)">
-		<text id="text176489" transform="matrix(1 0 0 1 37.1611 422)" class="st3 st4">Percolator</text>
+		<text id="text176489" transform="matrix(1 0 0 1 109.2 422)" class="st3 st4">Percolator</text>
 	</g>
 	<path id="path176495" pointer-events="stroke" class="st0" d="M222.5,256.5v10h-80v13.6"/>
 	<path id="path176497" pointer-events="all" class="st1" d="M142.5,285.4l-3.5-7l3.5,1.8l3.5-1.8L142.5,285.4z"/>
@@ -68,21 +68,7 @@
 	<g id="g176505" transform="translate(-0.5 -0.5)">
 		<text id="text176501" transform="matrix(1 0 0 1 197.501 240.5)" class="st3 st4">ID MSGF</text>
 	</g>
-	<path id="path176507" pointer-events="stroke" class="st0" d="M222.5,384.5v20v-23v13.6"/>
-	<path id="path176509" pointer-events="all" class="st1" d="M222.5,400.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,400.4z"/>
-	<path id="rect176511" pointer-events="all" class="st8" d="M168.5,344.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
-		c-3.3,0-6-2.7-6-6v-28C162.5,347.2,165.2,344.5,168.5,344.5z"/>
-	<g id="g176517" transform="translate(-0.5 -0.5)">
-		<text id="text176513" transform="matrix(1 0 0 1 210.1689 368.5)" class="st3 st4">FDR</text>
-	</g>
-	<path id="path176519" pointer-events="stroke" class="st0" d="M222.5,441.5v15h-80v3.6"/>
-	<path id="path176521" pointer-events="all" class="st1" d="M142.5,465.4l-3.5-7l3.5,1.8l3.5-1.8L142.5,465.4z"/>
-	<path id="rect176523" pointer-events="all" class="st2" d="M168.5,401.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
-		c-3.3,0-6-2.7-6-6v-28C162.5,404.2,165.2,401.5,168.5,401.5z"/>
-	<g id="g176529" transform="translate(-0.5 -0.5)">
-		<text transform="matrix(1 0 0 1 175.004 419.4696)" class="st3 st4">Distribution-based</text>
-		<text transform="matrix(1 0 0 1 211.3556 434.4696)" class="st3 st4">PEP</text>
-	</g>
+	<path id="path176521" pointer-events="all" class="st1" d="M141.1,465.9l-3.5-7l3.5,1.8l3.5-1.8L141.1,465.9z"/>
 	<path id="path176531" pointer-events="stroke" class="st0" d="M60,585.5v15.6"/>
 	<path id="path176533" pointer-events="all" class="st1" d="M60,606.4l-3.5-7l3.5,1.8l3.5-1.8L60,606.4z"/>
 	<path id="rect176535" pointer-events="all" class="st2" d="M6,545.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H6c-3.3,0-6-2.7-6-6
@@ -95,7 +81,7 @@
 	<path id="rect176547" pointer-events="all" class="st8" d="M87.5,724.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
 		c-3.3,0-6-2.7-6-6v-28C81.5,727.2,84.2,724.5,87.5,724.5z"/>
 	<g id="g176553" transform="translate(-0.5 -0.5)">
-		<text id="text176549" transform="matrix(1 0 0 1 118.4844 748.4999)" class="st3 st4">Luciphor</text>
+		<text id="text176549" transform="matrix(1 0 0 1 115.5 748.4998)" class="st3 st4">    onsite</text>
 	</g>
 	<path id="path176555" pointer-events="stroke" class="st0" d="M60,647.5v9h81.5v6.6"/>
 	<path id="path176557" pointer-events="all" class="st1" d="M141.5,668.4l-3.5-7l3.5,1.8l3.5-1.8L141.5,668.4z"/>
@@ -154,12 +140,6 @@
 	<path id="path176645" pointer-events="all" class="st1" d="M62.5,126.4l-3.5-7l3.5,1.8l3.5-1.8L62.5,126.4z"/>
 	<path id="path176647" pointer-events="stroke" class="st0" d="M247.5,103c-16.7,0-25,2.3-25,6.8s0,8.6,0,12.4"/>
 	<path id="path176649" pointer-events="all" class="st1" d="M222.5,127.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,127.4z"/>
-	<rect id="rect176651" x="153.5" y="338.5" pointer-events="all" class="st9" width="81" height="6"/>
-	<g id="g176657" transform="translate(-0.5,-4.5)">
-		<text id="text176653" transform="matrix(1 0 0 1 161.9854 344.5)" class="st3 st10">if !multi-engine</text>
-	</g>
-	<path id="path176659" pointer-events="stroke" class="st0" d="M142.5,316.5v10h80v11.6"/>
-	<path id="path176661" pointer-events="all" class="st1" d="M222.5,343.4l-3.5-7l3.5,1.8l3.5-1.8L222.5,343.4z"/>
 	<rect id="rect176663" x="78.5" y="716.5" pointer-events="all" class="st9" width="60" height="10"/>
 	<g id="g176669" transform="translate(-0.5,-4.5)">
 		<text id="text176665" transform="matrix(1 0 0 1 87.936 724.4999)" class="st3 st10">if localize</text>
@@ -206,10 +186,10 @@
 	<path id="rect176499_1_" pointer-events="all" class="st2" d="M112.1,216.5h61.8c1.9,0,3.4,2.7,3.4,6v28c0,3.3-1.5,6-3.4,6h-61.8
 		c-1.9,0-3.4-2.7-3.4-6v-28C108.7,219.2,110.2,216.5,112.1,216.5z"/>
 	<text transform="matrix(1 0 0 1 123.383 240.0014)" class="st3 st4">ID Sage</text>
-	<path id="rect176487_1_" pointer-events="all" class="st2" d="M10,344.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6H10
-		c-3.3,0-6-2.7-6-6v-28C4,347.2,6.7,344.5,10,344.5z"/>
-	<text transform="matrix(1 0 0 1 33.9002 368)" class="st3 st4">MS2Rescore</text>
-	<path id="path176509_1_" pointer-events="all" class="st1" d="M62.5,396.5l-3.5-7l3.5,1.8l3.5-1.8L62.5,396.5z"/>
+	<path id="rect176487_1_" pointer-events="all" class="st2" d="M78.7,344.5h108c3.3,0,6,2.7,6,6v28c0,3.3-2.7,6-6,6h-108
+		c-3.3,0-6-2.7-6-6v-28C72.7,347.2,75.4,344.5,78.7,344.5z"/>
+	<text transform="matrix(1 0 0 1 81.4998 368)" class="st3 st4">quantms-rescoring</text>
+	<path id="path176509_1_" pointer-events="all" class="st1" d="M138,400l-3.5-7l3.5,1.8l3.5-1.8L138,400z"/>
 </g>
 <a id="a176765" xlink:href="https://desk.draw.io/support/solutions/articles/16000042487"  transform="translate(0,-5)">
 </a>

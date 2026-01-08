@@ -3,20 +3,17 @@ process MSRESCORE_FEATURES {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.12' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.12' }"
-
-    // userEmulation settings when docker is specified
-    containerOptions = (workflow.containerEngine == 'docker') ? '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' : ''
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.14' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.14' }"
 
     input:
-    tuple val(meta), path(idxml), path(mzml)
+    tuple val(meta), path(idxml), path(mzml), path(model_weight), val(search_engine)
 
     output:
-    tuple val(meta), path("*ms2rescore.idXML") , emit: idxml
-    tuple val(meta), path("*.html" )           , optional:true, emit: html
-    path "versions.yml"                        , emit: versions
-    path "*.log"                               , emit: log
+    tuple val(meta), path("*ms2rescore.idXML"), val(search_engine) , emit: idxml
+    tuple val(meta), path("*.html" )                               , optional:true, emit: html
+    path "versions.yml"                                            , emit: versions
+    path "*.log"                                                   , emit: log
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,7 +25,13 @@ process MSRESCORE_FEATURES {
     // Only add ms2_model_dir if it's actually set and not empty
     // Handle cases where parameter might be empty string, null, boolean true, or whitespace
     // When --ms2features_model_dir is passed with no value, Nextflow may set it to boolean true
-    def ms2_model_dir = (params.ms2features_model_dir && params.ms2features_model_dir != true) ? "--ms2_model_dir ${params.ms2features_model_dir}" : ""
+    if (params.ms2features_fine_tuning) {
+        ms2_model_dir = '--ms2_model_dir ./'
+    } else if (params.ms2features_model_dir && params.ms2features_model_dir != true){
+        ms2_model_dir = "--ms2_model_dir ${model_weight}"
+    } else {
+        ms2_model_dir = "--ms2_model_dir ./"
+    }
 
     // Determine if using ms2pip or alphapeptdeep based on ms2features_generators
     def using_ms2pip = params.ms2features_generators.toLowerCase().contains('ms2pip')
