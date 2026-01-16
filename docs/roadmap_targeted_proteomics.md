@@ -515,6 +515,559 @@ quantms/
 
 ---
 
+## Deep Dive: Tool Combinations for SRM/PRM Analysis
+
+This section provides a detailed technical analysis of how existing tools can be combined to build the targeted proteomics workflow.
+
+### Available Tools Analysis
+
+#### 1. OpenMS/pyOpenMS Tools for Targeted Analysis
+
+OpenMS provides the **OpenSWATH suite** which, despite being designed for DIA/SWATH, contains tools directly applicable to SRM/MRM/PRM:
+
+| Tool | Function | Applicability |
+|------|----------|---------------|
+| **OpenSwathWorkflow** | Complete DIA analysis | Can process SRM-like data with adaptation |
+| **MRMFeatureFinderScoring** | Peak detection in MRM chromatograms | **Directly applicable** to SRM/MRM |
+| **OpenSwathChromatogramExtractor** | Extract XICs from mzML | **Directly applicable** |
+| **OpenSwathAnalyzer** | Analyze transition groups | **Directly applicable** |
+| **TargetedFileConverter** | Convert transition formats | TraML ↔ TSV conversion |
+
+**pyOpenMS API (from [pyOpenMS documentation](https://pyopenms.readthedocs.io/en/latest/user_guide/chromatographic_analysis.html)):**
+
+```python
+from pyopenms import *
+
+# Load SRM/MRM data
+exp = MSExperiment()
+MzMLFile().load("srm_data.mzML", exp)
+
+# Load transition library
+targeted_exp = TargetedExperiment()
+TraMLFile().load("transitions.TraML", targeted_exp)
+
+# Smooth chromatograms
+smoother = SavitzkyGolayFilter()
+smoother.filterExperiment(exp)
+
+# Find and score features
+ff = MRMFeatureFinderScoring()
+feature_map = FeatureMap()
+ff.pickExperiment(exp, feature_map, targeted_exp, TransformationDescription(), TransformationDescription())
+
+# Score includes: var_library_dotprod (spectral similarity)
+```
+
+#### 2. pyprophet/mProphet for Statistical Scoring
+
+[pyprophet](https://github.com/PyProphet/pyprophet) implements semi-supervised learning for FDR control:
+
+| Feature | Description |
+|---------|-------------|
+| **Algorithm** | mProphet - separates true signal from decoy noise |
+| **Input** | OpenSWATH `.osw` files (SQLite format) |
+| **Output** | q-values for peptide-level FDR control |
+| **Applicability** | Originally for SRM, now optimized for DIA |
+
+**Integration approach:**
+```bash
+# After OpenSWATH extraction
+pyprophet score --in=results.osw --level=ms2
+pyprophet peptide --in=results.osw --context=run-specific
+pyprophet protein --in=results.osw --context=global
+```
+
+#### 3. MSstats for Statistical Analysis
+
+[MSstats](https://msstats.org/) (already in quantms) natively supports SRM:
+
+**Existing quantms integration** (`bin/msstats_plfq.R:199`):
+```r
+# Current LFQ approach - adaptable for SRM
+quant <- OpenMStoMSstatsFormat(data, removeProtein_with1Feature = removeOneFeatProts)
+processed.quant <- dataProcess(quant, censoredInt = 'NA', featureSubset = 'top3')
+```
+
+**SRM-specific MSstats input format:**
+| Column | Description | Example |
+|--------|-------------|---------|
+| ProteinName | Protein ID | P02768 |
+| PeptideSequence | Peptide sequence | LVNEVTEFAK |
+| PrecursorCharge | Precursor charge | 2 |
+| FragmentIon | Transition ID | y7 |
+| ProductCharge | Product charge | 1 |
+| **IsotopeLabelType** | Heavy/Light | L or H |
+| Condition | Sample group | Control |
+| BioReplicate | Sample number | 1 |
+| Run | MS run | Run_01 |
+| Intensity | Peak area | 1234567 |
+
+**Key advantage:** MSstats handles heavy/light ratios via `IsotopeLabelType` column.
+
+#### 4. Skyline Integration Options
+
+**Option A: Skyline Exported Reports (Recommended)**
+
+Skyline's "Export Report" can output MSstats-compatible format directly:
+
+```
+Skyline → File → Export → Report → "MSstats Input"
+```
+
+Output columns match MSstats requirements exactly.
+
+**Option B: SkylineRunner/SkylineCmd CLI**
+
+Available via [Skyline Batch](https://skyline.ms/wiki/home/software/Skyline/page.view?name=documentation):
+```bash
+# Windows-only, but can run via Wine in containers
+SkylineCmd --in=document.sky \
+           --import-file=sample.raw \
+           --report-name="MSstats Input" \
+           --report-file=output.csv
+```
+
+**Option C: Direct .sky parsing**
+
+The `.sky` format is XML-based and parseable:
+```xml
+<SrmDocument>
+  <PeptideList>
+    <Peptide sequence="LVNEVTEFAK">
+      <Precursor charge="2">
+        <Transition fragment="y7" charge="1">
+          <Results>
+            <TransitionPeak area="1234567" />
+          </Results>
+        </Transition>
+      </Precursor>
+    </Peptide>
+  </PeptideList>
+</SrmDocument>
+```
+
+#### 5. ProteoWizard msconvert
+
+[msconvert](https://proteowizard.sourceforge.io/) handles SRM/MRM data conversion:
+
+```bash
+msconvert sample.raw \
+    --mzML \
+    --filter "peakPicking vendor" \
+    --srmAsSpectra  # Important: treats SRM transitions as spectra
+```
+
+**Container:** Already available in quantms via `thermorawfileparser` module, but msconvert offers better SRM support.
+
+---
+
+### Recommended Tool Combination Strategy
+
+Based on the analysis, here's the optimal architecture:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     WORKFLOW ENTRY POINTS                          │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  PATH A: Raw Data Processing          PATH B: Pre-processed Data   │
+│  (Full pipeline)                      (Skyline exports)            │
+│                                                                     │
+│  ┌──────────────┐                     ┌──────────────┐             │
+│  │ Raw Files    │                     │ Skyline CSV  │             │
+│  │ (.raw, .d)   │                     │ (MSstats fmt)│             │
+│  └──────┬───────┘                     └──────┬───────┘             │
+│         │                                    │                      │
+│         ▼                                    │                      │
+│  ┌──────────────┐                            │                      │
+│  │  msconvert   │                            │                      │
+│  │ (ProteoWiz)  │                            │                      │
+│  └──────┬───────┘                            │                      │
+│         │                                    │                      │
+│         ▼                                    │                      │
+│  ┌──────────────┐    ┌──────────────┐        │                      │
+│  │    mzML      │◄───│   TraML      │        │                      │
+│  │   (SRM data) │    │ (transitions)│        │                      │
+│  └──────┬───────┘    └──────────────┘        │                      │
+│         │                                    │                      │
+│         ▼                                    │                      │
+│  ┌────────────────────────┐                  │                      │
+│  │  OpenMS MRM Tools      │                  │                      │
+│  │  ┌──────────────────┐  │                  │                      │
+│  │  │ChromatogramExtract│  │                  │                      │
+│  │  │MRMFeatureScoring │  │                  │                      │
+│  │  └──────────────────┘  │                  │                      │
+│  └──────────┬─────────────┘                  │                      │
+│             │                                │                      │
+│             ▼                                │                      │
+│  ┌──────────────────┐                        │                      │
+│  │    pyprophet     │                        │                      │
+│  │  (FDR scoring)   │                        │                      │
+│  └──────────┬───────┘                        │                      │
+│             │                                │                      │
+│             ▼                                ▼                      │
+│  ┌─────────────────────────────────────────────┐                   │
+│  │         MERGE POINT: MSstats Format         │                   │
+│  │  (ProteinName, Peptide, Transition, etc.)   │                   │
+│  └──────────────────────┬──────────────────────┘                   │
+│                         │                                           │
+│                         ▼                                           │
+│  ┌─────────────────────────────────────────────┐                   │
+│  │         QUANTIFICATION MODULE               │                   │
+│  │  ┌─────────────────────────────────────┐   │                   │
+│  │  │ Heavy/Light Ratio Calculation       │   │                   │
+│  │  │ IS Normalization                    │   │                   │
+│  │  │ Calibration Curve Fitting           │   │                   │
+│  │  └─────────────────────────────────────┘   │                   │
+│  └──────────────────────┬──────────────────────┘                   │
+│                         │                                           │
+│                         ▼                                           │
+│  ┌─────────────────────────────────────────────┐                   │
+│  │              MSstats                        │                   │
+│  │  (dataProcess → groupComparison)            │                   │
+│  └──────────────────────┬──────────────────────┘                   │
+│                         │                                           │
+│                         ▼                                           │
+│  ┌─────────────────────────────────────────────┐                   │
+│  │              pMultiQC                       │                   │
+│  │  (QC Report with targeted metrics)          │                   │
+│  └─────────────────────────────────────────────┘                   │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### Specific Module Implementations
+
+#### Module 1: OPENMS_CHROMATOGRAM_EXTRACTOR
+
+```groovy
+process OPENMS_CHROMATOGRAM_EXTRACTOR {
+    tag "$meta.mzml_id"
+    label 'process_medium'
+    label 'openms'
+
+    container "${ workflow.containerEngine == 'singularity' ?
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+
+    input:
+    tuple val(meta), path(mzml)
+    path transition_library  // TraML format
+
+    output:
+    tuple val(meta), path("*.chrom.mzML"), emit: chromatograms
+    path "versions.yml", emit: versions
+
+    script:
+    """
+    OpenSwathChromatogramExtractor \\
+        -in ${mzml} \\
+        -tr ${transition_library} \\
+        -out ${meta.mzml_id}.chrom.mzML \\
+        -extract_MS1_traces false \\
+        -rt_extraction_window ${params.rt_extraction_window ?: 300} \\
+        -mz_extraction_window ${params.mz_extraction_window ?: 0.05} \\
+        -threads ${task.cpus}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        OpenMS: \$(OpenSwathChromatogramExtractor --version 2>&1 | grep 'Version' | cut -d' ' -f2)
+    END_VERSIONS
+    """
+}
+```
+
+#### Module 2: OPENMS_MRM_FEATURE_FINDER
+
+```groovy
+process OPENMS_MRM_FEATURE_FINDER {
+    tag "$meta.mzml_id"
+    label 'process_medium'
+    label 'openms'
+
+    container "${ workflow.containerEngine == 'singularity' ?
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+
+    input:
+    tuple val(meta), path(chromatograms)
+    path transition_library
+
+    output:
+    tuple val(meta), path("*.featureXML"), emit: features
+    tuple val(meta), path("*.osw"), emit: osw, optional: true
+    path "versions.yml", emit: versions
+
+    script:
+    """
+    OpenSwathAnalyzer \\
+        -in ${chromatograms} \\
+        -tr ${transition_library} \\
+        -out ${meta.mzml_id}.featureXML \\
+        -threads ${task.cpus} \\
+        -algorithm:Scores:use_library_dotprod true \\
+        -algorithm:stop_report_after_feature ${params.stop_report_after_feature ?: 5}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        OpenMS: \$(OpenSwathAnalyzer --version 2>&1 | grep 'Version' | cut -d' ' -f2)
+    END_VERSIONS
+    """
+}
+```
+
+#### Module 3: SKYLINE_REPORT_CONVERTER
+
+```groovy
+process SKYLINE_REPORT_CONVERTER {
+    tag "$skyline_report.Name"
+    label 'process_low'
+
+    container 'biocontainers/python:3.10'
+
+    input:
+    path skyline_report
+    path experimental_design
+
+    output:
+    path "*_msstats_in.csv", emit: msstats_input
+    path "versions.yml", emit: versions
+
+    script:
+    """
+    #!/usr/bin/env python3
+    import pandas as pd
+
+    # Load Skyline report (already in MSstats format if exported correctly)
+    df = pd.read_csv("${skyline_report}")
+
+    # Required columns mapping
+    required_cols = {
+        'ProteinName': ['Protein Name', 'ProteinName', 'Protein'],
+        'PeptideSequence': ['Peptide Sequence', 'PeptideSequence', 'Peptide Modified Sequence'],
+        'PrecursorCharge': ['Precursor Charge', 'PrecursorCharge'],
+        'FragmentIon': ['Fragment Ion', 'FragmentIon', 'Transition'],
+        'ProductCharge': ['Product Charge', 'ProductCharge'],
+        'IsotopeLabelType': ['Isotope Label Type', 'IsotopeLabelType', 'Label'],
+        'Condition': ['Condition', 'Sample Group'],
+        'BioReplicate': ['BioReplicate', 'Replicate'],
+        'Run': ['Run', 'File Name', 'Replicate Name'],
+        'Intensity': ['Intensity', 'Area', 'Total Area']
+    }
+
+    # Standardize column names
+    for std_name, variants in required_cols.items():
+        for var in variants:
+            if var in df.columns:
+                df = df.rename(columns={var: std_name})
+                break
+
+    # Write standardized output
+    df.to_csv("${skyline_report.baseName}_msstats_in.csv", index=False)
+
+    with open('versions.yml', 'w') as f:
+        f.write('"${task.process}":\\n')
+        f.write('    python: 3.10\\n')
+        f.write('    pandas: ' + pd.__version__ + '\\n')
+    """
+}
+```
+
+#### Module 4: ABSOLUTE_QUANTIFICATION
+
+```groovy
+process ABSOLUTE_QUANTIFICATION {
+    tag "$input_csv.Name"
+    label 'process_medium'
+
+    container 'biocontainers/bioconductor-msstats:4.14.0--r44he5774e6_0'
+
+    input:
+    path input_csv
+    path standard_concentrations  // CSV: Peptide, Concentration, Unit
+
+    output:
+    path "*_absolute_quant.csv", emit: concentrations
+    path "*_calibration_curves.pdf", emit: curves
+    path "*_qc_metrics.csv", emit: qc_metrics
+    path "versions.yml", emit: versions
+
+    script:
+    """
+    #!/usr/bin/env Rscript
+    library(dplyr)
+    library(ggplot2)
+
+    # Load data
+    data <- read.csv("${input_csv}")
+    standards <- read.csv("${standard_concentrations}")
+
+    # Calculate heavy/light ratios
+    wide_data <- data %>%
+        pivot_wider(
+            id_cols = c(ProteinName, PeptideSequence, Run, Condition, BioReplicate),
+            names_from = IsotopeLabelType,
+            values_from = Intensity
+        ) %>%
+        mutate(ratio = L / H)  # Light (endogenous) / Heavy (IS)
+
+    # Fit calibration curves for each peptide
+    calibration_results <- standards %>%
+        inner_join(wide_data, by = "PeptideSequence") %>%
+        group_by(PeptideSequence) %>%
+        do({
+            model <- lm(ratio ~ Concentration, data = .)
+            data.frame(
+                slope = coef(model)[2],
+                intercept = coef(model)[1],
+                r_squared = summary(model)\$r.squared,
+                LOD = 3.3 * sigma(model) / coef(model)[2],
+                LOQ = 10 * sigma(model) / coef(model)[2]
+            )
+        })
+
+    # Calculate absolute concentrations
+    results <- wide_data %>%
+        left_join(calibration_results, by = "PeptideSequence") %>%
+        mutate(
+            absolute_concentration = (ratio - intercept) / slope,
+            unit = "fmol/uL"
+        )
+
+    # Generate calibration curve plots
+    pdf("${input_csv.baseName}_calibration_curves.pdf", width = 12, height = 8)
+    for (pep in unique(standards\$PeptideSequence)) {
+        pep_data <- filter(wide_data, PeptideSequence == pep)
+        pep_std <- filter(standards, PeptideSequence == pep)
+        p <- ggplot(pep_data, aes(x = Concentration, y = ratio)) +
+            geom_point() +
+            geom_smooth(method = "lm") +
+            labs(title = pep, x = "Concentration", y = "L/H Ratio") +
+            theme_minimal()
+        print(p)
+    }
+    dev.off()
+
+    # Write outputs
+    write.csv(results, "${input_csv.baseName}_absolute_quant.csv", row.names = FALSE)
+    write.csv(calibration_results, "${input_csv.baseName}_qc_metrics.csv", row.names = FALSE)
+
+    writeLines(c(
+        '"${task.process}":',
+        paste0('    R: ', R.version\$major, '.', R.version\$minor)
+    ), 'versions.yml')
+    """
+}
+```
+
+#### Module 5: MSSTATS_SRM (adapted from existing MSSTATS_LFQ)
+
+```groovy
+process MSSTATS_SRM {
+    tag "$msstats_csv_input.Name"
+    label 'process_medium'
+
+    container 'biocontainers/bioconductor-msstats:4.14.0--r44he5774e6_0'
+
+    input:
+    path msstats_csv_input
+
+    output:
+    path "*.pdf", optional: true
+    path "*_comparisons.csv", emit: comparisons
+    path "*_quantification.csv", emit: quantification
+    path "*.log", emit: log
+    path "versions.yml", emit: versions
+
+    script:
+    """
+    #!/usr/bin/env Rscript
+    library(MSstats)
+
+    # Load SRM data (already in MSstats format)
+    data <- read.csv("${msstats_csv_input}")
+
+    # SRM-specific: use SRMRawData format if heavy/light pairs present
+    has_isotopes <- "IsotopeLabelType" %in% colnames(data) &&
+                    length(unique(data\$IsotopeLabelType)) > 1
+
+    if (has_isotopes) {
+        # Process with isotope labeling
+        processed <- dataProcess(
+            data,
+            normalization = "globalStandards",  # Use heavy peptides
+            nameStandards = unique(data\$ProteinName[data\$IsotopeLabelType == "H"]),
+            censoredInt = "NA",
+            summaryMethod = "TMP"
+        )
+    } else {
+        # Standard label-free processing
+        processed <- dataProcess(
+            data,
+            normalization = "equalizeMedians",
+            censoredInt = "NA",
+            summaryMethod = "TMP"
+        )
+    }
+
+    # Quantification
+    quant <- quantification(processed, type = "Sample")
+    write.csv(quant, "${msstats_csv_input.baseName}_quantification.csv", row.names = FALSE)
+
+    # Group comparison (if multiple conditions)
+    lvls <- levels(as.factor(data\$Condition))
+    if (length(lvls) > 1) {
+        # Pairwise comparisons
+        comparison <- groupComparison(data = processed)
+        write.csv(comparison\$ComparisonResult,
+                  "${msstats_csv_input.baseName}_comparisons.csv",
+                  row.names = FALSE)
+
+        # Visualization
+        groupComparisonPlots(data = comparison\$ComparisonResult,
+                            type = "VolcanoPlot",
+                            width = 10, height = 8)
+    }
+
+    writeLines(c(
+        '"${task.process}":',
+        paste0('    MSstats: ', packageVersion('MSstats'))
+    ), 'versions.yml')
+    """
+}
+```
+
+---
+
+### Tool Compatibility Matrix
+
+| Component | SRM | MRM | PRM | Notes |
+|-----------|-----|-----|-----|-------|
+| **msconvert** | ✅ | ✅ | ✅ | Use `--srmAsSpectra` flag |
+| **OpenSwathChromatogramExtractor** | ✅ | ✅ | ✅ | Works with any targeted mzML |
+| **MRMFeatureFinderScoring** | ✅ | ✅ | ⚠️ | PRM may need higher resolution settings |
+| **pyprophet** | ✅ | ✅ | ✅ | FDR scoring works universally |
+| **MSstats** | ✅ | ✅ | ✅ | Native SRM support |
+| **Skyline export** | ✅ | ✅ | ✅ | Best interoperability |
+
+---
+
+### Reusable Components from Existing quantms
+
+The following existing modules can be reused with minimal modification:
+
+| Module | Location | Reuse Potential |
+|--------|----------|-----------------|
+| `FILE_PREPARATION` | `subworkflows/local/file_preparation` | ✅ Direct reuse for raw→mzML |
+| `INPUT_CHECK` | `subworkflows/local/input_check` | ⚠️ Extend for targeted SDRF |
+| `MSSTATS_LFQ` | `modules/local/msstats/msstats_lfq` | ⚠️ Adapt for SRM data |
+| `PMULTIQC` | `modules/local/pmultiqc` | ⚠️ Add targeted QC metrics |
+| R utility functions | `bin/msstats_utils.R` | ✅ Reuse contrast handling |
+
+---
+
 ## References
 
 - [Skyline Ecosystem Paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC5799042/)
