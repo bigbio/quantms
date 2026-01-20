@@ -107,6 +107,58 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
     }
 
     wrapper.acquisition_method = meta.acquisition_method
+
+    // Validate required SDRF columns - these parameters are now exclusively read from SDRF
+    def requiredColumns = [
+        'Label': row.Label,
+        'Enzyme': row.Enzyme,
+        'PrecursorMassTolerance': row.PrecursorMassTolerance,
+        'PrecursorMassToleranceUnit': row.PrecursorMassToleranceUnit,
+        'FragmentMassTolerance': row.FragmentMassTolerance,
+        'FragmentMassToleranceUnit': row.FragmentMassToleranceUnit,
+        'FixedModifications': row.FixedModifications,
+        'VariableModifications': row.VariableModifications
+    ]
+
+    def missingColumns = []
+    requiredColumns.each { colName, colValue ->
+        if (colValue == null || colValue.toString().trim().isEmpty()) {
+            missingColumns.add(colName)
+        }
+    }
+
+    if (missingColumns.size() > 0) {
+        log.error("ERROR: Missing or empty required SDRF columns for file '${filestr}': ${missingColumns.join(', ')}")
+        log.error("These parameters must be specified in the SDRF file. Please check your SDRF annotation.")
+        exit(1)
+    }
+
+    // Validate tolerance values are valid numbers
+    try {
+        Double.parseDouble(row.PrecursorMassTolerance)
+    } catch (NumberFormatException e) {
+        log.error("ERROR: Invalid PrecursorMassTolerance value '${row.PrecursorMassTolerance}' for file '${filestr}'. Must be a valid number.")
+        exit(1)
+    }
+
+    try {
+        Double.parseDouble(row.FragmentMassTolerance)
+    } catch (NumberFormatException e) {
+        log.error("ERROR: Invalid FragmentMassTolerance value '${row.FragmentMassTolerance}' for file '${filestr}'. Must be a valid number.")
+        exit(1)
+    }
+
+    // Validate tolerance units
+    def validUnits = ['ppm', 'da', 'Da', 'PPM']
+    if (!validUnits.any { row.PrecursorMassToleranceUnit.toString().equalsIgnoreCase(it) }) {
+        log.error("ERROR: Invalid PrecursorMassToleranceUnit '${row.PrecursorMassToleranceUnit}' for file '${filestr}'. Must be 'ppm' or 'Da'.")
+        exit(1)
+    }
+    if (!validUnits.any { row.FragmentMassToleranceUnit.toString().equalsIgnoreCase(it) }) {
+        log.error("ERROR: Invalid FragmentMassToleranceUnit '${row.FragmentMassToleranceUnit}' for file '${filestr}'. Must be 'ppm' or 'Da'.")
+        exit(1)
+    }
+
     meta.labelling_type = row.Label
     meta.fixedmodifications = row.FixedModifications
     meta.variablemodifications = row.VariableModifications
