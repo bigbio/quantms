@@ -19,7 +19,7 @@
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.(?:csv|tsv|sdrf)$",
                     "description": "URI/path to an SDRF file in SDRF format with .sdrf, .tsv, or .csv extension. For more info see help text or docs.",
-                    "help_text": "Input is specified by using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and annotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\n\nThe SDRF file can have .sdrf, .tsv, or .csv extensions. An OpenMS-style experimental design will be generated based on the factor columns of the SDRF. The following parameters are read exclusively from the SDRF file:\n\n    * `acquisition_method` (from 'Proteomics Data Acquisition Method' column),\n    * `labelling_type` (from 'Label' column),\n    * `fixed_mods` (from 'FixedModifications' column),\n    * `variable_mods` (from 'VariableModifications' column),\n    * `precursor_mass_tolerance` (from 'PrecursorMassTolerance' column),\n    * `precursor_mass_tolerance_unit` (from 'PrecursorMassToleranceUnit' column),\n    * `fragment_mass_tolerance` (from 'FragmentMassTolerance' column),\n    * `fragment_mass_tolerance_unit` (from 'FragmentMassToleranceUnit' column),\n    * `enzyme` (from 'Enzyme' column)",
+                    "help_text": "Input is specified by using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and annotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\n\nThe SDRF file can have .sdrf, .tsv, or .csv extensions. An OpenMS-style experimental design will be generated based on the factor columns of the SDRF.\n\nThe following parameters are read **exclusively** from the SDRF file (required columns):\n\n    * `acquisition_method` (from 'Proteomics Data Acquisition Method' column),\n    * `labelling_type` (from 'Label' column),\n    * `enzyme` (from 'Enzyme' column),\n    * `fixed_mods` (from 'FixedModifications' column)\n\nThe following parameters are read from SDRF but can be **overridden via command line**:\n\n    * `precursor_mass_tolerance` (from 'PrecursorMassTolerance' column),\n    * `precursor_mass_tolerance_unit` (from 'PrecursorMassToleranceUnit' column),\n    * `fragment_mass_tolerance` (from 'FragmentMassTolerance' column),\n    * `fragment_mass_tolerance_unit` (from 'FragmentMassToleranceUnit' column),\n    * `variable_mods` (from 'VariableModifications' column)",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -262,6 +262,43 @@
                     "description": "Specify the maximum number of allowed missed enzyme cleavages in a peptide. The parameter is not applied if `unspecific cleavage` is specified as enzyme.",
                     "default": 2,
                     "fa_icon": "fas fa-sliders-h"
+                },
+                "precursor_mass_tolerance": {
+                    "type": "integer",
+                    "description": "Precursor mass tolerance used for database search. For High-Resolution instruments a precursor mass tolerance value of 5 ppm is recommended (i.e. 5). See also [`--precursor_mass_tolerance_unit`](#precursor_mass_tolerance_unit).",
+                    "default": 5,
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "This value can be overridden via command line. If not specified, the value from the SDRF file will be used."
+                },
+                "precursor_mass_tolerance_unit": {
+                    "type": "string",
+                    "description": "Precursor mass tolerance unit used for database search. Possible values are 'ppm' (default) and 'Da'.",
+                    "default": "ppm",
+                    "fa_icon": "fas fa-sliders-h",
+                    "enum": ["Da", "ppm"],
+                    "help_text": "This value can be overridden via command line. If not specified, the value from the SDRF file will be used."
+                },
+                "fragment_mass_tolerance": {
+                    "type": "number",
+                    "description": "Fragment mass tolerance used for database search. The default of 0.03 Da is for high-resolution instruments.",
+                    "default": 0.03,
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "Caution: for Comet we are estimating the `fragment_bin_tolerance` parameter based on this automatically. This value can be overridden via command line. If not specified, the value from the SDRF file will be used."
+                },
+                "fragment_mass_tolerance_unit": {
+                    "type": "string",
+                    "description": "Fragment mass tolerance unit used for database search. Possible values are 'ppm' and 'Da' (default).",
+                    "default": "Da",
+                    "fa_icon": "fas fa-list-ol",
+                    "help_text": "Caution: for Comet we are estimating the `fragment_bin_tolerance` parameter based on this automatically. This value can be overridden via command line. If not specified, the value from the SDRF file will be used.",
+                    "enum": ["Da", "ppm"]
+                },
+                "variable_mods": {
+                    "type": "string",
+                    "description": "A comma-separated list of variable modifications with their Unimod name to be searched during database search",
+                    "default": "Oxidation (M)",
+                    "fa_icon": "fas fa-tasks",
+                    "help_text": "Specify which variable modifications should be applied to the database search (eg. '' or 'Oxidation (M)', see Unimod modifications in the style '({unimod name} ({optional term specificity} {optional origin})'). All possible modifications can be found in the restrictions mentioned in the command line documentation of e.g. [CometAdapter](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_CometAdapter.html). Multiple variable modifications can be specified comma separated (e.g. 'Carbamidomethyl (C),Oxidation (M)'). This value can be overridden via command line. If not specified, the value from the SDRF file will be used."
                 },
                 "ms2_fragment_method": {
                     "type": "string",
