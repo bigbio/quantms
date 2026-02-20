@@ -20,10 +20,7 @@ process MSGF {
     msgf_jar = ''
     if ((workflow.containerEngine || (task.executor == "awsbatch")) && (task.container.indexOf("biocontainers") > -1 || task.container.indexOf("depot.galaxyproject.org") > -1)) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
-    // TODO session is an undocumented private API of nextflow. Unfortunately there is not other way
-    // of determining if conda was enabled since they did not expose it in the workflow namespace
-    // We could rely on CONDA_PREFIX but this could have been set by other things, not nextflow
-    } else if (session.config.conda && session.config.conda.enabled) {
+    } else if (System.getenv('CONDA_PREFIX')) {
         msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 
