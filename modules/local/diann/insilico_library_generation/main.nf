@@ -29,10 +29,12 @@ process INSILICO_LIBRARY_GENERATION {
          '--min-pr-charge', '--max-pr-charge', '--var-mods',
          '--min-pr-mz', '--max-pr-mz', '--min-fr-mz', '--max-fr-mz',
          '--met-excision']
-    blocked.each { flag ->
-        if (args.contains(flag)) {
+    // Sort by length descending so longer flags (e.g. --fasta-search) are matched before shorter prefixes (--fasta, --f)
+    blocked.sort { a -> -a.length() }.each { flag ->
+        def flagPattern = '(?<=^|\\s)' + java.util.regex.Pattern.quote(flag) + '(?=\\s|\$)(\\s+(?!-{1,2}[a-zA-Z])\\S+)*'
+        if (args =~ flagPattern) {
             log.warn "DIA-NN: '${flag}' is managed by the pipeline for INSILICO_LIBRARY_GENERATION and will be stripped."
-            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+            args = args.replaceAll(flagPattern, '').trim()
         }
     }
 

@@ -7,7 +7,7 @@ process MSRESCORE_FINE_TUNING {
         'ghcr.io/bigbio/quantms-rescoring:0.0.14' }"
 
     containerOptions workflow.containerEngine == 'docker' ?
-        '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' :
+        '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' :
         ''
 
     input:

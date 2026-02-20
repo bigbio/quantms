@@ -48,10 +48,12 @@ process FINAL_QUANTIFICATION {
          '--use-quant', '--matrices', '--out', '--relaxed-prot-inf', '--pg-level',
          '--qvalue', '--window', '--individual-windows',
          '--species-genes', '--report-decoys', '--xic']
-    blocked.each { flag ->
-        if (args.contains(flag)) {
+    // Sort by length descending so longer flags (e.g. --individual-windows) are matched before shorter prefixes (--window)
+    blocked.sort { a -> -a.length() }.each { flag ->
+        def flagPattern = '(?<=^|\\s)' + java.util.regex.Pattern.quote(flag) + '(?=\\s|\$)(\\s+(?!-{1,2}[a-zA-Z])\\S+)*'
+        if (args =~ flagPattern) {
             log.warn "DIA-NN: '${flag}' is managed by the pipeline for FINAL_QUANTIFICATION and will be stripped."
-            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+            args = args.replaceAll(flagPattern, '').trim()
         }
     }
 

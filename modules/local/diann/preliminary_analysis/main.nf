@@ -23,13 +23,15 @@ process PRELIMINARY_ANALYSIS {
     def args = task.ext.args ?: ''
     // Strip flags that are managed by the pipeline to prevent silent conflicts
     def blocked = ['--use-quant', '--gen-spec-lib', '--out-lib', '--matrices', '--out',
-         '--temp', '--threads', '--verbose', '--lib', '--f',
+         '--temp', '--threads', '--verbose', '--lib', '--f', '--fasta',
          '--mass-acc', '--mass-acc-ms1', '--window',
          '--quick-mass-acc', '--min-corr', '--corr-diff', '--time-corr-only']
-    blocked.each { flag ->
-        if (args.contains(flag)) {
+    // Sort by length descending so longer flags (e.g. --mass-acc-ms1) are matched before shorter prefixes (--mass-acc)
+    blocked.sort { a -> -a.length() }.each { flag ->
+        def flagPattern = '(?<=^|\\s)' + java.util.regex.Pattern.quote(flag) + '(?=\\s|\$)(\\s+(?!-{1,2}[a-zA-Z])\\S+)*'
+        if (args =~ flagPattern) {
             log.warn "DIA-NN: '${flag}' is managed by the pipeline for PRELIMINARY_ANALYSIS and will be stripped."
-            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+            args = args.replaceAll(flagPattern, '').trim()
         }
     }
 

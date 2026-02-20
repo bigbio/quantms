@@ -26,10 +26,19 @@ process INDIVIDUAL_ANALYSIS {
          '--temp', '--threads', '--verbose', '--lib', '--f', '--fasta',
          '--mass-acc', '--mass-acc-ms1', '--window',
          '--no-ifs-removal', '--no-main-report', '--relaxed-prot-inf', '--pg-level']
-    blocked.each { flag ->
-        if (args.contains(flag)) {
+    // Sort by length descending so longer flags (e.g. --mass-acc-ms1) are matched before shorter prefixes (--mass-acc)
+    blocked.sort { a -> -a.length() }.each { flag ->
+        def flagPattern = '(?<=^|\\s)' + java.util.regex.Pattern.quote(flag) + '(?=\\s|\$)(\\s+(?!-{1,2}[a-zA-Z])\\S+)*'
+        if (args =~ flagPattern) {
             log.warn "DIA-NN: '${flag}' is managed by the pipeline for INDIVIDUAL_ANALYSIS and will be stripped."
-            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+            args = args.replaceAll(flagPattern, '').trim()
+        }
+    }
+
+    // Warn about flags that override pipeline-computed calibration values (not blocked, but may change behaviour)
+    ['--individual-windows', '--individual-mass-acc'].each { flag ->
+        if (args.contains(flag)) {
+            log.warn "DIA-NN: '${flag}' overrides the mass accuracy / scan window values computed by the PRELIMINARY_ANALYSIS step. This may change pipeline behaviour."
         }
     }
 
