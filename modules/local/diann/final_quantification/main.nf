@@ -17,6 +17,7 @@ process FINAL_QUANTIFICATION {
     // of the ones passed in ms_files.
     path("quant/")
     path(fasta)
+    path(diann_config)
 
     output:
     // DIA-NN 2.0 don't return report in tsv format
@@ -51,6 +52,9 @@ process FINAL_QUANTIFICATION {
     # Notes: if .quant files are passed, mzml/.d files are not accessed, so the name needs to be passed but files
     # do not need to pe present.
 
+    # Extract --var-mod and --fixed-mod flags from diann_config.cfg (DIA-NN best practice)
+    mod_flags=\$(cat ${diann_config} | grep -oP '(--var-mod\\s+\\S+|--fixed-mod\\s+\\S+)' | tr '\\n' ' ')
+
     diann   --lib ${empirical_library} \\
             --fasta ${fasta} \\
             --f ${(ms_files as List).join(' --f ')} \\
@@ -66,6 +70,7 @@ process FINAL_QUANTIFICATION {
             --qvalue $params.protein_level_fdr_cutoff \\
             ${report_decoys} \\
             ${diann_export_xic} \\
+            \${mod_flags} \\
             $args
 
     cp diann_report.log.txt diannsummary.log

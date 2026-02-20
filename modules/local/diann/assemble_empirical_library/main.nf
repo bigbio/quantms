@@ -13,6 +13,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     val(meta)
     path("quant/*")
     path(lib)
+    path(diann_config)
 
     output:
     path "empirical_library.*", emit: empirical_library
@@ -42,6 +43,9 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
 
     ls -lcth
 
+    # Extract --var-mod and --fixed-mod flags from diann_config.cfg (DIA-NN best practice)
+    mod_flags=\$(cat ${diann_config} | grep -oP '(--var-mod\\s+\\S+|--fixed-mod\\s+\\S+)' | tr '\\n' ' ')
+
     diann   --f ${(ms_files as List).join(' --f ')} \\
             --lib ${lib} \\
             --threads ${task.cpus} \\
@@ -53,6 +57,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             ${mass_acc} \\
             ${scan_window} \\
             --gen-spec-lib \\
+            \${mod_flags} \\
             $args
 
     cp report.log.txt assemble_empirical_library.log

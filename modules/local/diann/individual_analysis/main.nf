@@ -9,6 +9,7 @@ process INDIVIDUAL_ANALYSIS {
 
     input:
     tuple val(meta), path(ms_file), path(fasta), path(diann_log), path(library)
+    path(diann_config)
 
     output:
     path "*.quant", emit: diann_quant
@@ -36,6 +37,9 @@ process INDIVIDUAL_ANALYSIS {
     }
 
     """
+    # Extract --var-mod and --fixed-mod flags from diann_config.cfg (DIA-NN best practice)
+    mod_flags=\$(cat ${diann_config} | grep -oP '(--var-mod\\s+\\S+|--fixed-mod\\s+\\S+)' | tr '\\n' ' ')
+
     diann   --lib ${library} \\
             --f ${ms_file} \\
             --fasta ${fasta} \\
@@ -49,6 +53,7 @@ process INDIVIDUAL_ANALYSIS {
             --no-main-report \\
             --relaxed-prot-inf \\
             --pg-level $params.pg_level \\
+            \${mod_flags} \\
             $args
 
     cp report.log.txt ${ms_file.baseName}_final_diann.log

@@ -9,6 +9,7 @@ process PRELIMINARY_ANALYSIS {
 
     input:
     tuple val(meta), path(ms_file), path(predict_library)
+    path(diann_config)
 
     output:
     path "*.quant", emit: diann_quant
@@ -44,6 +45,9 @@ process PRELIMINARY_ANALYSIS {
 
     # Final mass accuracy is '${mass_acc}'
 
+    # Extract --var-mod and --fixed-mod flags from diann_config.cfg (DIA-NN best practice)
+    mod_flags=\$(cat ${diann_config} | grep -oP '(--var-mod\\s+\\S+|--fixed-mod\\s+\\S+)' | tr '\\n' ' ')
+
     diann   --lib ${predict_library} \\
             --f ${ms_file} \\
             --threads ${task.cpus} \\
@@ -51,6 +55,7 @@ process PRELIMINARY_ANALYSIS {
             ${scan_window} \\
             --temp ./ \\
             ${mass_acc} \\
+            \${mod_flags} \\
             $args
 
     cp report.log.txt ${ms_file.baseName}_diann.log

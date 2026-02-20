@@ -1260,6 +1260,13 @@
                     "description": "Export the DIA-NN and DIA results to mzTab",
                     "default": false,
                     "fa_icon": "far fa-check-square"
+                },
+                "diann_extra_args": {
+                    "type": "string",
+                    "description": "Extra arguments appended to all DIA-NN steps. Flags incompatible with specific steps are automatically stripped with a warning.",
+                    "fa_icon": "fas fa-terminal",
+                    "hidden": false,
+                    "help_text": "Pass additional DIA-NN command-line arguments that will be appended to all DIA-NN steps (INSILICO_LIBRARY_GENERATION, PRELIMINARY_ANALYSIS, ASSEMBLE_EMPIRICAL_LIBRARY, INDIVIDUAL_ANALYSIS, FINAL_QUANTIFICATION). Flags that conflict with a specific step are automatically stripped with a warning. For step-specific overrides, use custom Nextflow config files with ext.args."
                 }
             },
             "fa_icon": "fas fa-braille"
