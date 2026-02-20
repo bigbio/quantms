@@ -6,6 +6,10 @@ process MSRESCORE_FINE_TUNING {
         'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.14' :
         'ghcr.io/bigbio/quantms-rescoring:0.0.14' }"
 
+    containerOptions workflow.containerEngine == 'docker' ?
+        '-u $(id -u) -e "HOME=${HOME}" -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/group:/etc/group:ro -v $HOME:$HOME' :
+        ''
+
     input:
     tuple val(meta), path(idxml), path(mzml), val(groupkey), path(ms2_model_dir)
 
