@@ -50,13 +50,16 @@ workflow DIA {
     ch_software_versions = ch_software_versions
         .mix(GENERATE_CFG.out.versions)
 
+    // Convert to value channel so it can be consumed by all per-file processes
+    ch_diann_cfg = GENERATE_CFG.out.diann_cfg.first()
+
     //
     // MODULE: SILICOLIBRARYGENERATION
     //
     if (params.diann_speclib != null && params.diann_speclib.toString() != "") {
         speclib = channel.from(file(params.diann_speclib, checkIfExists: true))
     } else {
-        INSILICO_LIBRARY_GENERATION(ch_searchdb, GENERATE_CFG.out.diann_cfg)
+        INSILICO_LIBRARY_GENERATION(ch_searchdb, ch_diann_cfg)
         speclib = INSILICO_LIBRARY_GENERATION.out.predict_speclib
     }
 
@@ -79,12 +82,12 @@ workflow DIA {
             empirical_lib_files = preanalysis_subset
                 .map { result -> result[1] }
                 .collect( sort: { a, b -> file(a).getName() <=> file(b).getName() } )
-            PRELIMINARY_ANALYSIS(preanalysis_subset.combine(speclib), GENERATE_CFG.out.diann_cfg)
+            PRELIMINARY_ANALYSIS(preanalysis_subset.combine(speclib), ch_diann_cfg)
         } else {
             empirical_lib_files = ch_file_preparation_results
                 .map { result -> result[1] }
                 .collect( sort: { a, b -> file(a).getName() <=> file(b).getName() } )
-            PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib), GENERATE_CFG.out.diann_cfg)
+            PRELIMINARY_ANALYSIS(ch_file_preparation_results.combine(speclib), ch_diann_cfg)
         }
         ch_software_versions = ch_software_versions
             .mix(PRELIMINARY_ANALYSIS.out.versions)
@@ -98,7 +101,7 @@ workflow DIA {
             meta,
             PRELIMINARY_ANALYSIS.out.diann_quant.collect(),
             speclib,
-            GENERATE_CFG.out.diann_cfg
+            ch_diann_cfg
         )
         ch_software_versions = ch_software_versions
             .mix(ASSEMBLE_EMPIRICAL_LIBRARY.out.versions)
@@ -113,7 +116,7 @@ workflow DIA {
     //
     // MODULE: INDIVIDUAL_ANALYSIS
     //
-    INDIVIDUAL_ANALYSIS(indiv_fin_analysis_in, GENERATE_CFG.out.diann_cfg)
+    INDIVIDUAL_ANALYSIS(indiv_fin_analysis_in, ch_diann_cfg)
     ch_software_versions = ch_software_versions
         .mix(INDIVIDUAL_ANALYSIS.out.versions)
 
@@ -136,7 +139,7 @@ workflow DIA {
         empirical_lib,
         INDIVIDUAL_ANALYSIS.out.diann_quant.collect(),
         ch_searchdb,
-        GENERATE_CFG.out.diann_cfg)
+        ch_diann_cfg)
 
     ch_software_versions = ch_software_versions.mix(
         FINAL_QUANTIFICATION.out.versions
