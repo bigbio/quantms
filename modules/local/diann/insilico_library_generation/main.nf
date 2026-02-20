@@ -21,6 +21,20 @@ process INSILICO_LIBRARY_GENERATION {
 
     script:
     def args = task.ext.args ?: ''
+    // Strip flags that are managed by the pipeline to prevent silent conflicts
+    def blocked = ['--use-quant', '--no-main-report', '--matrices', '--out',
+         '--temp', '--threads', '--verbose', '--lib', '--f', '--fasta',
+         '--fasta-search', '--predictor', '--gen-spec-lib',
+         '--missed-cleavages', '--min-pep-len', '--max-pep-len',
+         '--min-pr-charge', '--max-pr-charge', '--var-mods',
+         '--min-pr-mz', '--max-pr-mz', '--min-fr-mz', '--max-fr-mz',
+         '--met-excision']
+    blocked.each { flag ->
+        if (args.contains(flag)) {
+            log.warn "DIA-NN: '${flag}' is managed by the pipeline for INSILICO_LIBRARY_GENERATION and will be stripped."
+            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+        }
+    }
 
     min_pr_mz = params.min_pr_mz ? "--min-pr-mz $params.min_pr_mz":""
     max_pr_mz = params.max_pr_mz ? "--max-pr-mz $params.max_pr_mz":""

@@ -21,6 +21,18 @@ process INDIVIDUAL_ANALYSIS {
 
     script:
     def args = task.ext.args ?: ''
+    // Strip flags that are managed by the pipeline to prevent silent conflicts
+    def blocked = ['--use-quant', '--gen-spec-lib', '--out-lib', '--matrices', '--out', '--rt-profiling',
+         '--temp', '--threads', '--verbose', '--lib', '--f', '--fasta',
+         '--mass-acc', '--mass-acc-ms1', '--window',
+         '--no-ifs-removal', '--no-main-report', '--relaxed-prot-inf', '--pg-level']
+    blocked.each { flag ->
+        if (args.contains(flag)) {
+            log.warn "DIA-NN: '${flag}' is managed by the pipeline for INDIVIDUAL_ANALYSIS and will be stripped."
+            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+        }
+    }
+
     scan_window = params.scan_window
 
     if (params.mass_acc_automatic | params.scan_window_automatic) {

@@ -21,6 +21,21 @@ process PRELIMINARY_ANALYSIS {
 
     script:
     def args = task.ext.args ?: ''
+    // Strip flags that are managed by the pipeline to prevent silent conflicts
+    def blocked = ['--use-quant', '--gen-spec-lib', '--out-lib', '--matrices', '--out',
+         '--temp', '--threads', '--verbose', '--lib', '--f',
+         '--mass-acc', '--mass-acc-ms1', '--window',
+         '--quick-mass-acc', '--min-corr', '--corr-diff', '--time-corr-only']
+    blocked.each { flag ->
+        if (args.contains(flag)) {
+            log.warn "DIA-NN: '${flag}' is managed by the pipeline for PRELIMINARY_ANALYSIS and will be stripped."
+            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+        }
+    }
+
+    // Performance flags for preliminary analysis calibration step
+    quick_mass_acc = params.quick_mass_acc ? "--quick-mass-acc" : ""
+    performance_flags = params.performance_mode ? "--min-corr 2 --corr-diff 1 --time-corr-only" : ""
 
     // I am using here the ["key"] syntax, since the preprocessed meta makes
     // was evaluating to null when using the dot notation.
@@ -55,6 +70,8 @@ process PRELIMINARY_ANALYSIS {
             ${scan_window} \\
             --temp ./ \\
             ${mass_acc} \\
+            ${quick_mass_acc} \\
+            ${performance_flags} \\
             \${mod_flags} \\
             $args
 

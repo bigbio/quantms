@@ -25,6 +25,18 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
 
     script:
     def args = task.ext.args ?: ''
+    // Strip flags that are managed by the pipeline to prevent silent conflicts
+    def blocked = ['--no-main-report', '--no-ifs-removal', '--matrices', '--out',
+         '--temp', '--threads', '--verbose', '--lib', '--f',
+         '--mass-acc', '--mass-acc-ms1', '--window',
+         '--individual-mass-acc', '--individual-windows',
+         '--out-lib', '--use-quant', '--gen-spec-lib', '--rt-profiling']
+    blocked.each { flag ->
+        if (args.contains(flag)) {
+            log.warn "DIA-NN: '${flag}' is managed by the pipeline for ASSEMBLE_EMPIRICAL_LIBRARY and will be stripped."
+            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+        }
+    }
 
     if (params.mass_acc_automatic) {
         mass_acc = '--individual-mass-acc'

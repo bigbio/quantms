@@ -42,6 +42,18 @@ process FINAL_QUANTIFICATION {
 
     script:
     def args = task.ext.args ?: ''
+    // Strip flags that are managed by the pipeline to prevent silent conflicts
+    def blocked = ['--no-main-report', '--gen-spec-lib', '--out-lib', '--no-ifs-removal',
+         '--temp', '--threads', '--verbose', '--lib', '--f', '--fasta',
+         '--use-quant', '--matrices', '--out', '--relaxed-prot-inf', '--pg-level',
+         '--qvalue', '--window', '--individual-windows',
+         '--species-genes', '--report-decoys', '--xic']
+    blocked.each { flag ->
+        if (args.contains(flag)) {
+            log.warn "DIA-NN: '${flag}' is managed by the pipeline for FINAL_QUANTIFICATION and will be stripped."
+            args = args.replaceAll(java.util.regex.Pattern.quote(flag) + '(\\s+(?!--)\\S+)*', '').trim()
+        }
+    }
 
     scan_window = params.scan_window_automatic ? "--individual-windows" : "--window $params.scan_window"
     species_genes = params.species_genes ? "--species-genes": ""
