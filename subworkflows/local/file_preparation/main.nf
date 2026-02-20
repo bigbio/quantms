@@ -14,20 +14,19 @@ workflow FILE_PREPARATION {
     ch_rawfiles            // channel: [ val(meta), raw/mzml/d.tar ]
 
     main:
-    ch_versions   = Channel.empty()
-    ch_results    = Channel.empty()
-    ch_statistics = Channel.empty()
-    ch_ms2_statistics = Channel.empty()
-    ch_feature_statistics = Channel.empty()
-    ch_mqc_data   = Channel.empty()
+    ch_versions   = channel.empty()
+    ch_results    = channel.empty()
+    ch_statistics = channel.empty()
+    ch_ms2_statistics = channel.empty()
+    ch_feature_statistics = channel.empty()
 
 
     // Divide the compressed files
     ch_rawfiles
-    .branch {
-        dottar: hasExtension(it[1], '.tar')
-        dotzip: hasExtension(it[1], '.zip')
-        gz: hasExtension(it[1], '.gz')
+    .branch { item ->
+        dottar: hasExtension(item[1], '.tar')
+        dotzip: hasExtension(item[1], '.zip')
+        gz: hasExtension(item[1], '.gz')
         uncompressed: true
     }.set { ch_branched_input }
 
@@ -39,11 +38,11 @@ workflow FILE_PREPARATION {
     //
     // Divide mzml files
     ch_rawfiles
-    .branch {
-        raw: hasExtension(it[1], '.raw')
-        mzML: hasExtension(it[1], '.mzML')
-        dotd: hasExtension(it[1], '.d')
-        dia: hasExtension(it[1], '.dia')
+    .branch { item ->
+        raw: hasExtension(item[1], '.raw')
+        mzML: hasExtension(item[1], '.mzML')
+        dotd: hasExtension(item[1], '.d')
+        dia: hasExtension(item[1], '.dia')
         unsupported: true
     }.set { ch_branched_input }
 
@@ -54,7 +53,7 @@ workflow FILE_PREPARATION {
             if (files.size() > 0) {
                 log.warn "=" * 80
                 log.warn "WARNING: ${files.size()} file(s) with unsupported format(s) detected and will be SKIPPED from processing:"
-                files.each { meta, file ->
+                files.each { _meta, file ->
                     log.warn "  - ${file}"
                 }
                 log.warn "\nSupported formats: .raw, .mzML, .d (Bruker), .dia"

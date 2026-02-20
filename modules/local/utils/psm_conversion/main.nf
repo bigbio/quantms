@@ -25,7 +25,8 @@ process PSM_CONVERSION {
     quantmsutilsc psmconvert --idxml "${idxml_file}" \\
         --ms2_file ${spectrum_df} \\
         ${string_export_decoy_psm} \\
-        2>&1 | tee extract_idxml.log
+        $args \\
+        2>&1 | tee ${prefix}_psm_conversion.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

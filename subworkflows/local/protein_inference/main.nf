@@ -11,7 +11,7 @@ workflow PROTEIN_INFERENCE {
     ch_consus_file
 
     main:
-    ch_version = Channel.empty()
+    ch_version = channel.empty()
 
     if (params.protein_inference_method == "bayesian") {
         PROTEIN_INFERENCE_EPIFANY(ch_consus_file)
@@ -23,7 +23,7 @@ workflow PROTEIN_INFERENCE {
         ch_inference = PROTEIN_INFERENCE_GENERIC.out.protein_inference
     }
 
-    ID_FILTER(ch_inference.combine(Channel.value("-score:type_protein q-value")))
+    ID_FILTER(ch_inference.combine(channel.value("-score:type_protein q-value")))
     ch_version = ch_version.mix(ID_FILTER.out.versions)
     ID_FILTER.out.id_filtered
         .multiMap{ it ->

@@ -36,7 +36,7 @@ process ISOBARIC_ANALYZER {
         // Read the matrix file and format it into the command-line format
         // Read the matrix file, skipping lines that start with '#' and process the matrix
         def matrix_lines = new File(params.plex_corr_matrix_file).readLines()
-        .findAll { !it.startsWith('#') && it.trim() } // Skip lines starting with '#' and empty lines
+        .findAll { line -> !line.startsWith('#') && line.trim() } // Skip lines starting with '#' and empty lines
         .drop(1) // Assuming the first non-comment line is a header
         .collect { line ->
             def values = line.split('/')

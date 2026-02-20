@@ -20,7 +20,7 @@ process TDF2MZML {
 
     """
     echo "Converting..." | tee --append ${rawfile.baseName}_conversion.log
-    tdf2mzml.py -i *.d 2>&1 | tee --append ${rawfile.baseName}_conversion.log
+    tdf2mzml.py -i *.d $args 2>&1 | tee --append ${rawfile.baseName}_conversion.log
     mv *.mzml ${file(rawfile.baseName).baseName}.mzML
     mv *.d ${file(rawfile.baseName).baseName}.d
 

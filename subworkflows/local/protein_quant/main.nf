@@ -12,7 +12,7 @@ workflow PROTEIN_QUANT {
     ch_expdesign_file
 
     main:
-    ch_version = Channel.empty()
+    ch_version = channel.empty()
 
     ID_CONFLICT_RESOLVER(ch_conflict_file)
     ch_version = ch_version.mix(ID_CONFLICT_RESOLVER.out.versions)

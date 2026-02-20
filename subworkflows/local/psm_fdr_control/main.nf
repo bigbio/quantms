@@ -11,11 +11,11 @@ workflow PSM_FDR_CONTROL {
     ch_id_files
 
     main:
-    ch_version = Channel.empty()
-    ch_idfilter = Channel.empty()
+    ch_version = channel.empty()
+    ch_idfilter = channel.empty()
 
     if (params.search_engines.split(",").size() == 1) {
-        ID_FILTER(ch_id_files.combine(Channel.value("-score:type_peptide q-value")))
+        ID_FILTER(ch_id_files.combine(channel.value("-score:type_peptide q-value")))
         ch_version = ch_version.mix(ID_FILTER.out.versions)
         ch_idfilter = ID_FILTER.out.id_filtered
     } else {

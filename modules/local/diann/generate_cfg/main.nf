@@ -22,6 +22,7 @@ process GENERATE_CFG {
         --enzyme "${meta.enzyme}" \\
         --fix_mod "${meta.fixedmodifications}" \\
         --var_mod "${meta.variablemodifications}" \\
+        $args \\
         2>&1 | tee GENERATE_DIANN_CFG.log
 
     cat <<-END_VERSIONS > versions.yml

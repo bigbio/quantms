@@ -99,6 +99,7 @@ Have a look at public datasets that were already annotated [here](https://github
 Those SDRFs should be ready for one-command re-analysis and you can just use the URL to the file on GitHub,
 e.g., `https://raw.githubusercontent.com/bigbio/proteomics-sample-metadata/master/annotated-projects/PXD000396/PXD000396.sdrf.tsv`.
 If you create your own, please adhere to the specifications and point the pipeline to your local folder or a remote location where you uploaded it to.
+The SDRF file can have `.sdrf`, `.tsv`, or `.csv` extensions.
 
 The second requirement is a protein sequence database. We suggest downloading a database for the organism(s)/proteins of interest from [Uniprot](https://www.uniprot.org/proteomes?query=*).
 

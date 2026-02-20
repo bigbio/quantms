@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] bigbio/quantms - [Unreleased]
+
+### `Deprecations`
+
+- **BREAKING: Deprecated OpenMS experimental design format as input**: The pipeline now only accepts SDRF (Sample to Data Relation Format) files as input. The OpenMS experimental design format (`.tsv` without SDRF structure) is no longer supported. All input files are now treated as SDRF regardless of file extension. Supported file extensions for SDRF input are `.sdrf`, `.tsv`, and `.csv`. This change aligns with nf-core best practices and simplifies input handling for cloud storage interfaces like Seqera Datastudios and Explorer. Users must convert their OpenMS experimental design files to SDRF format. The `--labelling_type` and `--acquisition_method` parameters are no longer used for determining input file type - all information must be specified in the SDRF file.
+
 ## [1.7.0] bigbio/quantms - [08/01/2026] - [Caracas]
 
 ### `Added`
@@ -15,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [627](https://github.com/bigbio/quantms/pull/627) Move thermorawfileparser and onsite modules from local to bigbio/nf-modules
 - [629](https://github.com/bigbio/quantms/pull/629) Update quantms-rescoring to 0.0.13 to support transfer learning
 - [615](https://github.com/bigbio/quantms/pull/615) Update quantms-utils 0.0.24 and pmultiqc 0.0.39
-- [614](https://github.com/bigbio/quantms/pull/614) enable_diann_mztab from true to false as default. For DIA pipelines the mzTab will not be generated unless specified by a parameter `--enable_diann_mztab true`.
+- [614](https://github.com/bigbio/quantms/pull/614) Changed enable_diann_mztab default from true to false. For DIA pipelines the mzTab will not be generated unless specified by a parameter `--enable_diann_mztab true`.
 - [635](https://github.com/bigbio/quantms/pull/635) Minimum Nextflow version requirement updated to `>=25.04.0`
 
 ### `Fixed`

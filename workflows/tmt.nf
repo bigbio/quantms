@@ -32,7 +32,7 @@ workflow TMT {
 
     main:
 
-    ch_software_versions = Channel.empty()
+    ch_software_versions = channel.empty()
 
     //
     // SUBWORKFLOWS: ID
@@ -67,7 +67,7 @@ workflow TMT {
     //
     // MODULE: MSSTATSTMT
     //
-    ch_msstats_out = Channel.empty()
+    ch_msstats_out = channel.empty()
     if(!params.skip_post_msstats){
         MSSTATS_TMT(PROTEIN_QUANT.out.msstats_csv)
         ch_msstats_out = MSSTATS_TMT.out.msstats_csv

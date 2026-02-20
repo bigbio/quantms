@@ -18,10 +18,6 @@ output:
       type: file
       description: |
         Channel containing validated input files
-  - is_sdrf:
-      type: boolean
-      description: |
-        Whether the input is in SDRF format
   - versions:
       type: file
       description: |

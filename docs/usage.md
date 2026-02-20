@@ -14,10 +14,7 @@ The typical command for running the pipeline is as follows:
 nextflow run bigbio/quantms --input '/url/path/to/your/experiment_design.sdrf.tsv' --database '/url/path/to/your/proteindatabase.fasta' --outdir './results' -profile docker
 ```
 
-where the experimental design file has to be one of:
-
-- [Sample-to-data-relationship format](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.0c00376) (.sdrf.tsv)
-- [OpenMS experimental design format](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/classOpenMS_1_1ExperimentalDesign.html#details) (.tsv)
+The input file must be in [Sample-to-data-relationship format (SDRF)](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.0c00376) and can have `.sdrf`, `.tsv`, or `.csv` file extensions.
 
 ### Supported file formats
 

@@ -19,7 +19,7 @@ workflow ID {
 
     main:
 
-    ch_software_versions = Channel.empty()
+    ch_software_versions = channel.empty()
 
     //
     // SUBWORKFLOW: DatabaseSearchEngines
@@ -40,8 +40,8 @@ workflow ID {
     //
     // SUBWORKFLOW: PSM_FDR_CONTROL
     //
-    ch_psmfdrcontrol     = Channel.empty()
-    ch_consensus_results = Channel.empty()
+    ch_psmfdrcontrol     = channel.empty()
+    ch_consensus_results = channel.empty()
     // split returns String[], whereas tokenize returns a list, unique works on lists
     def n_unique_search_engines = params.search_engines.tokenize(",").unique().size()
     if (n_unique_search_engines > 1) {

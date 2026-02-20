@@ -1,5 +1,5 @@
 process SAGE {
-    tag "${metas.toList().collect{it.mzml_id}}"
+    tag "${metas.toList().collect{ m -> m.mzml_id }}"
     label 'process_medium' // we could make it dependent on the number of files
     label 'openms'
 
@@ -18,7 +18,7 @@ process SAGE {
     script:
     def meta             = metas[0] // due to groupTuple they should all be the same (TODO check to use groupBy?)
     // Make sure that the output order is consistent with the meta ids
-    meta_order_files     = metas.collect{ it.mzml_id.toString() + "*_sage.idXML" }
+    meta_order_files     = metas.collect{ m -> m.mzml_id.toString() + "*_sage.idXML" }
     def args             = task.ext.args ?: ''
     enzyme               = meta.enzyme
     outname              = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
@@ -47,8 +47,8 @@ process SAGE {
         -fragment_tol_left ${-meta.fragmentmasstolerance} \\
         -fragment_tol_right ${meta.fragmentmasstolerance} \\
         -fragment_tol_unit $meta.fragmentmasstoleranceunit \\
-        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect{ "'${it}'" }.join(" ") } \\
-        -variable_modifications ${meta.variablemodifications.tokenize(',').collect{ "'${it}'" }.join(" ") } \\
+        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect{ mod -> "'${mod}'" }.join(" ") } \\
+        -variable_modifications ${meta.variablemodifications.tokenize(',').collect{ mod -> "'${mod}'" }.join(" ") } \\
         -charges "$params.min_precursor_charge, $params.max_precursor_charge" \\
         -min_peaks $params.min_peaks \\
         -max_variable_mods $params.max_mods \\

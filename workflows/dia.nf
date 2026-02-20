@@ -26,8 +26,6 @@ include { FINAL_QUANTIFICATION        } from '../modules/local/diann/final_quant
 ========================================================================================
 */
 
-// Info required for completion email and summary
-def multiqc_report = []
 
 workflow DIA {
     take:
@@ -37,8 +35,8 @@ workflow DIA {
 
     main:
 
-    ch_software_versions = Channel.empty()
-    Channel.fromPath(params.database).set { ch_searchdb }
+    ch_software_versions = channel.empty()
+    channel.fromPath(params.database).set { ch_searchdb }
 
     ch_file_preparation_results.multiMap {
         result ->
@@ -46,7 +44,7 @@ workflow DIA {
         ms_file:result[1]
     }.set { ch_result }
 
-    meta = ch_result.meta.unique { it[0] }
+    meta = ch_result.meta.unique { m -> m[0] }
 
     GENERATE_CFG(meta)
     ch_software_versions = ch_software_versions
@@ -56,15 +54,15 @@ workflow DIA {
     // MODULE: SILICOLIBRARYGENERATION
     //
     if (params.diann_speclib != null && params.diann_speclib.toString() != "") {
-        speclib = Channel.from(file(params.diann_speclib, checkIfExists: true))
+        speclib = channel.from(file(params.diann_speclib, checkIfExists: true))
     } else {
         INSILICO_LIBRARY_GENERATION(ch_searchdb, GENERATE_CFG.out.diann_cfg)
         speclib = INSILICO_LIBRARY_GENERATION.out.predict_speclib
     }
 
     if (params.skip_preliminary_analysis) {
-        assembly_log = Channel.fromPath(params.empirical_assembly_log)
-        empirical_library = Channel.fromPath(params.diann_speclib)
+        assembly_log = channel.fromPath(params.empirical_assembly_log)
+        empirical_library = channel.fromPath(params.diann_speclib)
         indiv_fin_analysis_in = ch_file_preparation_results.combine(ch_searchdb)
             .combine(assembly_log)
             .combine(empirical_library)
@@ -162,7 +160,7 @@ workflow DIA {
 
     //
     // MODULE: MSSTATS
-    ch_msstats_out = Channel.empty()
+    ch_msstats_out = channel.empty()
     if (!params.skip_post_msstats) {
         MSSTATS_LFQ(CONVERT_RESULTS.out.out_msstats)
         ch_msstats_out = MSSTATS_LFQ.out.msstats_csv

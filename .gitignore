@@ -8,6 +8,7 @@ testing*
 *.pyc
 null/
 .idea/
+.vscode/
 /lint_log.txt
 /lint_results.md
 
