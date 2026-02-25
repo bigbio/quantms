@@ -214,7 +214,6 @@ The specific files include:
 - DDA-LFQ quantification results:
   - `quant_tables/out.consensusXML` - [ConsensusXML](#consensusxml) format with quantification data
   - `quant_tables/msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
-  - `quant_tables/out_triqler.tsv` - [Triqler](#triqler) input format
   - `quant_tables/out.mzTab` - [mzTab](#mztab) format with identifications and quantities
 
 - DDA-ISO quantification results:
@@ -306,11 +305,6 @@ In addition to the consensusXML and idXML formats, OpenMS generates other format
 MSstats output is generated for all three pipelines DDA-LFQ, DDA-ISO and DIA-LFQ. A simple tsv file ready to be read by the
 OpenMStoMSstats function of the MSstats R package. It should hold the same quantities as the consensusXML but rearranged in a "long" table format with additional
 information about the experimental design used by MSstats.
-
-##### Triqler
-
-Output to be used as input in Triqler has similar information in a tsv format as the output for MSstats. Additionally, it contains quantities for
-decoy identifications and search engine scores.
 
 #### mzTab
 

@@ -8,7 +8,7 @@
 // MODULES: Local to the pipeline
 //
 include { GENERATE_CFG                } from '../modules/local/diann/generate_cfg/main'
-include { CONVERT_RESULTS             } from '../modules/local/diann/convert_results/main'
+include { DIANN_MSSTATS              } from '../modules/local/diann/diann_msstats/main'
 include { MSSTATS_LFQ                 } from '../modules/local/msstats/msstats_lfq/main'
 include { PRELIMINARY_ANALYSIS        } from '../modules/local/diann/preliminary_analysis/main'
 include { ASSEMBLE_EMPIRICAL_LIBRARY  } from '../modules/local/diann/assemble_empirical_library/main'
@@ -31,7 +31,6 @@ workflow DIA {
     take:
     ch_file_preparation_results
     ch_expdesign
-    ch_ms_info
 
     main:
 
@@ -150,22 +149,21 @@ workflow DIA {
     //
     diann_main_report = FINAL_QUANTIFICATION.out.main_report.mix(FINAL_QUANTIFICATION.out.report_parquet).last()
 
-    CONVERT_RESULTS(
+    DIANN_MSSTATS(
         diann_main_report, ch_expdesign,
         FINAL_QUANTIFICATION.out.pg_matrix,
-        FINAL_QUANTIFICATION.out.pr_matrix, ch_ms_info,
+        FINAL_QUANTIFICATION.out.pr_matrix,
         meta,
-        ch_searchdb,
-        FINAL_QUANTIFICATION.out.versions
+        ch_searchdb
     )
     ch_software_versions = ch_software_versions
-        .mix(CONVERT_RESULTS.out.versions)
+        .mix(DIANN_MSSTATS.out.versions)
 
     //
     // MODULE: MSSTATS
     ch_msstats_out = channel.empty()
     if (!params.skip_post_msstats) {
-        MSSTATS_LFQ(CONVERT_RESULTS.out.out_msstats)
+        MSSTATS_LFQ(DIANN_MSSTATS.out.out_msstats)
         ch_msstats_out = MSSTATS_LFQ.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(
             MSSTATS_LFQ.out.versions
@@ -176,9 +174,8 @@ workflow DIA {
     versions                = ch_software_versions
     diann_report            = FINAL_QUANTIFICATION.out.main_report
     diann_report_parquet    = FINAL_QUANTIFICATION.out.report_parquet
-    msstats_in              = CONVERT_RESULTS.out.out_msstats
-    out_triqler             = CONVERT_RESULTS.out.out_triqler
-    final_result            = CONVERT_RESULTS.out.out_mztab
+    msstats_in              = DIANN_MSSTATS.out.out_msstats
+    final_result            = channel.empty()
     msstats_out             = ch_msstats_out
 }
 
