@@ -91,6 +91,11 @@ process MSRESCORE_FEATURES {
     }
 
     """
+    export USER="${USER:-quantms}"
+    export HOME="${HOME:-$PWD}"
+    export TORCHINDUCTOR_CACHE_DIR="${TORCHINDUCTOR_CACHE_DIR:-$PWD/.torchinductor_cache}"
+    mkdir -p "$TORCHINDUCTOR_CACHE_DIR"
+
     rescoring msrescore2feature \\
         --idxml $idxml \\
         --mzml $mzml \\
