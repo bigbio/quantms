@@ -95,9 +95,8 @@ workflow FILE_PREPARATION {
         TDF2MZML( ch_branched_input.dotd )
         ch_versions = ch_versions.mix(TDF2MZML.out.versions)
         ch_results = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
-        // indexed_mzml_bundle = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
     } else {
-        ch_results = indexed_mzml_bundle.mix(ch_branched_input.dotd)
+        ch_results = indexed_mzml_bundle
     }
 
     MZML_STATISTICS(ch_results)
@@ -105,6 +104,12 @@ workflow FILE_PREPARATION {
     ch_ms2_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms2_statistics)
     ch_feature_statistics = ch_statistics.mix(MZML_STATISTICS.out.feature_statistics.collect())
     ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
+
+    // Pass through .d files without conversion when convert_dotd=false
+    // (DIA-NN handles them natively; they bypass mzML statistics as they are not mzML)
+    if (!params.convert_dotd) {
+        ch_results = ch_results.mix(ch_branched_input.dotd)
+    }
 
     // Pass through .dia files without conversion (DIA-NN handles them natively)
     // Note: .dia files bypass peak picking and mzML statistics (when enabled) as they are only used with DIA-NN
