@@ -10,7 +10,6 @@ process TDF2MZML {
 
     output:
     tuple val(meta), path("*.mzML"), emit: mzmls_converted
-    tuple val(meta), path("*.d"),   emit: dotd_files
     path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
@@ -21,8 +20,10 @@ process TDF2MZML {
     """
     echo "Converting..." | tee --append ${rawfile.baseName}_conversion.log
     tdf2mzml.py -i *.d $args 2>&1 | tee --append ${rawfile.baseName}_conversion.log
-    mv *.mzml ${file(rawfile.baseName).baseName}.mzML
-    mv *.d ${file(rawfile.baseName).baseName}.d
+    # Two-step rename to handle case-insensitive filesystems (e.g. macOS bind-mounted Docker volumes)
+    # where mv *.mzml *.mzML would fail with "same file" error
+    mv *.mzml ${file(rawfile.baseName).baseName}.mzML_tmp_rename
+    mv ${file(rawfile.baseName).baseName}.mzML_tmp_rename ${file(rawfile.baseName).baseName}.mzML
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
