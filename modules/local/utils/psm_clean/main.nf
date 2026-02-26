@@ -22,6 +22,16 @@ process PSM_CLEAN {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}_clean"
 
     """
+    # Fix for UID-less container environments (e.g. GitHub Actions uid 1001)
+    if [ -w /etc/passwd ]; then
+        echo "\${USER:-quantms}:x:\$(id -u):\$(id -g):\${USER:-quantms} user:/tmp:/bin/bash" >> /etc/passwd
+    fi
+    export USER="\${USER:-quantms}"
+    export LOGNAME="\${LOGNAME:-\${USER:-quantms}}"
+    export HOME="\${HOME:-\$PWD}"
+    export TORCHINDUCTOR_CACHE_DIR="\${TORCHINDUCTOR_CACHE_DIR:-\$PWD/.torchinductor_cache}"
+    mkdir -p "\$TORCHINDUCTOR_CACHE_DIR"
+
     rescoring psm_feature_clean \\
         --idxml $idxml \\
         --mzml $mzml \\
