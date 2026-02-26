@@ -8,23 +8,7 @@ process DECOMPRESS {
         'https://depot.galaxyproject.org/singularity/mulled-v2-796b0610595ad1995b121d0b85375902097b78d4:a3a3220eb9ee55710d743438b2ab9092867c98c6-0' :
         'quay.io/biocontainers/mulled-v2-796b0610595ad1995b121d0b85375902097b78d4:a3a3220eb9ee55710d743438b2ab9092867c98c6-0' }"
 
-    stageInMode {
-        if (task.attempt == 1) {
-            if (executor == 'awsbatch') {
-                'symlink'
-            } else {
-                'link'
-            }
-        } else if (task.attempt == 2) {
-            if (executor == 'awsbatch') {
-                'copy'
-            } else {
-                'symlink'
-            }
-        } else {
-            'copy'
-        }
-    }
+    stageInMode task.attempt == 1 ? (task.executor == 'awsbatch' ? 'symlink' : 'link') : task.attempt == 2 ? (task.executor == 'awsbatch' ? 'copy' : 'symlink') : 'copy'
 
     input:
     tuple val(meta), path(compressed_file)
