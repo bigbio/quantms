@@ -84,9 +84,20 @@ process DECOMPRESS {
     echo "Unpacking..." | tee -a ${compressed_file.baseName}_decompression.log
 
     extract ${compressed_file} 2>&1 | tee -a ${compressed_file.baseName}_conversion.log
-    [ -d ${file(compressed_file.baseName).baseName}.d ] && \\
-        echo "Found ${file(compressed_file.baseName).baseName}.d" || \\
-        mv *.d ${file(compressed_file.baseName).baseName}.d
+
+    # Fix read-only permissions from Bruker/Windows zip archives (dirs extracted as dr-xr-xr-x)
+    chmod -R u+w . 2>/dev/null || true
+
+    expected_dir="${file(compressed_file.baseName).baseName}.d"
+    if [ -d "\${expected_dir}" ]; then
+        echo "Found \${expected_dir}"
+    else
+        # Handle archives where internal directory name differs (e.g. spaces vs underscores)
+        extracted_dir=\$(find . -maxdepth 1 -name "*.d" -type d | head -1 | sed 's|^\\./||')
+        if [ -n "\${extracted_dir}" ]; then
+            mv "\${extracted_dir}" "\${expected_dir}"
+        fi
+    fi
 
     ls -l | tee -a ${compressed_file.baseName}_decompression.log
 
