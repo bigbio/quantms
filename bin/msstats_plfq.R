@@ -196,17 +196,17 @@ control_str <- args[3]
 
 # read dataframe into MSstats
 data <- read.csv(csv_input)
-quant <- OpenMStoMSstatsFormat(data, removeProtein_with1Feature = removeOneFeatProts, removeFewMeasurements=removeFewMeasurements)
 
-# process data
-processed.quant <- dataProcess(quant, censoredInt = 'NA', featureSubset = args[6], summaryMethod = args[7])
-
+# Check conditions before calling MSstats functions (single-condition data causes data.table errors)
 lvls <- levels(as.factor(data$Condition))
 l <- length(lvls)
 
 if (l == 1) {
     print("Only one condition found. No contrasts to be tested. If this is not the case, please check your experimental design.")
 } else {
+    quant <- OpenMStoMSstatsFormat(data, removeProtein_with1Feature = removeOneFeatProts, removeFewMeasurements=removeFewMeasurements)
+    processed.quant <- dataProcess(quant, censoredInt = 'NA', featureSubset = args[6], summaryMethod = args[7])
+
     contrast_mat <- parse_contrasts(l = l, contrast_str = contrast_str, lvls = lvls)
     print ("Contrasts to be tested:")
     print (contrast_mat)
