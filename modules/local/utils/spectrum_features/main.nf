@@ -3,8 +3,8 @@ process SPECTRUM_FEATURES {
     label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.13' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.13' }"
+        'oras://ghcr.io/daichengxin/quantms-rescoring-sif:0.0.15' :
+        'ghcr.io/daichengxin/quantms-rescoring:0.0.15' }"
 
     input:
     tuple val(meta), path(id_file), val(search_engine), path(ms_file)
@@ -19,16 +19,6 @@ process SPECTRUM_FEATURES {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    # Fix for UID-less container environments (e.g. GitHub Actions uid 1001)
-    if [ -w /etc/passwd ]; then
-        echo "\${USER:-quantms}:x:\$(id -u):\$(id -g):\${USER:-quantms} user:/tmp:/bin/bash" >> /etc/passwd
-    fi
-    export USER="\${USER:-quantms}"
-    export LOGNAME="\${LOGNAME:-\${USER:-quantms}}"
-    export HOME="\${HOME:-\$PWD}"
-    export TORCHINDUCTOR_CACHE_DIR="\${TORCHINDUCTOR_CACHE_DIR:-\$PWD/.torchinductor_cache}"
-    mkdir -p "\$TORCHINDUCTOR_CACHE_DIR"
-
     rescoring spectrum2feature \\
         --mzml "${ms_file}" \\
         --idxml "${id_file}" \\

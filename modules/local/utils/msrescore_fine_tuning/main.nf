@@ -3,8 +3,8 @@ process MSRESCORE_FINE_TUNING {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.14' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.14' }"
+        'oras://ghcr.io/daichengxin/quantms-rescoring-sif:0.0.15' :
+        'ghcr.io/daichengxin/quantms-rescoring:0.0.15' }"
 
     input:
     tuple val(meta), path(idxml), path(mzml), val(groupkey), path(ms2_model_dir)
@@ -48,17 +48,6 @@ process MSRESCORE_FINE_TUNING {
     }
 
     """
-    # Fix for UID-less container environments (e.g. GitHub Actions uid 1001)
-    # Python's getpass.getuser() checks USER env var before calling getpwuid()
-    if [ -w /etc/passwd ]; then
-        echo "\${USER:-quantms}:x:\$(id -u):\$(id -g):\${USER:-quantms} user:/tmp:/bin/bash" >> /etc/passwd
-    fi
-    export USER="\${USER:-quantms}"
-    export LOGNAME="\${LOGNAME:-\${USER:-quantms}}"
-    export HOME="\${HOME:-\$PWD}"
-    export TORCHINDUCTOR_CACHE_DIR="\${TORCHINDUCTOR_CACHE_DIR:-\$PWD/.torchinductor_cache}"
-    mkdir -p "\$TORCHINDUCTOR_CACHE_DIR"
-
     rescoring transfer_learning \\
         --idxml ./ \\
         --mzml ./ \\
