@@ -213,6 +213,12 @@
                     "fa_icon": "far fa-check-square",
                     "help_text": "Force re-indexing in the beginning of the pipeline to make sure that indices are up-to-date and to avoid redundant indexing on-demand in steps that require an index (e.g., Comet)."
                 },
+                "mzml_statistics": {
+                    "type": "boolean",
+                    "description": "Compute MS1/MS2 statistics from mzML files. Only runs on mzML files, .d files are always skipped.",
+                    "help_text": "Enable to generate *_ms_info.parquet statistics for QC reporting. Only available for mzML files, Bruker .d files are always excluded.",
+                    "fa_icon": "far fa-check-square"
+                },
                 "mzml_features": {
                     "type": "boolean",
                     "description": "Compute with mzmlstatistics step the features at MS1 level and output to a RAW file, only available for mzML files",
@@ -1096,7 +1102,7 @@
                 },
                 "quantify_decoys": {
                     "type": "boolean",
-                    "description": "Also quantify decoys? (Usually only needed for Triqler post-processing output with [`--add_triqler_output`](#add_triqler_output), where it is auto-enabled)",
+                    "description": "Also quantify decoys?",
                     "fa_icon": "far fa-check-square"
                 },
                 "plfq_debug": {
@@ -1222,11 +1228,12 @@
                     "fa_icon": "fas fa-filter",
                     "hidden": true
                 },
-                "enable_diann_mztab": {
-                    "type": "boolean",
-                    "description": "Export the DIA-NN and DIA results to mzTab",
-                    "default": false,
-                    "fa_icon": "far fa-check-square"
+                "diann_extra_args": {
+                    "type": "string",
+                    "description": "Extra arguments appended to all DIA-NN steps. Flags incompatible with specific steps are automatically stripped with a warning.",
+                    "fa_icon": "fas fa-terminal",
+                    "hidden": false,
+                    "help_text": "Pass additional DIA-NN command-line arguments that will be appended to all DIA-NN steps (INSILICO_LIBRARY_GENERATION, PRELIMINARY_ANALYSIS, ASSEMBLE_EMPIRICAL_LIBRARY, INDIVIDUAL_ANALYSIS, FINAL_QUANTIFICATION). Flags that conflict with a specific step are automatically stripped with a warning. For step-specific overrides, use custom Nextflow config files with ext.args."
                 }
             },
             "fa_icon": "fas fa-braille"
@@ -1258,11 +1265,6 @@
                     "description": "The threshold value for differential expressed proteins in MSstats plots based on adjusted p-value",
                     "fa_icon": "fas fa-filter",
                     "default": 0.05
-                },
-                "add_triqler_output": {
-                    "type": "boolean",
-                    "description": "Also create an output in Triqler's format for an alternative manual post-processing with that tool",
-                    "fa_icon": "far fa-check-square"
                 },
                 "msstatslfq_feature_subset_protein": {
                     "type": "string",

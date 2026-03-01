@@ -13,6 +13,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
     val(meta)
     path("quant/*")
     path(lib)
+    path(diann_config)
 
     output:
     path "empirical_library.*", emit: empirical_library
@@ -24,6 +25,20 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
 
     script:
     def args = task.ext.args ?: ''
+    // Strip flags that are managed by the pipeline to prevent silent conflicts
+    def blocked = ['--no-main-report', '--no-ifs-removal', '--matrices', '--out',
+         '--temp', '--threads', '--verbose', '--lib', '--f', '--fasta',
+         '--mass-acc', '--mass-acc-ms1', '--window',
+         '--individual-mass-acc', '--individual-windows',
+         '--out-lib', '--use-quant', '--gen-spec-lib', '--rt-profiling']
+    // Sort by length descending so longer flags (e.g. --mass-acc-ms1) are matched before shorter prefixes (--mass-acc)
+    blocked.sort { a -> -a.length() }.each { flag ->
+        def flagPattern = '(?<=^|\\s)' + java.util.regex.Pattern.quote(flag) + '(?=\\s|\$)(\\s+(?!-{1,2}[a-zA-Z])\\S+)*'
+        if (args =~ flagPattern) {
+            log.warn "DIA-NN: '${flag}' is managed by the pipeline for ASSEMBLE_EMPIRICAL_LIBRARY and will be stripped."
+            args = args.replaceAll(flagPattern, '').trim()
+        }
+    }
 
     if (params.mass_acc_automatic) {
         mass_acc = '--individual-mass-acc'
@@ -42,6 +57,9 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
 
     ls -lcth
 
+    # Extract --var-mod and --fixed-mod flags from diann_config.cfg (DIA-NN best practice)
+    mod_flags=\$(cat ${diann_config} | grep -oP '(--var-mod\\s+\\S+|--fixed-mod\\s+\\S+)' | tr '\\n' ' ')
+
     diann   --f ${(ms_files as List).join(' --f ')} \\
             --lib ${lib} \\
             --threads ${task.cpus} \\
@@ -53,6 +71,7 @@ process ASSEMBLE_EMPIRICAL_LIBRARY {
             ${mass_acc} \\
             ${scan_window} \\
             --gen-spec-lib \\
+            \${mod_flags} \\
             $args
 
     cp report.log.txt assemble_empirical_library.log

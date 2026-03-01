@@ -8,7 +8,23 @@ process DECOMPRESS {
         'https://depot.galaxyproject.org/singularity/mulled-v2-796b0610595ad1995b121d0b85375902097b78d4:a3a3220eb9ee55710d743438b2ab9092867c98c6-0' :
         'quay.io/biocontainers/mulled-v2-796b0610595ad1995b121d0b85375902097b78d4:a3a3220eb9ee55710d743438b2ab9092867c98c6-0' }"
 
-    stageInMode { task.attempt == 1 ? (task.executor == 'awsbatch' ? 'symlink' : 'link') : task.attempt == 2 ? (task.executor == 'awsbatch' ? 'copy' : 'symlink') : 'copy' }
+    stageInMode {
+        if (task.attempt == 1) {
+            if (task.executor == 'awsbatch') {
+                'symlink'
+            } else {
+                'link'
+            }
+        } else if (task.attempt == 2) {
+            if (task.executor == 'awsbatch') {
+                'copy'
+            } else {
+                'symlink'
+            }
+        } else {
+            'copy'
+        }
+    }
 
     input:
     tuple val(meta), path(compressed_file)
@@ -68,9 +84,20 @@ process DECOMPRESS {
     echo "Unpacking..." | tee -a ${compressed_file.baseName}_decompression.log
 
     extract ${compressed_file} 2>&1 | tee -a ${compressed_file.baseName}_conversion.log
-    [ -d ${file(compressed_file.baseName).baseName}.d ] && \\
-        echo "Found ${file(compressed_file.baseName).baseName}.d" || \\
-        mv *.d ${file(compressed_file.baseName).baseName}.d
+
+    # Fix read-only permissions from Bruker/Windows zip archives (dirs extracted as dr-xr-xr-x)
+    chmod -R u+w . 2>/dev/null || true
+
+    expected_dir="${file(compressed_file.baseName).baseName}.d"
+    if [ -d "\${expected_dir}" ]; then
+        echo "Found \${expected_dir}"
+    else
+        # Handle archives where internal directory name differs (e.g. spaces vs underscores)
+        extracted_dir=\$(find . -maxdepth 1 -name "*.d" -type d | head -1 | sed 's|^\\./||')
+        if [ -n "\${extracted_dir}" ]; then
+            mv "\${extracted_dir}" "\${expected_dir}"
+        fi
+    fi
 
     ls -l | tee -a ${compressed_file.baseName}_decompression.log
 
