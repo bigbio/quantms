@@ -9,6 +9,7 @@ process PRELIMINARY_ANALYSIS {
 
     input:
     tuple val(meta), path(ms_file), path(predict_library)
+    path(diann_config)
 
     output:
     path "*.quant", emit: diann_quant
@@ -20,6 +21,23 @@ process PRELIMINARY_ANALYSIS {
 
     script:
     def args = task.ext.args ?: ''
+    // Strip flags that are managed by the pipeline to prevent silent conflicts
+    def blocked = ['--use-quant', '--gen-spec-lib', '--out-lib', '--matrices', '--out',
+         '--temp', '--threads', '--verbose', '--lib', '--f', '--fasta',
+         '--mass-acc', '--mass-acc-ms1', '--window',
+         '--quick-mass-acc', '--min-corr', '--corr-diff', '--time-corr-only']
+    // Sort by length descending so longer flags (e.g. --mass-acc-ms1) are matched before shorter prefixes (--mass-acc)
+    blocked.sort { a -> -a.length() }.each { flag ->
+        def flagPattern = '(?<=^|\\s)' + java.util.regex.Pattern.quote(flag) + '(?=\\s|\$)(\\s+(?!-{1,2}[a-zA-Z])\\S+)*'
+        if (args =~ flagPattern) {
+            log.warn "DIA-NN: '${flag}' is managed by the pipeline for PRELIMINARY_ANALYSIS and will be stripped."
+            args = args.replaceAll(flagPattern, '').trim()
+        }
+    }
+
+    // Performance flags for preliminary analysis calibration step
+    quick_mass_acc = params.quick_mass_acc ? "--quick-mass-acc" : ""
+    performance_flags = params.performance_mode ? "--min-corr 2 --corr-diff 1 --time-corr-only" : ""
 
     // I am using here the ["key"] syntax, since the preprocessed meta makes
     // was evaluating to null when using the dot notation.
@@ -44,6 +62,9 @@ process PRELIMINARY_ANALYSIS {
 
     # Final mass accuracy is '${mass_acc}'
 
+    # Extract --var-mod and --fixed-mod flags from diann_config.cfg (DIA-NN best practice)
+    mod_flags=\$(cat ${diann_config} | grep -oP '(--var-mod\\s+\\S+|--fixed-mod\\s+\\S+)' | tr '\\n' ' ')
+
     diann   --lib ${predict_library} \\
             --f ${ms_file} \\
             --threads ${task.cpus} \\
@@ -51,6 +72,9 @@ process PRELIMINARY_ANALYSIS {
             ${scan_window} \\
             --temp ./ \\
             ${mass_acc} \\
+            ${quick_mass_acc} \\
+            ${performance_flags} \\
+            \${mod_flags} \\
             $args
 
     cp report.log.txt ${ms_file.baseName}_diann.log

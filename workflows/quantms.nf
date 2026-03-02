@@ -154,7 +154,6 @@ workflow QUANTMS {
         DIA(
             ch_fileprep_result.dia,
             CREATE_INPUT_CHANNEL.out.ch_expdesign,
-            FILE_PREPARATION.out.statistics,
         )
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report_parquet)

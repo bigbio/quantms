@@ -1,29 +1,33 @@
-process GENERATE_CFG {
+process DIANN_MSSTATS {
     tag "$meta.experiment_id"
-    label 'process_tiny'
+    label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.25--pyh106432d_0' :
         'biocontainers/quantms-utils:0.0.25--pyh106432d_0' }"
 
     input:
+    path(report)
+    path(exp_design)
+    path(report_pg)
+    path(report_pr)
     val(meta)
+    path(fasta)
 
     output:
-    path 'diann_config.cfg', emit: diann_cfg
-    path 'versions.yml', emit: versions
-    path '*.log'
+    path "*msstats_in.csv", emit: out_msstats
+    path "*.log", emit: log
+    path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args ?: ''
-
     """
-    quantmsutilsc dianncfg \\
-        --enzyme "${meta.enzyme}" \\
-        --fix_mod "${meta.fixedmodifications}" \\
-        --var_mod "${meta.variablemodifications}" \\
+    quantmsutilsc diann2msstats \\
+        --report ${report} \\
+        --exp_design ${exp_design} \\
+        --qvalue_threshold $params.protein_level_fdr_cutoff \\
         $args \\
-        2>&1 | tee GENERATE_DIANN_CFG.log
+        2>&1 | tee convert_report.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

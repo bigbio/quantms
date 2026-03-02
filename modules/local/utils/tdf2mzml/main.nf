@@ -20,10 +20,15 @@ process TDF2MZML {
     """
     echo "Converting..." | tee --append ${rawfile.baseName}_conversion.log
     tdf2mzml.py -i *.d $args 2>&1 | tee --append ${rawfile.baseName}_conversion.log
-    # Two-step rename to handle case-insensitive filesystems (e.g. macOS bind-mounted Docker volumes)
-    # where mv *.mzml *.mzML would fail with "same file" error
-    mv *.mzml ${file(rawfile.baseName).baseName}.mzML_tmp_rename
-    mv ${file(rawfile.baseName).baseName}.mzML_tmp_rename ${file(rawfile.baseName).baseName}.mzML
+
+    # Rename .mzml to .mzML via temp file to handle case-insensitive filesystems (e.g. macOS)
+    mv *.mzml __tmp_converted.mzML && mv __tmp_converted.mzML ${file(rawfile.baseName).baseName}.mzML
+
+    # Rename .d directory only if the name differs (avoid 'same file' error)
+    target_d="${file(rawfile.baseName).baseName}.d"
+    if [ ! -d "\${target_d}" ]; then
+        mv *.d "\${target_d}"
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

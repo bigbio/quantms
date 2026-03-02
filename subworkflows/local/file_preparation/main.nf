@@ -99,11 +99,17 @@ workflow FILE_PREPARATION {
         ch_results = indexed_mzml_bundle
     }
 
-    MZML_STATISTICS(ch_results)
-    ch_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms_statistics.collect())
-    ch_ms2_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms2_statistics)
-    ch_feature_statistics = ch_statistics.mix(MZML_STATISTICS.out.feature_statistics.collect())
-    ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
+    if (params.mzml_statistics) {
+        // Only run on mzML files, skip .d directories
+        ch_mzml_for_stats = ch_results.filter { _meta, file ->
+            !file.toString().toLowerCase().endsWith('.d')
+        }
+        MZML_STATISTICS(ch_mzml_for_stats)
+        ch_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms_statistics.collect())
+        ch_ms2_statistics = ch_ms2_statistics.mix(MZML_STATISTICS.out.ms2_statistics)
+        ch_feature_statistics = ch_feature_statistics.mix(MZML_STATISTICS.out.feature_statistics.collect())
+        ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
+    }
 
     // Pass through .d files without conversion when convert_dotd=false
     // (DIA-NN handles them natively; they bypass mzML statistics as they are not mzML)
