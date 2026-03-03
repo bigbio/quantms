@@ -3,8 +3,8 @@ process MSRESCORE_FEATURES {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.14' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.14' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.15' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.15' }"
 
     input:
     tuple val(meta), path(idxml), path(mzml), path(model_weight), val(search_engine)
@@ -91,20 +91,6 @@ process MSRESCORE_FEATURES {
     }
 
     """
-    # Fix for UID-less environments (GitHub Actions, OpenShift, etc.)
-    # where pwd.getpwuid() fails because the running UID has no /etc/passwd entry.
-    # Python's getpass.getuser() calls getpwuid() only when USER env var is unset.
-    if [ -w /etc/passwd ]; then
-        echo "\${USER:-quantms}:x:\$(id -u):\$(id -g):\${USER:-quantms} user:/tmp:/bin/bash" >> /etc/passwd
-    fi
-    export USER="\${USER:-quantms}"
-    export LOGNAME="\${LOGNAME:-\${USER:-quantms}}"
-    export LNAME="\${LNAME:-\${USER:-quantms}}"
-    export USERNAME="\${USERNAME:-\${USER:-quantms}}"
-    export HOME="\${HOME:-\$PWD}"
-    export TORCHINDUCTOR_CACHE_DIR="\${TORCHINDUCTOR_CACHE_DIR:-\$PWD/.torchinductor_cache}"
-    mkdir -p "\$TORCHINDUCTOR_CACHE_DIR"
-
     rescoring msrescore2feature \\
         --idxml $idxml \\
         --mzml $mzml \\
