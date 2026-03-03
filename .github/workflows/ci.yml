@@ -39,6 +39,7 @@ jobs:
           [
             "test_lfq",
             "test_dia",
+            "test_dia_dotd",
             "test_localize",
             "test_tmt",
             "test_dda_id_alphapeptdeep",

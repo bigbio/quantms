@@ -17,7 +17,6 @@ process PROTEOMICSLFQ {
     path "${expdes.baseName}_openms.mzTab", emit: out_mztab
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "*msstats_in.csv", emit: out_msstats, optional: true
-    path "*triqler_in.tsv", emit: out_triqler, optional: true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs, optional: true
     path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference, optional: true
     path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved, optional: true
@@ -30,8 +29,7 @@ process PROTEOMICSLFQ {
     script:
     def args = task.ext.args ?: ''
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
-    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
-    def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
+    def decoys_present = params.quantify_decoys ? '-PeptideQuantification:quantify_decoys' : ''
     def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
     def id_sorted = id_files.collect().sort{ a, b -> a.name <=> b.name}
     def feature_with_id_min_score =  "-feature_with_id_min_score ${params.feature_with_id_min_score}"
@@ -60,7 +58,6 @@ process PROTEOMICSLFQ {
         -out_cxml ${expdes.baseName}_openms.consensusXML \\
         -out ${expdes.baseName}_openms.mzTab \\
         ${msstats_present} \\
-        ${triqler_present} \\
         $args \\
         2>&1 | tee proteomicslfq.log
 
