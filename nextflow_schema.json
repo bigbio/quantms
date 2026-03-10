@@ -1179,6 +1179,33 @@
                     "fa_icon": "far fa-check-square",
                     "hidden": false
                 },
+                "quantums": {
+                    "type": "boolean",
+                    "description": "Use legacy DIA-NN quantification algorithms (DIA-NN parameter --direct-quant); if true, QuantUMS is enabled.",
+                    "fa_icon": "far fa-check-square",
+                    "hidden": false
+                },
+                "quantums_train_runs": {
+                    "type": "string",
+                    "description": "Run index range for QuantUMS training (e.g., '0:5').",
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "Sets the DIA-NN parameter '--quant-train-runs'. Format: '[N1]:[N2]'. Instructs QuantUMS to train its parameters on runs with indices in the range N1 to N2 (inclusive).",
+                    "hidden": false
+                },
+                "quantums_sel_runs": {
+                    "type": "integer",
+                    "description": "Number of automatically selected runs for QuantUMS training.",
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "Sets the DIA-NN parameter --quant-sel-runs. Format: [N]. QuantUMS will train its parameters on N automatically selected runs to speed up training in large experiments. N must be 6 or greater.",
+                    "hidden": false
+                },
+                "quantums_params": {
+                    "type": "string",
+                    "description": "Pre-calculated QuantUMS parameters.",
+                    "fa_icon": "fas fa-sliders-h",
+                    "help_text": "Sets the DIA-NN parameter --quant-params. Provide previously obtained QuantUMS parameters to use instead of training new ones.",
+                    "hidden": false
+                },
                 "skip_preliminary_analysis": {
                     "type": "boolean",
                     "description": "Skip the preliminary analysis step, thus use the passed spectral library as-is insted of generating a local concensus library.",

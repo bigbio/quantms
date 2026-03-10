@@ -62,6 +62,10 @@ process FINAL_QUANTIFICATION {
     no_norm = params.diann_normalize ? "" : "--no-norm"
     report_decoys = params.diann_report_decoys ? "--report-decoys": ""
     diann_export_xic = params.diann_export_xic ? "--xic": ""
+    quantums = params.quantums ? "": "--direct-quant"
+    quantums_train_runs = params.quantums_train_runs ? "--quant-train-runs $params.quantums_train_runs": ""
+    quantums_sel_runs = params.quantums_sel_runs ? "--quant-sel-runs $params.quantums_sel_runs": ""
+    quantums_params = params.quantums_params ? "--quant-params $params.quantums_params": ""
 
     """
     # Notes: if .quant files are passed, mzml/.d files are not accessed, so the name needs to be passed but files
@@ -86,6 +90,10 @@ process FINAL_QUANTIFICATION {
             --qvalue $params.protein_level_fdr_cutoff \\
             ${report_decoys} \\
             ${diann_export_xic} \\
+            ${quantums} \\
+            ${quantums_train_runs} \\
+            ${quantums_sel_runs} \\
+            ${quantums_params} \\
             \${mod_flags} \\
             $args
 
