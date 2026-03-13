@@ -2,7 +2,7 @@
 // Raw file conversion and mzml indexing
 //
 
-include { THERMORAWFILEPARSER } from '../../../modules/bigbio/thermorawfileparser/main'
+include { THERMORAWFILEPARSER } from '../../../modules/nf-core/thermorawfileparser/main'
 include { TDF2MZML            } from '../../../modules/local/utils/tdf2mzml/main'
 include { DECOMPRESS          } from '../../../modules/local/utils/decompress_dotd/main'
 include { MZML_INDEXING       } from '../../../modules/local/openms/mzml_indexing/main'
@@ -85,8 +85,8 @@ workflow FILE_PREPARATION {
     //  'log': Path(*.txt)}
 
     // Where meta is the same as the input meta
-    ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.versions)
-    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.convert_files)
+    ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.versions_thermorawfileparser)
+    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.spectra)
 
     ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
 

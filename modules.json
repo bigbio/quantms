@@ -25,6 +25,11 @@
                         "branch": "master",
                         "git_sha": "8deffd6a402233ebf905c66dbf804bd4c2637946",
                         "installed_by": ["modules"]
+                    },
+                    "thermorawfileparser": {
+                        "branch": "master",
+                        "git_sha": "daaecc3478d6f6ad9cb8f48ec7d657ab6c67877f",
+                        "installed_by": ["modules"]
                     }
                 }
             },
