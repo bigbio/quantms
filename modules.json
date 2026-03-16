@@ -29,7 +29,8 @@
                     "thermorawfileparser": {
                         "branch": "master",
                         "git_sha": "daaecc3478d6f6ad9cb8f48ec7d657ab6c67877f",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/thermorawfileparser/thermorawfileparser.diff"
                     }
                 }
             },

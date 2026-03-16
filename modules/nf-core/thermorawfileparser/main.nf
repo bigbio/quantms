@@ -1,5 +1,5 @@
 process THERMORAWFILEPARSER {
-    tag "$meta.id"
+    tag "$meta.mzml_id"
     label 'process_low'
 
     conda "${moduleDir}/environment.yml"
@@ -19,7 +19,7 @@ process THERMORAWFILEPARSER {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
     def suffix = args.contains("--format 0") || args.contains("-f 0") ? "mgf" :
                 args.contains("--format 1") || args.contains("-f 1") ? "mzML" :
                 args.contains("--format 2") || args.contains("-f 2") ? "mzML" :
