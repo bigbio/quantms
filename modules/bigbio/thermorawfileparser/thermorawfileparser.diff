@@ -21,7 +21,7 @@ Changes in 'thermorawfileparser/main.nf':
          ? "mgf"
          : args.contains("--format 1") || args.contains("-f 1")
 @@ -48,7 +48,7 @@
- 
+
      stub:
      def args = task.ext.args ?: ''
 -    def prefix = task.ext.prefix ?: "${meta.id}"
