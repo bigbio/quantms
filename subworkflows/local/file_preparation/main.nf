@@ -2,7 +2,7 @@
 // Raw file conversion and mzml indexing
 //
 
-include { THERMORAWFILEPARSER } from '../../../modules/nf-core/thermorawfileparser/main'
+include { THERMORAWFILEPARSER } from '../../../modules/bigbio/thermorawfileparser/main'
 include { TDF2MZML            } from '../../../modules/local/utils/tdf2mzml/main'
 include { DECOMPRESS          } from '../../../modules/local/utils/decompress_dotd/main'
 include { MZML_INDEXING       } from '../../../modules/local/openms/mzml_indexing/main'
