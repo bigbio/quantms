@@ -22,8 +22,8 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out.versions).match("versions")
-            assert new File(process.out.convert_files[0][1]).name == 'TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzML'
+            assert snapshot(process.out.versions_thermorawfileparser).match("versions")
+            assert new File(process.out.spectra[0][1]).name == 'TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzML'
             assert process.out.log.size() == 1
         }
     }
@@ -36,7 +36,7 @@ nextflow_process {
             process {
                 """
                 input[0] = [
-                    [ id: 'test', mzml_id: 'test_sample' ],
+                    [ id: 'test_sample', mzml_id: 'test_sample' ],
                     file(params.test_data['proteomics']['msspectra']['ups1_50amol_r3'], checkIfExists: false)
                 ]
                 """
@@ -45,8 +45,9 @@ nextflow_process {
 
         then {
             assert process.success
-            assert snapshot(process.out.versions).match("versions_stub")
-            assert new File(process.out.convert_files[0][1]).name == 'test_sample.mzML'
+            assert snapshot(process.out.versions_thermorawfileparser).match("versions_stub")
+            assert new File(process.out.spectra[0][1]).name == 'test_sample.mzML'
+            assert snapshot(process.out).match()
             assert process.out.log.size() == 1
         }
     }
