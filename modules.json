@@ -12,8 +12,9 @@
                     },
                     "thermorawfileparser": {
                         "branch": "main",
-                        "git_sha": "a1a4a11ff508b2b5c23c9fb21c51c3327b748d4d",
-                        "installed_by": ["modules"]
+                        "git_sha": "53f2d78652a7040e3d44610286471642b1e1b55b",
+                        "installed_by": ["modules"],
+                        "patch": "modules/bigbio/thermorawfileparser/thermorawfileparser.diff"
                     }
                 }
             }
