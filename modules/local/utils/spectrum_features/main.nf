@@ -3,8 +3,8 @@ process SPECTRUM_FEATURES {
     label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.15' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.15' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.16' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.16' }"
 
     input:
     tuple val(meta), path(id_file), val(search_engine), path(ms_file)
