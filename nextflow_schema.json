@@ -966,6 +966,13 @@
                     "fa_icon": "fas fa-filter",
                     "help_text": "After applying protein-level FDR cutoff, this additionally filters PSMs to be used for quantification and reporting."
                 },
+                "fdr_conservative": {
+                    "type": "boolean",
+                    "description": "Use conservative FDR formula (D+1)/T instead of (D+1)/(T+D). Default: true",
+                    "default": true,
+                    "fa_icon": "fas fa-shield-alt",
+                    "help_text": "When true, uses the conservative formula (D+1)/T for FDR estimation, which provides an upper bound on the true FDR. When false, uses (D+1)/(T+D) which gives a tighter estimate. See Keich & Noble (2025, Nature Methods) for details on FDR estimation methods."
+                },
                 "protein_inference_debug": {
                     "type": "integer",
                     "description": "Debug level for the protein inference step. Increase for verbose logging",
