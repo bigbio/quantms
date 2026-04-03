@@ -81,6 +81,31 @@ When you run the above command, Nextflow automatically pulls the pipeline code f
 nextflow pull bigbio/quantms
 ```
 
+## Migration Guide
+
+### Migrating from luciphor*\* to onsite*\* parameters (Version 1.7.0)
+
+Starting with version 1.7.0, luciphor-specific parameters have been replaced with the unified `onsite_*` parameter naming scheme. The new onsite module supports multiple PTM localization algorithms (AScore, PhosphoRS, and LucXor).
+
+#### Onsite Parameters
+
+| Parameter                        | Default    | Description                                                                                           |
+| -------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------- |
+| `onsite_algorithm`               | `'lucxor'` | PTM localization algorithm: `'ascore'`, `'phosphors'`, or `'lucxor'`                                  |
+| `onsite_fragment_method`         | `'CID'`    | Fragmentation method: `'CID'` or `'HCD'`                                                              |
+| `onsite_fragment_tolerance`      | `0.5`      | Fragment mass tolerance                                                                               |
+| `onsite_fragment_error_units`    | `'Da'`     | Fragment error units: `'Da'` or `'ppm'`                                                               |
+| `onsite_add_decoys`              | `false`    | Add decoy modifications for validation                                                                |
+| `onsite_neutral_losses`          | `null`     | List of neutral losses to consider for modification localization (replaces `luciphor_neutral_losses`) |
+| `onsite_decoy_mass`              | `null`     | Mass to add to an amino acid to make it a decoy (replaces `luciphor_decoy_mass`)                      |
+| `onsite_decoy_neutral_losses`    | `null`     | List of neutral losses for decoy sequences (replaces `luciphor_decoy_neutral_losses`)                 |
+| `onsite_threads`                 | `1`        | Number of threads for onsite processing                                                               |
+| `onsite_min_psms`                | `5`        | Minimum number of high-scoring PSMs for lucxor model training                                         |
+| `onsite_disable_split_by_charge` | `false`    | Disable splitting PSMs by charge state for lucxor                                                     |
+| `onsite_compute_all_scores`      | `false`    | Compute all scores for all candidate sites                                                            |
+
+**Note:** The old `luciphor_*` parameters are no longer supported. Update your configuration files to use the `onsite_*` parameters above. The default algorithm is `'lucxor'`, which provides the same functionality as the previous luciphor module.
+
 ### Reproducibility
 
 It is a good idea to specify the pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.

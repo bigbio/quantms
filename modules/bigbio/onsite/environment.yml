@@ -1,0 +1,7 @@
+name: onsite
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bioconda::pyonsite=0.0.2

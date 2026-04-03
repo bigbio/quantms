@@ -3,17 +3,17 @@ process MSRESCORE_FEATURES {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.12' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.12' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.14' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.14' }"
 
     input:
-    tuple val(meta), path(idxml), path(mzml)
+    tuple val(meta), path(idxml), path(mzml), path(model_weight), val(search_engine)
 
     output:
-    tuple val(meta), path("*ms2rescore.idXML") , emit: idxml
-    tuple val(meta), path("*.html" )           , optional:true, emit: html
-    path "versions.yml"                        , emit: versions
-    path "*.log"                               , emit: log
+    tuple val(meta), path("*ms2rescore.idXML"), val(search_engine) , emit: idxml
+    tuple val(meta), path("*.html" )                               , optional:true, emit: html
+    path "versions.yml"                                            , emit: versions
+    path "*.log"                                                   , emit: log
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,7 +25,13 @@ process MSRESCORE_FEATURES {
     // Only add ms2_model_dir if it's actually set and not empty
     // Handle cases where parameter might be empty string, null, boolean true, or whitespace
     // When --ms2features_model_dir is passed with no value, Nextflow may set it to boolean true
-    def ms2_model_dir = (params.ms2features_model_dir && params.ms2features_model_dir != true) ? "--ms2_model_dir ${params.ms2features_model_dir}" : ""
+    if (params.ms2features_fine_tuning) {
+        ms2_model_dir = '--ms2_model_dir ./'
+    } else if (params.ms2features_model_dir && params.ms2features_model_dir != true){
+        ms2_model_dir = "--ms2_model_dir ${model_weight}"
+    } else {
+        ms2_model_dir = "--ms2_model_dir ./"
+    }
 
     // Determine if using ms2pip or alphapeptdeep based on ms2features_generators
     def using_ms2pip = params.ms2features_generators.toLowerCase().contains('ms2pip')
@@ -42,13 +48,15 @@ process MSRESCORE_FEATURES {
         // ms2pip only supports Da unit
         ms2_tolerance_unit = 'Da'
         ms2_tolerance = params.ms2features_tolerance
-        if (meta['fragmentmasstoleranceunit'].toLowerCase().endsWith('da')) {
+        def fragment_unit_lower = meta['fragmentmasstoleranceunit'].toLowerCase()
+        if (fragment_unit_lower.endsWith('da')) {
             ms2_tolerance = meta['fragmentmasstolerance']
-        } else if (params.ms2features_tolerance_unit == 'ppm') {
-            log.info "Warning: MS2pip only supports Da unit. Using default from config!"
-            ms2_tolerance = 0.05
+        } else if (fragment_unit_lower == 'ppm' || params.ms2features_tolerance_unit == 'ppm') {
+            log.warn "Warning: MS2pip only supports Da unit. Using default from config!"
+            ms2_tolerance = params.ms2features_tolerance
         } else {
-            log.info "Warning: MS2pip only supports Da unit. Using default from config!"
+            log.warn "Warning: MS2pip only supports Da unit. Fragment mass tolerance unit '${meta['fragmentmasstoleranceunit']}' is not supported. Using default from config! In the future, please use 'Da' or 'ppm'."
+            ms2_tolerance = params.ms2features_tolerance
         }
     }
 

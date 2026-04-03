@@ -20,8 +20,6 @@ lint:
     - .github/workflows/download_pipeline.yml
     - conf/modules.config
     - conf/igenomes_ignored.config
-    - .github/workflows/awstest.yml
-    - .github/workflows/awsfulltest.yml
   modules_config: false
   multiqc_config: false
   nextflow_config: false
@@ -35,4 +33,4 @@ template:
   name: quantms
   org: bigbio
   outdir: .
-  version: 1.6.0
+  version: 1.7.0

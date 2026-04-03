@@ -20,7 +20,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 8. If multiple search engines were chosen, the results are combined with OpenMS' ConsensusID
 9. If multiple search engines were chosen, a combined FDR is calculated
 10. Single run PSM/Peptide-level FDR filtering
-11. If localization of modifications was requested, Luciphor2 is applied.
+11. If localization of modifications was requested, onsite is applied.
 12. (**DDA-LFQ**) Protein inference and label-free quantification based on spectral counting or MS1 feature detection, alignment and integration with OpenMS' ProteomicsLFQ. Performs an additional experiment-wide FDR filter on protein (and if requested peptide/PSM-level).
 13. (**DDA-ISO**) Extracts and normalizes isobaric labeling
 14. (**DDA-ISO**) Protein inference using the OpenMS ProteinInference tool. In addition, protein FDR filtering is performed in this step for Isobaric datasets (TMT, iTRAQ).

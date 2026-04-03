@@ -8,7 +8,7 @@ keywords:
   - proteomics
 components:
   - id/score/switcher
-  - luciphor
+  - onsite
 input:
   - ch_input:
       type: file

@@ -1,0 +1,53 @@
+nextflow_process {
+
+    name "Test Process THERMORAWFILEPARSER"
+    script "../main.nf"
+    process "THERMORAWFILEPARSER"
+    tag "modules"
+    tag "modules_bigbio"
+    tag "thermorawfileparser"
+
+    test("Should convert RAW to mzML") {
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', mzml_id: 'UPS1_50amol_R3' ],
+                    file(params.test_data['proteomics']['msspectra']['ups1_50amol_r3'], checkIfExists: false)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.versions).match("versions")
+            assert new File(process.out.convert_files[0][1]).name == 'TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01.mzML'
+            assert process.out.log.size() == 1
+        }
+    }
+
+    test("Should run stub mode") {
+
+        options "-stub"
+
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id: 'test', mzml_id: 'test_sample' ],
+                    file(params.test_data['proteomics']['msspectra']['ups1_50amol_r3'], checkIfExists: false)
+                ]
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out.versions).match("versions_stub")
+            assert new File(process.out.convert_files[0][1]).name == 'test_sample.mzML'
+            assert process.out.log.size() == 1
+        }
+    }
+}

@@ -3,9 +3,36 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.0] bigbio/quantms - [] -
+## [1.7.0] bigbio/quantms - [08/01/2026] - [Caracas]
 
-## `Changed`
+### `Added`
+
+- [626](https://github.com/bigbio/quantms/pull/626) Added onsite module to quantms
+- [629](https://github.com/bigbio/quantms/pull/629) Added transfer learning module for MS2 intensity prediction
+
+### `Changed`
+
+- [627](https://github.com/bigbio/quantms/pull/627) Move thermorawfileparser and onsite modules from local to bigbio/nf-modules
+- [629](https://github.com/bigbio/quantms/pull/629) Update quantms-rescoring to 0.0.13 to support transfer learning
+- [615](https://github.com/bigbio/quantms/pull/615) Update quantms-utils 0.0.24 and pmultiqc 0.0.39
+- [614](https://github.com/bigbio/quantms/pull/614) Changed enable_diann_mztab default from true to false. For DIA pipelines the mzTab will not be generated unless specified by a parameter `--enable_diann_mztab true`.
+- [635](https://github.com/bigbio/quantms/pull/635) Minimum Nextflow version requirement updated to `>=25.04.0`
+
+### `Fixed`
+
+- [619](https://github.com/bigbio/quantms/pull/619) quantms-rescoring bug fixed
+- [614](https://github.com/bigbio/quantms/pull/614) Multiple bugs fixed about diann, ptms and pmultiqc
+
+### `Dependencies`
+
+- Updated quantms-rescoring==0.0.13
+- Updated pmultiqc==0.0.39
+- Updated pyonsite==0.0.2
+- Updated quantms-utils==0.0.24
+
+### `Deprecations`
+
+- [626](https://github.com/bigbio/quantms/pull/626) Removed luciphor-specific parameters: `luciphor_neutral_losses`, `luciphor_decoy_mass`, `luciphor_decoy_neutral_losses`. These have been replaced with onsite parameters: `onsite_neutral_losses`, `onsite_decoy_mass`, `onsite_decoy_neutral_losses`. The new onsite module provides support for multiple PTM localization algorithms (AScore, PhosphoRS, and LucXor) with unified parameter naming. See the [Migration Guide](docs/usage.md#migrating-from-luciphor_-to-onsite_-parameters-version-170) in the documentation for a complete parameter mapping table and migration instructions.
 
 ## [1.6.0] bigbio/quantms - [13/08/2025] - Munich
 

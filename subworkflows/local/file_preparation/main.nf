@@ -2,7 +2,7 @@
 // Raw file conversion and mzml indexing
 //
 
-include { THERMORAWFILEPARSER } from '../../../modules/local/thermorawfileparser/main'
+include { THERMORAWFILEPARSER } from '../../../modules/bigbio/thermorawfileparser/main'
 include { TDF2MZML            } from '../../../modules/local/utils/tdf2mzml/main'
 include { DECOMPRESS          } from '../../../modules/local/utils/decompress_dotd/main'
 include { MZML_INDEXING       } from '../../../modules/local/openms/mzml_indexing/main'
@@ -81,13 +81,13 @@ workflow FILE_PREPARATION {
 
     THERMORAWFILEPARSER( ch_branched_input.raw )
     // Output is
-    // {'mzmls_converted': Tuple[val(meta), path(mzml)],
+    // {'convert_files': Tuple[val(meta), path(mzml)],
     //  'version': Path(versions.yml),
     //  'log': Path(*.txt)}
 
     // Where meta is the same as the input meta
     ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.versions)
-    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.mzmls_converted)
+    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.convert_files)
 
     ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
 
@@ -101,16 +101,15 @@ workflow FILE_PREPARATION {
         ch_results = indexed_mzml_bundle.mix(ch_branched_input.dotd)
     }
 
-    // Pass through .dia files without conversion (DIA-NN handles them natively)
-    // Note: .dia files bypass peak picking (when enabled) as they are only used with DIA-NN
-    ch_results = ch_results.mix(ch_branched_input.dia)
-
-
     MZML_STATISTICS(ch_results)
     ch_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms_statistics.collect())
     ch_ms2_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms2_statistics)
     ch_feature_statistics = ch_statistics.mix(MZML_STATISTICS.out.feature_statistics.collect())
     ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
+
+    // Pass through .dia files without conversion (DIA-NN handles them natively)
+    // Note: .dia files bypass peak picking and mzML statistics (when enabled) as they are only used with DIA-NN
+    ch_results = ch_results.mix(ch_branched_input.dia)
 
     if (params.openms_peakpicking) {
         // If the peak picker is enabled, it will over-write not bypass the .d files
