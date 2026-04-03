@@ -7,15 +7,13 @@
 //
 // MODULES: Local to the pipeline
 //
-include { FILE_MERGE  } from '../modules/local/openms/file_merge/main'
 include { MSSTATS_TMT } from '../modules/local/msstats/msstats_tmt/main'
+include { ISOBARIC_WORKFLOW } from '../modules/local/openms/isobaric_workflow/main'
+include { MSSTATS_CONVERTER } from '../modules/local/openms/msstats_converter/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
 //
-include { FEATURE_MAPPER    } from '../subworkflows/local/feature_mapper/main'
-include { PROTEIN_INFERENCE } from '../subworkflows/local/protein_inference/main'
-include { PROTEIN_QUANT     } from '../subworkflows/local/protein_quant/main'
 include { ID                } from '../subworkflows/local/id/main'
 
 /*
@@ -41,35 +39,32 @@ workflow TMT {
     ch_software_versions = ch_software_versions.mix(ID.out.versions)
 
     //
-    // SUBWORKFLOW: FEATUREMAPPER
+    // SUBWORKFLOW: ISOBARIC_WORKFLOW
     //
-    FEATURE_MAPPER(ch_file_preparation_results, ID.out.id_results)
-    ch_software_versions = ch_software_versions.mix(FEATURE_MAPPER.out.versions)
+    ch_file_preparation_results.join(ID.out.id_results)
+        .multiMap { it ->
+            mzmls: pmultiqc_mzmls: it[1]
+            ids: it[2]
+        }
+        .set{ ch_iso_workflow }
+    ISOBARIC_WORKFLOW(ch_iso_workflow.mzmls.collect(),
+                ch_iso_workflow.ids.collect(),
+                ch_expdesign
+            )
+    ch_software_versions = ch_software_versions.mix(ISOBARIC_WORKFLOW.out.versions)
 
     //
-    // MODULE: FILEMERGE
+    // MODULE: MSSTATS_CONVERTER
     //
-    FILE_MERGE(FEATURE_MAPPER.out.id_map.collect())
-    ch_software_versions = ch_software_versions.mix(FILE_MERGE.out.versions)
-
-    //
-    // SUBWORKFLOW: PROTEININFERENCE
-    //
-    PROTEIN_INFERENCE(FILE_MERGE.out.id_merge)
-    ch_software_versions = ch_software_versions.mix(PROTEIN_INFERENCE.out.versions)
-
-    //
-    // SUBWORKFLOW: PROTEINQUANT
-    //
-    PROTEIN_QUANT(PROTEIN_INFERENCE.out.epi_idfilter, ch_expdesign)
-    ch_software_versions = ch_software_versions.mix(PROTEIN_QUANT.out.versions)
+    MSSTATS_CONVERTER(ISOBARIC_WORKFLOW.out.out_consensusXML, ch_expdesign, "ISO")
+    ch_software_versions = ch_software_versions.mix(MSSTATS_CONVERTER.out.versions)
 
     //
     // MODULE: MSSTATSTMT
     //
     ch_msstats_out = Channel.empty()
     if(!params.skip_post_msstats){
-        MSSTATS_TMT(PROTEIN_QUANT.out.msstats_csv)
+        MSSTATS_TMT(MSSTATS_CONVERTER.out.out_msstats)
         ch_msstats_out = MSSTATS_TMT.out.msstats_csv
         ch_software_versions = ch_software_versions.mix(MSSTATS_TMT.out.versions)
     }
@@ -85,8 +80,8 @@ workflow TMT {
     emit:
     ch_pmultiqc_ids         = ch_pmultiqc_ids
     ch_pmultiqc_consensus   = ch_pmultiqc_consensus
-    final_result            = PROTEIN_QUANT.out.out_mztab
-    msstats_in              = PROTEIN_QUANT.out.msstats_csv
+    final_result            = ISOBARIC_WORKFLOW.out.out_mztab
+    msstats_in              = MSSTATS_CONVERTER.out.out_msstats
     msstats_out             = ch_msstats_out
     versions                = ch_software_versions
 }
