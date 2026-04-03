@@ -41,13 +41,16 @@ workflow TMT {
     //
     // SUBWORKFLOW: ISOBARIC_WORKFLOW
     //
+    // Extract labelling_type from meta (auto-detected from SDRF)
     ch_file_preparation_results.join(ID.out.id_results)
         .multiMap { it ->
-            mzmls: pmultiqc_mzmls: it[1]
+            labelling_type: it[0].labelling_type
+            mzmls: it[1]
             ids: it[2]
         }
         .set{ ch_iso_workflow }
-    ISOBARIC_WORKFLOW(ch_iso_workflow.mzmls.collect(),
+    ISOBARIC_WORKFLOW(ch_iso_workflow.labelling_type.first(),
+                ch_iso_workflow.mzmls.collect(),
                 ch_iso_workflow.ids.collect(),
                 ch_expdesign
             )
