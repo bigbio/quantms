@@ -1064,6 +1064,13 @@
                     "enum": ["feature_intensity", "spectral_counting"],
                     "fa_icon": "fas fa-list-ol"
                 },
+                "lfq_seeding_algorithm": {
+                    "type": "string",
+                    "description": "Feature detection seeding algorithm for ProteomicsLFQ. 'multiplex' uses FeatureFinderMultiplex (default), 'biosaur2' uses the Biosaur2 algorithm.",
+                    "default": "multiplex",
+                    "enum": ["multiplex", "biosaur2"],
+                    "fa_icon": "fas fa-seedling"
+                },
                 "mass_recalibration": {
                     "type": "boolean",
                     "description": "Recalibrates masses based on precursor mass deviations to correct for instrument biases. (default: 'false')",
