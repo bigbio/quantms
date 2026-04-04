@@ -48,6 +48,7 @@ process PROTEOMICSLFQ {
         ${feature_with_id_min_score} \\
         ${feature_without_id_min_score} \\
         -mass_recalibration ${params.mass_recalibration} \\
+        -Seeding:algorithm ${params.lfq_seeding_algorithm} \\
         -Seeding:intThreshold ${params.lfq_intensity_threshold} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
