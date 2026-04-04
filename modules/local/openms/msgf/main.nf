@@ -20,7 +20,7 @@ process MSGF {
     msgf_jar = ''
     if ((workflow.containerEngine || (task.executor == "awsbatch")) && (task.container.indexOf("biocontainers") > -1 || task.container.indexOf("depot.galaxyproject.org") > -1)) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
-    } else if (session.config.conda && session.config.conda.enabled) {
+    } else if (System.getenv('CONDA_PREFIX')) {
         msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 
@@ -83,8 +83,8 @@ process MSGF {
         -tryptic ${msgf_num_enzyme_termini} \\
         -precursor_mass_tolerance $meta.precursormasstolerance \\
         -precursor_error_units $meta.precursormasstoleranceunit \\
-        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
-        -variable_modifications ${meta.variablemodifications.tokenize(',').collect() { "'${it}'" }.join(" ") } \\
+        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect { mod -> "'${mod}'" }.join(" ") } \\
+        -variable_modifications ${meta.variablemodifications.tokenize(',').collect { mod -> "'${mod}'" }.join(" ") } \\
         -max_mods $params.max_mods \\
         ${il_equiv} \\
         -PeptideIndexing:unmatched_action ${params.unmatched_action} \\

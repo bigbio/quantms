@@ -7,7 +7,7 @@
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.4.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.4.1)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.2)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/quantms)
@@ -99,6 +99,7 @@ Have a look at public datasets that were already annotated [here](https://github
 Those SDRFs should be ready for one-command re-analysis and you can just use the URL to the file on GitHub,
 e.g., `https://raw.githubusercontent.com/bigbio/proteomics-sample-metadata/master/annotated-projects/PXD000396/PXD000396.sdrf.tsv`.
 If you create your own, please adhere to the specifications and point the pipeline to your local folder or a remote location where you uploaded it to.
+The SDRF file can have `.sdrf`, `.tsv`, or `.csv` extensions.
 
 The second requirement is a protein sequence database. We suggest downloading a database for the organism(s)/proteins of interest from [Uniprot](https://www.uniprot.org/proteomes?query=*).
 

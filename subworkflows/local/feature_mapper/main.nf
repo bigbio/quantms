@@ -11,7 +11,7 @@ workflow FEATURE_MAPPER {
     ch_id_files
 
     main:
-    ch_version = Channel.empty()
+    ch_version = channel.empty()
 
     ISOBARIC_ANALYZER(ch_mzml_files)
     ch_version = ch_version.mix(ISOBARIC_ANALYZER.out.versions)

@@ -4,8 +4,8 @@ process MZML_STATISTICS {
     label 'process_single'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.24--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.24--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.25--pyh106432d_0' :
+        'biocontainers/quantms-utils:0.0.25--pyh106432d_0' }"
 
     input:
     tuple val(meta), path(ms_file)
@@ -27,6 +27,7 @@ process MZML_STATISTICS {
     quantmsutilsc mzmlstats --ms_path "${ms_file}" \\
         ${string_ms2_file} \\
         ${string_features_file} \\
+        $args \\
         2>&1 | tee ${ms_file.baseName}_mzml_statistics.log
 
     cat <<-END_VERSIONS > versions.yml

@@ -14,3 +14,7 @@ bin/
 ro-crate-metadata.json
 modules/nf-core/
 subworkflows/nf-core/
+
+# Ignore potentially non-human-readable markdown files
+.github/**/SKILL.md
+AGENT.md

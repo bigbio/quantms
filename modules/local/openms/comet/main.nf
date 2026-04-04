@@ -48,11 +48,9 @@ process COMET {
     def isoSlashComet = "0/1"
     if (params.isotope_error_range) {
         def isoRangeComet = params.isotope_error_range.split(",")
-        isoSlashComet = ""
-        for (c in isoRangeComet[0].toInteger()..isoRangeComet[1].toInteger()-1) {
-            isoSlashComet += c + "/"
-        }
-        isoSlashComet += isoRangeComet[1]
+        def range = (isoRangeComet[0].toInteger()..isoRangeComet[1].toInteger()-1).collect { v -> v.toString() }
+        range.add(isoRangeComet[1])
+        isoSlashComet = range.join("/")
     }
     // for consensusID the cutting rules need to be the same. So we adapt to the loosest rules from MSGF
     // TODO find another solution. In ProteomicsLFQ we re-run PeptideIndexer (remove??) and if we
@@ -96,8 +94,8 @@ process COMET {
         -enzyme "${enzyme}" \\
         -isotope_error ${isoSlashComet} \\
         -precursor_charge $params.min_precursor_charge:$params.max_precursor_charge \\
-        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
-        -variable_modifications ${meta.variablemodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
+        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect { mod -> "'$mod'" }.join(" ") } \\
+        -variable_modifications ${meta.variablemodifications.tokenize(',').collect { mod -> "'$mod'" }.join(" ") } \\
         -max_variable_mods_in_peptide $params.max_mods \\
         -precursor_mass_tolerance $meta.precursormasstolerance \\
         -precursor_error_units $meta.precursormasstoleranceunit \\

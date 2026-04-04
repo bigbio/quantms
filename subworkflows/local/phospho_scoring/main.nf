@@ -11,9 +11,9 @@ workflow PHOSPHO_SCORING {
     ch_id_files
 
     main:
-    ch_version = Channel.empty()
+    ch_version = channel.empty()
     if (params.search_engines.split(",").size() != 1){
-        ID_SCORE_SWITCHER(ch_id_files.combine(Channel.value("\"Posterior Error Probability_score\"")))
+        ID_SCORE_SWITCHER(ch_id_files.combine(channel.value("\"Posterior Error Probability_score\"")))
         ch_version = ch_version.mix(ID_SCORE_SWITCHER.out.versions)
         ONSITE(ch_mzml_files.join(ID_SCORE_SWITCHER.out.id_score_switcher))
         ch_version = ch_version.mix(ONSITE.out.versions)

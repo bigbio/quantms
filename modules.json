@@ -12,8 +12,9 @@
                     },
                     "thermorawfileparser": {
                         "branch": "main",
-                        "git_sha": "a1a4a11ff508b2b5c23c9fb21c51c3327b748d4d",
-                        "installed_by": ["modules"]
+                        "git_sha": "53f2d78652a7040e3d44610286471642b1e1b55b",
+                        "installed_by": ["modules"],
+                        "patch": "modules/bigbio/thermorawfileparser/thermorawfileparser.diff"
                     }
                 }
             }
@@ -21,11 +22,6 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "custom/dumpsoftwareversions": {
-                        "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
-                        "installed_by": ["modules"]
-                    },
                     "multiqc": {
                         "branch": "master",
                         "git_sha": "8deffd6a402233ebf905c66dbf804bd4c2637946",

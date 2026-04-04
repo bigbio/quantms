@@ -3,8 +3,8 @@ process SPECTRUM_FEATURES {
     label 'process_low'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.13' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.13' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.16' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.16' }"
 
     input:
     tuple val(meta), path(id_file), val(search_engine), path(ms_file)
@@ -19,7 +19,13 @@ process SPECTRUM_FEATURES {
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     """
-    rescoring spectrum2feature --mzml "${ms_file}" --idxml "${id_file}" --output "${id_file.baseName}_snr.idXML" 2>&1 | tee ${id_file.baseName}_snr_feature.log
+    rescoring spectrum2feature \\
+        --mzml "${ms_file}" \\
+        --idxml "${id_file}" \\
+        --output "${id_file.baseName}_snr.idXML" \\
+        $args \\
+        2>&1 | tee "${id_file.baseName}_snr_feature.log"
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

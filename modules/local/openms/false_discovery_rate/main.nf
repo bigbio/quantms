@@ -28,6 +28,7 @@ process FALSE_DISCOVERY_RATE {
         -FDR:PSM ${params.run_fdr_cutoff} \\
         -algorithm:add_decoy_peptides \\
         -algorithm:add_decoy_proteins \\
+        -algorithm:conservative ${params.fdr_conservative} \\
         $args \\
         2>&1 | tee ${id_file.baseName}_fdr.log
 

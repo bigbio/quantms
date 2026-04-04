@@ -3,8 +3,8 @@ process PSM_CONVERSION {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.24--pyh7e72e81_0' :
-        'biocontainers/quantms-utils:0.0.24--pyh7e72e81_0' }"
+        'https://depot.galaxyproject.org/singularity/quantms-utils:0.0.25--pyh106432d_0' :
+        'biocontainers/quantms-utils:0.0.25--pyh106432d_0' }"
 
 
     input:
@@ -25,7 +25,8 @@ process PSM_CONVERSION {
     quantmsutilsc psmconvert --idxml "${idxml_file}" \\
         --ms2_file ${spectrum_df} \\
         ${string_export_decoy_psm} \\
-        2>&1 | tee extract_idxml.log
+        $args \\
+        2>&1 | tee ${prefix}_psm_conversion.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

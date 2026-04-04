@@ -17,7 +17,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
     ch_expdesign
 
     main:
-    (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty(), Channel.empty() ]
+    (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ channel.empty(), channel.empty(), channel.empty(), channel.empty() ]
 
     if (params.search_engines.contains("msgf")) {
         MSGF_DB_INDEXING(ch_searchengine_in_db)
@@ -37,9 +37,9 @@ workflow PEPTIDE_DATABASE_SEARCH {
     // sorted mzmls to generate same batch ids when enable cache
     ch_mzmls_sorted_search = ch_mzmls_search.collect(flat: false, sort: { a, b -> a[0]["mzml_id"] <=> b[0]["mzml_id"] }).flatMap()
     if (params.search_engines.contains("sage")) {
-        cnt = 0
+        def cnt = 0
         ch_meta_mzml_db = ch_mzmls_sorted_search.map{ metapart, mzml ->
-            cnt++
+            cnt += 1
             def groupkey = metapart.labelling_type +
                     metapart.dissociationmethod +
                     metapart.fixedmodifications +
@@ -72,7 +72,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
         ch_id_sage = ch_id_sage.mix(SAGE.out.id_files_sage.transpose())
     }
 
-    (ch_id_files_msgf_feats, ch_id_files_comet_feats, ch_id_files_sage_feats) = [ Channel.empty(), Channel.empty(), Channel.empty() ]
+    (ch_id_files_msgf_feats, ch_id_files_comet_feats, ch_id_files_sage_feats) = [ channel.empty(), channel.empty(), channel.empty() ]
 
     if (params.skip_rescoring != true) {
 
@@ -81,10 +81,10 @@ workflow PEPTIDE_DATABASE_SEARCH {
             // Handle cases where parameter might be empty string, null, boolean true, or whitespace
             // When --ms2features_model_dir is passed with no value, Nextflow may set it to boolean true
             if (params.ms2features_model_dir && params.ms2features_model_dir != true) {
-                ms2_model_dir = Channel.from(file(params.ms2features_model_dir, checkIfExists: true))
+                ms2_model_dir = channel.from(file(params.ms2features_model_dir, checkIfExists: true))
             } else {
                 // create a fake channel when don't specify model dir
-                ms2_model_dir = Channel.from(file("pretrained_models"))
+                ms2_model_dir = channel.from(file("pretrained_models"))
             }
 
             if (params.ms2features_fine_tuning == true) {
@@ -98,7 +98,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
                         .toSortedList()
                         .flatMap()
                         .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(Channel.value("sage"))
+                        .combine(channel.value("sage"))
                         .groupTuple(by: 3)
 
                     msgf_train_datasets = ch_id_msgf
@@ -106,7 +106,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
                         .toSortedList()
                         .flatMap()
                         .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(Channel.value("msgf"))
+                        .combine(channel.value("msgf"))
                         .groupTuple(by: 3)
 
                     comet_train_datasets = ch_id_comet
@@ -114,7 +114,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
                         .toSortedList()
                         .flatMap()
                         .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(Channel.value("comet"))
+                        .combine(channel.value("comet"))
                         .groupTuple(by: 3)
 
                     sage_train_datasets.mix(msgf_train_datasets)
@@ -124,19 +124,19 @@ workflow PEPTIDE_DATABASE_SEARCH {
                     MSRESCORE_FINE_TUNING(train_datasets)
                     ch_versions = ch_versions.mix(MSRESCORE_FINE_TUNING.out.versions)
 
-                    Channel.value("msgf").combine(ch_id_msgf.combine(ch_mzmls_search, by: 0))
+                    channel.value("msgf").combine(ch_id_msgf.combine(ch_mzmls_search, by: 0))
                         .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { [it[1], it[2], it[3], it[4], it[0] ] }
+                        .map { v -> [v[1], v[2], v[3], v[4], v[0] ] }
                         .set { msgf_features_input }
 
-                    Channel.value("sage").combine(ch_id_sage.combine(ch_mzmls_search, by: 0))
+                    channel.value("sage").combine(ch_id_sage.combine(ch_mzmls_search, by: 0))
                         .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { [it[1], it[2], it[3], it[4], it[0] ] }
+                        .map { v -> [v[1], v[2], v[3], v[4], v[0] ] }
                         .set { sage_features_input }
 
-                    Channel.value("comet").combine(ch_id_comet.combine(ch_mzmls_search, by: 0))
+                    channel.value("comet").combine(ch_id_comet.combine(ch_mzmls_search, by: 0))
                         .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { [it[1], it[2], it[3], it[4], it[0] ] }
+                        .map { v -> [v[1], v[2], v[3], v[4], v[0] ] }
                         .set { comet_features_input }
 
                     MSRESCORE_FEATURES(msgf_features_input.mix(sage_features_input).mix(comet_features_input))
@@ -148,13 +148,13 @@ workflow PEPTIDE_DATABASE_SEARCH {
             } else{
                 ch_id_msgf.combine(ch_mzmls_search, by: 0)
                     .combine(ms2_model_dir)
-                    .combine(Channel.value("msgf")).set{ ch_id_msgf }
+                    .combine(channel.value("msgf")).set{ ch_id_msgf }
                 ch_id_comet.combine(ch_mzmls_search, by: 0)
                     .combine(ms2_model_dir)
-                    .combine(Channel.value("comet")).set{ ch_id_comet }
+                    .combine(channel.value("comet")).set{ ch_id_comet }
                 ch_id_sage.combine(ch_mzmls_search, by: 0)
                     .combine(ms2_model_dir)
-                    .combine(Channel.value("sage")).set{ ch_id_sage }
+                    .combine(channel.value("sage")).set{ ch_id_sage }
 
                 MSRESCORE_FEATURES(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage))
                 ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
@@ -171,13 +171,13 @@ workflow PEPTIDE_DATABASE_SEARCH {
             }
 
             ch_id_files_feats_snr
-                .branch { meta, file_name, engine_name ->
+                .branch { _meta, _file_name, engine_name ->
                     msgf: engine_name == "msgf"
                     comet: engine_name == "comet"
                     sage: engine_name == "sage"
                 }
                 .set {ch_id_files_feats_branch}
-            ch_id_files_feats_branch.msgf.map {it -> [it[0], it[1]]}.set {ch_id_files_msgf_feats}
+            ch_id_files_feats_branch.msgf.map { v -> [v[0], v[1]] }.set {ch_id_files_msgf_feats}
             ch_id_files_feats_branch.comet.map {it -> [it[0], it[1]]}.set {ch_id_files_comet_feats}
             ch_id_files_feats_branch.sage.map {it -> [it[0], it[1]]}.set {ch_id_files_sage_feats}
 
@@ -193,16 +193,16 @@ workflow PEPTIDE_DATABASE_SEARCH {
             ch_versions = ch_versions.mix(GET_SAMPLE.out.versions)
             ch_expdesign_sample = GET_SAMPLE.out.ch_expdesign_sample
             ch_expdesign_sample.splitCsv(header: true, sep: '\t')
-                .map { get_sample_map(it) }.set{ sample_map_idv }
+                .map { v -> get_sample_map(v) }.set{ sample_map_idv }
 
-            ch_id_files_msgf_feats.map {[it[0].mzml_id, it[0], it[1]]}.set { ch_id_files_msgf_feats }
-            ch_id_files_msgf_feats.combine(sample_map_idv, by: 0).map {[it[1], it[2], it[3]]}.set{ ch_id_files_msgf_feats }
+            ch_id_files_msgf_feats.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_msgf_feats }
+            ch_id_files_msgf_feats.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_msgf_feats }
 
-            ch_id_files_comet_feats.map {[it[0].mzml_id, it[0], it[1]]}.set { ch_id_files_comet_feats }
-            ch_id_files_comet_feats.combine(sample_map_idv, by: 0).map {[it[1], it[2], it[3]]}.set{ ch_id_files_comet_feats }
+            ch_id_files_comet_feats.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_comet_feats }
+            ch_id_files_comet_feats.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_comet_feats }
 
-            ch_id_files_sage_feats.map {[it[0].mzml_id, it[0], it[1]]}.set { ch_id_files_sage_feats }
-            ch_id_files_sage_feats.combine(sample_map_idv, by: 0).map {[it[1], it[2], it[3]]}.set{ ch_id_files_sage_feats }
+            ch_id_files_sage_feats.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_sage_feats }
+            ch_id_files_sage_feats.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_sage_feats }
 
             // ID_MERGER for samples group
             ID_MERGER(ch_id_files_msgf_feats.groupTuple(by: 2)
@@ -213,9 +213,9 @@ workflow PEPTIDE_DATABASE_SEARCH {
             ch_id_files_out = ID_MERGER.out.id_merged
 
         } else if (params.ms2features_range == "by_project") {
-            ch_id_files_msgf_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_msgf_feats }
-            ch_id_files_comet_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_comet_feats }
-            ch_id_files_sage_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_sage_feats }
+            ch_id_files_msgf_feats.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_msgf_feats }
+            ch_id_files_comet_feats.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_comet_feats }
+            ch_id_files_sage_feats.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_sage_feats }
 
             // ID_MERGER for whole experiments
             ID_MERGER(ch_id_files_msgf_feats.groupTuple(by: 2)
@@ -245,9 +245,9 @@ workflow PEPTIDE_DATABASE_SEARCH {
 // Function to get sample map
 def get_sample_map(LinkedHashMap row) {
 
-    filestr               = row.Spectra_Filepath
-    file_name             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
-    sample                = row.Sample
+    def filestr               = row.Spectra_Filepath
+    def file_name             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
+    def sample                = row.Sample
 
     return [file_name, sample]
 

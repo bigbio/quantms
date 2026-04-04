@@ -21,7 +21,9 @@ process MZML_INDEXING {
 
     """
     mkdir -p out
-    FileConverter -in ${mzmlfile} -out out/${mzmlfile.baseName}.mzML 2>&1 | tee ${mzmlfile.baseName}_mzmlindexing.log
+    FileConverter -in ${mzmlfile} -out out/${mzmlfile.baseName}.mzML \\
+        ${args} \\
+        2>&1 | tee ${mzmlfile.baseName}_mzmlindexing.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

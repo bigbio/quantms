@@ -14,20 +14,19 @@ workflow FILE_PREPARATION {
     ch_rawfiles            // channel: [ val(meta), raw/mzml/d.tar ]
 
     main:
-    ch_versions   = Channel.empty()
-    ch_results    = Channel.empty()
-    ch_statistics = Channel.empty()
-    ch_ms2_statistics = Channel.empty()
-    ch_feature_statistics = Channel.empty()
-    ch_mqc_data   = Channel.empty()
+    ch_versions   = channel.empty()
+    ch_results    = channel.empty()
+    ch_statistics = channel.empty()
+    ch_ms2_statistics = channel.empty()
+    ch_feature_statistics = channel.empty()
 
 
     // Divide the compressed files
     ch_rawfiles
-    .branch {
-        dottar: hasExtension(it[1], '.tar')
-        dotzip: hasExtension(it[1], '.zip')
-        gz: hasExtension(it[1], '.gz')
+    .branch { item ->
+        dottar: hasExtension(item[1], '.tar')
+        dotzip: hasExtension(item[1], '.zip')
+        gz: hasExtension(item[1], '.gz')
         uncompressed: true
     }.set { ch_branched_input }
 
@@ -39,11 +38,11 @@ workflow FILE_PREPARATION {
     //
     // Divide mzml files
     ch_rawfiles
-    .branch {
-        raw: hasExtension(it[1], '.raw')
-        mzML: hasExtension(it[1], '.mzML')
-        dotd: hasExtension(it[1], '.d')
-        dia: hasExtension(it[1], '.dia')
+    .branch { item ->
+        raw: hasExtension(item[1], '.raw')
+        mzML: hasExtension(item[1], '.mzML')
+        dotd: hasExtension(item[1], '.d')
+        dia: hasExtension(item[1], '.dia')
         unsupported: true
     }.set { ch_branched_input }
 
@@ -54,7 +53,7 @@ workflow FILE_PREPARATION {
             if (files.size() > 0) {
                 log.warn "=" * 80
                 log.warn "WARNING: ${files.size()} file(s) with unsupported format(s) detected and will be SKIPPED from processing:"
-                files.each { meta, file ->
+                files.each { _meta, file ->
                     log.warn "  - ${file}"
                 }
                 log.warn "\nSupported formats: .raw, .mzML, .d (Bruker), .dia"
@@ -86,8 +85,8 @@ workflow FILE_PREPARATION {
     //  'log': Path(*.txt)}
 
     // Where meta is the same as the input meta
-    ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.versions)
-    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.convert_files)
+    // ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.versions_thermorawfileparser)
+    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.spectra)
 
     ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
 
@@ -96,16 +95,27 @@ workflow FILE_PREPARATION {
         TDF2MZML( ch_branched_input.dotd )
         ch_versions = ch_versions.mix(TDF2MZML.out.versions)
         ch_results = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
-        // indexed_mzml_bundle = indexed_mzml_bundle.mix(TDF2MZML.out.mzmls_converted)
     } else {
-        ch_results = indexed_mzml_bundle.mix(ch_branched_input.dotd)
+        ch_results = indexed_mzml_bundle
     }
 
-    MZML_STATISTICS(ch_results)
-    ch_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms_statistics.collect())
-    ch_ms2_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms2_statistics)
-    ch_feature_statistics = ch_statistics.mix(MZML_STATISTICS.out.feature_statistics.collect())
-    ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
+    if (params.mzml_statistics) {
+        // Only run on mzML files, skip .d directories
+        ch_mzml_for_stats = ch_results.filter { _meta, file ->
+            !file.toString().toLowerCase().endsWith('.d')
+        }
+        MZML_STATISTICS(ch_mzml_for_stats)
+        ch_statistics = ch_statistics.mix(MZML_STATISTICS.out.ms_statistics.collect())
+        ch_ms2_statistics = ch_ms2_statistics.mix(MZML_STATISTICS.out.ms2_statistics)
+        ch_feature_statistics = ch_feature_statistics.mix(MZML_STATISTICS.out.feature_statistics.collect())
+        ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
+    }
+
+    // Pass through .d files without conversion when convert_dotd=false
+    // (DIA-NN handles them natively; they bypass mzML statistics as they are not mzML)
+    if (!params.convert_dotd) {
+        ch_results = ch_results.mix(ch_branched_input.dotd)
+    }
 
     // Pass through .dia files without conversion (DIA-NN handles them natively)
     // Note: .dia files bypass peak picking and mzML statistics (when enabled) as they are only used with DIA-NN

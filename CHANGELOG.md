@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] bigbio/quantms - [Unreleased]
+
+### `Deprecations`
+
+- **BREAKING: Deprecated OpenMS experimental design format as input**: The pipeline now only accepts SDRF (Sample to Data Relation Format) files as input. The OpenMS experimental design format (`.tsv` without SDRF structure) is no longer supported. All input files are now treated as SDRF regardless of file extension. Supported file extensions for SDRF input are `.sdrf`, `.tsv`, and `.csv`. This change aligns with nf-core best practices and simplifies input handling for cloud storage interfaces like Seqera Datastudios and Explorer. Users must convert their OpenMS experimental design files to SDRF format. The `--labelling_type` and `--acquisition_method` parameters are no longer used for determining input file type - all information must be specified in the SDRF file.
+
 ## [1.7.0] bigbio/quantms - [08/01/2026] - [Caracas]
 
 ### `Added`
@@ -291,8 +297,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow torun PROTEINQUANTIFIER TMT without exporting to mzTab
 
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
-
-Initial release of bigbio/quantms, created with the [nf-core](https://nf-co.re/) template.
 
 ### `Added`
 
