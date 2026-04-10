@@ -378,25 +378,25 @@
                     "type": "number",
                     "description": "The minimum precursor m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 400.0
+                    "default": 400
                 },
                 "max_pr_mz": {
                     "type": "number",
                     "description": "The maximum precursor m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 2400.0
+                    "default": 2400
                 },
                 "min_fr_mz": {
                     "type": "number",
                     "description": "The minimum fragment m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 100.0
+                    "default": 100
                 },
                 "max_fr_mz": {
                     "type": "number",
                     "description": "The maximum fragment m/z for the in silico library generation or library-free search",
                     "fa_icon": "fas fa-filter",
-                    "default": 1800.0
+                    "default": 1800
                 },
                 "db_debug": {
                     "type": "integer",
@@ -459,7 +459,6 @@
                 "onsite_add_decoys": {
                     "type": "boolean",
                     "description": "Add decoy modifications for validation",
-                    "default": false,
                     "fa_icon": "fas fa-shield-alt",
                     "help_text": "When enabled, adds decoy modifications for validation. For AScore/PhosphoRS, adds --add-decoys flag. For LucXor, adds PhosphoDecoy(A) to target modifications.",
                     "hidden": true
@@ -501,14 +500,12 @@
                 "onsite_disable_split_by_charge": {
                     "type": "boolean",
                     "description": "Disable splitting PSMs by charge state for lucxor",
-                    "default": false,
                     "fa_icon": "fas fa-ban",
                     "hidden": true
                 },
                 "onsite_compute_all_scores": {
                     "type": "boolean",
                     "description": "Compute all scores for all candidate sites",
-                    "default": false,
                     "fa_icon": "fas fa-calculator",
                     "hidden": true
                 },
@@ -662,7 +659,6 @@
                     "type": "boolean",
                     "description": "Force save fine-tuning model",
                     "help_text": "When enabled, Force save fine-tuning model even if retrained model is not better than pretrained model",
-                    "default": false,
                     "fa_icon": "far fa-check-square"
                 },
                 "epoch_to_train_ms2": {
@@ -836,26 +832,26 @@
                 "min_precursor_intensity": {
                     "type": "number",
                     "description": "Minimum intensity of the precursor to be extracted",
-                    "default": 1.0,
+                    "default": 1,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "min_precursor_purity": {
                     "type": "number",
                     "description": "Minimum fraction of the total intensity. 0.0:1.0",
-                    "default": 0.0,
+                    "default": 0,
                     "fa_icon": "fas fa-sliders-h",
                     "help_text": "Minimum fraction of the total intensity in the isolation window of the precursor spectrum"
                 },
                 "min_reporter_intensity": {
                     "type": "number",
                     "description": "Minimum intensity of the individual reporter ions to be extracted.",
-                    "default": 0.0,
+                    "default": 0,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "precursor_isotope_deviation": {
                     "type": "number",
                     "description": "Maximum allowed deviation (in ppm) between theoretical and observed isotopic peaks of the precursor peak",
-                    "default": 10.0,
+                    "default": 10,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "isotope_correction": {
@@ -970,6 +966,13 @@
                     "fa_icon": "fas fa-filter",
                     "help_text": "After applying protein-level FDR cutoff, this additionally filters PSMs to be used for quantification and reporting."
                 },
+                "fdr_conservative": {
+                    "type": "boolean",
+                    "description": "Use conservative FDR formula (D+1)/T instead of (D+1)/(T+D). Default: true",
+                    "default": true,
+                    "fa_icon": "fas fa-shield-alt",
+                    "help_text": "When true, uses the conservative formula (D+1)/T for FDR estimation, which provides an upper bound on the true FDR. When false, uses (D+1)/(T+D) which gives a tighter estimate. See Keich & Noble (2025, Nature Methods) for details on FDR estimation methods."
+                },
                 "protein_inference_debug": {
                     "type": "integer",
                     "description": "Debug level for the protein inference step. Increase for verbose logging",
@@ -1061,6 +1064,13 @@
                     "enum": ["feature_intensity", "spectral_counting"],
                     "fa_icon": "fas fa-list-ol"
                 },
+                "lfq_seeding_algorithm": {
+                    "type": "string",
+                    "description": "Feature detection seeding algorithm for ProteomicsLFQ. 'multiplex' uses FeatureFinderMultiplex (default), 'biosaur2' uses the Biosaur2 algorithm.",
+                    "default": "multiplex",
+                    "enum": ["multiplex", "biosaur2"],
+                    "fa_icon": "fas fa-seedling"
+                },
                 "mass_recalibration": {
                     "type": "boolean",
                     "description": "Recalibrates masses based on precursor mass deviations to correct for instrument biases. (default: 'false')",
@@ -1089,7 +1099,7 @@
                 "lfq_intensity_threshold": {
                     "type": "number",
                     "description": "The minimum intensity for a feature to be considered for quantification. (default: '1000')",
-                    "default": 1000.0,
+                    "default": 1000,
                     "fa_icon": "fas fa-filter",
                     "help_text": "The minimum intensity for a feature to be considered for quantification. (default: '1000')"
                 },
@@ -1509,7 +1519,7 @@
                     "type": "string",
                     "fa_icon": "far fa-check-circle",
                     "description": "Base URL or local path to location of pipeline test dataset files",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "default": "https://raw.githubusercontent.com/bigbio/quantms-test-datasets/",
                     "hidden": true
                 },
                 "trace_report_suffix": {
