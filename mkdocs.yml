@@ -31,11 +31,14 @@ extra_css:
   - https://quantms.org/css/quantms-theme.css
 nav:
   - Home: index.md
+  - Key Concepts: concepts.md
   - Installation: installation.md
   - Input Files: input.md
   - Workflows: workflows.md
   - Usage: usage.md
   - Output: output.md
+  - Troubleshooting: troubleshooting.md
+  - FAQ: faq.md
   - Publications: publications.md
 
 plugins:
