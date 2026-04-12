@@ -21,7 +21,7 @@ results_lfq/
 │   ├── msstats_in.csv         # MSstats-ready long-format table
 │   └── out.consensusXML       # OpenMS internal format (debugging/downstream)
 ├── msstats/                   # MSstats-processed results
-│   └── out_msstats.mzTab      # mzTab with MSstats-normalized quantities
+│   └── out_msstats.mzTab      # mzTab with MSstats input format (for downstream analysis)
 └── pmultiqc/                  # Interactive QC report
     ├── multiqc_report.html
     ├── multiqc_data/
@@ -129,10 +129,10 @@ Score columns vary depending on which search engines and rescoring tools were us
 - **Format:** Long-format CSV compatible with the `OpenMStoMSstats()` function in the MSstats R package
 - **Use:** Statistical modeling of differential expression
 
-### MSstats-Processed mzTab
+### MSstats Input Export
 
 - **Location:** `msstats/out_msstats.mzTab`
-- **Contains:** mzTab quantities replaced with MSstats-normalized and imputed values
+- **Contains:** MSstats-compatible CSV exported for downstream statistical analysis with the MSstats R package
 
 ### Parquet PSM Tables
 

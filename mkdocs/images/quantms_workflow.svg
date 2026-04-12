@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 920" width="700" height="920">
+  <defs>
+    <style>
+      .label { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; font-weight: 600; fill: #333; }
+      .sublabel { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; fill: #888; }
+      .badge { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 8px; font-weight: 700; fill: #fff; letter-spacing: 0.3px; }
+      .note { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 9px; fill: #999; font-style: italic; }
+      .legend-text { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 10px; fill: #666; }
+      .legend-title { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 11px; font-weight: 700; fill: #333; }
+    </style>
+  </defs>
+
+  <rect width="700" height="920" fill="#ffffff"/>
+
+  <!-- LEGEND -->
+  <g transform="translate(490, 20)">
+    <text x="0" y="0" class="legend-title">LEGEND</text>
+    <line x1="0" y1="14" x2="24" y2="14" stroke="#1565C0" stroke-width="4"/>
+    <text x="30" y="18" class="legend-text">Input</text>
+    <line x1="0" y1="30" x2="24" y2="30" stroke="#00897B" stroke-width="4"/>
+    <text x="30" y="34" class="legend-text">Preprocessing</text>
+    <line x1="0" y1="46" x2="24" y2="46" stroke="#7B1FA2" stroke-width="4"/>
+    <text x="30" y="50" class="legend-text">Search</text>
+    <line x1="0" y1="62" x2="24" y2="62" stroke="#E65100" stroke-width="4"/>
+    <text x="30" y="66" class="legend-text">Rescoring &amp; FDR</text>
+    <line x1="0" y1="78" x2="24" y2="78" stroke="#2E7D32" stroke-width="4"/>
+    <text x="30" y="82" class="legend-text">Quantification</text>
+    <line x1="0" y1="94" x2="24" y2="94" stroke="#F57C00" stroke-width="4"/>
+    <text x="30" y="98" class="legend-text">Export &amp; QC</text>
+    <line x1="0" y1="110" x2="24" y2="110" stroke="#bbb" stroke-width="3" stroke-dasharray="5,3"/>
+    <text x="30" y="114" class="legend-text">Optional</text>
+  </g>
+
+  <!-- ===== 1. INPUT ===== -->
+  <circle cx="100" cy="60" r="6" fill="#1565C0"/>
+  <text x="120" y="56" class="label">SDRF / Samplesheet</text>
+  <text x="120" y="70" class="sublabel">Experiment metadata, file paths</text>
+  <line x1="100" y1="66" x2="100" y2="100" stroke="#1565C0" stroke-width="4"/>
+
+  <circle cx="100" cy="100" r="6" fill="#1565C0"/>
+  <text x="120" y="96" class="label">Raw Spectra</text>
+  <text x="120" y="110" class="sublabel">.raw · .mzML · .d</text>
+
+  <!-- ===== 2. PREPROCESSING ===== -->
+  <line x1="100" y1="106" x2="100" y2="155" stroke="#00897B" stroke-width="4"/>
+  <circle cx="100" cy="155" r="6" fill="#00897B"/>
+  <text x="120" y="151" class="label">File Conversion → mzML</text>
+  <text x="120" y="165" class="sublabel">ThermoRawFileParser / tdf2mzml</text>
+  <rect x="350" y="146" width="60" height="14" rx="7" fill="#00897B" opacity="0.7"/>
+  <text x="380" y="156" text-anchor="middle" class="badge">OPTIONAL</text>
+
+  <line x1="100" y1="161" x2="100" y2="210" stroke="#00897B" stroke-width="4" stroke-dasharray="5,3"/>
+  <circle cx="100" cy="210" r="6" fill="#00897B"/>
+  <text x="120" y="206" class="label">Decoy Database</text>
+  <text x="120" y="220" class="sublabel">Target-decoy for FDR</text>
+  <text x="310" y="214" class="note">skip if decoys present</text>
+
+  <!-- ===== 3. DATABASE SEARCH (parallel box) ===== -->
+  <line x1="100" y1="216" x2="100" y2="265" stroke="#7B1FA2" stroke-width="4"/>
+
+  <rect x="55" y="265" width="430" height="80" rx="10" fill="#7B1FA2" opacity="0.04" stroke="#7B1FA2" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="70" y="282" class="label" style="fill:#7B1FA2;">Database Search</text>
+  <text x="230" y="282" class="note" style="fill:#7B1FA2;">1, 2, or all 3 in parallel</text>
+
+  <!-- Comet -->
+  <rect x="70" y="292" width="120" height="38" rx="6" fill="#f3e5f5"/>
+  <circle cx="88" cy="311" r="4" fill="#7B1FA2"/>
+  <text x="100" y="307" class="label" style="font-size:11px;">Comet</text>
+  <text x="100" y="320" class="sublabel" style="font-size:9px;">Fast, widely used</text>
+
+  <!-- MS-GF+ -->
+  <rect x="210" y="292" width="120" height="38" rx="6" fill="#f3e5f5"/>
+  <circle cx="228" cy="311" r="4" fill="#7B1FA2"/>
+  <text x="240" y="307" class="label" style="font-size:11px;">MS-GF+</text>
+  <text x="240" y="320" class="sublabel" style="font-size:9px;">High sensitivity</text>
+
+  <!-- Sage -->
+  <rect x="350" y="292" width="120" height="38" rx="6" fill="#f3e5f5"/>
+  <circle cx="368" cy="311" r="4" fill="#7B1FA2"/>
+  <text x="380" y="307" class="label" style="font-size:11px;">Sage</text>
+  <text x="380" y="320" class="sublabel" style="font-size:9px;">Rust, fastest</text>
+
+  <!-- ===== 4. RESCORING + PERCOLATOR ===== -->
+  <line x1="100" y1="345" x2="100" y2="395" stroke="#E65100" stroke-width="4" stroke-dasharray="5,3"/>
+  <circle cx="100" cy="395" r="6" fill="#E65100"/>
+  <text x="120" y="391" class="label">PSM Feature Generation</text>
+  <text x="120" y="405" class="sublabel">MS2PIP (spectrum) + DeepLC (RT)</text>
+  <rect x="350" y="386" width="80" height="14" rx="7" fill="#E65100"/>
+  <text x="390" y="396" text-anchor="middle" class="badge">MS2RESCORE</text>
+
+  <line x1="100" y1="401" x2="100" y2="450" stroke="#E65100" stroke-width="4"/>
+  <circle cx="100" cy="450" r="6" fill="#E65100"/>
+  <text x="120" y="446" class="label">Percolator</text>
+  <text x="120" y="460" class="sublabel">Semi-supervised PSM rescoring + FDR</text>
+  <rect x="350" y="441" width="80" height="14" rx="7" fill="#E65100"/>
+  <text x="390" y="451" text-anchor="middle" class="badge">+10-30% IDs</text>
+
+  <!-- ConsensusID (after rescoring, if multi-engine) -->
+  <line x1="100" y1="456" x2="100" y2="505" stroke="#7B1FA2" stroke-width="4" stroke-dasharray="5,3"/>
+  <circle cx="100" cy="505" r="6" fill="#7B1FA2"/>
+  <text x="120" y="501" class="label">ConsensusID</text>
+  <text x="120" y="515" class="sublabel">Merge multi-engine results</text>
+  <rect x="310" y="496" width="100" height="14" rx="7" fill="#7B1FA2" opacity="0.7"/>
+  <text x="360" y="506" text-anchor="middle" class="badge">IF MULTI-ENGINE</text>
+
+  <!-- FDR -->
+  <line x1="100" y1="511" x2="100" y2="565" stroke="#E65100" stroke-width="4"/>
+  <circle cx="100" cy="565" r="6" fill="#E65100"/>
+  <text x="120" y="561" class="label">FDR Filtering</text>
+  <text x="120" y="575" class="sublabel">PSM / peptide / protein level</text>
+
+  <!-- ===== 5. QUANTIFICATION (branch box) ===== -->
+  <line x1="100" y1="571" x2="100" y2="620" stroke="#2E7D32" stroke-width="4"/>
+
+  <rect x="55" y="620" width="430" height="100" rx="10" fill="#2E7D32" opacity="0.04" stroke="#2E7D32" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="70" y="638" class="label" style="fill:#2E7D32;">Protein Quantification</text>
+  <text x="260" y="638" class="note" style="fill:#2E7D32;">depends on workflow</text>
+
+  <!-- LFQ -->
+  <rect x="70" y="648" width="195" height="58" rx="6" fill="#e8f5e9"/>
+  <rect x="80" y="654" width="55" height="14" rx="7" fill="#2E7D32"/>
+  <text x="107" y="664" text-anchor="middle" class="badge">DDA-LFQ</text>
+  <text x="80" y="682" class="sublabel">Feature detection &amp; alignment</text>
+  <text x="80" y="695" class="sublabel">ProteomicsLFQ, protein inference</text>
+
+  <!-- TMT -->
+  <rect x="280" y="648" width="195" height="58" rx="6" fill="#e8f5e9"/>
+  <rect x="290" y="654" width="55" height="14" rx="7" fill="#2E7D32"/>
+  <text x="317" y="664" text-anchor="middle" class="badge">DDA-ISO</text>
+  <text x="290" y="682" class="sublabel">Reporter ion extraction</text>
+  <text x="290" y="695" class="sublabel">TMT6/10/11/16/18 · iTRAQ4/8</text>
+
+  <!-- ===== 6. EXPORT ===== -->
+  <line x1="100" y1="720" x2="100" y2="775" stroke="#F57C00" stroke-width="4"/>
+  <circle cx="100" cy="775" r="6" fill="#F57C00"/>
+  <text x="120" y="771" class="label">Export</text>
+  <text x="120" y="785" class="sublabel">mzTab · MSstats input CSV · Parquet</text>
+
+  <line x1="100" y1="781" x2="100" y2="835" stroke="#F57C00" stroke-width="4"/>
+  <circle cx="100" cy="835" r="6" fill="#F57C00"/>
+  <text x="120" y="831" class="label">Quality Control</text>
+  <text x="120" y="845" class="sublabel">pmultiqc interactive HTML report</text>
+
+  <!-- End marker -->
+  <line x1="100" y1="841" x2="100" y2="880" stroke="#F57C00" stroke-width="4"/>
+  <circle cx="100" cy="880" r="8" fill="#F57C00"/>
+  <circle cx="100" cy="880" r="4" fill="#fff"/>
+
+  <!-- DIA note -->
+  <rect x="420" y="830" width="250" height="40" rx="8" fill="#f0f4f8" stroke="#ddd"/>
+  <text x="435" y="847" class="sublabel" style="font-size:10px;">For DIA experiments use:</text>
+  <text x="435" y="862" class="label" style="fill:#1565C0; font-size:12px;">quantmsdiann pipeline</text>
+</svg>

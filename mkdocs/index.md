@@ -6,7 +6,7 @@
 
 **Cloud-ready Nextflow pipeline for DDA quantitative proteomics.**
 
-![quantms workflow](images/quantms_metro.png)
+![quantms DDA workflow](images/quantms_workflow.svg)
 
 quantms orchestrates end-to-end proteomics analysis — from raw mass spectrometry data to protein quantification, quality control, and differential expression. It supports DDA label-free (LFQ) and isobaric labeling (TMT/iTRAQ) workflows.
 

@@ -32,13 +32,23 @@ extra_css:
 nav:
   - Home: index.md
   - Key Concepts: concepts.md
-  - Installation: installation.md
-  - Input Files: input.md
-  - Workflows: workflows.md
-  - Usage: usage.md
-  - Output: output.md
-  - Troubleshooting: troubleshooting.md
-  - FAQ: faq.md
+  - Getting Started:
+    - Installation: installation.md
+    - Input Files: input.md
+    - File Formats: formats.md
+  - Workflows:
+    - Overview: workflows.md
+    - Label-Free (LFQ): lfq.md
+    - Isobaric (TMT/iTRAQ): tmt.md
+  - Analysis:
+    - Search Engines: search-engines.md
+    - PSM Rescoring: rescoring.md
+    - Usage Guide: usage.md
+  - Results:
+    - Output Files: output.md
+  - Help:
+    - Troubleshooting: troubleshooting.md
+    - FAQ: faq.md
   - Publications: publications.md
 
 plugins:
