@@ -51,6 +51,11 @@ nav:
     - FAQ: faq.md
   - Publications: publications.md
 
+extra:
+  analytics:
+    provider: google
+    property: G-6PL70G5VC1
+
 plugins:
   - search
 
