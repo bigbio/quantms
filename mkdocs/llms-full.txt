@@ -1,0 +1,150 @@
+# quantms Pipeline — Full Reference
+
+> Cloud-ready Nextflow pipeline for DDA quantitative proteomics (LFQ and TMT/iTRAQ). Published in Nature Methods 2024.
+
+## Overview
+
+quantms is a Nextflow pipeline that takes raw mass spectrometry data, an SDRF sample metadata file, and a protein FASTA database, and produces identified and quantified proteins. It supports two main workflows:
+
+1. Label-Free Quantification (LFQ): Raw files → file conversion (ThermoRawFileParser) → decoy database generation (DecoyPYrat) → database search (Comet + MS-GF+ + Sage in parallel) → PSM feature generation (MS2Rescore) → FDR control (Percolator) → consensus identification (ConsensusID) → protein-level FDR → quantification (ProteomicsLFQ) → MSstats export → QC report (pmultiqc)
+
+2. Isobaric Labeling (TMT/iTRAQ): Same identification pipeline, then IsobaricAnalyzer for reporter ion extraction → protein quantification → MSstats export → QC report
+
+## Installation
+
+### Prerequisites
+- Nextflow >= 21.10.3
+- Container runtime: Docker (recommended), Singularity, or Conda
+
+### Run with Docker
+nextflow run bigbio/quantms -r main -profile docker \
+  --input samplesheet.csv \
+  --database proteins.fasta \
+  --outdir results/
+
+### Run with Singularity (HPC)
+nextflow run bigbio/quantms -r main -profile singularity \
+  --input samplesheet.csv \
+  --database proteins.fasta \
+  --outdir results/
+
+## Input Files
+
+### Samplesheet (CSV)
+spectra_file,sdrf_file
+/path/to/sample1.raw,/path/to/sdrf.tsv
+/path/to/sample2.raw,/path/to/sdrf.tsv
+
+### SDRF File
+Tab-separated file following the SDRF-Proteomics standard. Defines sample metadata, experimental design, and analysis parameters. Download from PRIDE for public datasets or create with sdrf-pipelines.
+
+Key SDRF columns:
+- source name: sample identifier
+- characteristics[organism]: species (e.g., Homo sapiens)
+- characteristics[disease]: condition (e.g., normal, cancer)
+- comment[instrument]: mass spectrometer model
+- comment[modification parameters]: PTMs to search
+- comment[precursor mass tolerance]: search tolerance
+- comment[fragment mass tolerance]: fragment tolerance
+
+### FASTA Database
+Standard UniProt FASTA format. Decoy sequences are generated automatically by the pipeline using DecoyPYrat.
+
+## Key Parameters
+
+### Search Engines
+- --search_engines comet,msgf,sage (default: all three)
+- Results are merged via ConsensusID (at least 2 engines must agree)
+
+### FDR Thresholds
+- --fdr_level peptide_level_fdrs or protein_level_fdrs
+- --psm_level_fdr_cutoff 0.01 (default: 1% PSM FDR)
+- --peptide_level_fdr_cutoff 0.01 (default: 1% peptide FDR)
+- --protein_level_fdr_cutoff 0.01 (default: 1% protein FDR)
+
+### Rescoring
+- --posterior_eval_fdr 0.01
+- --rescoring_engine ms2rescore (default)
+- Features: DeepLC retention time, MS2PIP fragmentation, basic PSM features
+
+### LFQ-Specific
+- --labelling_type label free sample
+- --quantification_method feature_intensity
+- --targeted_only true (only quantify identified peptides)
+
+### TMT/iTRAQ-Specific
+- --labelling_type tmt or --labelling_type itraq
+- --iso_activation HCD (or CID, ETD)
+- --reference_channel (for ratio calculation)
+
+## Output Files
+
+results/
+├── mztab/                    # mzTab identification results
+├── idxml/                    # OpenMS idXML files
+├── consensusxml/             # Consensus features
+├── msstats/                  # MSstats input CSV
+│   └── msstats_input.csv     # Ready for MSstats R package
+├── pmultiqc/                 # QC report
+│   └── multiqc_report.html   # Interactive HTML report
+└── pipeline_info/            # Nextflow execution reports
+
+### MSstats Export
+The pipeline exports an MSstats-compatible CSV for downstream statistical analysis. This is NOT a processing step — it produces input for the MSstats R package.
+
+## Common Workflows
+
+### Reanalyze a PRIDE dataset
+# 1. Get SDRF from PRIDE
+wget https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/sdrf/PXD000001.sdrf.tsv
+# 2. Download raw files listed in SDRF
+# 3. Create samplesheet CSV pointing to files + SDRF
+# 4. Run pipeline
+nextflow run bigbio/quantms -r main -profile docker \
+  --input samplesheet.csv \
+  --database uniprot_human.fasta \
+  --outdir PXD000001_results/
+
+### LFQ analysis with custom parameters
+nextflow run bigbio/quantms -r main -profile docker \
+  --input samplesheet.csv \
+  --database proteins.fasta \
+  --search_engines comet,sage \
+  --psm_level_fdr_cutoff 0.01 \
+  --protein_level_fdr_cutoff 0.01 \
+  --outdir results/
+
+### TMT analysis
+nextflow run bigbio/quantms -r main -profile docker \
+  --input samplesheet.csv \
+  --database proteins.fasta \
+  --labelling_type tmt \
+  --iso_activation HCD \
+  --outdir results/
+
+## Integration with Ecosystem
+
+- Input metadata: SDRF files (sdrf-pipelines for validation)
+- QC reports: pmultiqc generates interactive HTML reports from quantms output
+- Downstream quantification: mokume can process quantms peptide-level output for iBAQ, TopN, etc.
+- Data format: qpx converts quantms output to standardized QPX Parquet format
+- Reanalyzed data: quantms Portal hosts 251 datasets processed with quantms
+
+## Troubleshooting
+
+- Pipeline hangs at database search: increase memory with --max_memory 32.GB
+- No proteins identified: check SDRF organism matches FASTA database species
+- TMT missing channels: verify SDRF comment[label] matches your labeling scheme
+- Docker permission errors: run with --profile singularity on shared HPC
+
+## Related Tools
+
+- quantmsdiann: DIA proteomics pipeline (https://quantmsdiann.quantms.org)
+- pmultiqc: QC reports plugin (https://pmultiqc.quantms.org)
+- mokume: protein quantification library (https://mokume.quantms.org)
+- qpx: data format toolkit (https://qpx.quantms.org)
+- quantms Portal: data portal (https://portal.quantms.org)
+
+## Citation
+
+Dai C et al. quantms: a cloud-based pipeline for quantitative proteomics enables the reanalysis of public proteomics data. Nature Methods. 2024;21:1603-1607. DOI: 10.1038/s41592-024-02343-1
