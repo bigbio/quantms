@@ -1,5 +1,33 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+<meta property="og:image" content="https://docs.quantms.org/images/social-card.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "quantms",
+  "description": "Cloud-ready Nextflow pipeline for DDA quantitative proteomics. Supports label-free (LFQ) and isobaric labeling (TMT, iTRAQ) workflows.",
+  "applicationCategory": "Scientific Software",
+  "applicationSubCategory": "Proteomics",
+  "operatingSystem": "Linux, macOS, Windows",
+  "url": "https://docs.quantms.org",
+  "downloadUrl": "https://github.com/bigbio/quantms",
+  "license": "https://opensource.org/licenses/MIT",
+  "author": {
+    "@type": "Organization",
+    "name": "BigBio",
+    "url": "https://quantms.org"
+  },
+  "citation": {
+    "@type": "ScholarlyArticle",
+    "name": "quantms: a cloud-based pipeline for quantitative proteomics enables the reanalysis of public proteomics data",
+    "url": "https://doi.org/10.1038/s41592-024-02343-1"
+  }
+}
+</script>
+{% endblock %}
+
 {% block footer %}
 <footer class="md-footer">
   {% if page.previous_page or page.next_page %}
