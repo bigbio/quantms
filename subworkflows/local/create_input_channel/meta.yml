@@ -26,10 +26,6 @@ output:
       type: file
       description: |
         Channel containing label-free data configuration
-  - ch_meta_config_dia:
-      type: file
-      description: |
-        Channel containing DIA data configuration
   - ch_expdesign:
       type: file
       description: |
