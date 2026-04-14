@@ -8,7 +8,6 @@
 // MODULES: Local to the pipeline
 //
 include { FILE_MERGE  } from '../modules/local/openms/file_merge/main'
-include { MSSTATS_TMT } from '../modules/local/msstats/msstats_tmt/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -64,16 +63,6 @@ workflow TMT {
     PROTEIN_QUANT(PROTEIN_INFERENCE.out.epi_idfilter, ch_expdesign)
     ch_software_versions = ch_software_versions.mix(PROTEIN_QUANT.out.versions)
 
-    //
-    // MODULE: MSSTATSTMT
-    //
-    ch_msstats_out = channel.empty()
-    if(!params.skip_post_msstats){
-        MSSTATS_TMT(PROTEIN_QUANT.out.msstats_csv)
-        ch_msstats_out = MSSTATS_TMT.out.msstats_csv
-        ch_software_versions = ch_software_versions.mix(MSSTATS_TMT.out.versions)
-    }
-
     ID.out.psmrescoring_results
         .map { it -> it[1] }
         .set { ch_pmultiqc_ids }
@@ -87,6 +76,5 @@ workflow TMT {
     ch_pmultiqc_consensus   = ch_pmultiqc_consensus
     final_result            = PROTEIN_QUANT.out.out_mztab
     msstats_in              = PROTEIN_QUANT.out.msstats_csv
-    msstats_out             = ch_msstats_out
     versions                = ch_software_versions
 }
