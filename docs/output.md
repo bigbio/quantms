@@ -293,9 +293,10 @@ In addition to the consensusXML and idXML formats, OpenMS generates other format
 
 ##### MSstats-ready quantity tables
 
-MSstats-compatible input files (`msstats_in.csv`) are produced for all three pipelines DDA-LFQ, DDA-ISO and DIA-LFQ. These are simple TSV files ready to be read by the
+MSstats-compatible input files (`*_msstats_in.csv`) are produced for all three pipelines DDA-LFQ, DDA-ISO and DIA-LFQ. These are simple CSV files ready to be read by the
 OpenMStoMSstats function of the MSstats R package. They hold the same quantities as the consensusXML but rearranged in a "long" table format with additional
-information about the experimental design used by MSstats. Users can take these files and run MSstats independently outside the pipeline.
+information about the experimental design used by MSstats, and the filename prefix depends on the experimental design or report basename. Users can take these files and run
+MSstats independently outside the pipeline.
 
 #### mzTab
 
