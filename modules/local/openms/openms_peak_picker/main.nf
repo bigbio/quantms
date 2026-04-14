@@ -19,7 +19,7 @@ process OPENMS_PEAK_PICKER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
-    in_mem = params.peakpicking_inmemory ? "inmermory" : "lowmemory"
+    in_mem = params.peakpicking_inmemory ? "inmemory" : "lowmemory"
     lvls = params.peakpicking_ms_levels ? "-algorithm:ms_levels ${params.peakpicking_ms_levels}" : ""
 
     """
