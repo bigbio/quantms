@@ -27,13 +27,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 15. (**DDA-ISO**) Protein Quantification
 16. Generation of QC reports using pMultiQC, a library for QC proteomics data analysis.
 
-For DIA-LFQ experiments, the workflow is different:
-
-1. RAW data is converted to mzML using the ThermoRawFileParser
-2. DIA-NN is used for identification and quantification of the peptides and proteins
-3. Generation of output files
-4. Generation of QC reports using pMultiQC, a library for QC proteomics data analysis.
-
 As an example, a rough visualization of the DDA identification subworkflow can be seen here:
 
 ![quantms LFQ workflow](./images/id-dda-pipeline.png)
@@ -47,7 +40,7 @@ Output will be saved to the folder defined by the parameter `--outdir`. Each ste
 
 ### Default Output Structure
 
-By default, quantms organizes output files in a structured way, with specific directories for different types of outputs. The structure varies slightly depending on the workflow type (DIA, ISO, LFQ, etc.), but follows a consistent organization pattern.
+By default, quantms organizes output files in a structured way, with specific directories for different types of outputs. The structure varies slightly depending on the workflow type (ISO, LFQ, etc.), but follows a consistent organization pattern.
 
 #### Common directories across all workflows:
 
@@ -59,23 +52,6 @@ By default, quantms organizes output files in a structured way, with specific di
     - `png/`: PNG format plots
     - `svg/`: SVG format plots
     - `pdf/`: PDF format plots
-
-#### DIA workflow output structure:
-
-```
-results_dia/
-├── pipeline_info/             # Nextflow pipeline information
-├── sdrf/                      # SDRF files and configs
-├── spectra/                   # Spectra-related data (only present if --mzml_features is enabled)
-    ├──thermorawfileparser/    # Converted raw files
-├── quant_tables/              # Quantification tables and results
-└── pmultiqc/                  # pMultiQC reports
-    ├── multiqc_plots/
-    │   ├── png/
-    │   ├── svg/
-    │   └── pdf/
-    └── multiqc_data/
-```
 
 #### ISO quantification workflow output structure:
 
@@ -171,31 +147,10 @@ results/
     └── multiqc_data/
 ```
 
-For DIA workflows, the verbose output structure includes additional directories:
-
-```
-results/
-├── pipeline_info/             # Nextflow pipeline information
-├── sdrf/                      # SDRF files and configs
-├── spectra/                   # Spectra-related data (only present if --mzml_features is enabled)
-│   ├── thermorawfileparser/   # Converted raw files
-│   └── mzml_statistics/       # Statistics about mzML files
-├── database_generation/       # Database generation for DIA
-│   ├── insilico_library_generation/  # In silico library generation
-│   └── assemble_empirical_library/   # Empirical library assembly
-├── diann_preprocessing/       # DIA-NN preprocessing
-│   ├── preliminary_analysis/  # Preliminary analysis results
-│   └── individual_analysis/   # Individual analysis results
-├── quant_tables/              # Quantification tables and results
-└── pmultiqc/                  # pMultiQC reports
-    ├── multiqc_plots/
-    │   ├── png/
-    │   ├── pdf/
-    │   └── svg/
-    └── multiqc_data/
-```
-
 ### Key Output Files
+
+> [!NOTE]
+> DIA (Data Independent Acquisition) workflow outputs have been moved to the dedicated [quantmsdiann](https://github.com/bigbio/quantmsdiann) pipeline. Please refer to that pipeline for DIA-specific output files and documentation.
 
 Depending on the workflow type, the main output files will be found in the following directories:
 
@@ -216,13 +171,6 @@ The specific files include:
   - `quant_tables/protein_out.csv` - [Tab-based](#tab-based-openms-formats) protein quantities
   - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
 
-- DIA-LFQ quantification results:
-  - `quant_tables/diann_report.tsv` - DIA-NN main report with peptide and protein quantification
-  - `quant_tables/diann_report.pr_matrix.tsv` - Protein quantification matrix from DIA-NN
-  - `quant_tables/diann_report.pg_matrix.tsv` - Protein group quantification matrix from DIA-NN
-  - `quant_tables/diann_report.peptide_matrix.tsv` - Peptide quantification matrix from DIA-NN
-  - `quant_tables/diann_report.lib` - DIA-NN spectral library
-  - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
 
 ## Output description
 
@@ -300,7 +248,7 @@ MSstats independently outside the pipeline.
 
 #### mzTab
 
-The mzTab is exported for all three workflows DDA-LFQ, DDA-ISO and DIA-LFQ. It is a complete [mzTab](https://github.com/HUPO-PSI/mzTab) file
+The mzTab is exported for both workflows DDA-LFQ and DDA-ISO. It is a complete [mzTab](https://github.com/HUPO-PSI/mzTab) file
 ready for submission to [PRIDE](https://www.ebi.ac.uk/pride/). It contains both identifications (only those responsible for a quantification),
 quantities and some metadata about both the experiment and the quantification.
 
