@@ -374,30 +374,6 @@
                     "default": 10,
                     "fa_icon": "fas fa-sliders-h"
                 },
-                "min_pr_mz": {
-                    "type": "number",
-                    "description": "The minimum precursor m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter",
-                    "default": 400
-                },
-                "max_pr_mz": {
-                    "type": "number",
-                    "description": "The maximum precursor m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter",
-                    "default": 2400
-                },
-                "min_fr_mz": {
-                    "type": "number",
-                    "description": "The minimum fragment m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter",
-                    "default": 100
-                },
-                "max_fr_mz": {
-                    "type": "number",
-                    "description": "The maximum fragment m/z for the in silico library generation or library-free search",
-                    "fa_icon": "fas fa-filter",
-                    "default": 1800
-                },
                 "db_debug": {
                     "type": "integer",
                     "description": "Debug level when running the database search. Logs become more verbose and at '>5' temporary files are kept.",
@@ -1125,129 +1101,6 @@
             },
             "fa_icon": "fas fa-braille"
         },
-        "DIA-NN": {
-            "title": "DIA-NN",
-            "type": "object",
-            "description": "Settings for DIA-NN - a universal software for data-independent acquisition (DIA) proteomics data processing.",
-            "default": "",
-            "properties": {
-                "mass_acc_automatic": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "Choosing the MS2 mass accuracy setting automatically",
-                    "fa_icon": "fas fa-toggle-on"
-                },
-                "scan_window_automatic": {
-                    "type": "boolean",
-                    "description": "Choosing scan_window setting automatically",
-                    "default": true,
-                    "fa_icon": "fas fa-toggle-on"
-                },
-                "scan_window": {
-                    "type": "integer",
-                    "description": "Set the scan window radius to a specific value",
-                    "fa_icon": "fas fa-filter",
-                    "help_text": " Ideally, should be approximately equal to the average number of data points per peak",
-                    "default": 8
-                },
-                "performance_mode": {
-                    "type": "boolean",
-                    "description": "Set Low RAM & High Speed Mode for DIANN, including min-corr, corr-diff, and time-corr-only three parameters",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "quick_mass_acc": {
-                    "type": "boolean",
-                    "description": "when choosing the MS2 mass accuracy setting automatically, DIA-NN will use a fast heuristical algorithm instead of IDs number optimisation",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "pg_level": {
-                    "type": "number",
-                    "description": "Controls the protein inference mode",
-                    "fa_icon": "fas fa-list-ol",
-                    "enum": [0, 1, 2],
-                    "default": 2
-                },
-                "species_genes": {
-                    "type": "boolean",
-                    "description": "Instructs DIA-NN to add the organism identifier to the gene names",
-                    "fa_icon": "far fa-check-square"
-                },
-                "diann_speclib": {
-                    "type": "string",
-                    "description": "The spectral library to use for DIA-NN",
-                    "fa_icon": "fas fa-file",
-                    "help_text": "If passed, will use that spectral library to carry out the DIA-NN search, instead of predicting one from the fasta file.",
-                    "hidden": false
-                },
-                "diann_report_decoys": {
-                    "type": "boolean",
-                    "description": "Save decoy PSMs to the main .parquet report for DIA-NN 2.0.*",
-                    "fa_icon": "far fa-check-square",
-                    "hidden": false
-                },
-                "diann_export_xic": {
-                    "type": "boolean",
-                    "description": "instructs DIA-NN to extract MS1/fragment chromatograms for identified precursors within X seconds from the elution apex, with X set to 10s if not provided;equivalent to the 'XICs' option in the GUI",
-                    "fa_icon": "far fa-check-square",
-                    "hidden": false
-                },
-                "skip_preliminary_analysis": {
-                    "type": "boolean",
-                    "description": "Skip the preliminary analysis step, thus use the passed spectral library as-is insted of generating a local concensus library.",
-                    "fa_icon": "fas fa-forward",
-                    "hidden": false
-                },
-                "empirical_assembly_log": {
-                    "type": "string",
-                    "description": "The log file for the empirical assembly, Only used if `--skip_preliminary_analysis` is set to `true` and `--diann_speclib` is passed. If passed, will use that log file to carry out the DIA-NN search, instead of running a preliminary search.",
-                    "fa_icon": "fas fa-file",
-                    "help_text": "If passed, will use that log file to carry out the DIA-NN search, instead of predicting one from the fasta file.",
-                    "hidden": false
-                },
-                "diann_debug": {
-                    "type": "integer",
-                    "description": "Debug level",
-                    "default": 3,
-                    "fa_icon": "fas fa-bug",
-                    "enum": [0, 1, 2, 3, 4],
-                    "hidden": true
-                },
-                "diann_normalize": {
-                    "type": "boolean",
-                    "description": "Enable cross-run normalization between runs by diann.",
-                    "default": true,
-                    "fa_icon": "far fa-check-square"
-                },
-                "random_preanalysis": {
-                    "type": "boolean",
-                    "description": "Enable random selection of spectrum files to generate empirical library.",
-                    "fa_icon": "far fa-check-square"
-                },
-                "random_preanalysis_seed": {
-                    "type": "integer",
-                    "description": "Set the random seed for the random selection of spectrum files to generate the empirical library.",
-                    "default": 42,
-                    "fa_icon": "fas fa-filter"
-                },
-                "empirical_assembly_ms_n": {
-                    "type": "integer",
-                    "description": "The number of randomly selected spectrum files.",
-                    "default": 200,
-                    "fa_icon": "fas fa-filter",
-                    "hidden": true
-                },
-                "diann_extra_args": {
-                    "type": "string",
-                    "description": "Extra arguments appended to all DIA-NN steps. Flags incompatible with specific steps are automatically stripped with a warning.",
-                    "fa_icon": "fas fa-terminal",
-                    "hidden": false,
-                    "help_text": "Pass additional DIA-NN command-line arguments that will be appended to all DIA-NN steps (INSILICO_LIBRARY_GENERATION, PRELIMINARY_ANALYSIS, ASSEMBLE_EMPIRICAL_LIBRARY, INDIVIDUAL_ANALYSIS, FINAL_QUANTIFICATION). Flags that conflict with a specific step are automatically stripped with a warning. For step-specific overrides, use custom Nextflow config files with ext.args."
-                }
-            },
-            "fa_icon": "fas fa-braille"
-        },
         "statistical_post_processing": {
             "title": "Statistical post-processing",
             "type": "object",
@@ -1588,9 +1441,6 @@
         },
         {
             "$ref": "#/$defs/protein_quantification_lfq"
-        },
-        {
-            "$ref": "#/$defs/DIA-NN"
         },
         {
             "$ref": "#/$defs/statistical_post_processing"
