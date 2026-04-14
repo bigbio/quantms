@@ -69,7 +69,6 @@ results_dia/
 ├── spectra/                   # Spectra-related data (only present if --mzml_features is enabled)
     ├──thermorawfileparser/    # Converted raw files
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_plots/
     │   ├── png/
@@ -85,7 +84,6 @@ results_iso/
 ├── pipeline_info/             # Nextflow pipeline information
 ├── sdrf/                      # SDRF files and configs
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_data/
     └── multiqc_plots/
@@ -103,7 +101,6 @@ results_lfq/
 ├── spectra/                   # Spectra-related data (only present if --mzml_features is enabled)
 │   └── mzml_statistics/       # Statistics about mzML files
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_data/
     └── multiqc_plots/
@@ -166,7 +163,6 @@ results/
 │   ├── fdr_consensusid/       # FDR calculation results
 │   └── id_filter/             # Filtered identification results
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_plots/
     │   ├── svg/
@@ -191,7 +187,6 @@ results/
 │   ├── preliminary_analysis/  # Preliminary analysis results
 │   └── individual_analysis/   # Individual analysis results
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_plots/
     │   ├── png/
@@ -204,9 +199,8 @@ results/
 
 Depending on the workflow type, the main output files will be found in the following directories:
 
-- `quant_tables/`: Contains all quantification results including mzTab files, MSstats input files, and other quantification tables
+- `quant_tables/`: Contains all quantification results including mzTab files, MSstats-compatible input files, and other quantification tables
 - `psm_tables/`: Contains PSM-level results from the identification pipeline in parquet format
-- `msstats/`: Contains MSstats processed results and reports
 - `pmultiqc/`: Contains quality control reports and visualizations
 
 The specific files include:
@@ -229,9 +223,6 @@ The specific files include:
   - `quant_tables/diann_report.peptide_matrix.tsv` - Peptide quantification matrix from DIA-NN
   - `quant_tables/diann_report.lib` - DIA-NN spectral library
   - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
-
-- MSstats-processed results:
-  - `msstats/out_msstats.mzTab` - [MSstats-processed](#msstats-processed-mztab) mzTab
 
 ## Output description
 
@@ -302,9 +293,9 @@ In addition to the consensusXML and idXML formats, OpenMS generates other format
 
 ##### MSstats-ready quantity tables
 
-MSstats output is generated for all three pipelines DDA-LFQ, DDA-ISO and DIA-LFQ. A simple tsv file ready to be read by the
-OpenMStoMSstats function of the MSstats R package. It should hold the same quantities as the consensusXML but rearranged in a "long" table format with additional
-information about the experimental design used by MSstats.
+MSstats-compatible input files (`msstats_in.csv`) are produced for all three pipelines DDA-LFQ, DDA-ISO and DIA-LFQ. These are simple TSV files ready to be read by the
+OpenMStoMSstats function of the MSstats R package. They hold the same quantities as the consensusXML but rearranged in a "long" table format with additional
+information about the experimental design used by MSstats. Users can take these files and run MSstats independently outside the pipeline.
 
 #### mzTab
 
@@ -359,8 +350,7 @@ Note that columns with scores heavily depend on the chosen search engines and re
 
 #### MSstats-processed mzTab
 
-If MSstats was enabled, the pipeline additionally exports an mzTab file where the quantities are replaced with the normalized and imputed ones from
-MSstats.
+The pipeline no longer runs MSstats post-processing. Instead, quantms produces MSstats-compatible input files (`quant_tables/msstats_in.csv`) that users can provide directly to MSstats outside the pipeline for normalization, imputation, and statistical analysis.
 
 ### MultiQC and pMultiQC
 
