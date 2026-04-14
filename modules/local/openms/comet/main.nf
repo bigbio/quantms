@@ -113,7 +113,7 @@ process COMET {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         CometAdapter: \$(CometAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
-        Comet: \$(/opt/OpenMS/thirdparty/Comet/comet.exe 2>&1 | grep -m1 -E "^[[:space:]]*Comet version.*" | sed 's/^[[:space:]]*Comet version //g' | sed 's/"//g' || echo "unknown")
+        Comet: \$(/opt/OpenMS/thirdparty/Comet/comet.exe 2>&1 | grep -m1 -E "^[[:space:]]*Comet version.*" | sed 's/^[[:space:]]*Comet version //g' | sed 's/"//g')
     END_VERSIONS
     """
 }
