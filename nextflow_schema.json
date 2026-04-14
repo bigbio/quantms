@@ -1238,112 +1238,6 @@
             },
             "fa_icon": "fas fa-braille"
         },
-        "statistical_post_processing": {
-            "title": "Statistical post-processing",
-            "type": "object",
-            "description": "",
-            "default": "Parameters for the R script using MSstats for statistical post processing and quantification visualization.",
-            "properties": {
-                "skip_post_msstats": {
-                    "type": "boolean",
-                    "description": "Skip MSstats/MSstatsTMT for statistical post-processing?",
-                    "fa_icon": "fas fa-forward"
-                },
-                "ref_condition": {
-                    "type": "string",
-                    "description": "Experimental: Instead of all pairwise contrasts (default), uses the given condition name/number (corresponding to your experimental design) as a reference and creates pairwise contrasts against it.",
-                    "fa_icon": "fas fa-font"
-                },
-                "contrasts": {
-                    "type": "string",
-                    "description": "Experimental: Allows full control over contrasts by specifying a set of contrasts in a semicolon separated list of R-compatible contrasts with the condition names/numbers as variables (e.g. `1-2;1-3;2-3`). Overwrites [`--ref_condition`](#ref_condition).",
-                    "fa_icon": "fas fa-font",
-                    "default": "pairwise"
-                },
-                "msstats_threshold": {
-                    "type": "number",
-                    "description": "The threshold value for differential expressed proteins in MSstats plots based on adjusted p-value",
-                    "fa_icon": "fas fa-filter",
-                    "default": 0.05
-                },
-                "msstatslfq_feature_subset_protein": {
-                    "type": "string",
-                    "description": "Which features to use for quantification per protein: 'top3' or 'highQuality' which removes outliers only",
-                    "fa_icon": "far fa-list-ol",
-                    "default": "top3",
-                    "enum": ["top3", "highQuality"]
-                },
-                "msstatslfq_quant_summary_method": {
-                    "type": "string",
-                    "description": "which summary method to use: 'TMP' (Tukey's median polish) or 'linear' (linear mixed model)",
-                    "fa_icon": "far fa-list-ol",
-                    "default": "TMP",
-                    "enum": ["TMP", "linear"]
-                },
-                "msstats_remove_one_feat_prot": {
-                    "type": "boolean",
-                    "description": "Omit proteins with only one quantified feature?",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "msstatslfq_removeFewMeasurements": {
-                    "type": "boolean",
-                    "description": "Keep features with only one or two measurements across runs?",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "msstatsiso_useunique_peptide": {
-                    "type": "boolean",
-                    "description": "Use unique peptide for each protein",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "msstatsiso_rmpsm_withfewmea_withinrun": {
-                    "type": "boolean",
-                    "description": "Remove the features that have 1 or 2 measurements within each run",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "msstatsiso_summaryformultiple_psm": {
-                    "type": "string",
-                    "description": "select the feature with the largest summmation or maximal value",
-                    "fa_icon": "far fa-list-ol",
-                    "default": "sum",
-                    "enum": ["sum", "max"]
-                },
-                "msstatsiso_summarization_method": {
-                    "type": "string",
-                    "description": "summarization methods to protein-level can be perfomed",
-                    "fa_icon": "far fa-list-ol",
-                    "default": "msstats",
-                    "enum": ["msstats", "MedianPolish", "Median", "LogSum"]
-                },
-                "msstatsiso_global_norm": {
-                    "type": "boolean",
-                    "description": "Reference channel based normalization between MS runs on protein level data?",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "msstatsiso_remove_norm_channel": {
-                    "type": "boolean",
-                    "description": "Remove 'Norm' channels from protein level data",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "msstatsiso_reference_normalization": {
-                    "type": "boolean",
-                    "description": "Reference channel based normalization between MS runs on protein level data",
-                    "fa_icon": "far fa-check-square",
-                    "default": true
-                },
-                "msstats_plot_profile_qc": {
-                    "type": "boolean",
-                    "description": "Export MSstats profile QC plots including all proteins",
-                    "fa_icon": "far fa-check-square"
-                }
-            },
-            "fa_icon": "fab fa-r-project"
-        },
         "quality_control": {
             "title": "Quality control",
             "type": "object",
@@ -1581,9 +1475,6 @@
         },
         {
             "$ref": "#/$defs/DIA-NN"
-        },
-        {
-            "$ref": "#/$defs/statistical_post_processing"
         },
         {
             "$ref": "#/$defs/quality_control"
