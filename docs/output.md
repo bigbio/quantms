@@ -171,7 +171,6 @@ The specific files include:
   - `quant_tables/protein_out.csv` - [Tab-based](#tab-based-openms-formats) protein quantities
   - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
 
-
 ## Output description
 
 ### Nextflow pipeline info
