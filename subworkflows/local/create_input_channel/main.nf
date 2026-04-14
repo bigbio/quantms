@@ -31,19 +31,16 @@ workflow CREATE_INPUT_CHANNEL {
         .splitCsv(header: true, sep: '\t')
         .map { row -> create_meta_channel(row, enzymes, files, wrapper) }
         .branch { item ->
-            ch_meta_config_dia: item[0].acquisition_method.contains("dia")
             ch_meta_config_iso: item[0].labelling_type.contains("tmt") || item[0].labelling_type.contains("itraq")
             ch_meta_config_lfq: item[0].labelling_type.contains("label free")
         }
         .set { result }
     ch_meta_config_iso = result.ch_meta_config_iso
     ch_meta_config_lfq = result.ch_meta_config_lfq
-    ch_meta_config_dia = result.ch_meta_config_dia
 
     emit:
     ch_meta_config_iso // [meta, [spectra_files ]]
     ch_meta_config_lfq // [meta, [spectra_files ]]
-    ch_meta_config_dia // [meta, [spectra files ]]
     ch_expdesign
     versions = ch_versions
 }
@@ -81,11 +78,8 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
     if (row["Proteomics Data Acquisition Method"].toString().toLowerCase().contains("data-dependent acquisition")) {
         meta.acquisition_method = "dda"
     }
-    else if (row["Proteomics Data Acquisition Method"].toString().toLowerCase().contains("data-independent acquisition")) {
-        meta.acquisition_method = "dia"
-    }
     else {
-        log.error("Currently DIA and DDA are supported for the pipeline. Check and Fix your SDRF.")
+        log.error("Currently only DDA is supported in quantms. For DIA data, use the quantmsdiann pipeline: https://github.com/bigbio/quantmsdiann. Check and Fix your SDRF.")
         exit(1)
     }
 
@@ -196,28 +190,25 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
         exit(1)
     }
 
-    // Nothing to determine for dia. Only LFQ allowed there.
-    if (!meta.acquisition_method.equals("dia")) {
-        if (wrapper.labelling_type.equals("")) {
-            if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
-                wrapper.labelling_type = meta.labelling_type
-            }
-            else {
-                log.error("Unsupported quantification type '${meta.labelling_type}'.")
-                exit(1)
-            }
+    if (wrapper.labelling_type.equals("")) {
+        if (meta.labelling_type.contains("tmt") || meta.labelling_type.contains("itraq") || meta.labelling_type.contains("label free")) {
+            wrapper.labelling_type = meta.labelling_type
         }
         else {
-            if (meta.labelling_type != wrapper.labelling_type) {
-                log.error("Currently, only one label type per design is supported: was '${wrapper.labelling_type}', now is '${meta.labelling_type}'.")
-                exit(1)
-            }
+            log.error("Unsupported quantification type '${meta.labelling_type}'.")
+            exit(1)
+        }
+    }
+    else {
+        if (meta.labelling_type != wrapper.labelling_type) {
+            log.error("Currently, only one label type per design is supported: was '${wrapper.labelling_type}', now is '${meta.labelling_type}'.")
+            exit(1)
         }
     }
 
-    if (wrapper.labelling_type.contains("label free") || meta.acquisition_method == "dia") {
+    if (wrapper.labelling_type.contains("label free")) {
         if (filestr in files) {
-            log.error("Currently only one search engine setting/DIA-NN setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments.")
+            log.error("Currently only one search engine setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments.")
             exit(1)
         }
         files += filestr
