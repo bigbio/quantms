@@ -206,6 +206,11 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
         }
     }
 
+    if (meta.acquisition_method == "dia") {
+        log.error("Unsupported acquisition type 'dia'. DIA support has been removed from quantms. Please use the quantmsdiann pipeline instead: https://github.com/bigbio/quantmsdiann")
+        exit(1)
+    }
+
     if (wrapper.labelling_type.contains("label free")) {
         if (filestr in files) {
             log.error("Currently only one search engine setting per file is supported for the whole experiment. ${filestr} has multiple entries in your SDRF. Maybe you have a (isobaric) labelled experiment? Otherwise, consider splitting your design into multiple experiments.")
