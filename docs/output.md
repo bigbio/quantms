@@ -60,7 +60,6 @@ results_iso/
 ├── pipeline_info/             # Nextflow pipeline information
 ├── sdrf/                      # SDRF files and configs
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_data/
     └── multiqc_plots/
@@ -78,7 +77,6 @@ results_lfq/
 ├── spectra/                   # Spectra-related data (only present if --mzml_features is enabled)
 │   └── mzml_statistics/       # Statistics about mzML files
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_data/
     └── multiqc_plots/
@@ -141,7 +139,6 @@ results/
 │   ├── fdr_consensusid/       # FDR calculation results
 │   └── id_filter/             # Filtered identification results
 ├── quant_tables/              # Quantification tables and results
-├── msstats/                   # MSstats processed results
 └── pmultiqc/                  # pMultiQC reports
     ├── multiqc_plots/
     │   ├── svg/
@@ -157,9 +154,8 @@ results/
 
 Depending on the workflow type, the main output files will be found in the following directories:
 
-- `quant_tables/`: Contains all quantification results including mzTab files, MSstats input files, and other quantification tables
+- `quant_tables/`: Contains all quantification results including mzTab files, MSstats-compatible input files, and other quantification tables
 - `psm_tables/`: Contains PSM-level results from the identification pipeline in parquet format
-- `msstats/`: Contains MSstats processed results and reports
 - `pmultiqc/`: Contains quality control reports and visualizations
 
 The specific files include:
@@ -174,9 +170,6 @@ The specific files include:
   - `quant_tables/peptide_out.csv` - [Tab-based](#tab-based-openms-formats) peptide quantities
   - `quant_tables/protein_out.csv` - [Tab-based](#tab-based-openms-formats) protein quantities
   - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
-
-- MSstats-processed results:
-  - `msstats/out_msstats.mzTab` - [MSstats-processed](#msstats-processed-mztab) mzTab
 
 ## Output description
 
@@ -247,9 +240,10 @@ In addition to the consensusXML and idXML formats, OpenMS generates other format
 
 ##### MSstats-ready quantity tables
 
-MSstats output is generated for both pipelines DDA-LFQ and DDA-ISO. A simple tsv file ready to be read by the
-OpenMStoMSstats function of the MSstats R package. It should hold the same quantities as the consensusXML but rearranged in a "long" table format with additional
-information about the experimental design used by MSstats.
+MSstats-compatible input files (`*_msstats_in.csv`) are produced for both DDA-LFQ and DDA-ISO pipelines. These are CSV files ready to be read by the
+OpenMStoMSstats function of the MSstats R package. They hold the same quantities as the consensusXML but rearranged in a "long" table format with additional
+information about the experimental design used by MSstats, and the filename prefix depends on the experimental design or report basename. Users can take these files and run
+MSstats independently outside the pipeline.
 
 #### mzTab
 
@@ -302,10 +296,9 @@ PSM section:
 
 Note that columns with scores heavily depend on the chosen search engines and rescoring tools and are better looked up in the documentation of the underlying tool.
 
-#### MSstats-processed mzTab
+#### MSstats post-processing (external)
 
-If MSstats was enabled, the pipeline additionally exports an mzTab file where the quantities are replaced with the normalized and imputed ones from
-MSstats.
+The pipeline no longer runs MSstats post-processing. Instead, quantms produces MSstats-compatible input files (`quant_tables/*_msstats_in.csv`) that users can provide directly to MSstats outside the pipeline for normalization, imputation, and statistical analysis.
 
 ### MultiQC and pMultiQC
 
