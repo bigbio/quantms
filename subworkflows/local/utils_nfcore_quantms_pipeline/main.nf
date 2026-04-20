@@ -78,6 +78,12 @@ workflow PIPELINE_COMPLETION {
 //
 def validateInputParameters() {
     genomeExistsError()
+
+    // Removed parameters — error loudly with migration guidance.
+    // nf-schema only warns on unknown params by default, so these need an explicit check.
+    if (params.containsKey('ms2features_range')) {
+        error("The parameter `--ms2features_range` has been removed. Per-file Percolator (previously `independent_run`) is now the only supported topology; drop this parameter from your config.")
+    }
 }
 
 //

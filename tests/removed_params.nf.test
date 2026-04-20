@@ -1,0 +1,25 @@
+nextflow_pipeline {
+
+    name "Test removed parameters"
+    script "../main.nf"
+    tag "pipeline"
+    tag "params_removed"
+
+    test("ms2features_range is rejected with migration message") {
+
+        when {
+            params {
+                outdir              = "$outputDir"
+                ms2features_range   = "by_sample"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.failed },
+                { assert workflow.errorReport.contains("ms2features_range") },
+                { assert workflow.errorReport.contains("has been removed") }
+            )
+        }
+    }
+}

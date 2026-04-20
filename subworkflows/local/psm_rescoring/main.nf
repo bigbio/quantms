@@ -7,9 +7,7 @@ include { PERCOLATOR              } from '../../../modules/local/openms/percolat
 
 workflow PSM_RESCORING {
     take:
-    ch_file_preparation_results
     ch_id_files_feats
-    _ch_expdesign
 
     main:
     ch_software_versions = channel.empty()
