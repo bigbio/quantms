@@ -34,7 +34,7 @@ workflow ID {
     //
     // SUBWORKFLOW: PSMReScoring
     //
-    PSM_RESCORING (ch_file_preparation_results, PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx, ch_expdesign)
+    PSM_RESCORING (PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx)
     ch_software_versions = ch_software_versions.mix(PSM_RESCORING.out.versions)
 
     //

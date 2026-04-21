@@ -548,14 +548,6 @@
                     "default": 1,
                     "fa_icon": "fas fa-sliders-h"
                 },
-                "ms2features_range": {
-                    "type": "string",
-                    "description": "MS2Features processing range: independent run, Sample or whole experiments",
-                    "help_text": "independent_run: Process each run separately (default, fastest). by_sample: Group runs by sample for better statistics. by_project: Use all runs together for maximum statistical power (slowest but most accurate).",
-                    "fa_icon": "fas fa-font",
-                    "default": "independent_run",
-                    "enum": ["independent_run", "by_sample", "by_project"]
-                },
                 "ms2features_model": {
                     "type": "string",
                     "description": "Deep learning model for MS2 prediction. Choose based on your feature generator: alphapeptdeep uses 'generic' model, ms2pip uses instrument-specific models.",
