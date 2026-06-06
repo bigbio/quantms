@@ -29,7 +29,7 @@ output:
   - id_files_sage:
       type: file
       description: Output file
-      pattern: "*.idXML"
+      pattern: "*.idparquet"
   - log:
       type: file
       description: log file

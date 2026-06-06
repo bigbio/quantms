@@ -172,7 +172,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
         } else {
             ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         }
-        
+
     } else if (params.psm_clean == true) {
         ch_id_files = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         PSM_CLEAN(ch_id_files.combine(ch_mzmls_search, by: 0))

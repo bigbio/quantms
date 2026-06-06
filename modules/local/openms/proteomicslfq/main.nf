@@ -18,12 +18,12 @@ process PROTEOMICSLFQ {
     path "${expdes.baseName}_qpx", emit: out_qpx
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "*msstats_in.csv", emit: out_msstats, optional: true
-    path "debug_mergedIDs.idXML", emit: debug_mergedIDs, optional: true
-    path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference, optional: true
-    path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved, optional: true
-    path "debug_mergedIDsGreedyResolvedFDR.idXML", emit: debug_mergedIDsGreedyResolvedFDR, optional: true
-    path "debug_mergedIDsGreedyResolvedFDRFiltered.idXML", emit: debug_mergedIDsGreedyResolvedFDRFiltered, optional: true
-    path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idXML", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved, optional: true
+    path "debug_mergedIDs.idparquet", emit: debug_mergedIDs, optional: true
+    path "debug_mergedIDs_inference.idparquet", emit: debug_mergedIDs_inference, optional: true
+    path "debug_mergedIDsGreedyResolved.idparquet", emit: debug_mergedIDsGreedyResolved, optional: true
+    path "debug_mergedIDsGreedyResolvedFDR.idparquet", emit: debug_mergedIDsGreedyResolvedFDR, optional: true
+    path "debug_mergedIDsGreedyResolvedFDRFiltered.idparquet", emit: debug_mergedIDsGreedyResolvedFDRFiltered, optional: true
+    path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idparquet", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved, optional: true
     path "*.log", emit: log
     path "versions.yml", emit: versions
 

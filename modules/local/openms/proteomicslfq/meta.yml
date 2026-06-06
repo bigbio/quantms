@@ -18,7 +18,7 @@ input:
   - id_files:
       type: file
       description: Identifications in idXML or mzIdentML format with posterior error probabilities as score type.
-      pattern: "*.idXML"
+      pattern: "*.idparquet"
   - expdes:
       type: file
       description: An experimental design file

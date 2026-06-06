@@ -18,7 +18,7 @@ input:
       type: file
       description: |
         Identifications from searching a target-decoy database.
-      pattern: "*.idXML"
+      pattern: "*.idparquet"
 output:
   - meta:
       type: map

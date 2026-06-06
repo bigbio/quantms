@@ -18,7 +18,7 @@ input:
       type: file
       description: |
         Input idXML file containing the identifications.
-      pattern: "*.idXML"
+      pattern: "*.idparquet"
   - database:
       type: file
       description: |
@@ -32,7 +32,7 @@ output:
       type: file
       description: |
         Output idXML file.
-      pattern: "*.idXML"
+      pattern: "*.idparquet"
   - log:
       type: file
       description: log file

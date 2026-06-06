@@ -18,7 +18,7 @@ input:
   - idxml_file:
       type: file
       description: idXML identification file
-      pattern: "*.idXML"
+      pattern: "*.idparquet"
   - mzml:
       type: file
       description: spectrum data file
@@ -30,7 +30,7 @@ output:
   - idxml:
       type: file
       description: idXML identification file after MS2 rescoring
-      pattern: "*.idXML"
+      pattern: "*.idparquet"
   - version:
       type: file
       description: File containing software version

@@ -75,7 +75,7 @@ sp:
     fn: "*_ms_info.parquet"
     num_lines: 0
   pmultiqc/idXML:
-    fn: "*.idXML"
+    fn: "*.idparquet"
     num_lines: 0
   pmultiqc/msstats:
     fn: "*msstats_in.csv"

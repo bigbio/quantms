@@ -12,7 +12,7 @@ process ID_SCORE_SWITCHER {
     tuple val(meta), path(id_file), val(new_score)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_pep.idXML"), emit: id_score_switcher
+    tuple val(meta), path("${id_file.baseName}_pep.idparquet"), emit: id_score_switcher
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
@@ -23,7 +23,7 @@ process ID_SCORE_SWITCHER {
     """
     IDScoreSwitcher \\
         -in ${id_file} \\
-        -out ${id_file.baseName}_pep.idXML \\
+        -out ${id_file.baseName}_pep.idparquet \\
         -threads $task.cpus \\
         -new_score ${new_score} \\
         $args \\

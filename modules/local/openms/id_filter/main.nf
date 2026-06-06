@@ -1,5 +1,5 @@
 process ID_FILTER {
-    tag {task.ext.suffix == ".idXML" ? "$meta.mzml_id" : "$id_file.baseName"}
+    tag {task.ext.suffix == ".idparquet" ? "$meta.mzml_id" : "$id_file.baseName"}
     label 'process_very_low'
     label 'process_single'
     label 'openms'
