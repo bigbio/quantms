@@ -4,14 +4,14 @@ process PERCOLATOR {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:latest' :
+        'ghcr.io/openms/openms-tools-thirdparty:latest' }"
 
     input:
     tuple val(meta), path(id_file)
 
     output:
-    tuple val(meta), path("*_perc.idXML"), emit: id_files_perc
+    tuple val(meta), path("*_perc.idparquet"), emit: id_files_perc
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
@@ -22,12 +22,13 @@ process PERCOLATOR {
     """
     OMP_NUM_THREADS=$task.cpus PercolatorAdapter \\
         -in ${id_file} \\
-        -out ${id_file.baseName}_perc.idXML \\
+        -out ${id_file.baseName}_perc.idparquet \\
         -threads $task.cpus \\
         -subset_max_train $params.subset_max_train \\
         -decoy_pattern $params.decoy_string \\
         -post_processing_tdc \\
         -score_type pep \\
+        -score:fdr $params.run_fdr_cutoff \\
         $args \\
         2>&1 | tee ${id_file.baseName}_percolator.log
 

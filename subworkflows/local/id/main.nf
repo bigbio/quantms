@@ -1,9 +1,4 @@
 //
-// MODULE: Local to the pipeline
-//
-include { CONSENSUSID   } from '../../../modules/local/openms/consensusid/main'
-
-//
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { PEPTIDE_DATABASE_SEARCH } from '../peptide_database_search/main'
@@ -40,34 +35,19 @@ workflow ID {
     //
     // SUBWORKFLOW: PSM_FDR_CONTROL
     //
-    ch_psmfdrcontrol     = channel.empty()
-    ch_consensus_results = channel.empty()
-    // split returns String[], whereas tokenize returns a list, unique works on lists
-    def n_unique_search_engines = params.search_engines.tokenize(",").unique().size()
-    if (n_unique_search_engines > 1) {
-        // 'remainder: true' will keep remainders which do not match the specified size
-        // if the 'size' is not matched, an empty channel will be returned and
-        // nothing will be run for the 'CONSENSUSID' process
-        CONSENSUSID(PSM_RESCORING.out.results.groupTuple(size: n_unique_search_engines))
-        ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions)
-        ch_psmfdrcontrol = CONSENSUSID.out.consensusids
-        ch_consensus_results = CONSENSUSID.out.consensusids
-    } else {
-        ch_psmfdrcontrol = PSM_RESCORING.out.results
-    }
 
-    PSM_FDR_CONTROL(ch_psmfdrcontrol)
-    ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions)
+    ch_psmfdrcontrol = PSM_RESCORING.out.results
+    ch_consensus_results = channel.empty()
 
     //
     // SUBWORKFLOW：PHOSPHOSCORING
     //
     if (params.enable_mod_localization) {
-        PHOSPHO_SCORING(ch_file_preparation_results, PSM_FDR_CONTROL.out.id_filtered)
+        PHOSPHO_SCORING(ch_file_preparation_results, PSM_RESCORING.out.results)
         ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
         ch_id_results = PHOSPHO_SCORING.out.id_onsite
     } else {
-        ch_id_results = PSM_FDR_CONTROL.out.id_filtered
+        ch_id_results = PSM_RESCORING.out.results
     }
 
     emit:

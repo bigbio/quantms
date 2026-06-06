@@ -7,10 +7,10 @@ process PSM_CLEAN {
         'ghcr.io/bigbio/quantms-rescoring:0.0.16' }"
 
     input:
-    tuple val(meta), path(idxml), path(mzml)
+    tuple val(meta), path(idparquet), path(mzml)
 
     output:
-    tuple val(meta), path("*clean.idXML") , emit: idxml
+    tuple val(meta), path("*clean.idparquet") , emit: idparquet
     path "versions.yml"                   , emit: versions
     path "*.log"                          , emit: log
 
@@ -23,9 +23,9 @@ process PSM_CLEAN {
 
     """
     rescoring psm_feature_clean \\
-        --idxml $idxml \\
+        --idparquet $idparquet \\
         --mzml $mzml \\
-        --output ${idxml.baseName}_clean.idXML \\
+        --output ${idxml.baseName}_clean.idparquet \\
         $args \\
         2>&1 | tee ${idxml.baseName}_clean.log
 

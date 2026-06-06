@@ -1,8 +1,9 @@
 //
 // MODULE: Local to the pipeline
 //
-include { CONSENSUSID          } from '../../../modules/local/openms/consensusid/main'
+include { MSRESCORE_FEATURES   } from '../../../modules/local/utils/msrescore_features/main'
 include { PERCOLATOR           } from '../../../modules/local/openms/percolator/main'
+include { EXTRACTPSMFEATURES           } from '../../../modules/local/openms/extractfeatures/main'
 include { PSM_CONVERSION       } from '../../../modules/local/utils/psm_conversion/main'
 include { PHOSPHO_SCORING      } from '../phospho_scoring/main'
 
@@ -40,50 +41,80 @@ workflow DDA_ID {
     //
     // SUBWORKFLOW: Rescoring
     //
-    if (params.skip_rescoring == false) {
-        PERCOLATOR(ch_id_files_feats)
+    if (params.search_engines.tokenize(",").unique().size() > 1) {
+        if (params.ms2features_enable == true) {
+        // Only add ms2_model_dir if it's actually set and not empty
+            // Handle cases where parameter might be empty string, null, boolean true, or whitespace
+            // When --ms2features_model_dir is passed with no value, Nextflow may set it to boolean true
+            if (params.ms2features_model_dir && params.ms2features_model_dir != true) {
+                ms2_model_dir = channel.from(file(params.ms2features_model_dir, checkIfExists: true))
+            } else {
+                // create a fake channel when don't specify model dir
+                ms2_model_dir = channel.from(file("pretrained_models"))
+            }
+
+            ch_id_files_feats.groupTuple(size: params.search_engines.tokenize(",").unique().size())
+                .combine(ch_mzmls_search, by: 0)
+                .combine(ms2_model_dir).set{ ch_id_rescoring }
+
+            MSRESCORE_FEATURES(ch_id_rescoring)
+            ch_software_versions = ch_software_versions.mix(MSRESCORE_FEATURES.out.versions)
+            ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
+            ch_id_files_feats.map { v -> [v[0], v[1]] }.set {ch_perc_input}
+
+        } else{
+            EXTRACTPSMFEATURES(ch_id_files_feats.groupTuple(size: params.search_engines.tokenize(",").unique().size()))
+            ch_consensus_input = EXTRACTPSMFEATURES.out.id_files_feat
+            ch_perc_input = ch_consensus_input
+        }
+        PERCOLATOR(ch_perc_input)
+        ch_rescoring_results = PERCOLATOR.out.id_files_perc
         ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
-        ch_consensus_input = PERCOLATOR.out.id_files_perc
-
-        ch_rescoring_results = ch_consensus_input
-
-        //
-        // SUBWORKFLOW: PSM_FDR_CONTROL
-        //
-        ch_psmfdrcontrol     = channel.empty()
-        // see comments in id.nf
-        if (params.search_engines.tokenize(",").unique().size() > 1) {
-            CONSENSUSID(ch_consensus_input.groupTuple(size: params.search_engines.tokenize(",").unique().size()))
-            ch_software_versions = ch_software_versions.mix(CONSENSUSID.out.versions)
-            ch_psmfdrcontrol = CONSENSUSID.out.consensusids
-            ch_psmfdrcontrol
-                .map { it -> it[1] }
-                .set { ch_pmultiqc_consensus }
-        } else {
-            ch_psmfdrcontrol = ch_consensus_input
-        }
-
-        PSM_FDR_CONTROL(ch_psmfdrcontrol)
-        ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions)
-
-        if (params.enable_mod_localization) {
-            PHOSPHO_SCORING(ch_file_preparation_results, PSM_FDR_CONTROL.out.id_filtered)
-            ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
-            ch_id_results = PHOSPHO_SCORING.out.id_onsite
-        } else {
-            ch_id_results = PSM_FDR_CONTROL.out.id_filtered
-        }
-
-        // Extract PSMs and export parquet format
-        PSM_CONVERSION(ch_id_results.combine(ch_ms2_statistics, by: 0))
-        ch_software_versions = ch_software_versions.mix(PSM_CONVERSION.out.versions)
-
-        ch_rescoring_results
-            .map { it -> it[1] }
-            .set { ch_pmultiqc_ids }
     } else {
-        PSM_CONVERSION(ch_id_files_feats.combine(ch_ms2_statistics, by: 0))
+        if (params.ms2features_enable == true) {
+            // Only add ms2_model_dir if it's actually set and not empty
+            // Handle cases where parameter might be empty string, null, boolean true, or whitespace
+            // When --ms2features_model_dir is passed with no value, Nextflow may set it to boolean true
+            if (params.ms2features_model_dir && params.ms2features_model_dir != true) {
+                ms2_model_dir = channel.from(file(params.ms2features_model_dir, checkIfExists: true))
+            } else {
+                // create a fake channel when don't specify model dir
+                ms2_model_dir = channel.from(file("pretrained_models"))
+            }
+
+            ch_id_files_feats.groupTuple(size: params.search_engines.tokenize(",").unique().size())
+                .combine(ch_mzmls_search, by: 0)
+                .combine(ms2_model_dir).set{ ch_id_rescoring }
+
+            MSRESCORE_FEATURES(ch_id_rescoring)
+            ch_software_versions = ch_software_versions.mix(MSRESCORE_FEATURES.out.versions)
+            ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
+            ch_id_files_feats.map { v -> [v[0], v[1]] }.set {ch_perc_input}
+        } else {
+            ch_perc_input = ch_id_files_feats
+        }
+        PERCOLATOR(ch_perc_input)
+        ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
+        ch_rescoring_results = PERCOLATOR.out.id_files_perc
     }
+
+    PSM_FDR_CONTROL(ch_rescoring_results)
+    ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions)
+
+    if (params.enable_mod_localization) {
+        PHOSPHO_SCORING(ch_file_preparation_results, PSM_FDR_CONTROL.out.id_filtered)
+        ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
+        ch_id_results = PHOSPHO_SCORING.out.id_onsite
+    } else {
+        ch_id_results = PSM_FDR_CONTROL.out.id_filtered
+    }
+
+    // Extract PSMs and export parquet format
+    PSM_CONVERSION(ch_id_results.combine(ch_ms2_statistics, by: 0))
+    ch_software_versions = ch_software_versions.mix(PSM_CONVERSION.out.versions)
+    ch_rescoring_results
+        .map { it -> it[1] }
+        .set { ch_pmultiqc_ids }
 
 
     emit:

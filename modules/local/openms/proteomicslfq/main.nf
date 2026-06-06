@@ -4,8 +4,8 @@ process PROTEOMICSLFQ {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:latest' :
+        'ghcr.io/openms/openms-executables:latest' }"
 
     input:
     path(mzmls)
@@ -15,6 +15,7 @@ process PROTEOMICSLFQ {
 
     output:
     path "${expdes.baseName}_openms.mzTab", emit: out_mztab
+    path "${expdes.baseName}_qpx", emit: out_qpx
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "*msstats_in.csv", emit: out_msstats, optional: true
     path "debug_mergedIDs.idXML", emit: debug_mergedIDs, optional: true
@@ -58,6 +59,7 @@ process PROTEOMICSLFQ {
         -picked_proteinFDR ${params.picked_fdr} \\
         -out_cxml ${expdes.baseName}_openms.consensusXML \\
         -out ${expdes.baseName}_openms.mzTab \\
+        -out_qpx ${expdes.baseName}_qpx \\
         ${msstats_present} \\
         $args \\
         2>&1 | tee proteomicslfq.log

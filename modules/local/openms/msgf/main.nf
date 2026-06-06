@@ -4,14 +4,14 @@ process MSGF {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:latest' :
+        'ghcr.io/openms/openms-tools-thirdparty:latest' }"
 
     input:
     tuple val(meta),  path(mzml_file), path(database), path(cnlcp), path(canno), path(csarr), path(cseq)
 
     output:
-    tuple val(meta), path("${mzml_file.baseName}_msgf.idXML"),  emit: id_files_msgf
+    tuple val(meta), path("${mzml_file.baseName}_msgf.idparquet"),  emit: id_files_msgf
     path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
@@ -65,7 +65,7 @@ process MSGF {
     MSGFPlusAdapter \\
         -protocol $params.protocol \\
         -in ${mzml_file} \\
-        -out ${mzml_file.baseName}_msgf.idXML \\
+        -out ${mzml_file.baseName}_msgf.idparquet \\
         ${msgf_jar} \\
         -threads $task.cpus \\
         -java_memory ${task.memory.toMega()} \\

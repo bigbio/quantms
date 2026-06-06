@@ -11,7 +11,7 @@ process ID_MERGER {
     tuple val(meta), path(id_files), val(groupkey)
 
     output:
-    tuple val(meta), path("*_merged.idXML"), emit: id_merged
+    tuple val(meta), path("*_merged.idparquet"), emit: id_merged
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
@@ -23,7 +23,7 @@ process ID_MERGER {
     IDMerger \\
         -in ${id_files.join(' ')} \\
         -threads $task.cpus \\
-        -out ${prefix}_merged.idXML \\
+        -out ${prefix}_merged.idparquet \\
         -merge_proteins_add_PSMs \\
         $args \\
         2>&1 | tee ${prefix}_merged.log

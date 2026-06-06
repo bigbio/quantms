@@ -7,6 +7,7 @@ include { PSM_CLEAN            } from '../../../modules/local/utils/psm_clean/ma
 include { MSRESCORE_FINE_TUNING} from '../../../modules/local/utils/msrescore_fine_tuning/main'
 include { MSRESCORE_FEATURES   } from '../../../modules/local/utils/msrescore_features/main'
 include { SPECTRUM_FEATURES    } from '../../../modules/local/utils/spectrum_features/main'
+include { EXTRACTPSMFEATURES           } from '../../../modules/local/openms/extractfeatures/main'
 
 workflow PEPTIDE_DATABASE_SEARCH {
     take:
@@ -73,7 +74,6 @@ workflow PEPTIDE_DATABASE_SEARCH {
     (ch_id_files_msgf_feats, ch_id_files_comet_feats, ch_id_files_sage_feats) = [ channel.empty(), channel.empty(), channel.empty() ]
 
     if (params.skip_rescoring != true) {
-
         if (params.ms2features_enable == true){
             // Only add ms2_model_dir if it's actually set and not empty
             // Handle cases where parameter might be empty string, null, boolean true, or whitespace
@@ -139,55 +139,40 @@ workflow PEPTIDE_DATABASE_SEARCH {
 
                     MSRESCORE_FEATURES(msgf_features_input.mix(sage_features_input).mix(comet_features_input))
                     ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
-                    ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
+                    ch_id_files_feats = MSRESCORE_FEATURES.out.idparquet
 
 
                 }
             } else{
-                ch_id_msgf.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(channel.value("msgf")).set{ ch_id_msgf }
-                ch_id_comet.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(channel.value("comet")).set{ ch_id_comet }
-                ch_id_sage.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(channel.value("sage")).set{ ch_id_sage }
-
-                MSRESCORE_FEATURES(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage))
+                if (params.search_engines.tokenize(",").unique().size() > 1) {
+                    ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size())
+                    .combine(ch_mzmls_search, by: 0)
+                    .combine(ms2_model_dir).set{ ch_id_rescoring }
+                } else {
+                    ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).combine(ch_mzmls_search, by: 0)
+                        .combine(ms2_model_dir).set{ ch_id_rescoring }
+                }
+                MSRESCORE_FEATURES(ch_id_rescoring)
                 ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
-                ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
+                ch_id_files_feats = MSRESCORE_FEATURES.out.idparquet
             }
 
             // Add SNR features to percolator
             if (params.ms2features_snr) {
                 SPECTRUM_FEATURES(ch_id_files_feats.combine(ch_mzmls_search, by: 0))
-                ch_id_files_feats_snr = SPECTRUM_FEATURES.out.id_files_snr
+                ch_id_files_out = SPECTRUM_FEATURES.out.id_files_snr
                 ch_versions = ch_versions.mix(SPECTRUM_FEATURES.out.versions)
             } else {
-                ch_id_files_feats_snr = ch_id_files_feats
+                ch_id_files_out = ch_id_files_feats
             }
 
-            ch_id_files_feats_snr
-                .branch { _meta, _file_name, engine_name ->
-                    msgf: engine_name == "msgf"
-                    comet: engine_name == "comet"
-                    sage: engine_name == "sage"
-                }
-                .set {ch_id_files_feats_branch}
-            ch_id_files_feats_branch.msgf.map { v -> [v[0], v[1]] }.set {ch_id_files_msgf_feats}
-            ch_id_files_feats_branch.comet.map {it -> [it[0], it[1]]}.set {ch_id_files_comet_feats}
-            ch_id_files_feats_branch.sage.map {it -> [it[0], it[1]]}.set {ch_id_files_sage_feats}
-
+        } else if (params.search_engines.tokenize(",").unique().size() > 1) {
+            EXTRACTPSMFEATURES(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size()))
+            ch_id_files_out = EXTRACTPSMFEATURES.out.id_files_feat
         } else {
-            ch_id_files_msgf_feats = ch_id_msgf
-            ch_id_files_comet_feats = ch_id_comet
-            ch_id_files_sage_feats = ch_id_sage
+            ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         }
-
-        ch_id_files_out = ch_id_files_msgf_feats.mix(ch_id_files_comet_feats).mix(ch_id_files_sage_feats)
-
-
+        
     } else if (params.psm_clean == true) {
         ch_id_files = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         PSM_CLEAN(ch_id_files.combine(ch_mzmls_search, by: 0))
