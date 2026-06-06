@@ -7,7 +7,7 @@ process MSRESCORE_FINE_TUNING {
         'ghcr.io/bigbio/quantms-rescoring:0.0.16' }"
 
     input:
-    tuple val(meta), path(idxml), path(mzml), val(groupkey), path(ms2_model_dir)
+    tuple val(meta), path(idparquet), path(mzml), val(groupkey), path(ms2_model_dir)
 
     output:
     tuple val(groupkey), path("retained_ms2.pth") , emit: model_weight
@@ -49,7 +49,7 @@ process MSRESCORE_FINE_TUNING {
 
     """
     rescoring transfer_learning \\
-        --idxml ./ \\
+        --idparquet ${idparquet.join(' --idparquet ')} \\
         --mzml ./ \\
         --save_model_dir ./ \\
         --ms2_tolerance $ms2_tolerance \\
