@@ -7,10 +7,10 @@ process SPECTRUM_FEATURES {
         'ghcr.io/bigbio/quantms-rescoring:0.0.17' }"
 
     input:
-    tuple val(meta), path(id_file), val(search_engine), path(ms_file)
+    tuple val(meta), path(id_file), path(ms_file)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_snr.idparquet"), val(search_engine), emit: id_files_snr
+    tuple val(meta), path("${id_file.baseName}_snr.idparquet"), emit: id_files_snr
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
