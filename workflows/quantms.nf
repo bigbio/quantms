@@ -9,10 +9,9 @@ include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipe
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_quantms_pipeline'
 
-// Main subworkflows imported from the pipeline TMT, LFQ, DIA
+// Main subworkflows imported from the pipeline TMT, LFQ
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
-include { DIA } from './dia'
 
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 include { INPUT_CHECK } from '../subworkflows/local/input_check/main'
@@ -61,14 +60,13 @@ workflow QUANTMS {
     // SUBWORKFLOW: File preparation
     //
     FILE_PREPARATION(
-        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq)
     )
 
     ch_versions = ch_versions.mix(FILE_PREPARATION.out.versions)
 
     FILE_PREPARATION.out.results
         .branch { item ->
-            dia: item[0].acquisition_method.contains("dia")
             iso: item[0].labelling_type.contains("tmt") || item[0].labelling_type.contains("itraq")
             lfq: item[0].labelling_type.contains("label free")
         }
@@ -151,14 +149,6 @@ workflow QUANTMS {
         ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
         ch_versions = ch_versions.mix(LFQ.out.versions)
 
-        DIA(
-            ch_fileprep_result.dia,
-            CREATE_INPUT_CHANNEL.out.ch_expdesign,
-        )
-        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
-        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report_parquet)
-        ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
-        ch_versions = ch_versions.mix(DIA.out.versions)
     }
 
     // Other subworkflow will return null when performing another subworkflow due to unknown reason.

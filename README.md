@@ -16,7 +16,11 @@
 
 ## Introduction
 
-**bigbio/quantms** is a bioinformatics best-practice analysis pipeline for Quantitative Mass Spectrometry (MS). Currently, the workflow supports three major MS-based analytical methods: (i) Data dependant acquisition (DDA) label-free and Isobaric quantitation (e.g. TMT, iTRAQ); (ii) Data independent acquisition (DIA) label-free quantification (for details see our in-depth documentation on [quantms](https://quantms.readthedocs.io/en/latest/)).
+> [!WARNING]
+> **DIA (Data Independent Acquisition) support has been moved to a dedicated pipeline.**
+> For DIA proteomics data, please use [quantmsdiann](https://github.com/bigbio/quantmsdiann).
+
+**bigbio/quantms** is a bioinformatics best-practice analysis pipeline for Quantitative Mass Spectrometry (MS). Currently, the workflow supports two major MS-based analytical methods: (i) Data dependant acquisition (DDA) label-free quantification; (ii) Isobaric quantitation (e.g. TMT, iTRAQ) (for details see our in-depth documentation on [quantms](https://quantms.readthedocs.io/en/latest/)).
 
 <p align="center">
     <img src="docs/images/quantms.png" alt="bigbio/quantms workflow overview" width="60%">
@@ -24,11 +28,11 @@
 
 The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
 
-On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/quantms/results). This gives you a hint on which reports and file types are produced by the pipeline in a standard run. The automatic continuous integration tests on every pull request evaluate different workflows, including peptide identification, quantification for LFQ, LFQ-DIA, and TMT test datasets.
+On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/quantms/results). This gives you a hint on which reports and file types are produced by the pipeline in a standard run. The automatic continuous integration tests on every pull request evaluate different workflows, including peptide identification, quantification for LFQ and TMT test datasets.
 
 ## Pipeline summary
 
-**bigbio/quantms** allows uses to perform analyses of three main types of analytical mass spectrometry-based quantitative methods: DDA-LFQ, DDA-ISO, DIA-LFQ. Each of these workflows share some processes but also includes their own steps. In summary:
+**bigbio/quantms** allows uses to perform analyses of two main types of analytical mass spectrometry-based quantitative methods: DDA-LFQ and DDA-ISO. Each of these workflows share some processes but also includes their own steps. In summary:
 
 ### DDA-LFQ (data-dependent label-free quantification)
 
@@ -57,14 +61,6 @@ On release, automated continuous integration tests run the pipeline on a full-si
 10. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 11. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
 
-### DIA-LFQ (data-independent label-free quantification)
-
-1. RAW file conversion to mzML when RAW as input([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
-2. Performing an [optional step](https://github.com/bigbio/quantms/blob/HEAD/modules/local/utils/tdf2mzml/main.nf): Converting .d to mzML when bruker data as input and set `convert_dotd` to true
-3. DIA-NN analysis [`dia-nn`](https://github.com/vdemichev/DiaNN/)
-4. Generation of output files (msstats)
-5. QC reports generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
-
 ### Functionality overview
 
 A graphical overview of suggested routes through the pipeline depending on context can be seen below.
@@ -85,7 +81,6 @@ The pipeline supports the following mass spectrometry data file formats:
 - **`.raw`** - Thermo RAW files (automatically converted to mzML)
 - **`.mzML`** - Open standard mzML files
 - **`.d`** - Bruker timsTOF files (optionally converted to mzML when `--convert_dotd` is set)
-- **`.dia`** - DIA-NN native binary format (passed through without conversion)
 
 Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
 

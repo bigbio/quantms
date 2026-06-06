@@ -8,7 +8,6 @@ workflow PSM_RESCORING {
     take:
     ch_id_files_feats
 
-
     main:
     ch_software_versions = channel.empty()
     PERCOLATOR(ch_id_files_feats)

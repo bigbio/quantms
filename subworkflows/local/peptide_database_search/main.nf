@@ -171,55 +171,18 @@ workflow PEPTIDE_DATABASE_SEARCH {
             ch_id_files_out = EXTRACTPSMFEATURES.out.id_files_feat
         } else {
             ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
-             }
-        if (params.ms2features_range == "by_sample") {
-            // Sample map
-            GET_SAMPLE(ch_expdesign)
-            ch_versions = ch_versions.mix(GET_SAMPLE.out.versions)
-            ch_expdesign_sample = GET_SAMPLE.out.ch_expdesign_sample
-            ch_expdesign_sample.splitCsv(header: true, sep: '\t')
-                .map { v -> get_sample_map(v) }.set{ sample_map_idv }
-
-            ch_id_files_out.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_out_feats }
-            ch_id_files_out.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_out_feats }
-
-            // ID_MERGER for samples group
-            ID_MERGER(ch_id_files_out_feats.groupTuple(by: 2))
-            ch_versions = ch_versions.mix(ID_MERGER.out.versions)
-            ch_id_files_feature_out = ID_MERGER.out.id_merged
-        } else if (params.ms2features_range == "by_project") {
-            ch_id_files_out.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_out_feats }
-
-            // ID_MERGER for whole experiments
-            ID_MERGER(ch_id_files_out_feats.groupTuple(by: 2))
-            ch_versions = ch_versions.mix(ID_MERGER.out.versions)
-            ch_id_files_feature_out = ID_MERGER.out.id_merged
-        } else {
-            ch_id_files_feature_out = ch_id_files_out
         }
         
-
     } else if (params.psm_clean == true) {
         ch_id_files = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         PSM_CLEAN(ch_id_files.combine(ch_mzmls_search, by: 0))
-        ch_id_files_feature_out = PSM_CLEAN.out.idxml
+        ch_id_files_out = PSM_CLEAN.out.idxml
         ch_versions = ch_versions.mix(PSM_CLEAN.out.versions)
     } else {
-        ch_id_files_feature_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
+        ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
     }
 
     emit:
-    ch_id_files_idx = ch_id_files_feature_out
+    ch_id_files_idx = ch_id_files_out
     versions        = ch_versions
-}
-
-// Function to get sample map
-def get_sample_map(LinkedHashMap row) {
-
-    def filestr               = row.Spectra_Filepath
-    def file_name             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
-    def sample                = row.Sample
-
-    return [file_name, sample]
-
 }
