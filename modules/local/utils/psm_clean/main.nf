@@ -25,9 +25,9 @@ process PSM_CLEAN {
     rescoring psm_feature_clean \\
         --idparquet $idparquet \\
         --mzml $mzml \\
-        --output ${idxml.baseName}_clean.idparquet \\
+        --output ${idparquet.baseName}_clean.idparquet \\
         $args \\
-        2>&1 | tee ${idxml.baseName}_clean.log
+        2>&1 | tee ${idparquet.baseName}_clean.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
