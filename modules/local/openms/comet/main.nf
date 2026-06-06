@@ -4,14 +4,14 @@ process COMET {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:latest' :
+        'ghcr.io/openms/openms-tools-thirdparty:latest' }"
 
     input:
     tuple val(meta), path(mzml_file), path(database)
 
     output:
-    tuple val(meta), path("${mzml_file.baseName}_comet.idXML"),  emit: id_files_comet
+    tuple val(meta), path("${mzml_file.baseName}_comet.idparquet"),  emit: id_files_comet
     path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
@@ -82,7 +82,7 @@ process COMET {
     """
     CometAdapter \\
         -in ${mzml_file} \\
-        -out ${mzml_file.baseName}_comet.idXML \\
+        -out ${mzml_file.baseName}_comet.idparquet \\
         -threads $task.cpus \\
         -database "${database}" \\
         -instrument ${inst} \\

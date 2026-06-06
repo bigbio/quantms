@@ -5,8 +5,8 @@ process ID_FILTER {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:latest' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:latest' }"
 
     input:
     tuple val(meta), path(id_file), val(score_type)

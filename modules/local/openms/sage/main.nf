@@ -4,8 +4,8 @@ process SAGE {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:latest' :
+        'ghcr.io/openms/openms-tools-thirdparty:latest' }"
 
     input:
     tuple val(key), val(batch), val(metas), path(mzml_files), path(database)
@@ -18,7 +18,7 @@ process SAGE {
     script:
     def meta             = metas[0] // due to groupTuple they should all be the same (TODO check to use groupBy?)
     // Make sure that the output order is consistent with the meta ids
-    meta_order_files     = metas.collect{ m -> m.mzml_id.toString() + "*_sage.idXML" }
+    meta_order_files     = metas.collect{ m -> m.mzml_id.toString() + "*_sage.idparquet" }
     def args             = task.ext.args ?: ''
     enzyme               = meta.enzyme
     outname              = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
@@ -29,7 +29,7 @@ process SAGE {
     export SAGE_LOG=trace
     SageAdapter \\
         -in ${mzml_files} \\
-        -out ${outname}_sage.idXML \\
+        -out ${outname}_sage.idparquet \\
         -threads $task.cpus \\
         -database "${database}" \\
         -decoy_prefix $params.decoy_string \\
@@ -60,11 +60,11 @@ process SAGE {
         2>&1 | tee ${outname}_sage.log
 
     if [[ ${mzml_files.size()} -ge 2 ]]; then
-        IDRipper -in ${outname}_sage.idXML -out . -split_ident_runs
-        rm ${outname}_sage.idXML
-        for f in *.idXML
+        IDRipper -in ${outname}_sage.idparquet -out . -split_ident_runs
+        rm -r ${outname}_sage.idparquet
+        for f in *.idparquet
         do
-            mv "\$f" "\${f%.*}_sage.idXML"
+            mv "\$f" "\${f%.*}_sage.idparquet"
         done
     fi
 

@@ -6,9 +6,8 @@ include { SAGE  } from '../../../modules/local/openms/sage/main'
 include { PSM_CLEAN            } from '../../../modules/local/utils/psm_clean/main'
 include { MSRESCORE_FINE_TUNING} from '../../../modules/local/utils/msrescore_fine_tuning/main'
 include { MSRESCORE_FEATURES   } from '../../../modules/local/utils/msrescore_features/main'
-include { GET_SAMPLE           } from '../../../modules/local/utils/extract_sample/main'
 include { SPECTRUM_FEATURES    } from '../../../modules/local/utils/spectrum_features/main'
-include { ID_MERGER            } from '../../../modules/local/openms/id_merger/main'
+include { EXTRACTPSMFEATURES           } from '../../../modules/local/openms/extractfeatures/main'
 
 workflow PEPTIDE_DATABASE_SEARCH {
     take:
@@ -75,7 +74,6 @@ workflow PEPTIDE_DATABASE_SEARCH {
     (ch_id_files_msgf_feats, ch_id_files_comet_feats, ch_id_files_sage_feats) = [ channel.empty(), channel.empty(), channel.empty() ]
 
     if (params.skip_rescoring != true) {
-
         if (params.ms2features_enable == true){
             // Only add ms2_model_dir if it's actually set and not empty
             // Handle cases where parameter might be empty string, null, boolean true, or whitespace
@@ -141,52 +139,39 @@ workflow PEPTIDE_DATABASE_SEARCH {
 
                     MSRESCORE_FEATURES(msgf_features_input.mix(sage_features_input).mix(comet_features_input))
                     ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
-                    ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
+                    ch_id_files_feats = MSRESCORE_FEATURES.out.idparquet
 
 
                 }
             } else{
-                ch_id_msgf.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(channel.value("msgf")).set{ ch_id_msgf }
-                ch_id_comet.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(channel.value("comet")).set{ ch_id_comet }
-                ch_id_sage.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(channel.value("sage")).set{ ch_id_sage }
-
-                MSRESCORE_FEATURES(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage))
+                if (params.search_engines.tokenize(",").unique().size() > 1) {
+                    ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size())
+                    .combine(ch_mzmls_search, by: 0)
+                    .combine(ms2_model_dir).set{ ch_id_rescoring }
+                } else {
+                    ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).combine(ch_mzmls_search, by: 0)
+                        .combine(ms2_model_dir).set{ ch_id_rescoring }
+                }
+                MSRESCORE_FEATURES(ch_id_rescoring)
                 ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
-                ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
+                ch_id_files_feats = MSRESCORE_FEATURES.out.idparquet
             }
 
             // Add SNR features to percolator
             if (params.ms2features_snr) {
                 SPECTRUM_FEATURES(ch_id_files_feats.combine(ch_mzmls_search, by: 0))
-                ch_id_files_feats_snr = SPECTRUM_FEATURES.out.id_files_snr
+                ch_id_files_out = SPECTRUM_FEATURES.out.id_files_snr
                 ch_versions = ch_versions.mix(SPECTRUM_FEATURES.out.versions)
             } else {
-                ch_id_files_feats_snr = ch_id_files_feats
+                ch_id_files_out = ch_id_files_feats
             }
 
-            ch_id_files_feats_snr
-                .branch { _meta, _file_name, engine_name ->
-                    msgf: engine_name == "msgf"
-                    comet: engine_name == "comet"
-                    sage: engine_name == "sage"
-                }
-                .set {ch_id_files_feats_branch}
-            ch_id_files_feats_branch.msgf.map { v -> [v[0], v[1]] }.set {ch_id_files_msgf_feats}
-            ch_id_files_feats_branch.comet.map {it -> [it[0], it[1]]}.set {ch_id_files_comet_feats}
-            ch_id_files_feats_branch.sage.map {it -> [it[0], it[1]]}.set {ch_id_files_sage_feats}
-
+        } else if (params.search_engines.tokenize(",").unique().size() > 1) {
+            EXTRACTPSMFEATURES(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size()))
+            ch_id_files_out = EXTRACTPSMFEATURES.out.id_files_feat
         } else {
-            ch_id_files_msgf_feats = ch_id_msgf
-            ch_id_files_comet_feats = ch_id_comet
-            ch_id_files_sage_feats = ch_id_sage
-        }
-
+            ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
+             }
         if (params.ms2features_range == "by_sample") {
             // Sample map
             GET_SAMPLE(ch_expdesign)
@@ -195,50 +180,36 @@ workflow PEPTIDE_DATABASE_SEARCH {
             ch_expdesign_sample.splitCsv(header: true, sep: '\t')
                 .map { v -> get_sample_map(v) }.set{ sample_map_idv }
 
-            ch_id_files_msgf_feats.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_msgf_feats }
-            ch_id_files_msgf_feats.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_msgf_feats }
-
-            ch_id_files_comet_feats.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_comet_feats }
-            ch_id_files_comet_feats.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_comet_feats }
-
-            ch_id_files_sage_feats.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_sage_feats }
-            ch_id_files_sage_feats.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_sage_feats }
+            ch_id_files_out.map { v -> [v[0].mzml_id, v[0], v[1]] }.set { ch_id_files_out_feats }
+            ch_id_files_out.combine(sample_map_idv, by: 0).map { v -> [v[1], v[2], v[3]] }.set{ ch_id_files_out_feats }
 
             // ID_MERGER for samples group
-            ID_MERGER(ch_id_files_msgf_feats.groupTuple(by: 2)
-                .mix(ch_id_files_comet_feats.groupTuple(by: 2))
-                .mix(ch_id_files_sage_feats.groupTuple(by: 2))
-            )
+            ID_MERGER(ch_id_files_out_feats.groupTuple(by: 2))
             ch_versions = ch_versions.mix(ID_MERGER.out.versions)
-            ch_id_files_out = ID_MERGER.out.id_merged
-
+            ch_id_files_feature_out = ID_MERGER.out.id_merged
         } else if (params.ms2features_range == "by_project") {
-            ch_id_files_msgf_feats.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_msgf_feats }
-            ch_id_files_comet_feats.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_comet_feats }
-            ch_id_files_sage_feats.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_sage_feats }
+            ch_id_files_out.map { v -> [v[0].experiment_id, v[0], v[1]] }.set { ch_id_files_out_feats }
 
             // ID_MERGER for whole experiments
-            ID_MERGER(ch_id_files_msgf_feats.groupTuple(by: 2)
-                .mix(ch_id_files_comet_feats.groupTuple(by: 2))
-                .mix(ch_id_files_sage_feats.groupTuple(by: 2)))
+            ID_MERGER(ch_id_files_out_feats.groupTuple(by: 2))
             ch_versions = ch_versions.mix(ID_MERGER.out.versions)
-            ch_id_files_out = ID_MERGER.out.id_merged
+            ch_id_files_feature_out = ID_MERGER.out.id_merged
         } else {
-            ch_id_files_out = ch_id_files_msgf_feats.mix(ch_id_files_comet_feats).mix(ch_id_files_sage_feats)
+            ch_id_files_feature_out = ch_id_files_out
         }
-
+        
 
     } else if (params.psm_clean == true) {
         ch_id_files = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         PSM_CLEAN(ch_id_files.combine(ch_mzmls_search, by: 0))
-        ch_id_files_out = PSM_CLEAN.out.idxml
+        ch_id_files_feature_out = PSM_CLEAN.out.idxml
         ch_versions = ch_versions.mix(PSM_CLEAN.out.versions)
     } else {
-        ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
+        ch_id_files_feature_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
     }
 
     emit:
-    ch_id_files_idx = ch_id_files_out
+    ch_id_files_idx = ch_id_files_feature_out
     versions        = ch_versions
 }
 

@@ -1,16 +1,16 @@
 process MSRESCORE_FEATURES {
     tag "$meta.mzml_id"
-    label 'process_high'
+    label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.16' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.16' }"
+        'ghcr.io/bigbio/quantms-rescoring:0.0.17' }"
 
     input:
-    tuple val(meta), path(idxml), path(mzml), path(model_weight), val(search_engine)
+    tuple val(meta), path(id_files), path(mzml), path(model_weight)
 
     output:
-    tuple val(meta), path("*ms2rescore.idXML"), val(search_engine) , emit: idxml
+    tuple val(meta), path("*ms2rescore.idparquet"), emit: idparquet
     tuple val(meta), path("*.html" )                               , optional:true, emit: html
     path "versions.yml"                                            , emit: versions
     path "*.log"                                                   , emit: log
@@ -92,11 +92,11 @@ process MSRESCORE_FEATURES {
 
     """
     rescoring msrescore2feature \\
-        --idxml $idxml \\
+        --idparquet ${id_files.join(' --idparquet ')} \\
         --mzml $mzml \\
         --ms2_tolerance $ms2_tolerance \\
         --ms2_tolerance_unit $ms2_tolerance_unit \\
-        --output ${idxml.baseName}_ms2rescore.idXML \\
+        --output ${mzml.baseName}_ms2rescore.idparquet \\
         ${ms2_model_dir} \\
         --processes $task.cpus \\
         ${find_best_model} \\
@@ -104,7 +104,7 @@ process MSRESCORE_FEATURES {
         ${consider_modloss} \\
         ${debug_log_level} \\
         $args \\
-        2>&1 | tee ${idxml.baseName}_ms2rescore.log
+        2>&1 | tee ${mzml.baseName}_ms2rescore.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
