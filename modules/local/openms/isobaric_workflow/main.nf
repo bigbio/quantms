@@ -22,23 +22,6 @@ process ISOBARIC_WORKFLOW {
 
     script:
     def args = task.ext.args ?: ''
-    def extractBaseName = { filename ->
-        def name = filename.toString()
-        name = name.replaceAll(/\.mzML$/, '')
-
-        if (name.endsWith('.idparquet')) {
-            name = name.replaceAll(/\.idparquet$/, '')
-            name = name.replaceAll(/_(comet|msgf|sage|consensus)(_perc)?(_filter)?(_fdr)?$/, '')
-        }
-        return name
-    }
-
-    def mzml_sorted = mzmls.collect().sort{ a, b ->
-        extractBaseName(a.name) <=> extractBaseName(b.name)
-    }
-    def id_sorted = id_files.collect().sort{ a, b ->
-        extractBaseName(a.name) <=> extractBaseName(b.name)
-    }
 
     // Build isotope correction matrix argument if enabled
     def isotope_correction = ""
@@ -61,8 +44,8 @@ process ISOBARIC_WORKFLOW {
     """
     IsobaricWorkflow \\
         -threads ${task.cpus} \\
-        -in ${mzml_sorted.join(' ')} \\
-        -in_id ${id_sorted.join(' ')} \\
+        -in ${mzmls.join(' ')} \\
+        -in_id ${id_files.join(' ')} \\
         -exp_design ${expdes} \\
         -type ${labelling_type} \\
         -inference_method ${params.protein_inference_method} \\
