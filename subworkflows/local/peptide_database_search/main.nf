@@ -91,56 +91,28 @@ workflow PEPTIDE_DATABASE_SEARCH {
                 } else {
 
                     // Preparing train datasets and fine tuning MS2 model
-                    sage_train_datasets = ch_id_sage
+                    train_datasets = ch_id_sage.mix(ch_id_msgf).mix(ch_id_comet)
                         .combine(ch_mzmls_search, by: 0)
                         .toSortedList()
                         .flatMap()
                         .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(channel.value("sage"))
                         .groupTuple(by: 3)
 
-                    msgf_train_datasets = ch_id_msgf
-                        .combine(ch_mzmls_search, by: 0)
-                        .toSortedList()
-                        .flatMap()
-                        .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(channel.value("msgf"))
-                        .groupTuple(by: 3)
-
-                    comet_train_datasets = ch_id_comet
-                        .combine(ch_mzmls_search, by: 0)
-                        .toSortedList()
-                        .flatMap()
-                        .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(channel.value("comet"))
-                        .groupTuple(by: 3)
-
-                    sage_train_datasets.mix(msgf_train_datasets)
-                        .mix(comet_train_datasets)
-                        .combine(ms2_model_dir)
-                        .set { train_datasets }
-                    MSRESCORE_FINE_TUNING(train_datasets)
+                    MSRESCORE_FINE_TUNING(train_datasets.combine(ms2_model_dir))
                     ch_versions = ch_versions.mix(MSRESCORE_FINE_TUNING.out.versions)
 
-                    channel.value("msgf").combine(ch_id_msgf.combine(ch_mzmls_search, by: 0))
-                        .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { v -> [v[1], v[2], v[3], v[4], v[0] ] }
-                        .set { msgf_features_input }
+                    if (params.search_engines.tokenize(",").unique().size() > 1) {
+                        ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size())
+                        .combine(ch_mzmls_search, by: 0)
+                        .combine(MSRESCORE_FINE_TUNING.out.model_weight).set{ ch_id_rescoring }
+                    } else {
+                        ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).combine(ch_mzmls_search, by: 0)
+                            .combine(MSRESCORE_FINE_TUNING.out.model_weight).set{ ch_id_rescoring }
+                    }
 
-                    channel.value("sage").combine(ch_id_sage.combine(ch_mzmls_search, by: 0))
-                        .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { v -> [v[1], v[2], v[3], v[4], v[0] ] }
-                        .set { sage_features_input }
-
-                    channel.value("comet").combine(ch_id_comet.combine(ch_mzmls_search, by: 0))
-                        .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { v -> [v[1], v[2], v[3], v[4], v[0] ] }
-                        .set { comet_features_input }
-
-                    MSRESCORE_FEATURES(msgf_features_input.mix(sage_features_input).mix(comet_features_input))
+                    MSRESCORE_FEATURES(ch_id_rescoring)
                     ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
                     ch_id_files_feats = MSRESCORE_FEATURES.out.idparquet
-
 
                 }
             } else{
@@ -167,8 +139,8 @@ workflow PEPTIDE_DATABASE_SEARCH {
             }
 
         } else if (params.search_engines.tokenize(",").unique().size() > 1) {
-            EXTRACTPSMFEATURES(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size()))
-            ch_id_files_out = EXTRACTPSMFEATURES.out.id_files_feat
+            PSM_CLEAN(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size()).combine(ch_mzmls_search, by: 0))
+            ch_id_files_out = PSM_CLEAN.out.idparquet
         } else {
             ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         }
@@ -176,7 +148,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
     } else if (params.psm_clean == true) {
         ch_id_files = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         PSM_CLEAN(ch_id_files.combine(ch_mzmls_search, by: 0))
-        ch_id_files_out = PSM_CLEAN.out.idxml
+        ch_id_files_out = PSM_CLEAN.out.idparquet
         ch_versions = ch_versions.mix(PSM_CLEAN.out.versions)
     } else {
         ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
