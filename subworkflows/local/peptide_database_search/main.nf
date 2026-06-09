@@ -91,7 +91,18 @@ workflow PEPTIDE_DATABASE_SEARCH {
                 } else {
 
                     // Preparing train datasets and fine tuning MS2 model
-                    train_datasets = ch_id_sage.mix(ch_id_msgf).mix(ch_id_comet)
+                    // Randomly select one search engine for fine-tuning sampling
+                    engine_opts = []
+                    if (params.search_engines.contains("sage"))  engine_opts.add("sage")
+                    if (params.search_engines.contains("msgf"))  engine_opts.add("msgf")
+                    if (params.search_engines.contains("comet")) engine_opts.add("comet")
+                    selected_engine = engine_opts[new Random(2025).nextInt(engine_opts.size())]
+
+                    ch_selected_engine = (selected_engine == "sage") ? ch_id_sage :
+                                        (selected_engine == "msgf") ? ch_id_msgf :
+                                        ch_id_comet
+
+                    train_datasets = ch_selected_engine
                         .combine(ch_mzmls_search, by: 0)
                         .toSortedList()
                         .flatMap()
