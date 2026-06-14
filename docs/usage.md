@@ -97,7 +97,11 @@ Starting with version 1.7.0, luciphor-specific parameters have been replaced wit
 | `onsite_decoy_mass`              | `null`     | Mass to add to an amino acid to make it a decoy (replaces `luciphor_decoy_mass`)                      |
 | `onsite_decoy_neutral_losses`    | `null`     | List of neutral losses for decoy sequences (replaces `luciphor_decoy_neutral_losses`)                 |
 | `onsite_threads`                 | `1`        | Number of threads for onsite processing                                                               |
-| `onsite_min_psms`                | `5`        | Minimum number of high-scoring PSMs for lucxor model training                                         |
+| `onsite_rt_tolerance`            | `0.01`     | RT tolerance for PTM localization                                                                     |
+| `onsite_modeling_score_threshold` | `0.95`     | Modeling score threshold for LucXor model training                                                    |
+| `onsite_scoring_threshold`       | `0.0`      | Scoring threshold for PTM localization                                                                |
+| `onsite_target_modifications`    | `null`     | Comma-separated list of target modifications to search for (defaults to `mod_localization` value)     |
+| `onsite_min_num_psms_model`      | `5`        | Minimum number of high-scoring PSMs for lucxor model training                                         |
 | `onsite_disable_split_by_charge` | `false`    | Disable splitting PSMs by charge state for lucxor                                                     |
 | `onsite_compute_all_scores`      | `false`    | Compute all scores for all candidate sites                                                            |
 
