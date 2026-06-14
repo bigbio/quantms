@@ -1,0 +1,29 @@
+name: preprocess_expdesign
+description: Preprocess experimental design files for OpenMS compatibility
+keywords:
+  - experimental design
+  - preprocessing
+  - openms
+tools:
+  - preprocess_expdesign
+input:
+  - meta: design
+    type: file
+    description: Experimental design file
+    pattern: "*.{tsv,txt}"
+output:
+  - meta: ch_expdesign
+    type: file
+    description: Preprocessed experimental design file for OpenMS
+    pattern: "*_openms_design.tsv"
+  - meta: ch_config
+    type: file
+    description: Configuration file extracted from experimental design
+    pattern: "*_config.tsv"
+  - meta: versions
+    type: file
+    description: File containing software versions
+    pattern: "versions.yml"
+authors:
+  - "@nf-core"
+  - "@bigbio"

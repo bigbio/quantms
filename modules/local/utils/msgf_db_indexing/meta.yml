@@ -1,0 +1,32 @@
+name: msgf_db_indexing
+description: Indexing the database prior to the database search for MS-GF+.
+keywords:
+  - Indexing
+  - database
+  - msgf
+tools:
+  - msgf_plus:
+      description: |
+        The MS-GF+ protein identification (database search) engine.
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_MSGFPlusAdapter.html
+input:
+  - database:
+      type: file
+      description: fasta file
+      pattern: "*.{fasta,fa}"
+output:
+  - msgfdb_idx:
+      type: file
+      description: Database indexing files
+      pattern: "*.{cnlcp,canno,csarr,cseq}"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"

@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "id"
+description: Subworkflow for protein identification using various search engines
+keywords:
+  - identification
+  - proteomics
+  - search
+  - engine
+components:
+  - consensusid
+  - peptide_database_search
+  - psm_rescoring
+  - psm_fdr_control
+  - phospho_scoring
+input:
+  - ch_input:
+      type: file
+      description: |
+        Channel containing input files for identification
+  - ch_database:
+      type: file
+      description: |
+        Channel containing protein database files
+output:
+  - ch_identifications:
+      type: file
+      description: |
+        Channel containing identification results
+  - versions:
+      type: file
+      description: |
+        Software versions used in this subworkflow
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"

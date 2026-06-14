@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "input_check"
+description: Subworkflow for validating and checking input files and parameters
+keywords:
+  - input
+  - validation
+  - check
+  - parameters
+components:
+  - samplesheet/check
+input:
+  - input_file:
+      type: file
+      description: |
+        Input file to be validated
+output:
+  - ch_input_file:
+      type: file
+      description: |
+        Channel containing validated input files
+  - versions:
+      type: file
+      description: |
+        Software versions used in this subworkflow
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"

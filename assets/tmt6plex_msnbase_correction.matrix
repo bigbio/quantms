@@ -1,0 +1,9 @@
+# comment: tmt6plex from MSnbase
+# comment: https://github.com/lgatto/MSnbase/blob/master/inst/extdata/TMT6plexPurityCorrections.csv
+channel/<-2Da>/<-1Da>/<+1Da>/<+2Da>
+126/0.0/0.0/6.1/0.0
+127/0.0/0.5/6.7/0.0
+128/0.0/1.1/4.2/0.0
+129/0.0/1.7/4.1/0.0
+130/0.0/1.6/2.1/0.0
+131/0.2/3.2/2.8/0.0

@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "pipeline_completion"
+description: Subworkflow for utils in the nf-core quantms pipeline
+keywords:
+  - utils
+  - nf-core
+  - quantms
+components:
+  - completionemail
+  - completionsummary
+  - imnotification
+  - utils_nextflow_pipeline
+  - utils_nfcore_pipeline
+  - utils_nfschema_plugin
+input:
+  - ch_input:
+      type: file
+      description: |
+        Channel containing input files for FDR control
+output:
+  - ch_fdr_results:
+      type: file
+      description: |
+        Channel containing FDR-controlled results
+  - versions:
+      type: file
+      description: |
+        Software versions used in this subworkflow
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"

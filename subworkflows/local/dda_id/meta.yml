@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "dda_id"
+description: Subworkflow for Data-Dependent Acquisition (DDA) protein identification
+keywords:
+  - dda
+  - identification
+  - proteomics
+  - msms
+components:
+  - consensusid
+  - percolator
+  - id/merger
+  - id/ripper
+  - psm/conversion
+  - msrescore/features
+  - get/sample
+  - spectrum/features
+  - psm/clean
+  - peptide_database_search
+  - psm_fdr_control
+  - phospho_scoring
+input:
+  - ch_input:
+      type: file
+      description: |
+        Channel containing input files for DDA analysis
+  - ch_database:
+      type: file
+      description: |
+        Channel containing protein database files
+  - ch_ms2_statistics:
+      type: file
+      description: |
+        Channel containing MS2 statistics
+  - ch_expdesign:
+      type: file
+      description: |
+        Channel containing experimental design information
+output:
+  - ch_pmultiqc_ids:
+      type: file
+      description: |
+        Channel containing identification results for MultiQC
+  - ch_pmultiqc_consensus:
+      type: file
+      description: |
+        Channel containing consensus results for MultiQC
+  - versions:
+      type: file
+      description: |
+        Software versions used in this subworkflow
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"

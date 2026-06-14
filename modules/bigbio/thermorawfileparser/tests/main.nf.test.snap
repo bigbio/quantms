@@ -1,0 +1,34 @@
+{
+    "versions_stub": {
+        "content": [
+            [
+                [
+                    "THERMORAWFILEPARSER",
+                    "thermorawfileparser",
+                    "1.4.5"
+                ]
+            ]
+        ],
+        "timestamp": "2026-03-20T12:41:22.8183",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
+    },
+    "versions": {
+        "content": [
+            [
+                [
+                    "THERMORAWFILEPARSER",
+                    "thermorawfileparser",
+                    "1.4.5"
+                ]
+            ]
+        ],
+        "timestamp": "2026-03-20T12:36:30.88531",
+        "meta": {
+            "nf-test": "0.9.4",
+            "nextflow": "25.10.4"
+        }
+    }
+}
