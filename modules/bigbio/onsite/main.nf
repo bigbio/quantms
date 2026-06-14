@@ -1,5 +1,5 @@
 process ONSITE {
-    tag "${meta.id}"
+    tag "${meta.mzml_id}"
     label 'process_medium'
     label 'onsite'
 
@@ -20,7 +20,7 @@ process ONSITE {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
     // Algorithm selection: lucxor (default), ascore, or phosphors
     def algorithm = params.onsite_algorithm ?: 'lucxor'
@@ -42,7 +42,7 @@ process ONSITE {
 
     if (algorithm == 'ascore') {
         // AScore: uses -in, -id, -out, --fragment-mass-unit
-        fragment_unit = params.onsite_fragment_unit ?: 'Da'
+        fragment_unit = params.onsite_fragment_error_units ?: 'Da'
         def optional_flags = [add_decoys, compute_all_scores, debug].findAll { a -> a }.join(' \\\n            ')
         algorithm_cmd = """
         onsite ascore \\
@@ -55,7 +55,7 @@ process ONSITE {
     }
     else if (algorithm == 'phosphors') {
         // PhosphoRS: uses -in, -id, -out, --fragment-mass-unit
-        fragment_unit = params.onsite_fragment_unit ?: 'Da'
+        fragment_unit = params.onsite_fragment_error_units ?: 'Da'
         def optional_flags = [add_decoys, compute_all_scores, debug].findAll { a -> a }.join(' \\\n            ')
         algorithm_cmd = """
         onsite phosphors \\
@@ -82,10 +82,10 @@ process ONSITE {
         def disable_split_by_charge = params.onsite_disable_split_by_charge ? '--disable-split-by-charge' : ''
 
         // Optional target modifications - default for LucXor includes decoy
-        def target_mods = params.onsite_target_modifications ? "--target-modifications ${params.onsite_target_modifications}" : "--target-modifications 'Phospho(S),Phospho(T),Phospho(Y),PhosphoDecoy(A)'"
-        def neutral_losses = params.onsite_neutral_losses ? "--neutral-losses ${params.onsite_neutral_losses}" : "--neutral-losses 'sty -H3PO4 -97.97690'"
+        def target_mods = params.onsite_target_modifications ? "--target-modifications '${params.onsite_target_modifications}'" : "--target-modifications 'Phospho(S),Phospho(T),Phospho(Y),PhosphoDecoy(A)'"
+        def neutral_losses = params.onsite_neutral_losses ? "--neutral-losses '${params.onsite_neutral_losses}'" : "--neutral-losses 'sty -H3PO4 -97.97690'"
         def decoy_mass = params.onsite_decoy_mass ? "--decoy-mass ${params.onsite_decoy_mass}" : "--decoy-mass 79.966331"
-        def decoy_losses = params.onsite_decoy_neutral_losses ? "--decoy-neutral-losses ${params.onsite_decoy_neutral_losses}" : "--decoy-neutral-losses 'X -H3PO4 -97.97690'"
+        def decoy_losses = params.onsite_decoy_neutral_losses ? "--decoy-neutral-losses '${params.onsite_decoy_neutral_losses}'" : "--decoy-neutral-losses 'X -H3PO4 -97.97690'"
 
         def optional_flags = [disable_split_by_charge, compute_all_scores, debug].findAll { a -> a }.join(' \\\n            ')
         algorithm_cmd = """
