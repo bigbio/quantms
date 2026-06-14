@@ -4,4 +4,4 @@ contact_links:
     about: Please join the nf-core community here
   - name: "Slack #quantms channel"
     url: https://nfcore.slack.com/channels/quantms
-    about: Discussion about the nf-core/quantms pipeline
+    about: Discussion about the bigbio/quantms pipeline
