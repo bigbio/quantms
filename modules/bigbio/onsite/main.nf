@@ -1,23 +1,26 @@
 process ONSITE {
-    tag "$meta.mzml_id"
+    tag "${meta.id}"
     label 'process_medium'
     label 'onsite'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/pyonsite:0.0.2--pyhdfd78af_0' :
-        'quay.io/biocontainers/pyonsite:0.0.2--pyhdfd78af_0' }"
+    container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
+        ? 'oras://ghcr.io/bigbio/pyonsite-sif:0.0.3'
+        : 'ghcr.io/bigbio/pyonsite:0.0.3'}"
 
     input:
     tuple val(meta), path(mzml_file), path(id_file)
 
     output:
-    tuple val(meta), path("${id_file.baseName}_*.idXML"), emit: ptm_in_id_onsite
+    tuple val(meta), path("${prefix}_*.idparquet"), emit: ptm_in_id_onsite
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     // Algorithm selection: lucxor (default), ascore, or phosphors
     def algorithm = params.onsite_algorithm ?: 'lucxor'
@@ -40,28 +43,31 @@ process ONSITE {
     if (algorithm == 'ascore') {
         // AScore: uses -in, -id, -out, --fragment-mass-unit
         fragment_unit = params.onsite_fragment_unit ?: 'Da'
-        def optional_flags = [add_decoys, compute_all_scores, debug].findAll { it }.join(' \\\n            ')
+        def optional_flags = [add_decoys, compute_all_scores, debug].findAll { a -> a }.join(' \\\n            ')
         algorithm_cmd = """
         onsite ascore \\
             -in ${mzml_file} \\
             -id ${id_file} \\
-            -out ${id_file.baseName}_ascore.idXML \\
+            -out ${prefix}_ascore.idparquet \\
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-mass-unit ${fragment_unit}${optional_flags ? ' \\\n            ' + optional_flags : ''}
         """
-    } else if (algorithm == 'phosphors') {
+    }
+    else if (algorithm == 'phosphors') {
         // PhosphoRS: uses -in, -id, -out, --fragment-mass-unit
         fragment_unit = params.onsite_fragment_unit ?: 'Da'
-        def optional_flags = [add_decoys, compute_all_scores, debug].findAll { it }.join(' \\\n            ')
+        def optional_flags = [add_decoys, compute_all_scores, debug].findAll { a -> a }.join(' \\\n            ')
         algorithm_cmd = """
         onsite phosphors \\
             -in ${mzml_file} \\
             -id ${id_file} \\
-            -out ${id_file.baseName}_phosphors.idXML \\
+            -out ${prefix}_phosphors.idparquet \\
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-mass-unit ${fragment_unit}${optional_flags ? ' \\\n            ' + optional_flags : ''}
+            ${args}
         """
-    } else if (algorithm == 'lucxor') {
+    }
+    else if (algorithm == 'lucxor') {
         // LucXor: uses -in, -id, -out, --fragment-error-units (note: error-units not mass-unit)
         fragment_unit = params.onsite_fragment_error_units ?: 'Da'
         def fragment_method = params.onsite_fragment_method ?: 'CID'
@@ -81,12 +87,12 @@ process ONSITE {
         def decoy_mass = params.onsite_decoy_mass ? "--decoy-mass ${params.onsite_decoy_mass}" : "--decoy-mass 79.966331"
         def decoy_losses = params.onsite_decoy_neutral_losses ? "--decoy-neutral-losses ${params.onsite_decoy_neutral_losses}" : "--decoy-neutral-losses 'X -H3PO4 -97.97690'"
 
-        def optional_flags = [disable_split_by_charge, compute_all_scores, debug].findAll { it }.join(' \\\n            ')
+        def optional_flags = [disable_split_by_charge, compute_all_scores, debug].findAll { a -> a }.join(' \\\n            ')
         algorithm_cmd = """
         onsite lucxor \\
             -in ${mzml_file} \\
             -id ${id_file} \\
-            -out ${id_file.baseName}_lucxor.idXML \\
+            -out ${prefix}_lucxor.idparquet \\
             --fragment-method ${fragment_method} \\
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-error-units ${fragment_unit} \\
@@ -103,16 +109,17 @@ process ONSITE {
             --min-num-psms-model ${min_num_psms} \\
             --rt-tolerance ${rt_tolerance}${optional_flags ? ' \\\n            ' + optional_flags : ''}
         """
-    } else {
-        error "Unknown onsite algorithm: ${algorithm}. Supported algorithms: ascore, phosphors, lucxor"
+    }
+    else {
+        error("Unknown onsite algorithm: ${algorithm}. Supported algorithms: ascore, phosphors, lucxor")
     }
 
     """
-    ${algorithm_cmd.trim()} 2>&1 | tee ${id_file.baseName}_${algorithm}.log
+    ${algorithm_cmd.trim()} 2>&1 | tee ${prefix}_${algorithm}.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        onsite: \$(onsite --version 2>&1 | grep -oP 'version \\K[0-9.]+' || echo "unknown")
+        onsite: \$(onsite --version 2>&1 | grep -oE 'version \\K[0-9.]+' || echo "unknown")
         algorithm: ${algorithm}
     END_VERSIONS
     """

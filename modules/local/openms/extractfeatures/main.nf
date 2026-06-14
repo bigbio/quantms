@@ -5,7 +5,7 @@ process EXTRACTPSMFEATURES {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:latest' :
+        'oras://ghcr.io/openms/openms-tools-thirdparty-sif:latest' :
         'ghcr.io/openms/openms-tools-thirdparty:latest' }"
 
     input:
