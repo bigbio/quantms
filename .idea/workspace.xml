@@ -20,6 +20,15 @@
       <change beforePath="$PROJECT_DIR$/../quantms-rescoring/tests/test_data/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01_comet_snr.idparquet/proteins.parquet" beforeDir="false" afterPath="$PROJECT_DIR$/../quantms-rescoring/tests/test_data/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01_comet_snr.idparquet/proteins.parquet" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../quantms-rescoring/tests/test_data/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01_comet_snr.idparquet/psms.parquet" beforeDir="false" afterPath="$PROJECT_DIR$/../quantms-rescoring/tests/test_data/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01_comet_snr.idparquet/psms.parquet" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../quantms-rescoring/tests/test_data/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01_comet_snr.idparquet/search_params.parquet" beforeDir="false" afterPath="$PROJECT_DIR$/../quantms-rescoring/tests/test_data/TMT_Erwinia_1uLSike_Top10HCD_isol2_45stepped_60min_01_comet_snr.idparquet/search_params.parquet" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/email_template.txt" beforeDir="false" afterPath="$PROJECT_DIR$/assets/email_template.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,39 +73,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python tests.Python tests for test_commands.test_annotator_train_rt.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_commands.test_idparquetreader.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests in test_commands.py.executor&quot;: &quot;Run&quot;,
-    &quot;Python.MSNet_cir.executor&quot;: &quot;Run&quot;,
-    &quot;Python.PXD001819_bench.executor&quot;: &quot;Run&quot;,
-    &quot;Python.diann.executor&quot;: &quot;Run&quot;,
-    &quot;Python.quant_bench.executor&quot;: &quot;Run&quot;,
-    &quot;Python.tes.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.test (2).executor&quot;: &quot;Run&quot;,
-    &quot;Python.test.executor&quot;: &quot;Run&quot;,
-    &quot;Python.test2 (1).executor&quot;: &quot;Run&quot;,
-    &quot;Python.test2.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
-    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/gitrepo/quantms-portal&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\software\\pycharm\\pro\\PyCharm 2023.3.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests for test_commands.test_annotator_train_rt.executor": "Run",
+    "Python tests.Python tests for test_commands.test_idparquetreader.executor": "Run",
+    "Python tests.Python tests in test_commands.py.executor": "Run",
+    "Python.MSNet_cir.executor": "Run",
+    "Python.PXD001819_bench.executor": "Run",
+    "Python.diann.executor": "Run",
+    "Python.quant_bench.executor": "Run",
+    "Python.tes.executor": "Run",
+    "Python.test (1).executor": "Run",
+    "Python.test (2).executor": "Run",
+    "Python.test.executor": "Run",
+    "Python.test2 (1).executor": "Run",
+    "Python.test2.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
+    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
+    "WebServerToolWindowPanel.toolwindow.show.date": "false",
+    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
+    "WebServerToolWindowPanel.toolwindow.show.size": "false",
+    "git-widget-placeholder": "nf-core-template-merge-4.0.2-2",
+    "last_opened_file_path": "D:/gitrepo/quantms-portal",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "D:\\software\\pycharm\\pro\\PyCharm 2023.3.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\gitrepo\quantms\modules\local\utils\download_model" />
@@ -399,7 +408,7 @@
       <workItem from="1780276423318" duration="170737000" />
       <workItem from="1781005273411" duration="39000" />
       <workItem from="1781056854766" duration="34836000" />
-      <workItem from="1781262910477" duration="6586000" />
+      <workItem from="1781262910477" duration="8028000" />
     </task>
     <servers />
   </component>
