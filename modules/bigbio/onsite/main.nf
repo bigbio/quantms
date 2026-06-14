@@ -83,9 +83,9 @@ process ONSITE {
 
         // Optional target modifications - default for LucXor includes decoy
         def target_mods = params.onsite_target_modifications ? "--target-modifications '${params.onsite_target_modifications}'" : "--target-modifications 'Phospho(S),Phospho(T),Phospho(Y),PhosphoDecoy(A)'"
-        def neutral_losses = params.onsite_neutral_losses ? "--neutral-losses ${params.onsite_neutral_losses}" : "--neutral-losses 'sty -H3PO4 -97.97690'"
+        def neutral_losses = params.onsite_neutral_losses ? "--neutral-losses '${params.onsite_neutral_losses}'" : "--neutral-losses 'sty -H3PO4 -97.97690'"
         def decoy_mass = params.onsite_decoy_mass ? "--decoy-mass ${params.onsite_decoy_mass}" : "--decoy-mass 79.966331"
-        def decoy_losses = params.onsite_decoy_neutral_losses ? "--decoy-neutral-losses ${params.onsite_decoy_neutral_losses}" : "--decoy-neutral-losses 'X -H3PO4 -97.97690'"
+        def decoy_losses = params.onsite_decoy_neutral_losses ? "--decoy-neutral-losses '${params.onsite_decoy_neutral_losses}'" : "--decoy-neutral-losses 'X -H3PO4 -97.97690'"
 
         def optional_flags = [disable_split_by_charge, compute_all_scores, debug].findAll { a -> a }.join(' \\\n            ')
         algorithm_cmd = """
