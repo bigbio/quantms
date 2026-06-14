@@ -1,6 +1,4 @@
 email_template.html
-adaptivecard.json
-slackreport.json
 .nextflow*
 work/
 data/
@@ -14,7 +12,6 @@ bin/
 ro-crate-metadata.json
 modules/nf-core/
 subworkflows/nf-core/
-
 # Ignore potentially non-human-readable markdown files
 .github/**/SKILL.md
 AGENT.md

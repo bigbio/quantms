@@ -34,7 +34,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "25.04.0"
+          - "25.10.4"
         test_profile:
           [
             "test_lfq",

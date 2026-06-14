@@ -7,23 +7,4 @@ testing/
 testing*
 *.pyc
 null/
-.idea/
-.vscode/
-/lint_log.txt
-/lint_results.md
-
-
-#Ignore cursor AI rules
-.cursor/rules/codacy.mdc
-.codacy/
-
-# Claude Code
-.claude/
-
-
-#Ignore vscode AI rules
-.github/instructions/codacy.instructions.md
-
-
-#Ignore vscode AI rules
-.github\instructions\codacy.instructions.md
+.lineage/

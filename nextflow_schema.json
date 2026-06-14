@@ -417,6 +417,13 @@
                     "fa_icon": "fas fa-atom",
                     "hidden": true
                 },
+                "onsite_rt_tolerance": {
+                    "type": "number",
+                    "description": "RT tolerance for PTM localization",
+                    "default": 0.01,
+                    "fa_icon": "fas fa-clock",
+                    "hidden": true
+                },
                 "onsite_fragment_tolerance": {
                     "type": "number",
                     "description": "Fragment mass tolerance",
@@ -430,6 +437,20 @@
                     "default": "Da",
                     "enum": ["Da", "ppm"],
                     "fa_icon": "fas fa-balance-scale",
+                    "hidden": true
+                },
+                "onsite_modeling_score_threshold": {
+                    "type": "number",
+                    "description": "Modeling score threshold for LucXor model training",
+                    "default": 0.95,
+                    "fa_icon": "fas fa-sliders-h",
+                    "hidden": true
+                },
+                "onsite_scoring_threshold": {
+                    "type": "number",
+                    "description": "Scoring threshold for PTM localization",
+                    "default": 0.0,
+                    "fa_icon": "fas fa-sliders-h",
                     "hidden": true
                 },
                 "onsite_add_decoys": {
@@ -466,7 +487,14 @@
                     "fa_icon": "fas fa-microchip",
                     "hidden": true
                 },
-                "onsite_min_psms": {
+                "onsite_target_modifications": {
+                    "type": "string",
+                    "description": "List of target modifications to search for during PTM localization",
+                    "fa_icon": "fas fa-tasks",
+                    "help_text": "Specify a comma-separated list of modifications to search for. If not set, the value from mod_localization is used.",
+                    "hidden": true
+                },
+                "onsite_min_num_psms_model": {
                     "type": "integer",
                     "description": "Minimum number of high-scoring PSMs required for model training in LucXor",
                     "default": 5,
@@ -1215,13 +1243,6 @@
                     "type": "boolean",
                     "description": "Do not use coloured log outputs.",
                     "fa_icon": "fas fa-palette",
-                    "hidden": true
-                },
-                "hook_url": {
-                    "type": "string",
-                    "description": "Incoming hook URL for messaging service",
-                    "fa_icon": "fas fa-people-group",
-                    "help_text": "Incoming hook URL for messaging service. Currently, MS Teams and Slack are supported.",
                     "hidden": true
                 },
                 "multiqc_config": {
