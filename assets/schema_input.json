@@ -16,17 +16,13 @@
                 "type": "string",
                 "format": "file-path",
                 "errorMessage": "Spectrum files must be provided",
-                "meta": [
-                    "id"
-                ]
+                "meta": ["id"]
             },
             "assay name": {
                 "type": "string",
                 "pattern": "^\\S+$",
                 "errorMessage": "Assay name must be provided and cannot contain spaces",
-                "meta": [
-                    "assay"
-                ]
+                "meta": ["assay"]
             }
         }
     }
