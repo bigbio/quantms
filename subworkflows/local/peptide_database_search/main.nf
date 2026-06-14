@@ -7,7 +7,6 @@ include { PSM_CLEAN            } from '../../../modules/local/utils/psm_clean/ma
 include { MSRESCORE_FINE_TUNING} from '../../../modules/local/utils/msrescore_fine_tuning/main'
 include { MSRESCORE_FEATURES   } from '../../../modules/local/utils/msrescore_features/main'
 include { SPECTRUM_FEATURES    } from '../../../modules/local/utils/spectrum_features/main'
-include { EXTRACTPSMFEATURES           } from '../../../modules/local/openms/extractfeatures/main'
 
 workflow PEPTIDE_DATABASE_SEARCH {
     take:
