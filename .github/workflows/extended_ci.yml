@@ -40,11 +40,12 @@ jobs:
             "test_dda_id_ms2pip",
             "test_tmt_corr",
           ]
+        exec_profile: ["docker"]
     env:
       NXF_ANSI_LOG: false
       CAPSULE_LOG: none
       TEST_PROFILE: ${{ matrix.test_profile }}
-      EXEC_PROFILE: docker
+      EXEC_PROFILE: ${{ matrix.exec_profile }}
 
     steps:
       - name: Checkout repository
@@ -131,11 +132,12 @@ jobs:
             "test_tmt_corr",
             "test_dda_id_fine_tuning",
           ]
+        exec_profile: ["singularity"]
     env:
       NXF_ANSI_LOG: false
       CAPSULE_LOG: none
       TEST_PROFILE: ${{ matrix.test_profile }}
-      EXEC_PROFILE: singularity
+      EXEC_PROFILE: ${{ matrix.exec_profile }}
     steps:
       - name: Check out pipeline code
         uses: actions/checkout@v4
