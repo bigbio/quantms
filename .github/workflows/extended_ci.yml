@@ -119,7 +119,7 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "25.04.0"
+          - "25.10.4"
           - "latest-everything"
         test_profile:
           [
