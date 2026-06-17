@@ -2,7 +2,6 @@
 // Phospho modification site localisation and scoring.
 //
 
-include { ID_SCORE_SWITCHER } from '../../../modules/local/openms/id_score_switcher/main'
 include { ONSITE            } from '../../../modules/bigbio/onsite/main'
 
 workflow PHOSPHO_SCORING {
