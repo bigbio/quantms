@@ -3,4 +3,4 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bioconda::pyonsite=0.0.3
+  - bioconda::pyonsite=0.0.4
