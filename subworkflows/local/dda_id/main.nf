@@ -2,7 +2,6 @@
 // MODULE: Local to the pipeline
 //
 include { PERCOLATOR           } from '../../../modules/local/openms/percolator/main'
-include { PSM_CONVERSION       } from '../../../modules/local/utils/psm_conversion/main'
 include { PHOSPHO_SCORING      } from '../phospho_scoring/main'
 
 //
@@ -55,14 +54,6 @@ workflow DDA_ID {
     } else {
         ch_id_results = PSM_FDR_CONTROL.out.id_filtered
     }
-
-    // Extract PSMs and export parquet format
-    PSM_CONVERSION(ch_id_results.combine(ch_ms2_statistics, by: 0))
-    ch_software_versions = ch_software_versions.mix(PSM_CONVERSION.out.versions)
-    ch_rescoring_results
-        .map { it -> it[1] }
-        .set { ch_pmultiqc_ids }
-
 
     emit:
     ch_pmultiqc_ids         = ch_pmultiqc_ids
