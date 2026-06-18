@@ -3,8 +3,8 @@ process MSRESCORE_FEATURES {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.16' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.17' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.20' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.20' }"
 
     input:
     tuple val(meta), path(id_files), path(mzml), path(model_weight)

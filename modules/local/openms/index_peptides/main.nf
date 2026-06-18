@@ -12,7 +12,7 @@ process INDEX_PEPTIDES {
 
 
     output:
-    tuple val(meta), path("${id_file.baseName}_idx.idXML"), emit: id_files_idx
+    tuple val(meta), path("${id_file.baseName}_idx.idparquet"), emit: id_files_idx
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
@@ -45,7 +45,7 @@ process INDEX_PEPTIDES {
     """
     PeptideIndexer \\
         -in ${id_file} \\
-        -out ${id_file.baseName}_idx.idXML \\
+        -out ${id_file.baseName}_idx.idparquet \\
         -threads $task.cpus \\
         -fasta ${database} \\
         -enzyme:name "${enzyme}" \\

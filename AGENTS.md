@@ -352,7 +352,7 @@ withName: 'OPENMS_PERCOLATORADAPTER' {
     publishDir = [
         path: { "${params.outdir}/intermediate_results/fdr_control" },
         mode: params.publish_dir_mode,
-        pattern: '*.idXML'
+        pattern: '*.idparquet'
     ]
 }
 ```
