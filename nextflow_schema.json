@@ -513,6 +513,19 @@
                     "fa_icon": "fas fa-calculator",
                     "hidden": true
                 },
+                "onsite_max_num_perm": {
+                    "type": "integer",
+                    "description": "Maximum number of permutations",
+                    "fa_icon": "fas fa-calculator",
+                    "hidden": true
+                },
+                "onsite_min_mz": {
+                    "type": "number",
+                    "description": "Minimum mz of peak",
+                    "default": 150.0,
+                    "fa_icon": "fas fa-ruler",
+                    "hidden": true
+                },
                 "onsite_debug": {
                     "type": "integer",
                     "fa_icon": "fas fa-bug",
@@ -1063,7 +1076,7 @@
                 "lfq_seeding_algorithm": {
                     "type": "string",
                     "description": "Feature detection seeding algorithm for ProteomicsLFQ. 'multiplex' uses FeatureFinderMultiplex (default), 'biosaur2' uses the Biosaur2 algorithm.",
-                    "default": "multiplex",
+                    "default": "biosaur2",
                     "enum": ["multiplex", "biosaur2"],
                     "fa_icon": "fas fa-seedling"
                 },
