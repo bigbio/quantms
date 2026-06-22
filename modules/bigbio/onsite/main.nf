@@ -4,14 +4,14 @@ process ONSITE {
     label 'onsite'
 
     container "${workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container
-        ? 'oras://ghcr.io/bigbio/pyonsite-sif:0.0.4'
-        : 'ghcr.io/bigbio/pyonsite:0.0.4'}"
+        ? 'oras://ghcr.io/bigbio/pyonsite-sif:0.0.5'
+        : 'ghcr.io/bigbio/pyonsite:0.0.5'}"
 
     input:
     tuple val(meta), path(mzml_file), path(id_file)
 
     output:
-    tuple val(meta), path("${prefix}_*.idparquet"), emit: ptm_in_id_onsite
+    tuple val(meta), path("${prefix}_*.{idparquet,idXML,mzIdentML}"), emit: ptm_in_id_onsite
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
@@ -36,6 +36,12 @@ process ONSITE {
     def fragment_unit = ''
     def add_decoys = onsite_add_decoys ? '--add-decoys' : ''
     def debug = params.onsite_debug ? '--debug' : ''
+    def suffix = id_file.name.endsWith(".idparquet")
+        ? "idparquet"
+        : id_file.name.endsWith(".idXML")
+            ? "idXML"
+            : id_file.name.endsWith(".mzIdentML")
+                ? "mzIdentML" : "idparquet"
 
     // Build algorithm-specific command
     def algorithm_cmd = ''
@@ -48,7 +54,7 @@ process ONSITE {
         onsite ascore \\
             -in ${mzml_file} \\
             -id ${id_file} \\
-            -out ${prefix}_ascore.idparquet \\
+            -out ${prefix}_ascore.${suffix} \\
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-mass-unit ${fragment_unit}${optional_flags ? ' \\\n            ' + optional_flags : ''}
         """
@@ -61,7 +67,7 @@ process ONSITE {
         onsite phosphors \\
             -in ${mzml_file} \\
             -id ${id_file} \\
-            -out ${prefix}_phosphors.idparquet \\
+            -out ${prefix}_phosphors.${suffix} \\
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-mass-unit ${fragment_unit}${optional_flags ? ' \\\n            ' + optional_flags : ''}
             ${args}
@@ -92,7 +98,7 @@ process ONSITE {
         onsite lucxor \\
             -in ${mzml_file} \\
             -id ${id_file} \\
-            -out ${prefix}_lucxor.idparquet \\
+            -out ${prefix}_lucxor.${suffix} \\
             --fragment-method ${fragment_method} \\
             --fragment-mass-tolerance ${fragment_tolerance} \\
             --fragment-error-units ${fragment_unit} \\
