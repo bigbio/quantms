@@ -7,10 +7,8 @@ keywords:
   - search
   - engine
 components:
-  - consensusid
   - peptide_database_search
   - psm_rescoring
-  - psm_fdr_control
   - phospho_scoring
 input:
   - ch_input:

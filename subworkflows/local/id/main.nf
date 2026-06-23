@@ -3,7 +3,6 @@
 //
 include { PEPTIDE_DATABASE_SEARCH } from '../peptide_database_search/main'
 include { PSM_RESCORING           } from '../psm_rescoring/main'
-include { PSM_FDR_CONTROL         } from '../psm_fdr_control/main'
 include { PHOSPHO_SCORING         } from '../phospho_scoring/main'
 
 workflow ID {

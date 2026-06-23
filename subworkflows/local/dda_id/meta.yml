@@ -7,17 +7,11 @@ keywords:
   - proteomics
   - msms
 components:
-  - consensusid
   - percolator
-  - id/merger
-  - id/ripper
-  - psm/conversion
   - msrescore/features
-  - get/sample
   - spectrum/features
   - psm/clean
   - peptide_database_search
-  - psm_fdr_control
   - phospho_scoring
 input:
   - ch_input:
