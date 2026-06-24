@@ -42,10 +42,6 @@
 
   > Röst HL., Sachsenberg T., Aiche S., Bielow C., Weisser H., Aicheler F., Andreotti S., Ehrlich HC., Gutenbrunner P., Kenar E., Liang X., Nahnsen S., Nilse L., Pfeuffer J., Rosenberger G., Rurik M., Schmitt U., Veit J., Walzer M., Wojnar D., Wolski WE., Schilling O., Choudhary JS, Malmström L., Aebersold R., Reinert K., Kohlbacher O. (2016). OpenMS: a flexible open-source software platform for mass spectrometry data analysis. Nature methods, 13(9), 741–748. doi: 10.1038/nmeth.3959. PubMed PMID: 27575624; PubMed Central PMCID: PMC5617107.
 
-- [DIA-NN](https://pubmed.ncbi.nlm.nih.gov/31768060/)
-
-  > Demichev V, Messner CB, Vernardis SI, Lilley KS, Ralser M. DIA-NN: neural networks and interference correction enable deep proteome coverage in high throughput. Nat Methods. 2020 Jan;17(1):41-44. doi: 10.1038/s41592-019-0638-x. Epub 2019 Nov 25. PMID: 31768060; PMCID: PMC6949130.
-
 - [MSstats](https://www.ncbi.nlm.nih.gov/pubmed/24794931/)
 
   > Choi M., Chang CY., Clough T., Broudy D., Killeen T., MacLean B., Vitek O. (2014). MSstats: an R package for statistical analysis of quantitative mass spectrometry-based proteomic experiments. Bioinformatics (Oxford, England), 30(17), 2524–2526. doi: 10.1093/bioinformatics/btu305. PubMed PMID: 24794931.
@@ -66,17 +62,13 @@
 
   > Pfeuffer J, Sachsenberg T, Dijkstra TMH, Serang O, Reinert K, Kohlbacher O. EPIFANY: A Method for Efficient High-Confidence Protein Inference. J Proteome Res. 2020 Mar 6;19(3):1060-1072. doi: 10.1021/acs.jproteome.9b00566. Epub 2020 Feb 13. PMID: 31975601; PMCID: PMC7583457.
 
-- [Triqler](https://pubmed.ncbi.nlm.nih.gov/30482846/)
-
-  > The M, Käll L. Integrated Identification and Quantification Error Probabilities for Shotgun Proteomics. Mol Cell Proteomics. 2019 Mar;18(3):561-570. doi: 10.1074/mcp.RA118.001018. Epub 2018 Nov 27. PMID: 30482846; PMCID: PMC6398204.
-
 - [luciphor](https://pubmed.ncbi.nlm.nih.gov/23918812/)
 
   > Fermin D, Walmsley SJ, Gingras AC, Choi H, Nesvizhskii AI. LuciPHOr: algorithm for phosphorylation site localization with false localization rate estimation using modified target-decoy approach. Mol Cell Proteomics. 2013 Nov;12(11):3409-19. doi: 10.1074/mcp.M113.028928. Epub 2013 Aug 5. PMID: 23918812; PMCID: PMC3820951.
 
 - [MultiQC](https://pubmed.ncbi.nlm.nih.gov/27312411/)
 
-  > Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
+> Ewels P, Magnusson M, Lundin S, Käller M. MultiQC: summarize analysis results for multiple tools and samples in a single report. Bioinformatics. 2016 Oct 1;32(19):3047-8. doi: 10.1093/bioinformatics/btw354. Epub 2016 Jun 16. PubMed PMID: 27312411; PubMed Central PMCID: PMC5039924.
 
 ## Software packaging/containerisation tools
 

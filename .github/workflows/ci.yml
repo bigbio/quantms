@@ -34,11 +34,10 @@ jobs:
       fail-fast: false
       matrix:
         NXF_VER:
-          - "25.04.0"
+          - "25.10.4"
         test_profile:
           [
             "test_lfq",
-            "test_dia",
             "test_localize",
             "test_tmt",
             "test_dda_id_alphapeptdeep",

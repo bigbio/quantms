@@ -4,14 +4,14 @@ process COMET {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.06.06' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2026.06.06' }"
 
     input:
     tuple val(meta), path(mzml_file), path(database)
 
     output:
-    tuple val(meta), path("${mzml_file.baseName}_comet.idXML"),  emit: id_files_comet
+    tuple val(meta), path("${mzml_file.baseName}_comet.idparquet"),  emit: id_files_comet
     path "versions.yml",   emit: versions
     path "*.log",   emit: log
 
@@ -48,11 +48,9 @@ process COMET {
     def isoSlashComet = "0/1"
     if (params.isotope_error_range) {
         def isoRangeComet = params.isotope_error_range.split(",")
-        isoSlashComet = ""
-        for (c in isoRangeComet[0].toInteger()..isoRangeComet[1].toInteger()-1) {
-            isoSlashComet += c + "/"
-        }
-        isoSlashComet += isoRangeComet[1]
+        def range = (isoRangeComet[0].toInteger()..isoRangeComet[1].toInteger()-1).collect { v -> v.toString() }
+        range.add(isoRangeComet[1])
+        isoSlashComet = range.join("/")
     }
     // for consensusID the cutting rules need to be the same. So we adapt to the loosest rules from MSGF
     // TODO find another solution. In ProteomicsLFQ we re-run PeptideIndexer (remove??) and if we
@@ -84,7 +82,7 @@ process COMET {
     """
     CometAdapter \\
         -in ${mzml_file} \\
-        -out ${mzml_file.baseName}_comet.idXML \\
+        -out ${mzml_file.baseName}_comet.idparquet \\
         -threads $task.cpus \\
         -database "${database}" \\
         -instrument ${inst} \\
@@ -96,8 +94,8 @@ process COMET {
         -enzyme "${enzyme}" \\
         -isotope_error ${isoSlashComet} \\
         -precursor_charge $params.min_precursor_charge:$params.max_precursor_charge \\
-        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
-        -variable_modifications ${meta.variablemodifications.tokenize(',').collect { "'$it'" }.join(" ") } \\
+        -fixed_modifications ${meta.fixedmodifications.tokenize(',').collect { mod -> "'$mod'" }.join(" ") } \\
+        -variable_modifications ${meta.variablemodifications.tokenize(',').collect { mod -> "'$mod'" }.join(" ") } \\
         -max_variable_mods_in_peptide $params.max_mods \\
         -precursor_mass_tolerance $meta.precursormasstolerance \\
         -precursor_error_units $meta.precursormasstoleranceunit \\
@@ -115,7 +113,7 @@ process COMET {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         CometAdapter: \$(CometAdapter 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
-        Comet: \$(comet 2>&1 | grep -E "Comet version.*" | sed 's/ Comet version //g' | sed 's/"//g')
+        Comet: \$(/opt/OpenMS/thirdparty/Comet/comet.exe 2>&1 | grep -m1 -E "^[[:space:]]*Comet version.*" | sed 's/^[[:space:]]*Comet version //g' | sed 's/"//g')
     END_VERSIONS
     """
 }

@@ -7,11 +7,4 @@ testing/
 testing*
 *.pyc
 null/
-.idea/
-/lint_log.txt
-/lint_results.md
-
-
-#Ignore cursor AI rules
-.cursor/rules/codacy.mdc
-.codacy/
+.lineage/

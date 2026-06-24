@@ -3,23 +3,23 @@ process MSRESCORE_FINE_TUNING {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.14' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.14' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.20' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.20' }"
 
     input:
-    tuple val(meta), path(idxml), path(mzml), val(groupkey), path(ms2_model_dir)
+    tuple val(meta), path(idparquet), path(mzml), path(ms2_model_dir)
 
     output:
-    tuple val(groupkey), path("retained_ms2.pth") , emit: model_weight
-    path "versions.yml"                           , emit: versions
-    path "*.log"                                  , emit: log
+    path("retained_ms2.pth") , emit: model_weight
+    path "versions.yml"      , emit: versions
+    path "*.log"             , emit: log
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${groupkey}_fine_tuning"
+    def prefix = task.ext.prefix ?: "fine_tuning"
 
     // Initialize tolerance variables
     def ms2_tolerance = null
@@ -49,8 +49,8 @@ process MSRESCORE_FINE_TUNING {
 
     """
     rescoring transfer_learning \\
-        --idxml ./ \\
-        --mzml ./ \\
+        --idparquet ${idparquet.join(' --idparquet ')} \\
+        --mzml ${mzml.join(' --mzml ')} \\
         --save_model_dir ./ \\
         --ms2_tolerance $ms2_tolerance \\
         --ms2_tolerance_unit $ms2_tolerance_unit \\
@@ -62,7 +62,7 @@ process MSRESCORE_FINE_TUNING {
         ${force_transfer_learning} \\
         ${consider_modloss} \\
         $args \\
-        2>&1 | tee ${groupkey}_fine_tuning.log
+        2>&1 | tee fine_tuning.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

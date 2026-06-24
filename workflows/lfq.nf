@@ -8,7 +8,6 @@
 // MODULES: Local to the pipeline
 //
 include { PROTEOMICSLFQ } from '../modules/local/openms/proteomicslfq/main'
-include { MSSTATS_LFQ   } from '../modules/local/msstats/msstats_lfq/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -21,8 +20,6 @@ include { ID } from '../subworkflows/local/id/main'
 ========================================================================================
 */
 
-// Info required for completion email and summary
-def multiqc_report = []
 
 workflow LFQ {
     take:
@@ -32,7 +29,7 @@ workflow LFQ {
 
     main:
 
-    ch_software_versions = Channel.empty()
+    ch_software_versions = channel.empty()
 
     //
     // SUBWORKFLOWS: ID
@@ -56,16 +53,6 @@ workflow LFQ {
             )
     ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.versions)
 
-    //
-    // MODULE: MSSTATS
-    //
-    ch_msstats_out = Channel.empty()
-    if(!params.skip_post_msstats && params.quantification_method == "feature_intensity"){
-        MSSTATS_LFQ(PROTEOMICSLFQ.out.out_msstats)
-        ch_msstats_out = MSSTATS_LFQ.out.msstats_csv
-        ch_software_versions = ch_software_versions.mix(MSSTATS_LFQ.out.versions)
-    }
-
     ID.out.psmrescoring_results
         .map { it -> it[1] }
         .set { ch_pmultiqc_ids }
@@ -80,7 +67,6 @@ workflow LFQ {
     final_result            = PROTEOMICSLFQ.out.out_mztab
     versions                = ch_software_versions
     msstats_in              = PROTEOMICSLFQ.out.out_msstats
-    msstats_out             = ch_msstats_out
 }
 
 /*

@@ -9,10 +9,9 @@ include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipe
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_quantms_pipeline'
 
-// Main subworkflows imported from the pipeline TMT, LFQ, DIA
+// Main subworkflows imported from the pipeline TMT, LFQ
 include { TMT } from './tmt'
 include { LFQ } from './lfq'
-include { DIA } from './dia'
 
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 include { INPUT_CHECK } from '../subworkflows/local/input_check/main'
@@ -36,16 +35,17 @@ workflow QUANTMS {
     main:
 
     // TODO check what the standard is here: ch_versions or ch_software_versions
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     //
     // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
+
     INPUT_CHECK(
         file(params.input)
     )
     ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
-    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with Channel.fromSamplesheet("input")
+    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with channel.fromSamplesheet("input")
     // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
     // ! There is currently no tooling to help you write a sample sheet schema
 
@@ -53,8 +53,7 @@ workflow QUANTMS {
     // SUBWORKFLOW: Create input channel
     //
     CREATE_INPUT_CHANNEL(
-        INPUT_CHECK.out.ch_input_file,
-        INPUT_CHECK.out.is_sdrf,
+        INPUT_CHECK.out.ch_input_file
     )
     ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.versions)
 
@@ -62,31 +61,30 @@ workflow QUANTMS {
     // SUBWORKFLOW: File preparation
     //
     FILE_PREPARATION(
-        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq).mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_dia)
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq)
     )
 
     ch_versions = ch_versions.mix(FILE_PREPARATION.out.versions)
 
     FILE_PREPARATION.out.results
-        .branch {
-            dia: it[0].acquisition_method.contains("dia")
-            iso: it[0].labelling_type.contains("tmt") || it[0].labelling_type.contains("itraq")
-            lfq: it[0].labelling_type.contains("label free")
+        .branch { item ->
+            iso: item[0].labelling_type.contains("tmt") || item[0].labelling_type.contains("itraq")
+            lfq: item[0].labelling_type.contains("label free")
         }
         .set { ch_fileprep_result }
     //
     // WORKFLOW: Run main bigbio/quantms analysis pipeline based on the quantification type
     //
-    ch_pipeline_results = Channel.empty()
-    ch_ids_pmultiqc = Channel.empty()
-    ch_msstats_in = Channel.empty()
-    ch_consensus_pmultiqc = Channel.empty()
+    ch_pipeline_results = channel.empty()
+    ch_ids_pmultiqc = channel.empty()
+    ch_msstats_in = channel.empty()
+    ch_consensus_pmultiqc = channel.empty()
 
     //
     // MODULE: Generate decoy database
     //
     if (params.database) {
-        ch_db_for_decoy_creation = Channel.from(file(params.database, checkIfExists: true))
+        ch_db_for_decoy_creation = channel.from(file(params.database, checkIfExists: true))
     }
     else {
         exit(1, 'No protein database provided')
@@ -97,10 +95,10 @@ workflow QUANTMS {
         CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq
     ).first()
         | combine(ch_db_for_decoy_creation)
-        | map { it[-1] }
+        | map { item -> item[-1] }
         | set { ch_db_for_decoy_creation_or_null }
 
-    ch_searchengine_in_db = params.add_decoys ? Channel.empty() : Channel.fromPath(params.database)
+    ch_searchengine_in_db = params.add_decoys ? channel.empty() : channel.fromPath(params.database)
     if (params.add_decoys) {
         GENERATE_DECOY_DATABASE(
             ch_db_for_decoy_creation_or_null
@@ -152,21 +150,32 @@ workflow QUANTMS {
         ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
         ch_versions = ch_versions.mix(LFQ.out.versions)
 
-        DIA(
-            ch_fileprep_result.dia,
-            CREATE_INPUT_CHANNEL.out.ch_expdesign,
-            FILE_PREPARATION.out.statistics,
-        )
-        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report)
-        ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report_parquet)
-        ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
-        ch_versions = ch_versions.mix(DIA.out.versions)
     }
 
     // Other subworkflow will return null when performing another subworkflow due to unknown reason.
-    ch_versions = ch_versions.filter { it != null }
+    ch_versions = ch_versions.filter { v -> v != null }
 
-    softwareVersionsToYAML(ch_versions)
+    // see https://nf-co.re/docs/tutorials/migrate_to_topics/update_pipelines
+    // which is used in https://github.com/nf-core/demo/blob/1.1.0/workflows/demo.nf
+    def topic_versions = channel.topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple(by:0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_' + 'quantms_software_' + 'mqc_' + 'versions.yml',
@@ -176,17 +185,15 @@ workflow QUANTMS {
         .set { ch_collated_versions }
 
 
-    ch_multiqc_config = Channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config, checkIfExists: true) : Channel.empty()
-    ch_multiqc_logo = params.multiqc_logo ? Channel.fromPath(params.multiqc_logo, checkIfExists: true) : Channel.empty()
+    ch_multiqc_config = channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
     summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
     ch_multiqc_custom_methods_description = params.multiqc_methods_description
         ? file(params.multiqc_methods_description, checkIfExists: true)
         : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description = Channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
     // concatenate multiqc input files
-    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
     ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_files = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)

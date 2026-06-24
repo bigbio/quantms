@@ -11,7 +11,7 @@ process ID_MERGER {
     tuple val(meta), path(id_files), val(groupkey)
 
     output:
-    tuple val(meta), path("*_merged.idXML"), emit: id_merged
+    tuple val(meta), path("*_merged.idparquet"), emit: id_merged
     path "versions.yml", emit: versions
     path "*.log", emit: log
 
@@ -19,29 +19,11 @@ process ID_MERGER {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${groupkey}"
 
-    if (params.ms2features_range == "by_project") {
-        if (id_files[0].baseName.contains('sage')){
-            prefix = "${groupkey}_sage"
-        } else if (id_files[0].baseName.contains('comet')){
-            prefix = "${groupkey}_comet"
-        } else {
-            prefix = "${groupkey}_msgf"
-        }
-    } else if (params.ms2features_range == "by_sample") {
-        if (id_files[0].baseName.contains('sage')){
-            prefix = "${groupkey}_sage"
-        } else if (id_files[0].baseName.contains('comet')){
-            prefix = "${groupkey}_comet"
-        } else {
-            prefix = "${groupkey}_msgf"
-        }
-    }
-
     """
     IDMerger \\
         -in ${id_files.join(' ')} \\
         -threads $task.cpus \\
-        -out ${prefix}_merged.idXML \\
+        -out ${prefix}_merged.idparquet \\
         -merge_proteins_add_PSMs \\
         $args \\
         2>&1 | tee ${prefix}_merged.log

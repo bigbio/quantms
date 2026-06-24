@@ -1,5 +1,6 @@
 name: onsite
-description: Post-translational modification (PTM) localization using onsite algorithms (AScore, PhosphoRS, LucXor)
+description: Post-translational modification (PTM) localization using onsite
+  algorithms (AScore, PhosphoRS, LucXor)
 keywords:
   - onsite
   - PTM
@@ -18,40 +19,51 @@ tools:
       homepage: https://github.com/bigbio/onsite
       documentation: https://github.com/bigbio/onsite/blob/main/README.md
       tool_dev_url: https://github.com/bigbio/onsite
-      doi: ""
-      licence: ["MIT"]
+      licence:
+        - "MIT"
+      identifier: ""
 input:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', mzml_id:'sample1' ]
-  - mzml_file:
-      type: file
-      description: Input spectrum file in mzML format
-      pattern: "*.mzML"
-  - id_file:
-      type: file
-      description: Protein/peptide identifications file in idXML format
-      pattern: "*.idXML"
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'test', mzml_id:'sample1' ]`
+    - mzml_file:
+        type: file
+        description: Input spectrum file in mzML format
+        pattern: "*.mzML"
+        ontologies: []
+    - id_file:
+        type: file
+        description: Protein/peptide identifications file
+        pattern: "*.{idparquet,idXML,mzIdentML}"
+        ontologies: []
 output:
-  - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test', mzml_id:'sample1' ]
-  - ptm_in_id_onsite:
-      type: file
-      description: Protein/peptide identifications file with PTM localization scores
-      pattern: "*_{ascore,phosphors,lucxor}.idXML"
-  - log:
-      type: file
-      description: Log file from onsite execution
-      pattern: "*.log"
-  - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+  ptm_in_id_onsite:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+      - ${prefix}_*.idparquet:
+          type: file
+          description: Output id file containing PTM localization results from
+            onsite
+          pattern: "${prefix}_*.{idparquet,idXML,mzIdentML}"
+          ontologies: []
+  log:
+    - "*.log":
+        type: file
+        description: Log file from onsite execution
+        pattern: "*.log"
+        ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750
 authors:
   - "@ypriverol"
   - "@weizhongchun"
+  - "@enryh"

@@ -4,8 +4,8 @@ process PROTEOMICSLFQ {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2025.04.14' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2025.04.14' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.06.06' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2026.06.06' }"
 
     input:
     path(mzmls)
@@ -15,23 +15,22 @@ process PROTEOMICSLFQ {
 
     output:
     path "${expdes.baseName}_openms.mzTab", emit: out_mztab
+    path "${expdes.baseName}_qpx", emit: out_qpx
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "*msstats_in.csv", emit: out_msstats, optional: true
-    path "*triqler_in.tsv", emit: out_triqler, optional: true
-    path "debug_mergedIDs.idXML", emit: debug_mergedIDs, optional: true
-    path "debug_mergedIDs_inference.idXML", emit: debug_mergedIDs_inference, optional: true
-    path "debug_mergedIDsGreedyResolved.idXML", emit: debug_mergedIDsGreedyResolved, optional: true
-    path "debug_mergedIDsGreedyResolvedFDR.idXML", emit: debug_mergedIDsGreedyResolvedFDR, optional: true
-    path "debug_mergedIDsGreedyResolvedFDRFiltered.idXML", emit: debug_mergedIDsGreedyResolvedFDRFiltered, optional: true
-    path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idXML", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved, optional: true
+    path "debug_mergedIDs.idparquet", emit: debug_mergedIDs, optional: true
+    path "debug_mergedIDs_inference.idparquet", emit: debug_mergedIDs_inference, optional: true
+    path "debug_mergedIDsGreedyResolved.idparquet", emit: debug_mergedIDsGreedyResolved, optional: true
+    path "debug_mergedIDsGreedyResolvedFDR.idparquet", emit: debug_mergedIDsGreedyResolvedFDR, optional: true
+    path "debug_mergedIDsGreedyResolvedFDRFiltered.idparquet", emit: debug_mergedIDsGreedyResolvedFDRFiltered, optional: true
+    path "debug_mergedIDsFDRFilteredStrictlyUniqueResolved.idparquet", emit: debug_mergedIDsFDRFilteredStrictlyUniqueResolved, optional: true
     path "*.log", emit: log
     path "versions.yml", emit: versions
 
     script:
     def args = task.ext.args ?: ''
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
-    def triqler_present = (params.quantification_method == "feature_intensity") && (params.add_triqler_output) ? "-out_triqler ${expdes.baseName}_triqler_in.tsv" : ""
-    def decoys_present = (params.quantify_decoys || ((params.quantification_method == "feature_intensity") && params.add_triqler_output)) ? '-PeptideQuantification:quantify_decoys' : ''
+    def decoys_present = params.quantify_decoys ? '-PeptideQuantification:quantify_decoys' : ''
     def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
     def id_sorted = id_files.collect().sort{ a, b -> a.name <=> b.name}
     def feature_with_id_min_score =  "-feature_with_id_min_score ${params.feature_with_id_min_score}"
@@ -50,6 +49,7 @@ process PROTEOMICSLFQ {
         ${feature_with_id_min_score} \\
         ${feature_without_id_min_score} \\
         -mass_recalibration ${params.mass_recalibration} \\
+        -Seeding:algorithm ${params.lfq_seeding_algorithm} \\
         -Seeding:intThreshold ${params.lfq_intensity_threshold} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
@@ -59,8 +59,8 @@ process PROTEOMICSLFQ {
         -picked_proteinFDR ${params.picked_fdr} \\
         -out_cxml ${expdes.baseName}_openms.consensusXML \\
         -out ${expdes.baseName}_openms.mzTab \\
+        -out_qpx ${expdes.baseName}_qpx \\
         ${msstats_present} \\
-        ${triqler_present} \\
         $args \\
         2>&1 | tee proteomicslfq.log
 

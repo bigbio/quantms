@@ -3,14 +3,14 @@ process PSM_CLEAN {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.13' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.13' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.20' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.20' }"
 
     input:
-    tuple val(meta), path(idxml), path(mzml)
+    tuple val(meta), path(idparquet), path(mzml)
 
     output:
-    tuple val(meta), path("*clean.idXML") , emit: idxml
+    tuple val(meta), path("*clean.idparquet") , emit: idparquet
     path "versions.yml"                   , emit: versions
     path "*.log"                          , emit: log
 
@@ -23,11 +23,11 @@ process PSM_CLEAN {
 
     """
     rescoring psm_feature_clean \\
-        --idxml $idxml \\
+        --idparquet ${idparquet.join(' --idparquet ')} \\
         --mzml $mzml \\
-        --output ${idxml.baseName}_clean.idXML \\
+        --output ${mzml.baseName}_clean.idparquet \\
         $args \\
-        2>&1 | tee ${idxml.baseName}_clean.log
+        2>&1 | tee ${mzml.baseName}_clean.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

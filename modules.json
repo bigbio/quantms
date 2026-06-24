@@ -7,13 +7,14 @@
                 "bigbio": {
                     "onsite": {
                         "branch": "main",
-                        "git_sha": "ffe3c99ee867c4d7d6400f95d0b5658eccf16212",
+                        "git_sha": "1c93e068aeca6704d042b92c26249cdd801da278",
                         "installed_by": ["modules"]
                     },
                     "thermorawfileparser": {
                         "branch": "main",
-                        "git_sha": "a1a4a11ff508b2b5c23c9fb21c51c3327b748d4d",
-                        "installed_by": ["modules"]
+                        "git_sha": "53f2d78652a7040e3d44610286471642b1e1b55b",
+                        "installed_by": ["modules"],
+                        "patch": "modules/bigbio/thermorawfileparser/thermorawfileparser.diff"
                     }
                 }
             }
@@ -21,14 +22,9 @@
         "https://github.com/nf-core/modules.git": {
             "modules": {
                 "nf-core": {
-                    "custom/dumpsoftwareversions": {
-                        "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
-                        "installed_by": ["modules"]
-                    },
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "8deffd6a402233ebf905c66dbf804bd4c2637946",
+                        "git_sha": "008f9d3e61209bf995edac3ba531f54e269e1215",
                         "installed_by": ["modules"]
                     }
                 }
@@ -42,12 +38,12 @@
                     },
                     "utils_nfcore_pipeline": {
                         "branch": "master",
-                        "git_sha": "271e7fc14eb1320364416d996fb077421f3faed2",
+                        "git_sha": "a3fb7351b1fdb2b1de282b765816bbea190e86a8",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_nfschema_plugin": {
                         "branch": "master",
-                        "git_sha": "e753770db613ce014b3c4bc94f6cba443427b726",
+                        "git_sha": "fdc08b8b1ae74f56686ce21f7ea11ad11990ce57",
                         "installed_by": ["subworkflows"]
                     }
                 }

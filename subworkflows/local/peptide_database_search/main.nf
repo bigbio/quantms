@@ -6,9 +6,7 @@ include { SAGE  } from '../../../modules/local/openms/sage/main'
 include { PSM_CLEAN            } from '../../../modules/local/utils/psm_clean/main'
 include { MSRESCORE_FINE_TUNING} from '../../../modules/local/utils/msrescore_fine_tuning/main'
 include { MSRESCORE_FEATURES   } from '../../../modules/local/utils/msrescore_features/main'
-include { GET_SAMPLE           } from '../../../modules/local/utils/extract_sample/main'
 include { SPECTRUM_FEATURES    } from '../../../modules/local/utils/spectrum_features/main'
-include { ID_MERGER            } from '../../../modules/local/openms/id_merger/main'
 
 workflow PEPTIDE_DATABASE_SEARCH {
     take:
@@ -17,7 +15,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
     ch_expdesign
 
     main:
-    (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ Channel.empty(), Channel.empty(), Channel.empty(), Channel.empty() ]
+    (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ channel.empty(), channel.empty(), channel.empty(), channel.empty() ]
 
     if (params.search_engines.contains("msgf")) {
         MSGF_DB_INDEXING(ch_searchengine_in_db)
@@ -37,9 +35,9 @@ workflow PEPTIDE_DATABASE_SEARCH {
     // sorted mzmls to generate same batch ids when enable cache
     ch_mzmls_sorted_search = ch_mzmls_search.collect(flat: false, sort: { a, b -> a[0]["mzml_id"] <=> b[0]["mzml_id"] }).flatMap()
     if (params.search_engines.contains("sage")) {
-        cnt = 0
+        def cnt = 0
         ch_meta_mzml_db = ch_mzmls_sorted_search.map{ metapart, mzml ->
-            cnt++
+            cnt += 1
             def groupkey = metapart.labelling_type +
                     metapart.dissociationmethod +
                     metapart.fixedmodifications +
@@ -72,19 +70,18 @@ workflow PEPTIDE_DATABASE_SEARCH {
         ch_id_sage = ch_id_sage.mix(SAGE.out.id_files_sage.transpose())
     }
 
-    (ch_id_files_msgf_feats, ch_id_files_comet_feats, ch_id_files_sage_feats) = [ Channel.empty(), Channel.empty(), Channel.empty() ]
+    (ch_id_files_msgf_feats, ch_id_files_comet_feats, ch_id_files_sage_feats) = [ channel.empty(), channel.empty(), channel.empty() ]
 
     if (params.skip_rescoring != true) {
-
         if (params.ms2features_enable == true){
             // Only add ms2_model_dir if it's actually set and not empty
             // Handle cases where parameter might be empty string, null, boolean true, or whitespace
             // When --ms2features_model_dir is passed with no value, Nextflow may set it to boolean true
             if (params.ms2features_model_dir && params.ms2features_model_dir != true) {
-                ms2_model_dir = Channel.from(file(params.ms2features_model_dir, checkIfExists: true))
+                ms2_model_dir = channel.from(file(params.ms2features_model_dir, checkIfExists: true))
             } else {
                 // create a fake channel when don't specify model dir
-                ms2_model_dir = Channel.from(file("pretrained_models"))
+                ms2_model_dir = channel.from(file("pretrained_models"))
             }
 
             if (params.ms2features_fine_tuning == true) {
@@ -93,145 +90,75 @@ workflow PEPTIDE_DATABASE_SEARCH {
                 } else {
 
                     // Preparing train datasets and fine tuning MS2 model
-                    sage_train_datasets = ch_id_sage
+                    // Randomly select one search engine for fine-tuning sampling
+                    engine_opts = []
+                    if (params.search_engines.contains("sage"))  engine_opts.add("sage")
+                    if (params.search_engines.contains("msgf"))  engine_opts.add("msgf")
+                    if (params.search_engines.contains("comet")) engine_opts.add("comet")
+                    selected_engine = engine_opts[new Random(2025).nextInt(engine_opts.size())]
+
+                    ch_selected_engine = (selected_engine == "sage") ? ch_id_sage :
+                                        (selected_engine == "msgf") ? ch_id_msgf :
+                                        ch_id_comet
+
+                    train_datasets = ch_selected_engine
                         .combine(ch_mzmls_search, by: 0)
                         .toSortedList()
                         .flatMap()
                         .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(Channel.value("sage"))
                         .groupTuple(by: 3)
 
-                    msgf_train_datasets = ch_id_msgf
-                        .combine(ch_mzmls_search, by: 0)
-                        .toSortedList()
-                        .flatMap()
-                        .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(Channel.value("msgf"))
-                        .groupTuple(by: 3)
-
-                    comet_train_datasets = ch_id_comet
-                        .combine(ch_mzmls_search, by: 0)
-                        .toSortedList()
-                        .flatMap()
-                        .randomSample(params.fine_tuning_sample_run, 2025)
-                        .combine(Channel.value("comet"))
-                        .groupTuple(by: 3)
-
-                    sage_train_datasets.mix(msgf_train_datasets)
-                        .mix(comet_train_datasets)
-                        .combine(ms2_model_dir)
-                        .set { train_datasets }
-                    MSRESCORE_FINE_TUNING(train_datasets)
+                    MSRESCORE_FINE_TUNING(train_datasets.combine(ms2_model_dir))
                     ch_versions = ch_versions.mix(MSRESCORE_FINE_TUNING.out.versions)
 
-                    Channel.value("msgf").combine(ch_id_msgf.combine(ch_mzmls_search, by: 0))
-                        .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { [it[1], it[2], it[3], it[4], it[0] ] }
-                        .set { msgf_features_input }
+                    if (params.search_engines.tokenize(",").unique().size() > 1) {
+                        ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size())
+                        .combine(ch_mzmls_search, by: 0)
+                        .combine(MSRESCORE_FINE_TUNING.out.model_weight).set{ ch_id_rescoring }
+                    } else {
+                        ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).combine(ch_mzmls_search, by: 0)
+                            .combine(MSRESCORE_FINE_TUNING.out.model_weight).set{ ch_id_rescoring }
+                    }
 
-                    Channel.value("sage").combine(ch_id_sage.combine(ch_mzmls_search, by: 0))
-                        .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { [it[1], it[2], it[3], it[4], it[0] ] }
-                        .set { sage_features_input }
-
-                    Channel.value("comet").combine(ch_id_comet.combine(ch_mzmls_search, by: 0))
-                        .combine(MSRESCORE_FINE_TUNING.out.model_weight, by:0)
-                        .map { [it[1], it[2], it[3], it[4], it[0] ] }
-                        .set { comet_features_input }
-
-                    MSRESCORE_FEATURES(msgf_features_input.mix(sage_features_input).mix(comet_features_input))
+                    MSRESCORE_FEATURES(ch_id_rescoring)
                     ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
-                    ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
-
+                    ch_id_files_feats = MSRESCORE_FEATURES.out.idparquet
 
                 }
             } else{
-                ch_id_msgf.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(Channel.value("msgf")).set{ ch_id_msgf }
-                ch_id_comet.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(Channel.value("comet")).set{ ch_id_comet }
-                ch_id_sage.combine(ch_mzmls_search, by: 0)
-                    .combine(ms2_model_dir)
-                    .combine(Channel.value("sage")).set{ ch_id_sage }
-
-                MSRESCORE_FEATURES(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage))
+                if (params.search_engines.tokenize(",").unique().size() > 1) {
+                    ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size())
+                    .combine(ch_mzmls_search, by: 0)
+                    .combine(ms2_model_dir).set{ ch_id_rescoring }
+                } else {
+                    ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).combine(ch_mzmls_search, by: 0)
+                        .combine(ms2_model_dir).set{ ch_id_rescoring }
+                }
+                MSRESCORE_FEATURES(ch_id_rescoring)
                 ch_versions = ch_versions.mix(MSRESCORE_FEATURES.out.versions)
-                ch_id_files_feats = MSRESCORE_FEATURES.out.idxml
+                ch_id_files_feats = MSRESCORE_FEATURES.out.idparquet
             }
 
             // Add SNR features to percolator
             if (params.ms2features_snr) {
                 SPECTRUM_FEATURES(ch_id_files_feats.combine(ch_mzmls_search, by: 0))
-                ch_id_files_feats_snr = SPECTRUM_FEATURES.out.id_files_snr
+                ch_id_files_out = SPECTRUM_FEATURES.out.id_files_snr
                 ch_versions = ch_versions.mix(SPECTRUM_FEATURES.out.versions)
             } else {
-                ch_id_files_feats_snr = ch_id_files_feats
+                ch_id_files_out = ch_id_files_feats
             }
 
-            ch_id_files_feats_snr
-                .branch { meta, file_name, engine_name ->
-                    msgf: engine_name == "msgf"
-                    comet: engine_name == "comet"
-                    sage: engine_name == "sage"
-                }
-                .set {ch_id_files_feats_branch}
-            ch_id_files_feats_branch.msgf.map {it -> [it[0], it[1]]}.set {ch_id_files_msgf_feats}
-            ch_id_files_feats_branch.comet.map {it -> [it[0], it[1]]}.set {ch_id_files_comet_feats}
-            ch_id_files_feats_branch.sage.map {it -> [it[0], it[1]]}.set {ch_id_files_sage_feats}
-
+        } else if (params.search_engines.tokenize(",").unique().size() > 1) {
+            PSM_CLEAN(ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage).groupTuple(size: params.search_engines.tokenize(",").unique().size()).combine(ch_mzmls_search, by: 0))
+            ch_id_files_out = PSM_CLEAN.out.idparquet
         } else {
-            ch_id_files_msgf_feats = ch_id_msgf
-            ch_id_files_comet_feats = ch_id_comet
-            ch_id_files_sage_feats = ch_id_sage
+            ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         }
-
-        if (params.ms2features_range == "by_sample") {
-            // Sample map
-            GET_SAMPLE(ch_expdesign)
-            ch_versions = ch_versions.mix(GET_SAMPLE.out.versions)
-            ch_expdesign_sample = GET_SAMPLE.out.ch_expdesign_sample
-            ch_expdesign_sample.splitCsv(header: true, sep: '\t')
-                .map { get_sample_map(it) }.set{ sample_map_idv }
-
-            ch_id_files_msgf_feats.map {[it[0].mzml_id, it[0], it[1]]}.set { ch_id_files_msgf_feats }
-            ch_id_files_msgf_feats.combine(sample_map_idv, by: 0).map {[it[1], it[2], it[3]]}.set{ ch_id_files_msgf_feats }
-
-            ch_id_files_comet_feats.map {[it[0].mzml_id, it[0], it[1]]}.set { ch_id_files_comet_feats }
-            ch_id_files_comet_feats.combine(sample_map_idv, by: 0).map {[it[1], it[2], it[3]]}.set{ ch_id_files_comet_feats }
-
-            ch_id_files_sage_feats.map {[it[0].mzml_id, it[0], it[1]]}.set { ch_id_files_sage_feats }
-            ch_id_files_sage_feats.combine(sample_map_idv, by: 0).map {[it[1], it[2], it[3]]}.set{ ch_id_files_sage_feats }
-
-            // ID_MERGER for samples group
-            ID_MERGER(ch_id_files_msgf_feats.groupTuple(by: 2)
-                .mix(ch_id_files_comet_feats.groupTuple(by: 2))
-                .mix(ch_id_files_sage_feats.groupTuple(by: 2))
-            )
-            ch_versions = ch_versions.mix(ID_MERGER.out.versions)
-            ch_id_files_out = ID_MERGER.out.id_merged
-
-        } else if (params.ms2features_range == "by_project") {
-            ch_id_files_msgf_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_msgf_feats }
-            ch_id_files_comet_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_comet_feats }
-            ch_id_files_sage_feats.map {[it[0].experiment_id, it[0], it[1]]}.set { ch_id_files_sage_feats }
-
-            // ID_MERGER for whole experiments
-            ID_MERGER(ch_id_files_msgf_feats.groupTuple(by: 2)
-                .mix(ch_id_files_comet_feats.groupTuple(by: 2))
-                .mix(ch_id_files_sage_feats.groupTuple(by: 2)))
-            ch_versions = ch_versions.mix(ID_MERGER.out.versions)
-            ch_id_files_out = ID_MERGER.out.id_merged
-        } else {
-            ch_id_files_out = ch_id_files_msgf_feats.mix(ch_id_files_comet_feats).mix(ch_id_files_sage_feats)
-        }
-
 
     } else if (params.psm_clean == true) {
         ch_id_files = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
         PSM_CLEAN(ch_id_files.combine(ch_mzmls_search, by: 0))
-        ch_id_files_out = PSM_CLEAN.out.idxml
+        ch_id_files_out = PSM_CLEAN.out.idparquet
         ch_versions = ch_versions.mix(PSM_CLEAN.out.versions)
     } else {
         ch_id_files_out = ch_id_msgf.mix(ch_id_comet).mix(ch_id_sage)
@@ -240,15 +167,4 @@ workflow PEPTIDE_DATABASE_SEARCH {
     emit:
     ch_id_files_idx = ch_id_files_out
     versions        = ch_versions
-}
-
-// Function to get sample map
-def get_sample_map(LinkedHashMap row) {
-
-    filestr               = row.Spectra_Filepath
-    file_name             = file(filestr).name.take(file(filestr).name.lastIndexOf('.'))
-    sample                = row.Sample
-
-    return [file_name, sample]
-
 }

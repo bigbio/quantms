@@ -3,6 +3,49 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] bigbio/quantms - [23/06/2026] - [Guangzhou]
+
+### `Added`
+
+- [#690](https://github.com/bigbio/quantms/pull/690) Expose `fdr_conservative` parameter to control FDR estimation formula (Keich & Noble 2025)
+- [#694](https://github.com/bigbio/quantms/pull/694) Expose Biosaur2 as alternative feature seeding algorithm for LFQ via `lfq_seeding_algorithm` parameter
+- [#623](https://github.com/bigbio/quantms/pull/623) Add support for `.dia` file format and improve file format documentation
+
+### `Changed`
+
+- [#639](https://github.com/bigbio/quantms/pull/639) **BREAKING: Deprecated OpenMS experimental design format**: The pipeline now only accepts SDRF files as input. All input files are treated as SDRF regardless of file extension. Supported extensions: `.sdrf`, `.tsv`, `.csv`.
+- [#651](https://github.com/bigbio/quantms/pull/651) Remove redundant SDRF-derived parameters: 4 parameters (`acquisition_method`, `labelling_type`, `enzyme`, `fixed_mods`) are now read exclusively from SDRF files
+- [#644](https://github.com/bigbio/quantms/pull/644) Update pipeline for Nextflow 26 strict syntax compatibility
+- [#641](https://github.com/bigbio/quantms/pull/641) Enable `ext.args` support in GENERATE_CFG module for nf-core standard compliance
+- [#660](https://github.com/bigbio/quantms/pull/660) Refactor DIA-NN parameter handling for extended module validation
+- [#676](https://github.com/bigbio/quantms/pull/676) Fix `.d` file support and multiple Nextflow 26 compatibility issues
+- [#686](https://github.com/bigbio/quantms/pull/686) Update test configurations to fetch SDRF and FASTA files from maintained repository
+- [#687](https://github.com/bigbio/quantms/pull/687) Migrate thermorawfileparser module from local to bigbio/nf-modules
+- [#709](https://github.com/bigbio/quantms/pull/709) Update onsite module for improved PTM localization
+- [#690](https://github.com/bigbio/quantms/pull/690), [#694](https://github.com/bigbio/quantms/pull/694) OpenMS tooling improvements including FDR conservative formula and Biosaur2 feature seeding
+
+### `Fixed`
+
+- [#689](https://github.com/bigbio/quantms/pull/689) Fix typo in openms_peak_picker processOption value (`inmermory` → `inmemory`)
+- [#699](https://github.com/bigbio/quantms/pull/699) Fix Comet version reporting in pmultiqc software table
+
+### `Removed`
+
+- [#702](https://github.com/bigbio/quantms/pull/702) **Remove DIA-NN workflow from quantms**: DIA users should use the dedicated repository [bigbio/quantmsdiann](https://github.com/bigbio/quantmsdiann)
+- [#701](https://github.com/bigbio/quantms/pull/701) **Remove MSstats post-processing step**: R scripts (`msstats_plfq.R`, `msstats_tmt.R`, `msstats_utils.R`) and corresponding modules removed. Users should run MSstats manually outside the pipeline.
+- [#706](https://github.com/bigbio/quantms/pull/706) Remove `ms2features_range` modes (`by_sample`, `by_project`) and IDRipper module. Only `independent_run` per-file Percolator is now supported.
+- [#708](https://github.com/bigbio/quantms/pull/708) Remove ConsensusID module; migrate to parquet-based processing
+
+### `Dependencies`
+
+- Updated quantms-utils to version 0.0.25
+- Updated quantms-rescoring (container permissions fix)
+- Migrated thermorawfileparser to bigbio/nf-modules
+
+### `Deprecations`
+
+- **BREAKING: Deprecated OpenMS experimental design format as input**: The pipeline now only accepts SDRF (Sample to Data Relation Format) files as input. The OpenMS experimental design format (`.tsv` without SDRF structure) is no longer supported. All input files are now treated as SDRF regardless of file extension. Supported file extensions for SDRF input are `.sdrf`, `.tsv`, and `.csv`. This change aligns with nf-core best practices and simplifies input handling for cloud storage interfaces like Seqera Datastudios and Explorer. Users must convert their OpenMS experimental design files to SDRF format. The `--labelling_type` and `--acquisition_method` parameters are no longer used for determining input file type - all information must be specified in the SDRF file.
+
 ## [1.7.0] bigbio/quantms - [08/01/2026] - [Caracas]
 
 ### `Added`
@@ -291,8 +334,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [#200](https://github.com/bigbio/quantms/pull/200) - Add `export_mztab` parameter to allow torun PROTEINQUANTIFIER TMT without exporting to mzTab
 
 ## [1.0] nfcore/quantms - [05/02/2022] - Havana
-
-Initial release of bigbio/quantms, created with the [nf-core](https://nf-co.re/) template.
 
 ### `Added`
 
