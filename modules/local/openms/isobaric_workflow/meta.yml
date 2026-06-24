@@ -9,6 +9,7 @@ tools:
         Extracts and normalizes isobaric labeling information from an LC-MS/MS experiment.
       homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_IsobaricWorkflow.html
       documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_IsobaricWorkflow.html
+input:
   - mzmls:
       type: file
       description: Input Spectra in mzML format
