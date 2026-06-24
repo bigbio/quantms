@@ -8,7 +8,6 @@ include { PHOSPHO_SCORING      } from '../phospho_scoring/main'
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 //
 include { PEPTIDE_DATABASE_SEARCH } from '../peptide_database_search/main'
-include { PSM_FDR_CONTROL         } from '../psm_fdr_control/main'
 
 workflow DDA_ID {
     take:
@@ -43,16 +42,12 @@ workflow DDA_ID {
     ch_rescoring_results = PERCOLATOR.out.id_files_perc
     ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
 
-
-    PSM_FDR_CONTROL(ch_rescoring_results)
-    ch_software_versions = ch_software_versions.mix(PSM_FDR_CONTROL.out.versions)
-
     if (params.enable_mod_localization) {
-        PHOSPHO_SCORING(ch_file_preparation_results, PSM_FDR_CONTROL.out.id_filtered)
+        PHOSPHO_SCORING(ch_file_preparation_results, ch_rescoring_results)
         ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
         ch_id_results = PHOSPHO_SCORING.out.id_onsite
     } else {
-        ch_id_results = PSM_FDR_CONTROL.out.id_filtered
+        ch_id_results = ch_rescoring_results
     }
 
     emit:
