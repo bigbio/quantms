@@ -3,8 +3,8 @@ process PSM_CLEAN {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.20' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.20' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.21' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.21' }"
 
     input:
     tuple val(meta), path(idparquet), path(mzml)

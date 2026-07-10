@@ -4,8 +4,8 @@ process ISOBARIC_WORKFLOW {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.06.06' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2026.06.06' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.07.02' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2026.07.02' }"
 
     input:
     val(labelling_type)
