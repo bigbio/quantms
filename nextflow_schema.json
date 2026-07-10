@@ -1273,12 +1273,6 @@
             "$ref": "#/$defs/psm_re_scoring_percolator"
         },
         {
-            "$ref": "#/$defs/consensus_id"
-        },
-        {
-            "$ref": "#/$defs/feature_mapper"
-        },
-        {
             "$ref": "#/$defs/isobaric_analyzer"
         },
         {
