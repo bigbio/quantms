@@ -1,0 +1,45 @@
+name: decompress_dotd
+description: Decompress .tar/.gz files that contain a .d file/directory
+keywords:
+  - raw
+  - bruker
+  - .d
+tools:
+  - tar:
+      description: |
+        Generates and extracts archives.
+      homepage: https://www.gnu.org/software/tar/
+  - gunzip:
+      description: |
+        Decompresses using zlib.
+      homepage: https://www.gnu.org/software/gzip/
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+  - rawfile:
+      type: file
+      description: |
+        Bruker Raw file archived using tar
+      pattern: "*.{d.tar,.tar,.gz,.d.tar.gz}"
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. [ id:'MD5', enzyme:trypsin ]
+  - dotd:
+      type: path
+      description: Raw Bruker .d file
+      pattern: "*.d"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@jspaezp"

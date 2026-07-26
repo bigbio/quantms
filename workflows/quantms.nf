@@ -1,43 +1,162 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
+    PRINT PARAMS SUMMARY
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { FASTQC                 } from '../modules/nf-core/fastqc/main'
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
-include { paramsSummaryMap       } from 'plugin/nf-schema'
-include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+
+include { paramsSummaryMap } from 'plugin/nf-schema'
+include { paramsSummaryMultiqc } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_quantms_pipeline'
 
+// Main subworkflows imported from the pipeline TMT, LFQ
+include { TMT } from './tmt'
+include { LFQ } from './lfq'
+
+// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
+include { INPUT_CHECK } from '../subworkflows/local/input_check/main'
+include { FILE_PREPARATION } from '../subworkflows/local/file_preparation/main'
+include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channel/main'
+include { DDA_ID } from '../subworkflows/local/dda_id/main'
+
+// Modules import from the pipeline
+include { PMULTIQC as SUMMARY_PIPELINE } from '../modules/local/pmultiqc/main'
+include { GENERATE_DECOY_DATABASE } from '../modules/local/openms/generate_decoy_database/main'
+
 /*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+========================================================================================
     RUN MAIN WORKFLOW
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+========================================================================================
 */
+
 
 workflow QUANTMS {
 
-    take:
-    ch_samplesheet // channel: samplesheet read in from --input
-    multiqc_config
-    multiqc_logo
-    multiqc_methods_description
-    outdir
-
     main:
 
-    def ch_versions = channel.empty()
-    def ch_multiqc_files = channel.empty()
-    //
-    // MODULE: Run FastQC
-    //
-    FASTQC(ch_samplesheet)
-    ch_multiqc_files = ch_multiqc_files.mix(FASTQC.out.zip.map{ _meta, file -> file })
+    // TODO check what the standard is here: ch_versions or ch_software_versions
+    ch_versions = channel.empty()
 
     //
-    // Collate and save software versions
+    // SUBWORKFLOW: Read in samplesheet, validate and stage input files
     //
+
+    INPUT_CHECK(
+        file(params.input)
+    )
+    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
+    // TODO: OPTIONAL, you can use nf-validation plugin to create an input channel from the samplesheet with channel.fromSamplesheet("input")
+    // See the documentation https://nextflow-io.github.io/nf-validation/samplesheets/fromSamplesheet/
+    // ! There is currently no tooling to help you write a sample sheet schema
+
+    //
+    // SUBWORKFLOW: Create input channel
+    //
+    CREATE_INPUT_CHANNEL(
+        INPUT_CHECK.out.ch_input_file
+    )
+    ch_versions = ch_versions.mix(CREATE_INPUT_CHANNEL.out.versions)
+
+    //
+    // SUBWORKFLOW: File preparation
+    //
+    FILE_PREPARATION(
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq)
+    )
+
+    ch_versions = ch_versions.mix(FILE_PREPARATION.out.versions)
+
+    FILE_PREPARATION.out.results
+        .branch { item ->
+            iso: item[0].labelling_type.contains("tmt") || item[0].labelling_type.contains("itraq")
+            lfq: item[0].labelling_type.contains("label free")
+        }
+        .set { ch_fileprep_result }
+    //
+    // WORKFLOW: Run main bigbio/quantms analysis pipeline based on the quantification type
+    //
+    ch_pipeline_results = channel.empty()
+    ch_ids_pmultiqc = channel.empty()
+    ch_msstats_in = channel.empty()
+    ch_consensus_pmultiqc = channel.empty()
+
+    //
+    // MODULE: Generate decoy database
+    //
+    if (params.database) {
+        ch_db_for_decoy_creation = channel.from(file(params.database, checkIfExists: true))
+    }
+    else {
+        exit(1, 'No protein database provided')
+    }
+
+
+    CREATE_INPUT_CHANNEL.out.ch_meta_config_iso.mix(
+        CREATE_INPUT_CHANNEL.out.ch_meta_config_lfq
+    ).first()
+        | combine(ch_db_for_decoy_creation)
+        | map { item -> item[-1] }
+        | set { ch_db_for_decoy_creation_or_null }
+
+    ch_searchengine_in_db = params.add_decoys ? channel.empty() : channel.fromPath(params.database)
+    if (params.add_decoys) {
+        GENERATE_DECOY_DATABASE(
+            ch_db_for_decoy_creation_or_null
+        )
+        ch_searchengine_in_db = GENERATE_DECOY_DATABASE.out.db_decoy
+        ch_versions = ch_versions.mix(GENERATE_DECOY_DATABASE.out.versions)
+    }
+
+    // Check that there is no duplicated search engines
+    if (params.search_engines) {
+        search_engines = params.search_engines.tokenize(',')
+        if (search_engines.size() != search_engines.unique().size()) {
+            error("Duplicated search engines in the search_engines parameter: ${params.search_engines}")
+        }
+    }
+
+    // Only performing id_only subworkflows .
+    if (params.id_only) {
+        DDA_ID(
+            FILE_PREPARATION.out.results,
+            ch_searchengine_in_db,
+            FILE_PREPARATION.out.ms2_statistics,
+            CREATE_INPUT_CHANNEL.out.ch_expdesign,
+        )
+        ch_versions = ch_versions.mix(DDA_ID.out.versions)
+        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_ids)
+        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(DDA_ID.out.ch_pmultiqc_consensus)
+    }
+    else {
+        TMT(
+            ch_fileprep_result.iso,
+            CREATE_INPUT_CHANNEL.out.ch_expdesign,
+            ch_searchengine_in_db,
+        )
+        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(TMT.out.ch_pmultiqc_ids)
+        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(TMT.out.ch_pmultiqc_consensus)
+        ch_pipeline_results = ch_pipeline_results.mix(TMT.out.final_result)
+        ch_msstats_in = ch_msstats_in.mix(TMT.out.msstats_in)
+        ch_versions = ch_versions.mix(TMT.out.versions)
+
+        LFQ(
+            ch_fileprep_result.lfq,
+            CREATE_INPUT_CHANNEL.out.ch_expdesign,
+            ch_searchengine_in_db,
+        )
+        ch_ids_pmultiqc = ch_ids_pmultiqc.mix(LFQ.out.ch_pmultiqc_ids)
+        ch_consensus_pmultiqc = ch_consensus_pmultiqc.mix(LFQ.out.ch_pmultiqc_consensus)
+        ch_pipeline_results = ch_pipeline_results.mix(LFQ.out.final_result)
+        ch_msstats_in = ch_msstats_in.mix(LFQ.out.msstats_in)
+        ch_versions = ch_versions.mix(LFQ.out.versions)
+
+    }
+
+    // Other subworkflow will return null when performing another subworkflow due to unknown reason.
+    ch_versions = ch_versions.filter { v -> v != null }
+
+    // see https://nf-co.re/docs/tutorials/migrate_to_topics/update_pipelines
+    // which is used in https://github.com/nf-core/demo/blob/1.1.0/workflows/demo.nf
     def topic_versions = channel.topic("versions")
         .distinct()
         .branch { entry ->
@@ -55,47 +174,48 @@ workflow QUANTMS {
             "${process}:\n${tool_versions.join('\n')}"
         }
 
-    def ch_collated_versions = softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
         .mix(topic_versions_string)
         .collectFile(
-            storeDir: "${outdir}/pipeline_info",
-            name: 'nf_core_'  +  'quantms_software_'  + 'mqc_'  + 'versions.yml',
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_' + 'quantms_software_' + 'mqc_' + 'versions.yml',
             sort: true,
-            newLine: true
+            newLine: true,
         )
+        .set { ch_collated_versions }
 
-    //
-    // MODULE: MultiQC
-    //
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    def ch_summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
-    def ch_workflow_summary = channel.value(paramsSummaryMultiqc(ch_summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    def ch_multiqc_custom_methods_description = multiqc_methods_description
-        ? file(multiqc_methods_description, checkIfExists: true)
+
+    ch_multiqc_config = channel.fromPath("${projectDir}/assets/multiqc_config.yml", checkIfExists: true)
+    summary_params = paramsSummaryMap(workflow, parameters_schema: "nextflow_schema.json")
+    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description
+        ? file(params.multiqc_methods_description, checkIfExists: true)
         : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
-    def ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: true))
-    MULTIQC(
-        ch_multiqc_files.flatten().collect().map { files ->
-            [
-                [id: 'quantms'],
-                files,
-                multiqc_config
-                    ? file(multiqc_config, checkIfExists: true)
-                    : file("${projectDir}/assets/multiqc_config.yml", checkIfExists: true),
-                multiqc_logo ? file(multiqc_logo, checkIfExists: true) : [],
-                [],
-                [],
-            ]
-        }
-    )
-    emit:multiqc_report = MULTIQC.out.report.map { _meta, report -> [report] }.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions                 // channel: [ path(versions.yml) ]
-}
+    ch_methods_description = channel.value(methodsDescriptionText(ch_multiqc_custom_methods_description))
+    // concatenate multiqc input files
+    ch_multiqc_files = channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_multiqc_config)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
+    ch_multiqc_quantms_logo = file("${projectDir}/assets/nf-core-quantms_logo_light.png")
 
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    THE END
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
+    // create cross product of all inputs
+    multiqc_inputs = CREATE_INPUT_CHANNEL.out.ch_expdesign
+        .mix(ch_pipeline_results.ifEmpty([]))
+        .mix(ch_multiqc_files.collect())
+        .mix(ch_ids_pmultiqc.collect().ifEmpty([]))
+        .mix(ch_consensus_pmultiqc.collect().ifEmpty([]))
+        .mix(ch_msstats_in.ifEmpty([]))
+        .collect()
+
+    SUMMARY_PIPELINE(
+        multiqc_inputs,
+        ch_multiqc_quantms_logo,
+    )
+
+    emit:
+    multiqc_report = SUMMARY_PIPELINE.out.ch_pmultiqc_report.toList()
+    versions = ch_versions
+}

@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1"
+	 id="图层_1" inkscape:export-filename="quantms_metro.png" inkscape:export-xdpi="96" inkscape:export-ydpi="96" inkscape:version="1.3.2 (091e20e, 2023-11-25)" sodipodi:docname="quantms_metro.drawio.svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1283 603"
+	 style="enable-background:new 0 0 1283 603;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;stroke:#DA291C;stroke-width:11;stroke-miterlimit:10;}
+	.st1{fill:none;stroke:#56A8CB;stroke-width:10;stroke-miterlimit:10;}
+	.st2{fill:none;}
+	.st3{fill:none;stroke:#CDA2BE;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st4{fill:none;stroke:#9673A6;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:3,3;}
+	.st5{font-family:'ArialMT';}
+	.st6{font-size:12.8756px;}
+	.st7{fill:none;stroke:#FFFFFF;stroke-width:13;stroke-miterlimit:10;}
+	.st8{fill:#FFFFFF;stroke:#000000;}
+	.st9{fill:#FFBE7A;stroke:#000000;}
+	.st10{fill:#FFBE7A;stroke:#000000;stroke-width:1.5;stroke-dasharray:4.5,4.5;}
+	.st11{fill:#FFFFFF;}
+	.st12{fill:none;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:3,3;}
+	.st13{font-family:'Arial-BoldMT';}
+	.st14{fill:none;stroke:#DA291C;stroke-width:11;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st15{fill:none;stroke:#56A8CB;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st16{font-size:11.8539px;}
+	.st17{font-family:'ArialNarrow-Bold';}
+	.st18{letter-spacing:1.1;}
+	.st19{fill:#FFFFFF;stroke:#000000;stroke-dasharray:3,3;}
+	.st20{font-size:12.1693px;}
+	.st21{letter-spacing:27.4;}
+	.st22{fill:none;stroke:#53A567;stroke-width:10;stroke-miterlimit:10;}
+	.st23{clip-path:url(#SVGID_2_);}
+	.st24{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;stroke:#2F528F;stroke-width:1.3333;stroke-miterlimit:8;}
+	.st25{fill-rule:evenodd;clip-rule:evenodd;stroke:#2F528F;stroke-width:1.3333;stroke-miterlimit:8;}
+	.st26{font-size:8.5714px;}
+	.st27{clip-path:url(#SVGID_4_);}
+	.st28{clip-path:url(#SVGID_6_);}
+	.st29{clip-path:url(#SVGID_8_);}
+	.st30{font-size:6.1224px;}
+	.st31{clip-path:url(#SVGID_10_);}
+	.st32{font-size:6.4378px;}
+	.st33{clip-path:url(#SVGID_12_);}
+	.st34{font-size:6.5691px;}
+	.st35{letter-spacing:33.3;}
+	.st36{font-size:10.0751px;}
+</style>
+<path id="path168" pointer-events="stroke" class="st0" d="M452.6,147.5l246.6,21.2"/>
+<path id="path166" pointer-events="stroke" class="st1" d="M654.5,157.5c-14.2,0.1-60-27.7-197.6-27.7"/>
+<g id="g107">
+	<path id="path16_1_" pointer-events="stroke" class="st1" d="M702,154.3h170"/>
+	<path id="path17_2_" pointer-events="stroke" class="st0" d="M702,169.2l44.8,0.1l125.2-0.1"/>
+	<rect id="rect3" x="404.5" y="48.9" pointer-events="all" class="st2" width="103" height="169.5"/>
+	<path id="path4" pointer-events="all" class="st3" d="M329.3,342.8L329.3,342.8 M329.3,342.8L329.3,342.8 M397.9,53.2
+		c5-3.1,7.6-6.6,9.9-7.7 M397.9,53.2c3.9-3.5,8.2-6.2,9.9-7.7 M397.4,61.4C406,56.1,408,54,418,45 M397.4,61.4
+		c5.9-5.2,10.2-10.1,20.6-16.5 M398.1,68.6c9.9-6,21-16.6,29.4-23.3 M398.1,68.6c8.7-8,19-15.9,29.4-23.3 M397.6,76.8
+		c17.3-12.2,26-21.1,40.1-32.1 M397.6,76.8c1.7-2.3,18.6-14.7,40.1-32.1 M398.3,84c14.9-15.7,40.1-27.8,48.8-38.9 M398.3,84
+		c14.5-11.2,25.5-18.6,48.8-38.9 M397.9,92.4c18.6-13.3,38.3-31.3,59.6-47.7 M397.9,92.4c20.8-16,39.7-32,59.6-47.7 M397.4,100.5
+		c23.2-12.5,35-29.3,69.5-55.3 M398.1,108c24.5-21,52.8-41.6,78.1-62.1 M398.1,108c16.9-12.8,33.6-25.4,78.1-62.1 M397.6,116.1
+		c35.5-30.4,73-58,89.1-70.9 M397.6,116.1c17.8-16.1,36-30,89.1-70.9 M398.3,123.3c31.3-27,66.8-50.4,97.5-77.7 M398.3,123.3
+		c24.9-20.5,49.5-40.5,97.5-77.7 M397.9,131.6C418.2,113,442,96.4,506.5,45.1 M397.9,131.6c38.8-31.6,74.2-61.4,108.5-86.5
+		 M397.4,139.9c31.4-21.7,59.6-47.6,118.2-94.2 M397.4,139.9c24.7-20,50.9-38.7,118.2-94.2 M398.1,147.2
+		c45.1-33,86.6-67.2,128-102.1 M397.6,155.5c54.6-44.2,105-87,137.7-109.8 M397.6,155.5c45.7-34.9,89.2-71.7,137.7-109.8
+		 M398.3,162.7C437.5,135,471,104.5,545.8,45.1 M398.3,162.7c49.2-38.1,97.9-74.2,147.5-117.6 M397.9,170.8
+		c57.8-48.3,118.2-94.1,157.2-125.4 M397.9,170.8c36.3-28.4,71.1-58.5,157.2-125.4 M397.4,179.1c36.3-32.4,82.9-63.4,168.2-134.2
+		 M397.4,179.1c43.8-34.9,89.2-72.3,168.2-134.2 M398.1,186.3c63.7-46,123-93.2,176.7-140.9 M398.1,186.3
+		c48.3-39.8,97.4-77.6,176.7-140.9 M397.6,194.6c46.1-35.3,86.2-68.3,187.7-149.7 M397.6,194.6c44.6-37.1,87.7-72.7,187.7-149.7
+		 M398.3,201.9C473,139.8,547.4,80.8,592.1,47.3 M398.3,201.9c41.3-33.3,81-63.9,193.8-154.6 M397.9,210.2
+		c68.8-54.9,142-109,195.2-155.5 M397.4,218.4c40.5-31.6,86.6-64.1,195.2-155.5 M398.1,225.6C466,171.3,534.9,117.7,592,71
+		 M397.6,233.8c53.7-44.2,112.4-86.6,195.2-155.5 M397.6,233.8c54.5-46.7,111.4-91.5,195.2-155.5 M398.3,241.2
+		c50.1-42.8,107-86.3,193.8-154.6 M398.3,241.2c42.4-30.4,82.7-64.1,193.8-154.6 M408.3,248.8c58-41.9,112.4-85.7,184.2-146.7
+		 M408.3,248.8c61.5-48,119.3-96.4,184.2-146.7 M417.7,249.3c42.2-33.9,87.7-70.3,174.3-139 M417.7,249.3
+		c46.8-39.5,93.8-77.2,174.3-139 M428.2,248.7c42.2-31.1,78.1-63.3,164.7-131.1 M428.2,248.7c48.7-39.8,102.4-80.2,164.7-131.1
+		 M437.3,249.3c55.4-41.1,106.1-82.2,154.8-123.5 M437.3,249.3c36.8-27.7,69.9-57.6,154.8-123.5 M447.9,248.7
+		c52.8-40.7,102.8-78.4,145.2-115.6 M447.9,248.7c44.1-33.9,87-67,145.2-115.6 M457.3,249.3c37.9-27.7,68.8-51.8,135.3-107.9
+		 M457.3,249.3c50.9-40.2,99.4-80.6,135.3-107.9 M467.6,248.7c38.8-33,78.6-63.6,124.3-99.2 M476.9,249.2
+		c37.2-31.7,73-57.9,115.8-92.3 M476.9,249.2c27.7-22.7,58.7-44.2,115.8-92.3 M487.4,248.5c29.7-25.2,61.9-47.7,104.8-83.5
+		 M487.4,248.5c38.7-29.8,74.9-60.1,104.8-83.5 M496.6,249.2c23.8-19.6,50.2-35.6,96.3-76.7 M496.6,249.2
+		c18.6-16.1,42-32.1,96.3-76.7 M507.2,248.5c26.4-22.9,57.6-44.9,85.3-68.1 M507.2,248.5c31.6-27.5,68-53.1,85.3-68.1 M516.5,249.2
+		c21.9-17.1,45.1-33.9,75.6-60.2 M516.5,249.2c26-20.9,48.3-39.5,75.6-60.2 M526.9,248.5c16.2-11.3,33.6-25.7,65.8-52.6
+		 M526.9,248.5c18.2-14.6,40.1-31.8,65.8-52.6 M536.2,249c18.1-14.6,37.3-26.5,56.1-44.6 M536.2,249c14-12.5,27.5-24,56.1-44.6
+		 M546.6,248.5c15.4-10.8,36.4-28.6,46.3-37 M546.6,248.5c13.7-11.2,26.4-21.1,46.3-37 M555.9,249c11.2-8,23.8-18.7,36.6-29
+		 M555.9,249c14-10.4,24.2-21.1,36.6-29 M566.5,248.5c7.3-8.8,15.6-10.9,25.6-20.4 M566.5,248.5c6.7-6.3,12.8-12.6,25.6-20.4
+		 M575.6,248.8c5.6-1.9,8.7-4.6,17.1-13.7 M575.6,248.8c6.5-5.2,12.7-10.4,17.1-13.7 M586.2,248.5c0.9-1,2.4-3.1,6.1-4.9
+		 M586.2,248.5c1.5-1.5,3.7-3.1,6.1-4.9"/>
+	<path id="path5" pointer-events="all" class="st4" d="M404.5,48.9c29.2,1.1,58.4-2,103,0 M404.5,48.9c29.2,0,58,0.7,103,0
+		 M404.5,48.9c29.2,0,58,0.7,103,0 M507.5,48.9c1,50.4,1.3,99.5,0,169.5 M507.5,48.9c0.8,48.6,0.9,97.4,0,169.5 M507.5,218.4
+		c-31,0.5-59.8,2.1-103,0 M507.5,218.4c-39.6,1.3-81.9,0-103,0 M404.5,218.4c0.2-68.9,0.1-127.7,0-169.5 M404.5,218.4
+		c1.7-50.1,0.7-97.9,0-169.5"/>
+	<g id="g6" transform="translate(-0.5 -0.5)">
+		<text id="text5" transform="matrix(0.932 0 0 1 409.1846 21.2311)" class="st5 st6">Search engines</text>
+		<text id="text6" transform="matrix(0.932 0 0 1 419.8096 35.609)" class="st5 st6">(at least one)</text>
+		<polygon id="polygon6" class="st2" points="459.9,43.2 454.8,43.2 454.8,43.2 		"/>
+	</g>
+	<path id="path6" pointer-events="stroke" class="st1" d="M165.4,295.5l104.1-0.9c6.7,0,10.7-3.5,12-10.6l23.9-123.8
+		c1.4-7,5.4-10.5,12-10.5h15"/>
+	<path id="path7" pointer-events="stroke" class="st1" d="M279.2,149.6l62.3,0.2c6.7,0,12.8,1.9,18.5,5.7l32.7,28.3
+		c5.6,3.8,19.9,25.5,26.6,25.5l39.1,1.6"/>
+	<path id="path8" pointer-events="stroke" class="st1" d="M458.4,72.5"/>
+	<path id="path9" pointer-events="stroke" class="st1" d="M279.2,149.6l68.3,0.2c6.7,0,12-2.8,16.1-8.5l41.1-60c0.4-0.5,5.2,2,5.4,2
+		"/>
+	<path id="path10" pointer-events="stroke" class="st7" d="M279.2,165.8l78.3,0.1c6.7,0,12-2.9,16-8.6l26.1-37.6
+		c4-5.7,12.1-26,18.8-26l37.8-0.3"/>
+	<path id="path12" pointer-events="stroke" class="st0" d="M165.4,312.7l114.1-0.9c6.7,0,10.8-3.5,12.3-10.5l26.5-122.9
+		c1.5-7,5.4-10.8,11.8-11.5l9.5-1.1"/>
+	<path id="path16" pointer-events="stroke" class="st1" d="M48.2,149.6h117"/>
+	<path id="path16_3_" pointer-events="stroke" class="st1" d="M58.8,222.1h119.9"/>
+	<path id="path17" pointer-events="stroke" class="st0" d="M48.2,165.8l30.8,0.1l86.2-0.1"/>
+	<path id="path19" pointer-events="stroke" class="st1" d="M165.2,149.6h114"/>
+	<path id="path20" pointer-events="stroke" class="st0" d="M165.2,165.8h114"/>
+	<path id="path22" pointer-events="stroke" class="st1" d="M48.2,50.9L166.5,52c6.7,0.1,11.5,3.3,14.5,9.7l36,76.4
+		c3,6.3,7.8,9.7,14.5,9.9l47.7,1.5"/>
+	<path id="path22_1_" pointer-events="stroke" class="st1" d="M174.3,222.6l26.5-0.8c1.5-0.1,2.6-2.5,3.3-7.4l8.1-58.6
+		c0.7-4.8,1.7-7.4,3.3-7.6L226,147"/>
+	<path id="path23" pointer-events="stroke" class="st0" d="M48.2,67.1l108.3,1c6.7,0.1,11.5,3.3,14.5,9.7l36,76.4
+		c3,6.3,7.8,9.7,14.5,9.9l57.7,1.7"/>
+	<path id="path25" pointer-events="all" class="st8" d="M48.4,89.7L48.4,89.7c-5.5,0-9.9-4.7-9.9-10.6V55.2c0-5.9,4.4-10.6,9.9-10.6
+		l0,0c5.5,0,9.9,4.7,9.9,10.6V79C58.3,85,53.8,89.7,48.4,89.7z"/>
+	<path id="path26" pointer-events="all" class="st8" d="M48.4,188.3L48.4,188.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v23.8C58.3,183.5,53.8,188.3,48.4,188.3z"/>
+	<path id="path27" pointer-events="all" class="st9" d="M165.4,188.3L165.4,188.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v23.8C175.3,183.5,170.8,188.3,165.4,188.3z"/>
+	<g id="g28" transform="translate(-0.5 -0.5)">
+		<text id="text27" transform="matrix(0.927 0 0 1 99.2021 123.5748)" class="st5 st6">ThermoRaw</text>
+		<text id="text28" transform="matrix(0.932 0 0 1 104.502 139.0255)" class="st5 st6">FileParser</text>
+	</g>
+	<path id="path28" pointer-events="stroke" class="st0" d="M279.2,165.8l63.3,0.1c6.7,0,12.8,2,18.3,6.1l31.9,32.3
+		c5.5,4.1,11,17.1,20.7,18.3h45.8"/>
+	<path id="path29" pointer-events="stroke" class="st1" d="M453.7,82.1h62.1c13.1,2,40.9-0.3,49.4,1.5c3,0.6-1.6-1.5,0,0l67.9,64.2
+		c10.3,4.8,22.2,7.2,35.6,7.2h40.3"/>
+	<path id="path30" pointer-events="stroke" class="st1" d="M458.4,210.9l44.3-1.5c18.2-3.4,45.2-26,72.5-42.2
+		c8.6-5.1,29.7-7.4,29.7-7.4c10.6-2.9,21.9-4.2,33.8-4.2H674"/>
+	<path id="path31" pointer-events="stroke" class="st0" d="M459.3,222.1h46.3c41.9-7,107.3-58.5,94.8-48.8c-14.1,10.7,0,0,0,0
+		c10.3-3,21.3-4.5,32.8-4.5h34.4"/>
+	<path id="path32" pointer-events="stroke" class="st0" d="M512.5,93.4l36.7-0.1c22.6,2.8,17-3.5,25,1.2l57.3,66.6
+		c8.1,4.6,35.3,7.7,45.9,7.7h31.6"/>
+	<path id="path33" pointer-events="all" class="st9" d="M481.8,234.3L481.8,234.3c-5.5,0-9.9-4.7-9.9-10.6v-10.1
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.1C491.7,229.5,487.3,234.3,481.8,234.3z"/>
+	<g id="g33" transform="translate(-0.5 -0.5)">
+		<text id="text33" transform="matrix(0.932 0 0 1 434.2002 197.047)" class="st5 st6">Comet</text>
+	</g>
+	<path id="path38" pointer-events="all" class="st10" d="M689.3,177L689.3,177c-5.5,0-9.9-4.7-9.9-10.6v-10.1
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.1C699.1,172.2,694.6,177,689.3,177z"/>
+	<path id="path49" pointer-events="stroke" class="st1" d="M48.2,295.6h30l57.2-0.1h30"/>
+	<path id="path50" pointer-events="stroke" class="st0" d="M48.2,311.8h30l57.2,1h30"/>
+	<path id="path52" pointer-events="all" class="st8" d="M48.4,334.3L48.4,334.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v23.8C58.3,329.6,53.8,334.3,48.4,334.3z"/>
+	<path id="path53" pointer-events="stroke" class="st1" d="M859.4,155h20c6.7,0,13-1.7,19-5.1l67.2-38c6-3.3,12.3-5.1,19-5.1h20"/>
+	<path id="path55" pointer-events="stroke" class="st0" d="M859.4,168.8h20c6.7,0,11.1,3.3,13.4,10.1l27.5,81.1
+		c2.3,6.8,5.1,24.7,11.7,24.7l21.7,0.7"/>
+	<path id="path56" pointer-events="all" class="st10" d="M859.4,176.6L859.4,176.6c-5.5,0-9.9-4.7-9.9-10.6v-10.1
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6V166C869.3,171.8,864.8,176.6,859.4,176.6z"/>
+	<g id="g57" transform="translate(-0.5 -0.5)">
+		<text id="text56" transform="matrix(0.932 0 0 1 849.9141 126.0162)" class="st5 st6">Mod.</text>
+		<text id="text57" transform="matrix(0.932 0 0 1 833.6143 141.4669)" class="st5 st6">localization</text>
+	</g>
+	<path id="path60" pointer-events="all" class="st2" d="M1238,382.5V369c0-7.4-3.4-11.2-10.4-11.2h-112.2c-6.9,0-10.4,3.6-10.4,11.2
+		v13.5"/>
+	<path id="path61" pointer-events="none" class="st11" d="M1237.7,381.9l-1.1-18l-4.5-6.8l-5.8,0.8l-117.1-0.3l-18.9-29.1l13.5,52.3
+		"/>
+	<path id="path62" pointer-events="none" class="st12" d="M1238,382.5c-0.6-3.5-0.4-6.5,0-13.5 M1238,382.5
+		c-0.6-4.7,0.2-10.5,0-13.5 M1238,369c-1.8-7.5-4.4-9.3-10.4-11.2 M1238,369c-0.4-9.8-4.5-10.2-10.4-11.2 M1227.7,357.9
+		c-32.8,1-68.1-0.6-112.3,0 M1227.7,357.9c-37.6,1.1-74.7,1.2-112.3,0 M1115.4,357.9c-6.1,1.1-10.3,1.6-10.4,11.2 M1115.4,357.9
+		c-7.6,0.2-8.5,2.6-10.4,11.2 M1105,369c0,4,1.2,10.7,0,13.5 M1105,369c-0.5,2.3,0.5,5.2,0,13.5"/>
+	<path id="path63" pointer-events="none" class="st12" d="M1105,382.5c-0.5,21.7-1.7,42.6,0,76.2 M1105,382.5
+		c-1.3,22.9-1.5,44.9,0,76.2 M1105,458.8c-0.3,3.9,5,6.7,10.4,7.5 M1105,458.8c0.6,4.3,5.3,9.1,10.4,7.5 M1115.4,466.2
+		c45.3,1.2,87.7-0.7,112.3,0 M1115.4,466.2c33.2-1.3,66.4-0.3,112.3,0 M1227.7,466.2c6.9,0.9,9.7-1.8,10.4-7.5 M1227.7,466.2
+		c8.3-0.5,10.1-1.9,10.4-7.5 M1238,458.8c-0.1-21.6,0-43.7,0-76.2 M1238,458.8c-0.3-26.5,0.8-53.5,0-76.2"/>
+	<path id="path64" pointer-events="none" class="st12" d="M1105,382.5c37.8,0.4,74.6-1,133,0 M1105,382.5c39.3,1,78.8-0.2,133,0"/>
+	<g id="g64" pointer-events="none">
+		<text id="text64" transform="matrix(0.932 0 0 1 1149.6748 375.0494)" class="st13 st6">Legend</text>
+	</g>
+	<path id="path66" pointer-events="none" class="st14" d="M1118.5,426c11,1.9,21,1,33.2,0 M1118.5,426c8,0.4,17.1-0.2,33.2,0"/>
+	<path id="path67" pointer-events="none" class="st15" d="M1118.5,400.8c10,1.2,19.1,0.4,34,0 M1118.5,400.8c9.9,1.2,21.1-0.3,34,0"
+		/>
+	<g id="g67" transform="translate(-0.5 -0.5)">
+		<text id="text67" transform="matrix(0.932 0 0 1 1162.1396 405.1617)" class="st5 st6">DDA-LFQ</text>
+	</g>
+	<g id="g68" transform="translate(-0.5 -0.5)">
+		<text id="text68" transform="matrix(0.932 0 0 1 1163.4727 430.3331)" class="st5 st6">DDA-ISO</text>
+	</g>
+	<g id="g71" transform="translate(-0.5 -0.5)">
+		<g id="g70" transform="translate(-0.5 -0.5)">
+			<text id="text70" transform="matrix(1.0123 0 0 1 1159.5752 456.0167)" class="st5 st16">Parallel step</text>
+		</g>
+	</g>
+	<path id="path71" pointer-events="none" class="st0" d="M953.7,285.4l27.6-0.7l0,0h30"/>
+	<path id="path72" pointer-events="none" class="st0" d="M1011.3,284.7l26.6,0.4l0,0h30"/>
+	<path id="path74" pointer-events="none" class="st8" d="M1011.3,294.3L1011.3,294.3c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0
+		c5,0,9,4.3,9,9.7l0,0C1020.3,290,1016.3,294.3,1011.3,294.3z"/>
+	<g id="g75" transform="translate(-0.5 -0.5)">
+		<text id="text74" transform="matrix(0.932 0 0 1 965.2635 309.5023)" class="st5 st6">IsobaricWorkflow</text>
+	</g>
+	<path id="path75" pointer-events="none" class="st1" d="M1004.5,106.8h30c6.7,0,10,3.6,10,10.7v110.8c0,7.2,3.3,10.7,10,10.7h173.7
+		"/>
+	<path id="path76" pointer-events="none" class="st0" d="M1067.9,285.1l25.5,0.4c0,0,0-8.6,0-14.4l2.1-14.1c0-2.9,3.3-4.3,10-4.3
+		l122.6-0.1"/>
+	<path id="path77" pointer-events="none" class="st1" d="M1004.5,106.8h29.1c6.7,0,10-3.5,10-10.7V65.9c0-7.2,3.3-10.7,10-10.7
+		h174.8"/>
+	<g id="g78" transform="translate(-0.5 -0.5)">
+		<text transform="matrix(0.8952 0 0 1 945.6113 369.4816)" class="st17 st6">bigbio/quantms v1.8</text>
+		<text transform="matrix(0.932 0 0 1 1040.7686 369.4816)" class="st17 st6 st18"> </text>
+		<text id="text78" transform="matrix(0.932 0 0 1 945.6113 408.2706)" class="st5 st6">Example analysis pathways</text>
+	</g>
+	<g id="g80" transform="translate(-0.5 -0.5)">
+		<text id="text79" transform="matrix(0.932 0 0 1 263.3667 124.4069)" class="st5 st6">mzML</text>
+		<text id="text80" transform="matrix(0.932 0 0 1 257.3667 139.8575)" class="st5 st6">indexing</text>
+	</g>
+	<path id="path85" pointer-events="none" class="st19" d="M165.4,320.5L165.4,320.5c-5.5,0-9.9-4.7-9.9-10.6v-10.1
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.1C175.3,315.8,170.8,320.5,165.4,320.5z"/>
+	<g id="g87" transform="translate(-0.5 -0.5)">
+		<text id="text86" transform="matrix(0.932 0 0 1 155.2241 270.4376)" class="st5 st6">Add</text>
+		<text id="text87" transform="matrix(0.932 0 0 1 146.9238 285.8883)" class="st5 st6">decoys</text>
+	</g>
+	<path id="path87" pointer-events="none" class="st1" d="M1004.5,106.8h30c6.7,0,10,3.6,10,10.7v15.8c0,7.2,3.3,10.7,10,10.7
+		l173.9,0.1"/>
+	<path id="path88" pointer-events="none" class="st7" d="M1068.7,269.9V172c0-7.2,3.3-10.7,10-10.7l149.6,0.1"/>
+	<path id="path89" pointer-events="none" class="st0" d="M1067.9,274.9V171.6c0-6.9,3.3-10.3,10.1-10.3l150.3,0.1"/>
+	<path id="path91" pointer-events="none" class="st8" d="M1027.5,116.5h-46c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7h46
+		c5,0,9,4.3,9,9.7l0,0C1036.5,112.2,1032.5,116.5,1027.5,116.5z"/>
+	<g id="g92" transform="translate(-0.5 -0.5)">
+		<text id="text91" transform="matrix(0.932 0 0 1 977.2686 75.8014)" class="st5 st6">Proteomics</text>
+		<text id="text92" transform="matrix(0.932 0 0 1 995.5684 91.2521)" class="st5 st6">LFQ</text>
+	</g>
+	<path id="path92" pointer-events="none" class="st8" d="M1228.4,169.2L1228.4,169.2c-5.5,0-9.9-4.7-9.9-10.6v-10.1
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.1C1238.3,164.5,1233.8,169.2,1228.4,169.2z"/>
+	<g id="g93" transform="translate(-0.5 -0.5)">
+		<text id="text93" transform="matrix(0.932 0 0 1 1212.501 134.7096)" class="st5 st6">mzTab</text>
+	</g>
+	<g id="g96" transform="translate(-0.5 -0.5)">
+		<text id="text96" transform="matrix(0.932 0 0 1 1216.7256 45.6529)" class="st5 st6">qpx</text>
+	</g>
+	<path id="path98" pointer-events="none" class="st8" d="M1228.4,275.3L1228.4,275.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v23.8C1238.3,270.6,1233.8,275.3,1228.4,275.3z"/>
+	<g id="g98" transform="translate(-0.5 -0.5)">
+		<text id="text98" transform="matrix(0.932 0 0 1 1211.499 226.985)" class="st5 st6">MSstats</text>
+	</g>
+	<g id="g103" transform="translate(-0.5 -0.5)">
+		<text id="text103" transform="matrix(0.932 0 0 1 436.084 64.1061)" class="st5 st6">MSGF+</text>
+	</g>
+	<path id="path103" pointer-events="stroke" class="st0" d="M279.2,165.8l78.2-0.9c6.6-0.1,11.7-3,15.6-8.8l38.3-59
+		c3.8-5.8-1.4-3.2,5.2-3.4l37.3-0.3"/>
+	<path id="path104" pointer-events="none" class="st9" d="M279.4,188.3L279.4,188.3c-5.5,0-9.9-4.7-9.9-10.6v-23.8
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v23.8C289.3,183.5,284.8,188.3,279.4,188.3z"/>
+	<path id="path26_1_" pointer-events="all" class="st8" d="M49.8,254.7L49.8,254.7c-5.5,0-9.9-4.7-9.9-10.6v-23.8
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v23.8C59.7,249.9,55.2,254.7,49.8,254.7z"/>
+	<g id="g28_1_" transform="translate(-0.5 -0.5)">
+		<text id="text27_1_" transform="matrix(0.932 0 0 1 126.4365 239.7501)" class="st5 st6">tdf2mzml</text>
+	</g>
+	<path id="path27_1_" pointer-events="all" class="st9" d="M187,258.3L187,258.3c-4.6,0-8.3-4-8.3-9v-20.2c0-5,3.7-9,8.3-9l0,0
+		c4.6,0,8.3,4,8.3,9v20.2C195.3,254.3,191.5,258.3,187,258.3z"/>
+	<g id="g78_1_" transform="translate(-0.5 -0.5)">
+		<text id="text77_1_" transform="matrix(0.9861 0 0 1 207.3999 31.6715)" class="st17 st20 st21"> </text>
+		<text id="text78_1_" transform="matrix(0.9861 0 0 1 224.3999 26.6564)" class="st13 st20">Identification subworkflow</text>
+	</g>
+	<g id="g58_3_" transform="translate(-0.5 -0.5)">
+		<text transform="matrix(0.932 0 0 1 636.4667 192.8362)" class="st5 st6">quantms-rescoring </text>
+		<text transform="matrix(0.932 0 0 1 713.1333 139.0256)" class="st5 st6">       Percolator</text>
+	</g>
+	<path id="path38_2_" pointer-events="all" class="st10" d="M755,177.4L755,177.4c-5.5,0-9.9-4.7-9.9-10.6v-10.1
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.1C764.9,172.6,760.4,177.4,755,177.4z"/>
+	<path id="path17_1_" pointer-events="stroke" class="st0" d="M417.4,93.3l31.8,0.1l89.1-0.1"/>
+	<path id="path105" pointer-events="all" class="st9" d="M482.7,98.9L482.7,98.9c-5.5,0-9.9-4.7-9.9-10.6V78.2
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.2C492.6,94.2,488.2,98.9,482.7,98.9z"/>
+	<path id="path89_1_" pointer-events="none" class="st0" d="M1067.9,284.6V86.4c0-13.3,3.4-19.7,10.2-19.7l151.9,0.2"/>
+	<path id="path96" pointer-events="none" class="st8" d="M1228.4,80.1L1228.4,80.1c-5.5,0-9.9-4.7-9.9-10.6V59.4
+		c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.2C1238.3,75.4,1233.8,80.1,1228.4,80.1z"/>
+</g>
+<sodipodi:namedview  bordercolor="#000000" borderopacity="0.25" id="namedview177" inkscape:current-layer="g78" inkscape:cx="214.09605" inkscape:cy="301.72186" inkscape:deskcolor="#d1d1d1" inkscape:pagecheckerboard="0" inkscape:pageopacity="0.0" inkscape:showpageshadow="2" inkscape:window-height="1027" inkscape:window-maximized="1" inkscape:window-width="1920" inkscape:window-x="0" inkscape:window-y="25" inkscape:zoom="1.1069798" pagecolor="#ffffff">
+	</sodipodi:namedview>
+<path id="path1" class="st3" d="M404.7,113.4c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path2" class="st3" d="M412,152.4c19.5-23.6,38.3-48.8,84.6-104.5"/>
+<path id="path108" class="st22" d="M0,16"/>
+<path id="path109" d="M0,16"/>
+<g id="g119">
+	<g id="g118">
+		<g id="g117">
+			<g id="g116">
+				<g>
+					<g>
+						<g>
+							<g>
+								<defs>
+									<rect id="SVGID_1_" x="-2370" y="-1129.7" width="35" height="37.5"/>
+								</defs>
+								<clipPath id="SVGID_2_">
+									<use xlink:href="#SVGID_1_"  style="overflow:visible;"/>
+								</clipPath>
+								<g id="g115" transform="translate(-395 -198)" class="st23">
+									<path id="path113" class="st24" d="M398,257.1h17.4l11.2,11.2v25.3H398V257.1z"/>
+									<path id="path114" class="st25" d="M395.5,275.4c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8
+										h-30.2c-1,0-1.8-0.8-1.8-1.8V275.4z"/>
+									<text id="text114" transform="matrix(1 0 0 1 401.0742 281.5916)" class="st11 st5 st26">mzML</text>
+									<path id="path115" class="st25" d="M415.5,267.9v-10.7l11.1,10.7H415.5z"/>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="g125">
+	<g id="g124">
+		<g id="g123">
+			<g id="g122">
+				<g>
+					<g>
+						<g>
+							<g>
+								<defs>
+									<rect id="SVGID_3_" x="-2370" y="-1037.7" width="35" height="37.5"/>
+								</defs>
+								<clipPath id="SVGID_4_">
+									<use xlink:href="#SVGID_3_"  style="overflow:visible;"/>
+								</clipPath>
+								<g id="g121" transform="translate(-395 -198)" class="st27">
+									<path id="path119" class="st24" d="M398,349.2h17.4l11.2,11.2v25.3H398V349.2z"/>
+									<path id="path120" class="st25" d="M395.5,367.5c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8
+										h-30.2c-1,0-1.8-0.8-1.8-1.8V367.5z"/>
+									<text id="text120" transform="matrix(1 0 0 1 405.7471 373.6404)" class="st11 st5 st26">raw</text>
+									<path id="path121" class="st25" d="M415.5,359.9v-10.7l11.1,10.7H415.5z"/>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="g131">
+	<g id="g130">
+		<g id="g129">
+			<g id="g128">
+				<g>
+					<g>
+						<g>
+							<g>
+								<defs>
+									<rect id="SVGID_5_" x="-2370" y="-900.8" width="35" height="37.5"/>
+								</defs>
+								<clipPath id="SVGID_6_">
+									<use xlink:href="#SVGID_5_"  style="overflow:visible;"/>
+								</clipPath>
+								<g id="g127" transform="translate(-395 -198)" class="st28">
+									<path id="path125" class="st24" d="M398,486.1h17.4l11.2,11.2v25.3H398V486.1z"/>
+									<path id="path126" class="st25" d="M395.5,504.4c0-1,0.8-1.8,1.8-1.8h30.2c1,0,1.8,0.8,1.8,1.8v7.4c0,1-0.8,1.8-1.8,1.8
+										h-30.2c-1,0-1.8-0.8-1.8-1.8V504.4z"/>
+									<text id="text126" transform="matrix(1 0 0 1 403.6936 510.5903)" class="st11 st5 st26">fasta</text>
+									<path id="path127" class="st25" d="M415.5,496.9v-10.7l11.1,10.7H415.5z"/>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="g137">
+	<g id="g136">
+		<g id="g135">
+			<g id="g134">
+				<g>
+					<g>
+						<g>
+							<g>
+								<defs>
+									<rect id="SVGID_7_" x="-1121.6" y="-1125" width="25" height="26.8"/>
+								</defs>
+								<clipPath id="SVGID_8_">
+									<use xlink:href="#SVGID_7_"  style="overflow:visible;"/>
+								</clipPath>
+								<g id="g133" transform="translate(-395 -198)" class="st29">
+									<path id="path131" class="st24" d="M1645.6,261.6h12.4l8,8v18h-20.4V261.6z"/>
+									<path id="path132" class="st25" d="M1643.8,274.7c0-0.7,0.6-1.3,1.3-1.3h21.6c0.7,0,1.3,0.6,1.3,1.3v5.3
+										c0,0.7-0.6,1.3-1.3,1.3h-21.6c-0.7,0-1.3-0.6-1.3-1.3V274.7z"/>
+									<text id="text132" transform="matrix(1 0 0 1 1652.1426 279.1031)" class="st11 st5 st30">tsv</text>
+									<path id="path133" class="st25" d="M1658.1,269.3v-7.7l7.9,7.7H1658.1z"/>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="g143">
+	<g id="g142">
+		<g id="g141">
+			<g id="g140">
+				<g>
+					<g>
+						<g>
+							<g>
+								<defs>
+									<rect id="SVGID_9_" x="-1115.6" y="-1062.9" width="25" height="28.2"/>
+								</defs>
+								<clipPath id="SVGID_10_">
+									<use xlink:href="#SVGID_9_"  style="overflow:visible;"/>
+								</clipPath>
+								<g id="g139" transform="translate(-394 -198)" class="st31">
+									<path id="path137" class="st24" d="M1644.8,338.2h12.2l7.8,8.4v19h-20V338.2z"/>
+									<path id="path138" class="st25" d="M1643,351.9c0-0.8,0.6-1.4,1.3-1.4h21.2c0.7,0,1.3,0.6,1.3,1.4v5.6
+										c0,0.8-0.6,1.4-1.3,1.4h-21.2c-0.7,0-1.3-0.6-1.3-1.4V351.9z"/>
+									<text id="text138" transform="matrix(0.932 0 0 1 1646.1143 356.5905)" class="st11 st5 st32">mzTab</text>
+									<path id="path139" class="st25" d="M1657,352.5V345l7.8,7.5H1657z"/>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="g149">
+	<g id="g148">
+		<g id="g147">
+			<g id="g146">
+				<g>
+					<g>
+						<g>
+							<g>
+								<defs>
+									<rect id="SVGID_11_" x="-1121.6" y="-964.2" width="25" height="28.8"/>
+								</defs>
+								<clipPath id="SVGID_12_">
+									<use xlink:href="#SVGID_11_"  style="overflow:visible;"/>
+								</clipPath>
+								<g id="g145" transform="translate(-395 -198)" class="st33">
+									<path id="path143" class="st24" d="M1645.6,436.9h12.4l8,8.6v19.3h-20.4V436.9z"/>
+									<path id="path144" class="st25" d="M1643.8,451c0-0.8,0.6-1.4,1.3-1.4h21.6c0.7,0,1.3,0.6,1.3,1.4v5.7
+										c0,0.8-0.6,1.4-1.3,1.4h-21.6c-0.7,0-1.3-0.6-1.3-1.4V451z"/>
+									<text id="text144" transform="matrix(0.932 0 0 1 1652.1426 455.7272)" class="st11 st5 st34">tsv</text>
+									<path id="path145" class="st25" d="M1658.1,444.7V437l7.9,7.7H1658.1z"/>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</g>
+<path id="path153" pointer-events="none" class="st9" d="M1139.5,458.8L1139.5,458.8c-5,0-9-4.3-9-9.7l0,0c0-5.4,4-9.7,9-9.7l0,0
+	c5,0,9,4.3,9,9.7l0,0C1148.5,454.5,1144.5,458.8,1139.5,458.8z"/>
+<path id="path154" pointer-events="stroke" class="st1" d="M452.8,128.3"/>
+<line id="line154" class="st1" x1="403.6" y1="80.9" x2="458" y2="81"/>
+<path id="path155" class="st3" d="M417.8,125.8c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path156" class="st3" d="M423.5,127.3c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path157" class="st3" d="M433,127.3c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path158" class="st3" d="M429.9,125.8c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path159" class="st3" d="M409.5,123c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path160" class="st3" d="M405.2,119.3c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path161" class="st3" d="M413.4,125.8c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path162" class="st3" d="M430.9,149.8c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path163" class="st3" d="M419.8,127.1c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path164" class="st3" d="M406.7,120.8c7.8-9.3,13.7-15.5,26.3-32.4"/>
+<path id="path165" pointer-events="stroke" class="st1" d="M355.7,153.5c8.8,0.1,48.5-16.7,76.3-22.8l44.8-0.4"/>
+<g id="g166" transform="translate(-0.5 -0.5)">
+	<text id="text165" transform="matrix(0.932 0 0 1 405.4688 119.257)" class="st5 st6 st35"> </text>
+	<text id="text166" transform="matrix(0.932 0 0 1 441.4434 119.257)" class="st5 st6">Sage</text>
+</g>
+<path id="path167" pointer-events="stroke" class="st0" d="M357.5,165.9l100.9-19.1"/>
+<path id="path169" pointer-events="all" class="st9" d="M481.8,154.3L481.8,154.3c-5.5,0-9.9-4.7-9.9-10.6v-10.1
+	c0-5.9,4.4-10.6,9.9-10.6l0,0c5.5,0,9.9,4.7,9.9,10.6v10.1C491.7,149.6,487.3,154.3,481.8,154.3z"/>
+<g id="g75512" transform="matrix(1,0,0,0.99644072,47.999999,-25.455682)">
+
+		<g id="g7296" transform="matrix(0.830789,0,0,0.83257119,1086.8209,1004.1008)" inkscape:export-filename="g6237.png" inkscape:export-xdpi="89" inkscape:export-ydpi="89">
+		<g id="g11000-0" transform="matrix(0.8,0,0,0.8,14.51977,252.76794)">
+			<path id="path11002-7" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1673.9-1546.9h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1671.1-1545.4-1672.4-1546.9-1673.9-1546.9L-1673.9-1546.9z M-1708.6-1565.6h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1565.6L-1708.6-1565.6z M-1677-1512.1h-31.6v-11.1h31.6V-1512.1L-1677-1512.1z"/>
+			<g id="flowRoot11004-8" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+			</g>
+			<path id="path11012-4" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="M-1708.6-1565.6
+				h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1565.6L-1708.6-1565.6z M-1677-1512.1h-31.6v-11.1h31.6V-1512.1L-1677-1512.1z"
+				/>
+		</g>
+		<g id="g11014-3" transform="matrix(0.8,0,0,0.8,8.54653,246.7946)">
+			<g id="g11016-1">
+				<path id="path11018-4" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+					M-1669.9-1535.2h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+					c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+					c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+					C-1667.2-1533.7-1668.4-1535.2-1669.9-1535.2L-1669.9-1535.2z M-1704.6-1553.9h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+					V-1553.9z M-1673-1500.4h-31.6v-11.1h31.6V-1500.4L-1673-1500.4z"/>
+				<g id="flowRoot11020-9" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+				</g>
+				<path id="path11028-8" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="M-1704.6-1553.9
+					h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1553.9z M-1673-1500.4h-31.6v-11.1h31.6V-1500.4L-1673-1500.4z"/>
+			</g>
+		</g>
+		<g id="g10986-9" transform="matrix(0.8,0,0,0.8,2.57329,240.82126)">
+			<path id="path10988-2" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1665.9-1523.6h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1663.2-1522.1-1664.5-1523.6-1665.9-1523.6L-1665.9-1523.6z M-1700.6-1542.2h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1542.2L-1700.6-1542.2z M-1669-1488.7h-31.6v-11.1h31.6V-1488.7L-1669-1488.7z"/>
+			<path id="path10998-5" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="M-1700.6-1542.2
+				h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1542.2z M-1669-1488.7h-31.6v-11.1h31.6V-1488.7L-1669-1488.7z"/>
+		</g>
+	</g>
+	<text transform="matrix(0.8342 0 0 1.0036 -41.2588 201.1766)" class="st11 st13 st36">raw</text>
+</g>
+<g id="g75512_1_" transform="matrix(1,0,0,0.99644072,47.999999,-25.455682)">
+
+		<g id="g7296_1_" transform="matrix(0.830789,0,0,0.83257119,1086.8209,1004.1008)" inkscape:export-filename="g6237.png" inkscape:export-xdpi="89" inkscape:export-ydpi="89">
+		<g id="g11000-0_1_" transform="matrix(0.8,0,0,0.8,14.51977,252.76794)">
+
+				<path id="path11002-7_1_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1673.9-1699.5h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1671.1-1698-1672.4-1699.5-1673.9-1699.5L-1673.9-1699.5z M-1708.6-1718.2h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1718.2L-1708.6-1718.2z M-1677-1664.7h-31.6v-11.1h31.6V-1664.7L-1677-1664.7z"/>
+			<g id="flowRoot11004-8_1_" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+			</g>
+			<path id="path11012-4_1_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="
+				M-1708.6-1718.2h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1718.2L-1708.6-1718.2z M-1677-1664.7h-31.6v-11.1h31.6V-1664.7
+				L-1677-1664.7z"/>
+		</g>
+		<g id="g11014-3_1_" transform="matrix(0.8,0,0,0.8,8.54653,246.7946)">
+			<g id="g11016-1_1_">
+
+					<path id="path11018-4_1_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+					M-1669.9-1687.9h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+					c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+					c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+					C-1667.2-1686.4-1668.4-1687.9-1669.9-1687.9L-1669.9-1687.9z M-1704.6-1706.5h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+					V-1706.5z M-1673-1653h-31.6v-11.1h31.6V-1653L-1673-1653z"/>
+				<g id="flowRoot11020-9_1_" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+				</g>
+				<path id="path11028-8_1_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="
+					M-1704.6-1706.5h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1706.5z M-1673-1653h-31.6v-11.1h31.6V-1653L-1673-1653z"/>
+			</g>
+		</g>
+		<g id="g10986-9_1_" transform="matrix(0.8,0,0,0.8,2.57329,240.82126)">
+
+				<path id="path10988-2_1_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1665.9-1676.2h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1663.2-1674.7-1664.5-1676.2-1665.9-1676.2L-1665.9-1676.2z M-1700.6-1694.9h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1694.9L-1700.6-1694.9z M-1669-1641.3h-31.6v-11.1h31.6V-1641.3L-1669-1641.3z"/>
+			<path id="path10998-5_1_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="
+				M-1700.6-1694.9h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1694.9z M-1669-1641.3h-31.6v-11.1h31.6V-1641.3L-1669-1641.3z"
+				/>
+		</g>
+	</g>
+	<text transform="matrix(0.8342 0 0 1.0036 -41.2588 99.5151)" class="st11 st13 st36">mzML</text>
+</g>
+<g id="g75512_2_" transform="matrix(1,0,0,0.99644072,47.999999,-25.455682)">
+
+		<g id="g7296_2_" transform="matrix(0.830789,0,0,0.83257119,1086.8209,1004.1008)" inkscape:export-filename="g6237.png" inkscape:export-xdpi="89" inkscape:export-ydpi="89">
+		<g id="g11000-0_2_" transform="matrix(0.8,0,0,0.8,14.51977,252.76794)">
+
+				<path id="path11002-7_2_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1670.5-1327.9h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1667.8-1326.5-1669-1327.9-1670.5-1327.9L-1670.5-1327.9z M-1705.2-1346.6h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1346.6L-1705.2-1346.6z M-1673.6-1293.1h-31.6v-11.1h31.6V-1293.1L-1673.6-1293.1z"/>
+			<g id="flowRoot11004-8_2_" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+			</g>
+			<path id="path11012-4_2_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="
+				M-1705.2-1346.6h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1346.6L-1705.2-1346.6z M-1673.6-1293.1h-31.6v-11.1h31.6
+				V-1293.1L-1673.6-1293.1z"/>
+		</g>
+		<g id="g11014-3_2_" transform="matrix(0.8,0,0,0.8,8.54653,246.7946)">
+			<g id="g11016-1_2_">
+
+					<path id="path11018-4_2_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+					M-1666.5-1316.3h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+					c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+					c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+					C-1663.8-1314.8-1665-1316.3-1666.5-1316.3L-1666.5-1316.3z M-1701.3-1335h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1335
+					z M-1669.6-1281.5h-31.6v-11.1h31.6V-1281.5L-1669.6-1281.5z"/>
+				<g id="flowRoot11020-9_2_" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+				</g>
+				<path id="path11028-8_2_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="M-1701.3-1335
+					h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1335z M-1669.6-1281.5h-31.6v-11.1h31.6V-1281.5L-1669.6-1281.5z"/>
+			</g>
+		</g>
+		<g id="g10986-9_2_" transform="matrix(0.8,0,0,0.8,2.57329,240.82126)">
+
+				<path id="path10988-2_2_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1662.6-1304.6h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1659.9-1303.2-1661.1-1304.6-1662.6-1304.6L-1662.6-1304.6z M-1697.3-1323.3h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1323.3L-1697.3-1323.3z M-1665.6-1269.7h-31.6v-11.1h31.6V-1269.7L-1665.6-1269.7z"/>
+			<path id="path10998-5_2_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="
+				M-1697.3-1323.3h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1323.3z M-1665.6-1269.7h-31.6v-11.1h31.6V-1269.7
+				L-1665.6-1269.7z"/>
+		</g>
+	</g>
+	<text transform="matrix(0.8342 0 0 1.0036 -39.0225 346.9955)" class="st11 st13 st36">fasta</text>
+</g>
+<g id="g75512_3_" transform="matrix(1,0,0,0.99644072,47.999999,-25.455682)">
+
+		<g id="g7296_3_" transform="matrix(0.830789,0,0,0.83257119,1086.8209,1004.1008)" inkscape:export-filename="g6237.png" inkscape:export-xdpi="89" inkscape:export-ydpi="89">
+		<g id="g11000-0_3_" transform="matrix(0.8,0,0,0.8,14.51977,252.76794)">
+
+				<path id="path11002-7_3_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1673.9-1443.7h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1671.1-1442.2-1672.4-1443.7-1673.9-1443.7L-1673.9-1443.7z M-1708.6-1462.3h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1462.3L-1708.6-1462.3z M-1677-1408.8h-31.6v-11.1h31.6V-1408.8L-1677-1408.8z"/>
+			<g id="flowRoot11004-8_3_" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+			</g>
+			<path id="path11012-4_3_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="
+				M-1708.6-1462.3h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1462.3L-1708.6-1462.3z M-1677-1408.8h-31.6v-11.1h31.6V-1408.8
+				L-1677-1408.8z"/>
+		</g>
+		<g id="g11014-3_3_" transform="matrix(0.8,0,0,0.8,8.54653,246.7946)">
+			<g id="g11016-1_3_">
+
+					<path id="path11018-4_3_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+					M-1669.9-1432h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+					c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+					c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+					C-1667.2-1430.5-1668.4-1432-1669.9-1432L-1669.9-1432z M-1704.6-1450.7h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1450.7
+					z M-1673-1397.2h-31.6v-11.1h31.6V-1397.2L-1673-1397.2z"/>
+				<g id="flowRoot11020-9_3_" transform="matrix(1,0,0,-1,257.80291,3175.6791)">
+				</g>
+				<path id="path11028-8_3_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="
+					M-1704.6-1450.7h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1450.7z M-1673-1397.2h-31.6v-11.1h31.6V-1397.2L-1673-1397.2z
+					"/>
+			</g>
+		</g>
+		<g id="g10986-9_3_" transform="matrix(0.8,0,0,0.8,2.57329,240.82126)">
+
+				<path id="path10988-2_3_" inkscape:connector-curvature="0" sodipodi:nodetypes="scsccccccccssscsssscsssscsscsccsscccccccccc" d="
+				M-1665.9-1420.4h-1.2v-6.8c0-0.1,0-0.1,0-0.1c0-0.3-0.1-0.6-0.2-0.8l-9.4-12.9l0,0c-0.1-0.1-0.1-0.1-0.2-0.2c0,0-0.1,0-0.1-0.1
+				c-0.1-0.1-0.1-0.1-0.2-0.1h-0.1c-0.1,0-0.1,0-0.2,0h-23.2c-1.1,0-1.9,1.1-1.9,2.3v18.7h-1.2c-1.5,0-2.7,1.5-2.7,3.3v17.1
+				c0,1.8,1.2,3.3,2.7,3.3h1.2v11.7c0,1.3,0.9,2.3,1.9,2.3h31.6c1.1,0,1.9-1.1,1.9-2.3v-11.7h1.2c1.5,0,2.7-1.5,2.7-3.3v-17.1
+				C-1663.2-1418.9-1664.5-1420.4-1665.9-1420.4L-1665.9-1420.4z M-1700.6-1439h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6
+				V-1439L-1700.6-1439z M-1669-1385.5h-31.6v-11.1h31.6V-1385.5L-1669-1385.5z"/>
+			<path id="path10998-5_3_" inkscape:connector-curvature="0" sodipodi:nodetypes="ccsscccccccccc" class="st11" d="M-1700.6-1439
+				h22.2v11.8c0,0.6,0.4,1.1,0.9,1.1h8.5v5.8h-31.6V-1439z M-1669-1385.5h-31.6v-11.1h31.6V-1385.5L-1669-1385.5z"/>
+		</g>
+	</g>
+	<text transform="matrix(0.8342 0 0 1.0036 -41.2588 269.9212)" class="st11 st13 st36">.d</text>
+</g>
+<path class="st12" d="M6.7,12.7"/>
+<path class="st12" d="M203.8,253.4l625.5-3.3c0,0,0,0,2-242.1H2.8v262.4c-0.2,85.9-0.2,85.9-0.2,85.9l204.2-2.7v-97.2"/>
+</svg>

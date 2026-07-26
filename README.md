@@ -1,74 +1,124 @@
-<h1>
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/bigbio-quantms_logo_dark.png">
-    <img alt="bigbio/quantms" src="docs/images/bigbio-quantms_logo_light.png">
-  </picture>
-</h1>
+# ![bigbio/quantms](docs/images/nf-core-quantms_logo_light.png#gh-light-mode-only) ![bigbio/quantms](docs/images/nf-core-quantms_logo_dark.png#gh-dark-mode-only)
 
-[![Open in GitHub Codespaces](https://img.shields.io/badge/Open_In_GitHub_Codespaces-black?labelColor=grey&logo=github)](https://github.com/codespaces/new/bigbio/quantms)
-[![GitHub Actions CI Status](https://github.com/bigbio/quantms/actions/workflows/nf-test.yml/badge.svg)](https://github.com/bigbio/quantms/actions/workflows/nf-test.yml)
-[![GitHub Actions Linting Status](https://github.com/bigbio/quantms/actions/workflows/linting.yml/badge.svg)](https://github.com/bigbio/quantms/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/quantms/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+[![GitHub Actions CI Status](https://github.com/bigbio/quantms/actions/workflows/ci.yml/badge.svg)](https://github.com/bigbio/quantms/actions/workflows/ci.yml)
+[![GitHub Actions Linting Status](https://github.com/bigbio/quantms/actions/workflows/linting.yml/badge.svg)](https://github.com/bigbio/quantms/actions/workflows/linting.yml)
+[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/quantms/results)
+[![Cite with Zenodo](https://zenodo.org/badge/DOI/10.5281/zenodo.15573386.svg)](https://doi.org/10.5281/zenodo.15573386)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.10.4-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
-[![nf-core template version](https://img.shields.io/badge/nf--core_template-4.0.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/4.0.2)
-[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
+[![nf-core template version](https://img.shields.io/badge/nf--core_template-3.5.2-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.5.2)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
-[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/bigbio/quantms)
+[![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/quantms)
 
-[![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23quantms-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/quantms)[![Follow on Bluesky](https://img.shields.io/badge/bluesky-%40nf__core-1185fe?labelColor=000000&logo=bluesky)](https://bsky.app/profile/nf-co.re)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
+[![Get help on Slack](https://img.shields.io/badge/slack-nf--core%20%23quantms-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/quantms)[![Follow on Twitter](https://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)[![Follow on Mastodon](https://img.shields.io/badge/mastodon-nf__core-6364ff?labelColor=FFFFFF&logo=mastodon)](https://mstdn.science/@nf_core)[![Watch on YouTube](https://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
 
 ## Introduction
 
-**bigbio/quantms** is a bioinformatics pipeline that ...
+> [!WARNING]
+> **DIA (Data Independent Acquisition) support has been moved to a dedicated pipeline.**
+> For DIA proteomics data, please use [quantmsdiann](https://github.com/bigbio/quantmsdiann).
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
+**bigbio/quantms** is a bioinformatics best-practice analysis pipeline for Quantitative Mass Spectrometry (MS). Currently, the workflow supports two major MS-based analytical methods: (i) Data dependant acquisition (DDA) label-free quantification; (ii) Isobaric quantitation (e.g. TMT, iTRAQ) (for details see our in-depth documentation on [quantms](https://quantms.readthedocs.io/en/latest/)).
 
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/community/brand/workflow-schematics#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+<p align="center">
+    <img src="docs/images/quantms.png" alt="bigbio/quantms workflow overview" width="60%">
+</p>
+
+The pipeline is built using [Nextflow](https://www.nextflow.io), a workflow tool to run tasks across multiple compute infrastructures in a very portable manner. It uses Docker/Singularity containers making installation trivial and results highly reproducible. The [Nextflow DSL2](https://www.nextflow.io/docs/latest/dsl2.html) implementation of this pipeline uses one container per process which makes it much easier to maintain and update software dependencies. Where possible, these processes have been submitted to and installed from [nf-core/modules](https://github.com/nf-core/modules) in order to make them available to all nf-core pipelines, and to everyone within the Nextflow community!
+
+On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/quantms/results). This gives you a hint on which reports and file types are produced by the pipeline in a standard run. The automatic continuous integration tests on every pull request evaluate different workflows, including peptide identification, quantification for LFQ and TMT test datasets.
+
+## Pipeline summary
+
+**bigbio/quantms** allows uses to perform analyses of two main types of analytical mass spectrometry-based quantitative methods: DDA-LFQ and DDA-ISO. Each of these workflows share some processes but also includes their own steps. In summary:
+
+### DDA-LFQ (data-dependent label-free quantification)
+
+1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
+3. (Optional) Add extra PSM features using [`quantms-rescoring`](https://github.com/bigbio/quantms-rescoring)
+4. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
+5. Peptide identification FDR [`openms fdr tool`](https://github.com/bigbio/quantms/blob/HEAD/modules/local/openms/false_discovery_rate/main.nf)
+6. Modification localization [`onsite`](https://github.com/bigbio/onsite)
+7. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteomicsLFQ.html)
+8. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteomicsLFQ.html)
+9. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+10. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
+
+### DDA-ISO (data-dependent quantification via isobaric labelling)
+
+1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
+3. (Optional) Add extra PSM features using [`quantms-rescoring`](https://github.com/bigbio/quantms-rescoring)
+4. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
+5. Peptide identification FDR [`openms fdr tool`](https://github.com/bigbio/quantms/blob/HEAD/modules/local/openms/false_discovery_rate/main.nf)
+6. Modification localization [`onsite`](https://github.com/bigbio/onsite)
+7. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
+8. Protein inference [`ProteinInference`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinInference.html) or [`Epifany`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_Epifany.html) for bayesian inference.
+9. Protein Quantification [`ProteinQuantifier`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteinQuantifier.html)
+10. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
+11. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
+
+### Functionality overview
+
+A graphical overview of suggested routes through the pipeline depending on context can be seen below.
+
+<p align="center">
+    <img src="docs/images/quantms_metro.png" alt="bigbio/quantms metro map" width="70%">
+</p>
 
 ## Usage
 
 > [!NOTE]
 > If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/get_started/environment_setup/overview) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/get_started/run-your-first-pipeline) with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+### Supported file formats
 
-First, prepare a samplesheet with your input data that looks as follows:
+The pipeline supports the following mass spectrometry data file formats:
 
-`samplesheet.csv`:
+- **`.raw`** - Thermo RAW files (automatically converted to mzML)
+- **`.mzML`** - Open standard mzML files
+- **`.d`** - Bruker timsTOF files (optionally converted to mzML when `--convert_dotd` is set)
 
-```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-```
+Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
 
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
+- `.gz` (gzip compressed)
+- `.tar` (tar archive)
+- `.tar.gz` or `.tgz` (tar gzip compressed)
+- `.zip` (zip compressed)
 
--->
+First, find or create a sample-to-data relationship file ([SDRF](https://github.com/bigbio/proteomics-sample-metadata)).
+Have a look at public datasets that were already annotated [here](https://github.com/bigbio/proteomics-sample-metadata/tree/master/annotated-projects).
+Those SDRFs should be ready for one-command re-analysis and you can just use the URL to the file on GitHub,
+e.g., `https://raw.githubusercontent.com/bigbio/proteomics-sample-metadata/master/annotated-projects/PXD000396/PXD000396.sdrf.tsv`.
+If you create your own, please adhere to the specifications and point the pipeline to your local folder or a remote location where you uploaded it to.
+The SDRF file can have `.sdrf`, `.tsv`, or `.csv` extensions.
+
+The second requirement is a protein sequence database. We suggest downloading a database for the organism(s)/proteins of interest from [Uniprot](https://www.uniprot.org/proteomes?query=*).
 
 Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
 
 ```bash
 nextflow run bigbio/quantms \
    -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
+   --input project.sdrf.tsv \
+   --database database.fasta \
    --outdir <OUTDIR>
 ```
+
+> [!NOTE]
+> Conda is no longer supported in this pipeline. Please use Docker, Singularity, or other container-based profiles.
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/running/run-pipelines#using-parameter-files).
 
 For more details and further functionality, please refer to the [usage documentation](https://nf-co.re/quantms/usage) and the [parameter documentation](https://nf-co.re/quantms/parameters).
+
+## Additional documentation and tutorial
+
+The **bigbio/quantms** pipeline comes with a stand-alone [full documentation](https://quantms.readthedocs.io/en/latest/) including examples, benchmarks, and detailed explanation about the data analysis of proteomics data using quantms.
 
 ## Pipeline output
 
@@ -78,11 +128,14 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-bigbio/quantms was originally written by Yasset Perez-Riverol.
+bigbio/quantms was originally written by: Chengxin Dai ([@daichengxin](https://github.com/daichengxin)), Julianus Pfeuffer ([@jpfeuffer](https://github.com/jpfeuffer)) and Yasset Perez-Riverol ([@ypriverol](https://github.com/ypriverol)).
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+- Timo Sachsenberg ([@timosachsenberg](https://github.com/timosachsenberg))
+- Wang Hong ([@WangHong007](https://github.com/WangHong007))
+- Henry Webel ([@enryH](https://github.com/enryH))
+- Fabian Egli ([@fabianegli](https://github.com/fabianegli))
 
 ## Contributions and Support
 
@@ -90,12 +143,17 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 For further information or help, don't hesitate to get in touch on the [Slack `#quantms` channel](https://nfcore.slack.com/channels/quantms) (you can join with [this invite](https://nf-co.re/join/slack)).
 
-## Citations
+## How to cite
 
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-<!-- If you use bigbio/quantms for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
+If you use **bigbio/quantms** for your analysis, please cite it using the following citation:
 
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
+> **quantms: a cloud-based pipeline for quantitative proteomics enables the reanalysis of public proteomics data**
+>
+> Chengxin Dai, Julianus Pfeuffer, Hong Wang, Ping Zheng, Lukas Käll, Timo Sachsenberg, Vadim Demichev, Mingze Bai, Oliver Kohlbacher & Yasset Perez-Riverol
+>
+> _Nat Methods._ 2024 July 4. doi: [10.1038/s41592-024-02343-1](https://doi.org/10.1038/s41592-024-02343-1).
+
+## How to cite nf-core
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

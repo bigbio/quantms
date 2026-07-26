@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "peptide_database_search"
+description: Subworkflow for peptide database searching using various search engines
+keywords:
+  - peptide
+  - database
+  - search
+  - proteomics
+components:
+  - msgf/db/indexing
+  - msgf
+  - comet
+  - sage
+input:
+  - ch_input:
+      type: file
+      description: |
+        Channel containing input files for peptide search
+  - ch_database:
+      type: file
+      description: |
+        Channel containing peptide database files
+output:
+  - ch_search_results:
+      type: file
+      description: |
+        Channel containing search results
+  - versions:
+      type: file
+      description: |
+        Software versions used in this subworkflow
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"

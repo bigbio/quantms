@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "create_input_channel"
+description: Subworkflow to create input channels from validated input files
+keywords:
+  - input
+  - channel
+  - validation
+components:
+  - sdrf/parsing
+  - preprocess/expdesign
+input:
+  - ch_input_file:
+      type: file
+      description: |
+        Channel containing validated input files
+  - is_sdrf:
+      type: boolean
+      description: |
+        Whether the input is in SDRF format
+output:
+  - ch_meta_config_iso:
+      type: file
+      description: |
+        Channel containing isobaric labeled data configuration
+  - ch_meta_config_lfq:
+      type: file
+      description: |
+        Channel containing label-free data configuration
+  - ch_expdesign:
+      type: file
+      description: |
+        Channel containing experimental design information
+  - versions:
+      type: file
+      description: |
+        Software versions used in this subworkflow
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"

@@ -1,0 +1,57 @@
+//
+// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
+//
+include { PEPTIDE_DATABASE_SEARCH } from '../peptide_database_search/main'
+include { PSM_RESCORING           } from '../psm_rescoring/main'
+include { PHOSPHO_SCORING         } from '../phospho_scoring/main'
+
+workflow ID {
+    take:
+    ch_file_preparation_results
+    ch_database_wdecoy
+    ch_expdesign
+
+    main:
+
+    ch_software_versions = channel.empty()
+
+    //
+    // SUBWORKFLOW: DatabaseSearchEngines
+    //
+    PEPTIDE_DATABASE_SEARCH (
+        ch_file_preparation_results,
+        ch_database_wdecoy,
+        ch_expdesign
+    )
+    ch_software_versions = ch_software_versions.mix(PEPTIDE_DATABASE_SEARCH.out.versions)
+
+    //
+    // SUBWORKFLOW: PSMReScoring
+    //
+    PSM_RESCORING (PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx)
+    ch_software_versions = ch_software_versions.mix(PSM_RESCORING.out.versions)
+
+    //
+    // SUBWORKFLOW: PSM_FDR_CONTROL
+    //
+
+    ch_psmfdrcontrol = PSM_RESCORING.out.results
+    ch_consensus_results = channel.empty()
+
+    //
+    // SUBWORKFLOW：PHOSPHOSCORING
+    //
+    if (params.enable_mod_localization) {
+        PHOSPHO_SCORING(ch_file_preparation_results, PSM_RESCORING.out.results)
+        ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
+        ch_id_results = PHOSPHO_SCORING.out.id_onsite
+    } else {
+        ch_id_results = PSM_RESCORING.out.results
+    }
+
+    emit:
+    id_results              = ch_id_results
+    psmrescoring_results    = PSM_RESCORING.out.results
+    ch_consensus_results    = ch_consensus_results
+    versions                 = ch_software_versions
+}

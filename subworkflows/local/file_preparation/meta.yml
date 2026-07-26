@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "file_preparation"
+description: Subworkflow for preparing and validating input files for proteomics analysis
+keywords:
+  - file
+  - preparation
+  - validation
+  - proteomics
+components:
+  - thermorawfileparser
+  - tdf2mzml
+  - decompress
+  - mzml/indexing
+  - mzml/statistics
+  - openms/peak/picker
+input:
+  - ch_input:
+      type: file
+      description: |
+        Channel containing input files to be prepared
+output:
+  - results:
+      type: file
+      description: |
+        Channel containing prepared results
+  - statistics:
+      type: file
+      description: |
+        Channel containing file statistics
+  - versions:
+      type: file
+      description: |
+        Software versions used in this subworkflow
+authors:
+  - "@bigbio"
+maintainers:
+  - "@bigbio"
