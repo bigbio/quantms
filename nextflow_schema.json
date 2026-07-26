@@ -358,8 +358,8 @@
                 },
                 "num_hits": {
                     "type": "integer",
-                    "description": "Specify the maximum number of top peptide candidates per spectrum to be reported by the search engine. Default: 1",
-                    "default": 1,
+                    "description": "Specify the maximum number of top peptide candidates per spectrum to be reported by the search engine. Applied to both Comet (-num_hits) and MSGF+ (-matches_per_spec). Default: 5",
+                    "default": 5,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "max_mods": {
