@@ -3,8 +3,8 @@ process MSRESCORE_FINE_TUNING {
     label 'process_high'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.21' :
-        'ghcr.io/bigbio/quantms-rescoring:0.0.21' }"
+        'oras://ghcr.io/bigbio/quantms-rescoring-sif:0.0.24' :
+        'ghcr.io/bigbio/quantms-rescoring:0.0.24' }"
 
     input:
     tuple val(meta), path(idparquet), path(mzml), path(ms2_model_dir)
