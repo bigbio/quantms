@@ -978,6 +978,16 @@
                     "default": true,
                     "fa_icon": "fas fa-check-square"
                 },
+                    "type": "string",
+                    "description": "Version of the qpx tool used to refine the OpenMS -out_qpx output into the final clean QPX dataset.",
+                    "default": "1.0.2",
+                    "fa_icon": "fas fa-tag"
+                },
+                "accession": {
+                    "type": "string",
+                    "description": "Project accession (e.g. PRIDE accession) recorded in the QPX dataset provenance.",
+                    "fa_icon": "fas fa-fingerprint"
+                },
                 "protein_quant_debug": {
                     "type": "integer",
                     "description": "Debug level for the protein quantification step. Increase for verbose logging",
