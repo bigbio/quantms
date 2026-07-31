@@ -978,6 +978,7 @@
                     "default": true,
                     "fa_icon": "fas fa-check-square"
                 },
+                "qpx_version": {
                     "type": "string",
                     "description": "Version of the qpx tool used to refine the OpenMS -out_qpx output into the final clean QPX dataset.",
                     "default": "1.0.2",
