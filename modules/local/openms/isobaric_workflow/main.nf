@@ -40,6 +40,9 @@ process ISOBARIC_WORKFLOW {
         isotope_correction = "-quantification:isotope_correction true -${labelling_type}:correction_matrix ${correction_matrix}"
     }
 
+    // NB: OpenMS IsobaricWorkflow REQUIRES -out_mzTab. It is produced but deliberately
+    // NOT declared as an output (no emit) so the pipeline neither publishes nor
+    // consumes it — QPX (-out_qpx) is the artifact. Do not remove the -out_mzTab flag.
     """
     IsobaricWorkflow \\
         -threads ${task.cpus} \\
@@ -58,6 +61,7 @@ process ISOBARIC_WORKFLOW {
         -extraction:min_reporter_intensity ${params.min_reporter_intensity} \\
         ${isotope_correction} \\
         -out ${expdes.baseName}_openms.consensusXML \\
+        -out_mzTab ${expdes.baseName}_openms.mzTab \\
         -out_qpx ${expdes.baseName}_qpx \\
         $args \\
         2>&1 | tee isobaricworkflow.log

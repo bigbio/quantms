@@ -35,6 +35,9 @@ process PROTEOMICSLFQ {
     def feature_with_id_min_score =  "-feature_with_id_min_score ${params.feature_with_id_min_score}"
     def feature_without_id_min_score = params.targeted_only == false ? "-feature_without_id_min_score ${params.feature_without_id_min_score}" : ""
 
+    // NB: OpenMS ProteomicsLFQ REQUIRES -out (mzTab). It is produced but deliberately
+    // NOT declared as an output (no emit) so the pipeline neither publishes nor
+    // consumes it — QPX (-out_qpx) is the artifact. Do not remove the -out flag.
     """
     ProteomicsLFQ \\
         -threads ${task.cpus} \\
@@ -57,6 +60,7 @@ process PROTEOMICSLFQ {
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         -picked_proteinFDR ${params.picked_fdr} \\
         -out_cxml ${expdes.baseName}_openms.consensusXML \\
+        -out ${expdes.baseName}_openms.mzTab \\
         -out_qpx ${expdes.baseName}_qpx \\
         ${msstats_present} \\
         $args \\
