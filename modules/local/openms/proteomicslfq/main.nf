@@ -14,7 +14,6 @@ process PROTEOMICSLFQ {
     path(fasta)
 
     output:
-    path "${expdes.baseName}_openms.mzTab", emit: out_mztab
     path "${expdes.baseName}_qpx", emit: out_qpx
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "*msstats_in.csv", emit: out_msstats, optional: true
@@ -58,7 +57,6 @@ process PROTEOMICSLFQ {
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         -picked_proteinFDR ${params.picked_fdr} \\
         -out_cxml ${expdes.baseName}_openms.consensusXML \\
-        -out ${expdes.baseName}_openms.mzTab \\
         -out_qpx ${expdes.baseName}_qpx \\
         ${msstats_present} \\
         $args \\

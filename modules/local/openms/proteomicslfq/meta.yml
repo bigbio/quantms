@@ -28,10 +28,6 @@ input:
       description: A protein database in with appended decoy sequences in FASTA format.
       pattern: "*.{fasta,fa}"
 output:
-  - out_mztab:
-      type: file
-      description: mzTab file with analysis results
-      pattern: "*.mzTab"
   - out_consensusXML:
       type: file
       description: ConsensusXML file for visualization and further processing in OpenMS.

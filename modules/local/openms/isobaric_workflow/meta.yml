@@ -23,10 +23,6 @@ input:
       description: An experimental design file
       pattern: "*.tsv"
 output:
-  - out_mztab:
-      type: file
-      description: mzTab file with analysis results
-      pattern: "*.mzTab"
   - out_consensusXML:
       type: file
       description: ConsensusXML file for visualization and further processing in OpenMS.

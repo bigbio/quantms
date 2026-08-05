@@ -14,7 +14,6 @@ process ISOBARIC_WORKFLOW {
     path(expdes)
 
     output:
-    path "${expdes.baseName}_openms.mzTab", emit: out_mztab
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "${expdes.baseName}_qpx", emit: out_qpx
     path "*.log", emit: log
@@ -59,7 +58,6 @@ process ISOBARIC_WORKFLOW {
         -extraction:min_reporter_intensity ${params.min_reporter_intensity} \\
         ${isotope_correction} \\
         -out ${expdes.baseName}_openms.consensusXML \\
-        -out_mzTab ${expdes.baseName}_openms.mzTab \\
         -out_qpx ${expdes.baseName}_qpx \\
         $args \\
         2>&1 | tee isobaricworkflow.log

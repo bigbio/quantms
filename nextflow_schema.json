@@ -972,18 +972,6 @@
                     "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
                     "fa_icon": "fas fa-list-ol"
                 },
-                "export_mztab": {
-                    "type": "boolean",
-                    "description": "Export the results in mzTab format.",
-                    "default": true,
-                    "fa_icon": "fas fa-check-square"
-                },
-                "qpx_version": {
-                    "type": "string",
-                    "description": "Version of the qpx tool used to refine the OpenMS -out_qpx output into the final clean QPX dataset.",
-                    "default": "1.0.2",
-                    "fa_icon": "fas fa-tag"
-                },
                 "accession": {
                     "type": "string",
                     "description": "Project accession (e.g. PRIDE accession) recorded in the QPX dataset provenance.",
