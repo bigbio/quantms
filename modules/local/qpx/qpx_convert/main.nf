@@ -17,9 +17,9 @@ process QPX_CONVERT {
     label 'process_medium'
 
     // qpx ships as a Docker image to GitHub Container Registry
-    // (ghcr.io/bigbio/qpx) on every release; always track the latest.
+    // (ghcr.io/bigbio/qpx) on every release; pin the current release tag.
     // Singularity pulls the same image via docker://.
-    container "ghcr.io/bigbio/qpx:latest"
+    container "ghcr.io/bigbio/qpx:1.1.0"
 
     input:
     path(qpx_dir)
