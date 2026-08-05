@@ -16,11 +16,10 @@ process QPX_CONVERT {
     tag "${qpx_dir.baseName}"
     label 'process_medium'
 
-    // NOTE: qpx is not yet published to BioContainers. Pin the release tag via
-    // `params.qpx_version` once the `qpx` tool is released and containerised.
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        "https://depot.galaxyproject.org/singularity/qpx:${params.qpx_version}--pyhdfd78af_0" :
-        "biocontainers/qpx:${params.qpx_version}--pyhdfd78af_0" }"
+    // qpx ships as a Docker image to GitHub Container Registry
+    // (ghcr.io/bigbio/qpx) on every `v*.*.*` release; pin the tag via
+    // `params.qpx_version`. Singularity pulls the same image via docker://.
+    container "ghcr.io/bigbio/qpx:${params.qpx_version}"
 
     input:
     path(qpx_dir)
