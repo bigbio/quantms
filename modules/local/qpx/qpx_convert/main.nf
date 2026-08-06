@@ -13,7 +13,7 @@
 // See OpenMS#9817 for the upstream `-out_qpx` labelling fixes; until those land,
 // this converter relabels channels downstream from the consensusXML/SDRF.
 process QPX_CONVERT {
-    tag "${qpx_dir.baseName}"
+    tag "${consensusxml.baseName}"
     label 'process_medium'
 
     // qpx ships as a Docker image to GitHub Container Registry
