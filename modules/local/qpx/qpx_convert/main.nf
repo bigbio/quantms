@@ -28,7 +28,9 @@ process QPX_CONVERT {
     path(sdrf)
 
     output:
-    path "${prefix}_qpx", emit: out_qpx
+    // Emit the dataset files individually (not the wrapping dir) so the publish
+    // step can flatten them directly under `qpx/`, matching quantmsdiann.
+    path "${prefix}_qpx/*", emit: out_qpx
     path "*.log", emit: log
     path "versions.yml", emit: versions
 
@@ -43,7 +45,7 @@ process QPX_CONVERT {
         --consensusxml ${consensusxml} \\
         --output-folder ${prefix}_qpx \\
         --output-prefix ${prefix} \\
-        --project-accession ${accession} \\
+        ${accession} \\
         ${args} \\
         2>&1 | tee qpx_convert.log
 
