@@ -64,7 +64,7 @@ workflow TMT {
 
     //
     // MODULE: QPX_OPENMSCONSENSUS  -- convert the OpenMS consensusXML + SDRF into the
-    // final clean QPX dataset + MuData (replaces the mzTab as the published artifact).
+    // final clean QPX dataset + MuData (the published quantification artifact).
     //
     QPX_OPENMSCONSENSUS(
         ISOBARIC_WORKFLOW.out.out_consensusXML,

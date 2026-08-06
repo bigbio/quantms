@@ -36,7 +36,7 @@ As an example, a rough visualization of the DDA identification subworkflow can b
 Output will be saved to the folder defined by the parameter `--outdir`. Each step of the workflow exports different files and reports with the specific data, peptide identifications, protein quantifications, etc. Most of the pipeline outputs are [HUPO-PSI](https://www.psidev.info/) standard file formats:
 
 - [mzML](https://www.psidev.info/mzML): The mzML format is an open, XML-based format for mass spectrometer output files.
-- [mzTab](https://www.psidev.info/mztab): mzTab is intended as a lightweight tab-delimited file format to export peptide and protein identification/quantification results.
+- [QPX](https://bigbio.github.io/qpx/): the columnar Parquet + MuData quantification dataset that is the pipeline's published quantification artifact.
 
 ### Default Output Structure
 
@@ -160,16 +160,9 @@ Depending on the workflow type, the main output files will be found in the follo
 
 The specific files include:
 
-- DDA-LFQ quantification results:
-  - `quant_tables/out.consensusXML` - [ConsensusXML](#consensusxml) format with quantification data
-  - `quant_tables/msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
-  - `<prefix>_qpx/` - [QPX](https://bigbio.github.io/qpx/) dataset (psm/feature/pg parquet + run/sample/ontology/provenance/dataset metadata + MuData `.h5mu`) — the published quantification artifact
-
-- DDA-ISO quantification results:
-  - `<prefix>_qpx/` - [QPX](https://bigbio.github.io/qpx/) dataset (psm/feature/pg parquet + run/sample/ontology/provenance/dataset metadata + MuData `.h5mu`) — the published quantification artifact
-  - `quant_tables/peptide_out.csv` - [Tab-based](#tab-based-openms-formats) peptide quantities
-  - `quant_tables/protein_out.csv` - [Tab-based](#tab-based-openms-formats) protein quantities
-  - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
+- DDA-LFQ and DDA-ISO quantification results:
+  - `qpx/` - [QPX](https://bigbio.github.io/qpx/) dataset published flat: the `psm`/`feature`/`pg` parquet views + `run`/`sample`/`ontology`/`provenance`/`dataset` metadata parquets + the MuData `.h5mu` container — the published quantification artifact
+  - `quant_tables/*_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
 
 ## Output description
 
@@ -247,12 +240,12 @@ MSstats independently outside the pipeline.
 
 #### QPX
 
-QPX is the published quantification artifact for both DDA-LFQ and DDA-ISO (replacing the mzTab). It is a
-columnar [QPX](https://bigbio.github.io/qpx/) dataset produced by refining OpenMS `-out_qpx` + the companion
-`consensusXML` + the SDRF with the `qpx` tool: `psm`/`feature`/`pg` Parquet views, the `run`/`sample`/`ontology`/
+QPX is the published quantification artifact for both DDA-LFQ and DDA-ISO. It is a columnar
+[QPX](https://bigbio.github.io/qpx/) dataset produced by converting the OpenMS `consensusXML` + the SDRF with the
+`qpx` tool (`qpxc convert openms-consensus`): `psm`/`feature`/`pg` Parquet views, the `run`/`sample`/`ontology`/
 `provenance`/`dataset` metadata tables, and a combined MuData (`.h5mu`) container — with canonical TMT/iTRAQ/LFQ
-channel labels. This brings the DDA path to parity with the DIA-NN (`quantmsdiann`) QPX output. See the
-[QPX specification](https://bigbio.github.io/qpx/) for the view schemas and file layout.
+channel labels. The dataset is published flat under `qpx/`, the same layout as the DIA-NN (`quantmsdiann`) QPX
+output. See the [QPX specification](https://bigbio.github.io/qpx/) for the view schemas and file layout.
 
 Some explanations for optional ("opt\_") columns:
 
