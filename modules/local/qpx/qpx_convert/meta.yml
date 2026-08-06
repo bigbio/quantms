@@ -1,0 +1,40 @@
+name: qpx_convert
+description: Convert an OpenMS consensusXML plus SDRF into a complete, canonical QPX dataset (psm/feature/pg parquet + MuData) replacing the mzTab as the published quantification artifact.
+keywords:
+  - QPX
+  - OpenMS
+  - quantification
+  - SDRF
+  - consensusXML
+tools:
+  - qpx:
+      description: |
+        qpx is a tool for converting various data formats into the QPX format,
+        a compact, columnar, open format for proteomics data based on parquet.
+      homepage: https://github.com/bigbio/qpx
+      documentation: https://github.com/bigbio/qpx
+input:
+  - consensusxml:
+      type: file
+      description: ConsensusXML file with protein/peptide quantification results from OpenMS.
+      pattern: "*.consensusXML"
+  - sdrf:
+      type: file
+      description: Sample and data relationship format file describing the experimental design.
+      pattern: "*.sdrf.tsv"
+output:
+  - out_qpx:
+      type: directory
+      description: Directory containing the final, canonical QPX dataset with metadata tables (run, sample, ontology, provenance, dataset) and MuData (.h5mu) view.
+      pattern: "*_qpx"
+  - log:
+      type: file
+      description: Log file from the qpx conversion process.
+      pattern: "*.log"
+  - versions:
+      type: file
+      description: File containing software versions.
+      pattern: "versions.yml"
+authors:
+  - "@daichengxin"
+  - "@bigbio"

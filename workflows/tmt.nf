@@ -67,7 +67,6 @@ workflow TMT {
     // final clean QPX dataset (replaces the mzTab as the published artifact).
     //
     QPX_CONVERT(
-        ISOBARIC_WORKFLOW.out.out_qpx,
         ISOBARIC_WORKFLOW.out.out_consensusXML,
         file(params.input),
     )

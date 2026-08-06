@@ -59,7 +59,6 @@ workflow LFQ {
     // final clean QPX dataset (replaces the mzTab as the published artifact).
     //
     QPX_CONVERT(
-        PROTEOMICSLFQ.out.out_qpx,
         PROTEOMICSLFQ.out.out_consensusXML,
         file(params.input),
     )
