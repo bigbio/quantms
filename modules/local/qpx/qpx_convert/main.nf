@@ -34,17 +34,14 @@ process QPX_CONVERT {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${sdrf.baseName}"
-    def accession = params.accession ? "--project-accession ${params.accession}" : ''
+    // def accession = params.accession ? "--project-accession ${params.accession}" : ''
 
     """
-    qpxc convert openms \\
-        --qpx-dir ${qpx_dir} \\
+    qpxc convert openms-consensus \\
         --sdrf-file ${sdrf} \\
         --consensusxml ${consensusxml} \\
         --output-folder ${prefix}_qpx \\
         --output-prefix ${prefix} \\
-        --compression zstd \\
-        ${accession} \\
         ${args} \\
         2>&1 | tee qpx_convert.log
 
