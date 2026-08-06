@@ -36,7 +36,7 @@ As an example, a rough visualization of the DDA identification subworkflow can b
 Output will be saved to the folder defined by the parameter `--outdir`. Each step of the workflow exports different files and reports with the specific data, peptide identifications, protein quantifications, etc. Most of the pipeline outputs are [HUPO-PSI](https://www.psidev.info/) standard file formats:
 
 - [mzML](https://www.psidev.info/mzML): The mzML format is an open, XML-based format for mass spectrometer output files.
-- [mzTab](https://www.psidev.info/mztab): mzTab is intended as a lightweight tab-delimited file format to export peptide and protein identification/quantification results.
+- [QPX](https://bigbio.github.io/qpx/): the columnar Parquet + MuData quantification dataset that is the pipeline's published quantification artifact.
 
 ### Default Output Structure
 
@@ -154,22 +154,15 @@ results/
 
 Depending on the workflow type, the main output files will be found in the following directories:
 
-- `quant_tables/`: Contains all quantification results including mzTab files, MSstats-compatible input files, and other quantification tables
+- `quant_tables/`: Contains all quantification results including the QPX dataset, MSstats-compatible input files, and other quantification tables
 - `psm_tables/`: Contains PSM-level results from the identification pipeline in parquet format
 - `pmultiqc/`: Contains quality control reports and visualizations
 
 The specific files include:
 
-- DDA-LFQ quantification results:
-  - `quant_tables/out.consensusXML` - [ConsensusXML](#consensusxml) format with quantification data
-  - `quant_tables/msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
-  - `quant_tables/out.mzTab` - [mzTab](#mztab) format with identifications and quantities
-
-- DDA-ISO quantification results:
-  - `quant_tables/out.mzTab` - [mzTab](#mztab) format with identifications and quantities
-  - `quant_tables/peptide_out.csv` - [Tab-based](#tab-based-openms-formats) peptide quantities
-  - `quant_tables/protein_out.csv` - [Tab-based](#tab-based-openms-formats) protein quantities
-  - `quant_tables/out_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
+- DDA-LFQ and DDA-ISO quantification results:
+  - `qpx/` - [QPX](https://bigbio.github.io/qpx/) dataset published flat: the `psm`/`feature`/`pg` parquet views + `run`/`sample`/`ontology`/`provenance`/`dataset` metadata parquets + the MuData `.h5mu` container — the published quantification artifact
+  - `quant_tables/*_msstats_in.csv` - [MSstats-ready](#msstats-ready-quantity-tables) quantity tables
 
 ## Output description
 
@@ -245,21 +238,14 @@ OpenMStoMSstats function of the MSstats R package. They hold the same quantities
 information about the experimental design used by MSstats, and the filename prefix depends on the experimental design or report basename. Users can take these files and run
 MSstats independently outside the pipeline.
 
-#### mzTab
+#### QPX
 
-The mzTab is exported for both workflows DDA-LFQ and DDA-ISO. It is a complete [mzTab](https://github.com/HUPO-PSI/mzTab) file
-ready for submission to [PRIDE](https://www.ebi.ac.uk/pride/). It contains both identifications (only those responsible for a quantification),
-quantities and some metadata about both the experiment and the quantification.
-
-mzTab is a multi-section TSV file where the first column is a section identifier:
-
-- MTD: Metadata
-- PRH: Protein header line
-- PRT: Protein entry line
-- PEH: Peptide header line
-- PEP: Peptide entry line
-- PSH: Peptide-spectrum match header
-- PSM: Peptide-spectrum match entry line
+QPX is the published quantification artifact for both DDA-LFQ and DDA-ISO. It is a columnar
+[QPX](https://bigbio.github.io/qpx/) dataset produced by converting the OpenMS `consensusXML` + the SDRF with the
+`qpx` tool (`qpxc convert openms-consensus`): `psm`/`feature`/`pg` Parquet views, the `run`/`sample`/`ontology`/
+`provenance`/`dataset` metadata tables, and a combined MuData (`.h5mu`) container — with canonical TMT/iTRAQ/LFQ
+channel labels. The dataset is published flat under `qpx/`, the same layout as the DIA-NN (`quantmsdiann`) QPX
+output. See the [QPX specification](https://bigbio.github.io/qpx/) for the view schemas and file layout.
 
 Some explanations for optional ("opt\_") columns:
 
