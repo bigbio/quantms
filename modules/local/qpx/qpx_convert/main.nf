@@ -16,12 +16,12 @@ process QPX_CONVERT {
     tag "${qpx_dir.baseName}"
     label 'process_medium'
 
-    // qpx is published to BioConda / BioContainers on every release; pin the
-    // current release tag. Singularity pulls the Galaxy depot mirror of the same
-    // build; Docker/Podman pull the BioContainers image.
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/qpx:1.1.0--pyhdfd78af_0' :
-        'biocontainers/qpx:1.1.0--pyhdfd78af_0' }"
+    // qpx ships as a Docker image to GitHub Container Registry
+    // (ghcr.io/bigbio/qpx) on every release; pin the current release tag.
+    // Singularity pulls the same image via docker://. (BioContainers is also
+    // published — biocontainers/qpx — but the Galaxy depot singularity mirror
+    // lags a release, so GHCR is used until it catches up.)
+    container "ghcr.io/bigbio/qpx:1.1.0"
 
     input:
     path(qpx_dir)
