@@ -1,0 +1,61 @@
+name: qpx_openmsconsensus
+description: Convert an OpenMS ProteomicsLFQ / IsobaricWorkflow consensusXML to a QPX Parquet dataset and MuData (.h5mu)
+keywords:
+  - proteomics
+  - quantification
+  - parquet
+  - mudata
+  - openms
+  - consensusxml
+  - qpx
+tools:
+  - qpx:
+      description: |
+        QPX (Quantitative Proteomics eXchange) converts tool-specific quantification
+        outputs into a standardised Parquet dataset and optionally a MuData (.h5mu) file
+        for downstream analysis in Python (scanpy / muon). The openms-consensus converter
+        reads the OpenMS consensusXML directly (resolving the run per PSM via map_index /
+        id_merge_index / feature-element runs), so it does not inherit the -out_qpx PSM
+        run mis-assignment (OpenMS#9872) or duplicate PSMs (OpenMS#9871).
+      homepage: https://github.com/bigbio/qpx
+      documentation: https://github.com/bigbio/qpx
+      tool_dev_url: https://github.com/bigbio/qpx
+      licence:
+        - "Apache-2.0"
+      identifier: ""
+input:
+  - consensusxml:
+      type: file
+      description: OpenMS ProteomicsLFQ / IsobaricWorkflow consensusXML (peptide feature intensities + IDs + protein inference)
+      pattern: "*.consensusXML"
+  - sdrf:
+      type: file
+      description: SDRF sample metadata file
+      pattern: "*.sdrf.tsv"
+  - project_accession:
+      type: string
+      description: PRIDE project accession (e.g. PXD026600) used as output prefix
+output:
+  qpx_dataset:
+    - "qpx_output/*":
+        type: file
+        description: QPX Parquet dataset files
+        pattern: "qpx_output/*"
+  mudata:
+    - "*.h5mu":
+        type: file
+        description: MuData file containing the quantification data
+        pattern: "*.h5mu"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750
+authors:
+  - "@ypriverol"
+  - "@daichengxin"
+maintainers:
+  - "@ypriverol"
+  - "@daichengxin"

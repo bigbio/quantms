@@ -1,0 +1,10 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  # qpx 1.1.1 is on PyPI now; bioconda lags a release, so pin the PyPI release to
+  # match the GHCR container version. Switch to `bioconda::qpx=1.1.1` once bioconda
+  # publishes it.
+  - pip
+  - pip:
+      - qpx==1.1.1

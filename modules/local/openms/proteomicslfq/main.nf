@@ -14,7 +14,6 @@ process PROTEOMICSLFQ {
     path(fasta)
 
     output:
-    path "${expdes.baseName}_openms.mzTab", emit: out_mztab
     path "${expdes.baseName}_qpx", emit: out_qpx
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "*msstats_in.csv", emit: out_msstats, optional: true
@@ -36,6 +35,9 @@ process PROTEOMICSLFQ {
     def feature_with_id_min_score =  "-feature_with_id_min_score ${params.feature_with_id_min_score}"
     def feature_without_id_min_score = params.targeted_only == false ? "-feature_without_id_min_score ${params.feature_without_id_min_score}" : ""
 
+    // NB: OpenMS ProteomicsLFQ REQUIRES -out (mzTab). It is produced but deliberately
+    // NOT declared as an output (no emit) so the pipeline neither publishes nor
+    // consumes it — QPX (-out_qpx) is the artifact. Do not remove the -out flag.
     """
     ProteomicsLFQ \\
         -threads ${task.cpus} \\

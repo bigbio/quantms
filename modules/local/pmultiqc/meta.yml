@@ -19,7 +19,7 @@ input:
       description: mzML files directory
   - quantms_results:
       type: dir
-      description: the directory of quantms results including out.mzTab/out_msstats.csv
+      description: the directory of quantms results including the QPX dataset / out_msstats.csv
   - raw_ids:
       type: dir
       description: idXML files directory

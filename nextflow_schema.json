@@ -972,11 +972,10 @@
                     "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
                     "fa_icon": "fas fa-list-ol"
                 },
-                "export_mztab": {
-                    "type": "boolean",
-                    "description": "Export the results in mzTab format.",
-                    "default": true,
-                    "fa_icon": "fas fa-check-square"
+                "accession": {
+                    "type": "string",
+                    "description": "Project accession (e.g. PRIDE accession) recorded in the QPX dataset provenance.",
+                    "fa_icon": "fas fa-fingerprint"
                 },
                 "protein_quant_debug": {
                     "type": "integer",
