@@ -8,7 +8,7 @@ process QPX_OPENMSCONSENSUS {
     // a single image serves Docker (native) and Singularity (via docker://).
     // BioContainers/Galaxy-depot lag the release, so GHCR is used for containers;
     // -profile conda still resolves the bioconda package in environment.yml.
-    container "ghcr.io/bigbio/qpx:1.1.1"
+    container "ghcr.io/bigbio/qpx:1.1.2"
 
     input:
     path(consensusxml)
