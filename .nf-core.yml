@@ -11,6 +11,7 @@ lint:
     - .gitignore
     - conf/modules.config
     - conf/igenomes_ignored.config
+  container_configs: false
   files_unchanged:
     - .github/PULL_REQUEST_TEMPLATE.md
     - .github/CONTRIBUTING.md
@@ -23,7 +24,7 @@ lint:
   modules_config: false
   multiqc_config: false
   nextflow_config: false
-nf_core_version: 4.0.2
+nf_core_version: 4.1.0
 repository_type: pipeline
 template:
   author: Yasset Perez-Riverol
@@ -33,4 +34,4 @@ template:
   name: quantms
   org: bigbio
   outdir: .
-  version: 1.8.0
+  version: 1.9.0

@@ -9,6 +9,7 @@
 //
 include { ISOBARIC_WORKFLOW } from '../modules/local/openms/isobaric_workflow/main'
 include { MSSTATS_CONVERTER } from '../modules/local/openms/msstats_converter/main'
+include { QPX_OPENMSCONSENSUS } from '../modules/bigbio/qpx/openmsconsensus/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -61,6 +62,17 @@ workflow TMT {
     MSSTATS_CONVERTER(ISOBARIC_WORKFLOW.out.out_consensusXML, ch_expdesign, "ISO")
     ch_software_versions = ch_software_versions.mix(MSSTATS_CONVERTER.out.versions)
 
+    //
+    // MODULE: QPX_OPENMSCONSENSUS  -- convert the OpenMS consensusXML + SDRF into the
+    // final clean QPX dataset + MuData (the published quantification artifact).
+    //
+    QPX_OPENMSCONSENSUS(
+        ISOBARIC_WORKFLOW.out.out_consensusXML,
+        file(params.input),
+        params.accession ?: '',
+    )
+    ch_software_versions = ch_software_versions.mix(QPX_OPENMSCONSENSUS.out.versions)
+
     ID.out.psmrescoring_results
         .map { it -> it[1] }
         .set { ch_pmultiqc_ids }
@@ -72,7 +84,7 @@ workflow TMT {
     emit:
     ch_pmultiqc_ids         = ch_pmultiqc_ids
     ch_pmultiqc_consensus   = ch_pmultiqc_consensus
-    final_result            = ISOBARIC_WORKFLOW.out.out_mztab
+    final_result            = QPX_OPENMSCONSENSUS.out.qpx_dataset
     msstats_in              = MSSTATS_CONVERTER.out.out_msstats
     versions                = ch_software_versions
 }

@@ -8,6 +8,7 @@
 // MODULES: Local to the pipeline
 //
 include { PROTEOMICSLFQ } from '../modules/local/openms/proteomicslfq/main'
+include { QPX_OPENMSCONSENSUS } from '../modules/bigbio/qpx/openmsconsensus/main'
 
 //
 // SUBWORKFLOWS: Consisting of a mix of local and nf-core/modules
@@ -53,6 +54,17 @@ workflow LFQ {
             )
     ch_software_versions = ch_software_versions.mix(PROTEOMICSLFQ.out.versions)
 
+    //
+    // MODULE: QPX_OPENMSCONSENSUS  -- convert the OpenMS consensusXML + SDRF into the
+    // final clean QPX dataset + MuData (the published quantification artifact).
+    //
+    QPX_OPENMSCONSENSUS(
+        PROTEOMICSLFQ.out.out_consensusXML,
+        file(params.input),
+        params.accession ?: '',
+    )
+    ch_software_versions = ch_software_versions.mix(QPX_OPENMSCONSENSUS.out.versions)
+
     ID.out.psmrescoring_results
         .map { it -> it[1] }
         .set { ch_pmultiqc_ids }
@@ -64,7 +76,7 @@ workflow LFQ {
     emit:
     ch_pmultiqc_ids         = ch_pmultiqc_ids
     ch_pmultiqc_consensus   = ch_pmultiqc_consensus
-    final_result            = PROTEOMICSLFQ.out.out_mztab
+    final_result            = QPX_OPENMSCONSENSUS.out.qpx_dataset
     versions                = ch_software_versions
     msstats_in              = PROTEOMICSLFQ.out.out_msstats
 }

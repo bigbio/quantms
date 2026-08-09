@@ -4,8 +4,8 @@ process PERCOLATOR {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.06.06' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2026.06.06' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.07.02' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2026.07.02' }"
 
     input:
     tuple val(meta), path(id_file)
@@ -18,6 +18,7 @@ process PERCOLATOR {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.mzml_id}"
+    def best_per_spectrum_only = params.best_per_spectrum_only ? "-best_per_spectrum_only" : ""
 
     """
     OMP_NUM_THREADS=$task.cpus PercolatorAdapter \\
@@ -29,6 +30,7 @@ process PERCOLATOR {
         -post_processing_tdc \\
         -score_type pep \\
         -score:fdr $params.run_fdr_cutoff \\
+        ${best_per_spectrum_only} \\
         $args \\
         2>&1 | tee ${id_file.baseName}_percolator.log
 

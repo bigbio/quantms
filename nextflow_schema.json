@@ -395,12 +395,6 @@
                     "description": "Turn the mechanism on.",
                     "fa_icon": "fas fa-toggle-on"
                 },
-                "mod_localization": {
-                    "type": "string",
-                    "description": "Which variable modifications to use for scoring their localization.",
-                    "default": "Phospho (S),Phospho (T),Phospho (Y)",
-                    "fa_icon": "fas fa-tasks"
-                },
                 "onsite_algorithm": {
                     "type": "string",
                     "description": "Algorithm to use for PTM localization (ascore, phosphors, or lucxor)",
@@ -693,28 +687,7 @@
                     "default": 0.1,
                     "fa_icon": "fas fa-filter"
                 },
-                "extractpsmfeature_debug": {
-                    "type": "integer",
-                    "description": "Debug level when running the PSMFeatureExtractor step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "hidden": true,
-                    "default": 0
-                },
-                "idfilter_debug": {
-                    "type": "integer",
-                    "description": "Debug level when running the IDFilter step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "hidden": true,
-                    "default": 0
-                },
                 "pp_debug": {
-                    "type": "integer",
-                    "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
-                },
-                "idscoreswitcher_debug": {
                     "type": "integer",
                     "description": "Debug level when running the re-scoring. Logs become more verbose and at '>5' temporary files are kept.",
                     "fa_icon": "fas fa-bug",
@@ -779,45 +752,16 @@
                     "fa_icon": "fas fa-bug",
                     "default": 0,
                     "hidden": true
+                },
+                "best_per_spectrum_only": {
+                    "type": "boolean",
+                    "description": "After applying score:fdr, retain only the best-scoring PSM per spectrum.",
+                    "default": true,
+                    "fa_icon": "far fa-check-square",
+                    "hidden": true
                 }
             },
             "fa_icon": "fas fa-star-half"
-        },
-        "consensus_id": {
-            "title": "Consensus ID",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "consensusid_algorithm": {
-                    "type": "string",
-                    "description": "How to combine the probabilities from the single search engines: best, combine using a sequence similarity-matrix (PEPMatrix), combine using shared ion count of peptides (PEPIons). See help for further info.",
-                    "default": "best",
-                    "fa_icon": "fas fa-list-ol",
-                    "help_text": "Specifies how search engine results are combined: ConsensusID offers several algorithms that can aggregate results from multiple peptide identification engines ('search engines') into consensus identifications - typically one per MS2 spectrum. This works especially well for search engines that provide more than one peptide hit per spectrum, i.e. that report not just the best hit, but also a list of runner-up candidates with corresponding scores.\n\nThe available algorithms are:\n\n* PEPMatrix: Scoring based on posterior error probabilities (PEPs) and peptide sequence similarities. This algorithm uses a substitution matrix to score the similarity of sequences not listed by all search engines. It requires PEPs as the scores for all peptide hits.\n* PEPIons: Scoring based on posterior error probabilities (PEPs) and fragment ion similarities ('shared peak count'). This algorithm, too, requires PEPs as scores.\n* best: For each peptide ID, this uses the best score of any search engine as the consensus score.\n* worst: For each peptide ID, this uses the worst score of any search engine as the consensus score.\n* average: For each peptide ID, this uses the average score of all search engines as the consensus score.\n* ranks: Calculates a consensus score based on the ranks of peptide IDs in the results of different search engines. The final score is in the range (0, 1], with 1 being the best score.\n\nTo make scores comparable, for best, worst and average, PEPs are used as well. Peptide IDs are only considered the same if they map to exactly the same sequence (including modifications and their localization). Also isobaric aminoacids are (for now) only considered equal with the PEPMatrix/PEPIons algorithms.",
-                    "enum": ["best", "PEPMatrix", "PEPIons"]
-                },
-                "consensusid_considered_top_hits": {
-                    "type": "integer",
-                    "description": "Only use the top N hits per search engine and spectrum for combination. Default: 0 = all",
-                    "fa_icon": "fas fa-sliders-h",
-                    "help_text": "Limits the number of alternative peptide hits considered per spectrum/feature for each identification run. This helps to reduce runtime, especially for the PEPMatrix and PEPIons algorithms, which involve costly 'all vs. all' comparisons of peptide hits per spectrum across engines."
-                },
-                "min_consensus_support": {
-                    "type": "number",
-                    "description": "A threshold for the ratio of occurrence/similarity scores of a peptide in other runs, to be reported. See help.",
-                    "fa_icon": "fas fa-filter",
-                    "help_text": "This allows filtering of peptide hits based on agreement between search engines. Every peptide sequence in the analysis has been identified by at least one search run. This parameter defines which fraction (between 0 and 1) of the remaining search runs must 'support' a peptide identification that should be kept. The meaning of 'support' differs slightly between algorithms: For best, worst, average and rank, each search run supports peptides that it has also identified among its top `consensusid_considered_top_hits` candidates. So `min_consensus_support` simply gives the fraction of additional search engines that must have identified a peptide. (For example, if there are three search runs, and only peptides identified by at least two of them should be kept, set `min_support` to 0.5.) For the similarity-based algorithms PEPMatrix and PEPIons, the 'support' for a peptide is the average similarity of the most-similar peptide from each (other) search run. (In the context of the JPR publication, this is the average of the similarity scores used in the consensus score calculation for a peptide.) Note: For most of the subsequent algorithms, only the best identification per spectrum is used."
-                },
-                "consensusid_debug": {
-                    "type": "integer",
-                    "description": "Debug level for ConsensusID. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "hidden": true,
-                    "default": 0
-                }
-            },
-            "fa_icon": "fas fa-code-branch"
         },
         "isobaric_analyzer": {
             "title": "Isobaric analyzer",
@@ -894,21 +838,6 @@
                 }
             },
             "fa_icon": "far fa-chart-bar"
-        },
-        "feature_mapper": {
-            "title": "Feature Mapper",
-            "type": "object",
-            "description": "Assigns protein/peptide identifications to features or consensus features. Here, features generated from isobaric reporter intensities of fragment spectra.",
-            "default": "",
-            "properties": {
-                "idmapper_debug": {
-                    "type": "integer",
-                    "description": "Debug level for IDMapper step. Increase for verbose logging",
-                    "fa_icon": "fas fa-bug",
-                    "default": 0,
-                    "hidden": true
-                }
-            }
         },
         "protein_inference": {
             "title": "Protein inference",
@@ -1044,11 +973,10 @@
                     "enum": ["unique_peptides", "strictly_unique_peptides", "shared_peptides"],
                     "fa_icon": "fas fa-list-ol"
                 },
-                "export_mztab": {
-                    "type": "boolean",
-                    "description": "Export the results in mzTab format.",
-                    "default": true,
-                    "fa_icon": "fas fa-check-square"
+                "accession": {
+                    "type": "string",
+                    "description": "Project accession (e.g. PRIDE accession) recorded in the QPX dataset provenance.",
+                    "fa_icon": "fas fa-fingerprint"
                 },
                 "protein_quant_debug": {
                     "type": "integer",
@@ -1343,12 +1271,6 @@
         },
         {
             "$ref": "#/$defs/psm_re_scoring_percolator"
-        },
-        {
-            "$ref": "#/$defs/consensus_id"
-        },
-        {
-            "$ref": "#/$defs/feature_mapper"
         },
         {
             "$ref": "#/$defs/isobaric_analyzer"

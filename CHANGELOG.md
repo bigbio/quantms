@@ -3,6 +3,24 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] bigbio/quantms - [06/08/2026] - [Cambridge]
+
+### `Added`
+
+- [#725](https://github.com/bigbio/quantms/pull/725) **QPX quantification output for DDA**: LFQ and isobaric now publish a [QPX](https://bigbio.github.io/qpx/) dataset (`psm`/`feature`/`pg` Parquet + `run`/`sample`/`ontology`/`provenance`/`dataset` metadata) plus a MuData (`.h5mu`) container, built from the OpenMS `consensusXML` via the shared `bigbio/qpx/openmsconsensus` nf-module (`qpxc convert openms-consensus`, qpx `1.1.1`). The dataset is published flat under `qpx/`, consistent with quantmsdiann.
+
+### `Changed`
+
+- [#725](https://github.com/bigbio/quantms/pull/725) **BREAKING — mzTab is no longer a published artifact**: QPX is the sole DDA quantification output. The raw OpenMS `-out_qpx` folder and the `consensusXML` are consumed as intermediates; `quant_tables/` retains only the MSstats input.
+- [#719](https://github.com/bigbio/quantms/pull/719), [#721](https://github.com/bigbio/quantms/pull/721) Bump `pmultiqc` to `0.0.46` and `quantms-rescoring` to `0.0.24`.
+- [#712](https://github.com/bigbio/quantms/pull/712) Update OpenMS and quantms-rescoring dependencies.
+- [#716](https://github.com/bigbio/quantms/pull/716) Update the nf-core template.
+
+### `Fixed`
+
+- [#718](https://github.com/bigbio/quantms/pull/718) Scale `ISOBARIC_WORKFLOW` and `MSSTATS_CONVERTER` resources dynamically with experiment size (PRIDE cluster config).
+- [#714](https://github.com/bigbio/quantms/pull/714) Fix a bug and bump the pmultiqc version.
+
 ## [1.8.0] bigbio/quantms - [23/06/2026] - [Guangzhou]
 
 ### `Added`

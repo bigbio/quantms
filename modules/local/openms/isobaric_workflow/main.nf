@@ -4,8 +4,8 @@ process ISOBARIC_WORKFLOW {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.06.06' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2026.06.06' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.07.02' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2026.07.02' }"
 
     input:
     val(labelling_type)
@@ -14,7 +14,6 @@ process ISOBARIC_WORKFLOW {
     path(expdes)
 
     output:
-    path "${expdes.baseName}_openms.mzTab", emit: out_mztab
     path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
     path "${expdes.baseName}_qpx", emit: out_qpx
     path "*.log", emit: log
@@ -41,6 +40,9 @@ process ISOBARIC_WORKFLOW {
         isotope_correction = "-quantification:isotope_correction true -${labelling_type}:correction_matrix ${correction_matrix}"
     }
 
+    // NB: OpenMS IsobaricWorkflow REQUIRES -out_mzTab. It is produced but deliberately
+    // NOT declared as an output (no emit) so the pipeline neither publishes nor
+    // consumes it — QPX (-out_qpx) is the artifact. Do not remove the -out_mzTab flag.
     """
     IsobaricWorkflow \\
         -threads ${task.cpus} \\

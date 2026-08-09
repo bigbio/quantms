@@ -10,6 +10,11 @@
                         "git_sha": "1c93e068aeca6704d042b92c26249cdd801da278",
                         "installed_by": ["modules"]
                     },
+                    "qpx/openmsconsensus": {
+                        "branch": "main",
+                        "git_sha": "21b7fa083b9400c6a276629fbf3ae8500493d518",
+                        "installed_by": ["modules"]
+                    },
                     "thermorawfileparser": {
                         "branch": "main",
                         "git_sha": "53f2d78652a7040e3d44610286471642b1e1b55b",

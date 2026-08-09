@@ -4,8 +4,8 @@ process MSGF {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.06.06' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2026.06.06' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.07.02' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2026.07.02' }"
 
     input:
     tuple val(meta),  path(mzml_file), path(database), path(cnlcp), path(canno), path(csarr), path(cseq)
@@ -18,9 +18,13 @@ process MSGF {
     script:
     // The OpenMS adapters need the actual jar file, not the executable/shell wrapper that (bio)conda creates
     msgf_jar = ''
-    if ((workflow.containerEngine || (task.executor == "awsbatch")) && (task.container.indexOf("biocontainers") > -1 || task.container.indexOf("depot.galaxyproject.org") > -1)) {
+    if ((workflow.containerEngine || (task.executor == "awsbatch")) && task.container.indexOf("bigbio") > -1) {
+        msgf_jar = "-executable /opt/OpenMS/thirdparty/MSGFPlus/MSGFPlus.jar"
+    }
+    else if ((workflow.containerEngine || (task.executor == "awsbatch")) && (task.container.indexOf("biocontainers") > -1 || task.container.indexOf("depot.galaxyproject.org") > -1)) {
         msgf_jar = "-executable \$(find /usr/local/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
-    } else if (System.getenv('CONDA_PREFIX')) {
+    }
+    else if (System.getenv('CONDA_PREFIX')) {
         msgf_jar = "-executable \$(find \$CONDA_PREFIX/share/msgf_plus-*/MSGFPlus.jar -maxdepth 0)"
     }
 
