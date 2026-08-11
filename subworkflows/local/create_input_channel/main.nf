@@ -87,7 +87,7 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
     if (row.DissociationMethod == "COLLISION-INDUCED DISSOCIATION") {
         meta.dissociationmethod = "CID"
     }
-    else if (row.DissociationMethod == "HIGHER ENERGY BEAM-TYPE COLLISION-INDUCED DISSOCIATION") {
+    else if (row.DissociationMethod == "BEAM-TYPE COLLISION-INDUCED DISSOCIATION") {
         meta.dissociationmethod = "HCD"
     }
     else if (row.DissociationMethod == "ELECTRON TRANSFER DISSOCIATION") {
