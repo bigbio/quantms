@@ -755,7 +755,8 @@
                 },
                 "best_per_spectrum_only": {
                     "type": "boolean",
-                    "description": "After applying score:fdr, retain only the best-scoring PSM per spectrum (default: keep all hits, matching legacy PercolatorAdapter behaviour).",
+                    "description": "After applying score:fdr, retain only the best-scoring PSM per spectrum.",
+                    "default": true,
                     "fa_icon": "far fa-check-square",
                     "hidden": true
                 }

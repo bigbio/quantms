@@ -7,4 +7,4 @@ dependencies:
   # publishes it.
   - pip
   - pip:
-      - qpx==1.1.1
+      - qpx==1.1.2
