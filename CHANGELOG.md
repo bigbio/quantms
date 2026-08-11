@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] bigbio/quantms - [date]
+
+### `Fixed`
+
+- [#728](https://github.com/bigbio/quantms/pull/718) Clean dead document and modules.
+
 ## [1.9.0] bigbio/quantms - [06/08/2026] - [Cambridge]
 
 ### `Added`
