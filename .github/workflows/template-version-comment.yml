@@ -2,7 +2,7 @@ name: nf-core template version comment
 # This workflow is triggered on PRs to check if the pipeline template version matches the latest nf-core version.
 # It posts a comment to the PR, even if it comes from a fork.
 
-on: pull_request_target
+on: pull_request
 
 jobs:
   template_version:
