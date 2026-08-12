@@ -12,6 +12,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+          allow-unsafe-pr-checkout: true
 
       - name: Read template version from .nf-core.yml
         uses: nichmor/minimal-read-yaml@1f7205277e25e156e1f63815781db80a6d490b8f # v0.0.2
