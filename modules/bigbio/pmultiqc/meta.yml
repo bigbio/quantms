@@ -1,0 +1,52 @@
+name: pmultiqc
+description: A library for proteomics QC report based on MultiQC framework.
+keywords:
+  - MultiQC
+  - QC
+  - Proteomics
+tools:
+  - pmultiqc:
+      description: |
+        A library for proteomics QC report based on MultiQC framework.
+        Use `task.ext.args` to pass additional arguments, e.g.:
+        - `--quantms-plugin` for quantms/dia/tmt/lfq data
+        - `--qpx-plugin` for a qpx dataset
+        - `--diann-plugin` for DIA-NN data
+        - `--maxquant-plugin` for MaxQuant data
+        - `--proteobench-plugin` for ProteoBench data
+        - `--mzid-plugin` for mzID data
+        - `--disable-table` to disable table plots
+        - `--ignored-idxml` to ignore idXML files
+        - `--contaminant-affix VALUE` to specify contaminant affix
+        - `--quantification-method VALUE` to specify quantification method (used with --quantms-plugin)
+        - `--config FILE` to point at a MultiQC config staged under results/
+      homepage: https://github.com/bigbio/pmultiqc/
+      documentation: https://github.com/bigbio/pmultiqc/
+input:
+  - multiqc_inputs:
+      type: file
+      description: |
+        All files the report needs (MultiQC config, experimental design, quant
+        tables, qpx dataset, logs, ...), collected into a single channel and staged
+        flat under `results/`. MultiQC runs on `./results`; per-consumer plugin and
+        config flags are supplied through `task.ext.args`.
+output:
+  - ch_pmultiqc_report:
+      type: file
+      description: MultiQC report file
+      pattern: "*.html"
+  - ch_pmultiqc_db:
+      type: file
+      description: |
+        Sqlite3 database file storing protein, psm and quantification information (optional)
+      pattern: "*.db"
+  - data:
+      type: file
+      description: Plots created by MultiQC
+      pattern: "*_data"
+  - versions:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@Chengxin Dai"

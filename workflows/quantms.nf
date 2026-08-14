@@ -20,7 +20,7 @@ include { CREATE_INPUT_CHANNEL } from '../subworkflows/local/create_input_channe
 include { DDA_ID } from '../subworkflows/local/dda_id/main'
 
 // Modules import from the pipeline
-include { PMULTIQC as SUMMARY_PIPELINE } from '../modules/local/pmultiqc/main'
+include { PMULTIQC as SUMMARY_PIPELINE } from '../modules/bigbio/pmultiqc/main'
 include { GENERATE_DECOY_DATABASE } from '../modules/local/openms/generate_decoy_database/main'
 
 /*
@@ -199,7 +199,9 @@ workflow QUANTMS {
     ch_multiqc_files = ch_multiqc_files.mix(FILE_PREPARATION.out.statistics)
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
     ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml', sort: false))
-    ch_multiqc_quantms_logo = file("${projectDir}/assets/nf-core-quantms_logo_light.png")
+    // The quantms logo is referenced by the MultiQC config (custom_logo, relative to
+    // the config staged under results/), so stage it alongside the other inputs.
+    ch_multiqc_files = ch_multiqc_files.mix(Channel.of(file("${projectDir}/assets/nf-core-quantms_logo_light.png")))
 
     // create cross product of all inputs
     multiqc_inputs = CREATE_INPUT_CHANNEL.out.ch_expdesign
@@ -212,7 +214,6 @@ workflow QUANTMS {
 
     SUMMARY_PIPELINE(
         multiqc_inputs,
-        ch_multiqc_quantms_logo,
     )
 
     emit:
