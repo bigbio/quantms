@@ -23,7 +23,7 @@
                     },
                     "pmultiqc": {
                         "branch": "main",
-                        "git_sha": "eb9b01de5493e5cd0f21c10cf9a402931ee768d2",
+                        "git_sha": "108392261b83e7e45681c3462a92549ffa1f5db3",
                         "installed_by": ["modules"]
                     }
                 }
