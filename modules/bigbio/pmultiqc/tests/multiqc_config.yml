@@ -1,0 +1,2 @@
+# Minimal MultiQC config for testing
+report_comment: "Test MultiQC report"

@@ -20,6 +20,11 @@
                         "git_sha": "53f2d78652a7040e3d44610286471642b1e1b55b",
                         "installed_by": ["modules"],
                         "patch": "modules/bigbio/thermorawfileparser/thermorawfileparser.diff"
+                    },
+                    "pmultiqc": {
+                        "branch": "main",
+                        "git_sha": "eb9b01de5493e5cd0f21c10cf9a402931ee768d2",
+                        "installed_by": ["modules"]
                     }
                 }
             }

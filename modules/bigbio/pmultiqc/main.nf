@@ -12,7 +12,7 @@ process PMULTIQC {
     // Everything the report needs, staged flat under `results/`. Consumers collect
     // their inputs (config, expdesign, quant tables, qpx dataset, logs, ...) into a
     // single channel; all pmultiqc/plugin flags are supplied via `task.ext.args`.
-    path multiqc_inputs, stageAs: 'results/*'
+    path 'results/*'
 
     output:
     path "*.html",       emit: ch_pmultiqc_report
