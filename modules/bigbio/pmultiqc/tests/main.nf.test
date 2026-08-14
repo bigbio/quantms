@@ -1,0 +1,147 @@
+nextflow_process {
+
+    name "Test Process PMULTIQC"
+    script "../main.nf"
+    process "PMULTIQC"
+    tag "modules"
+    tag "modules_bigbio"
+    tag "pmultiqc"
+
+    config "./nextflow.config"
+
+    // Download + extract a pmultiqc example results bundle into `dir`, flat.
+    // The module stages the returned files under `results/`, so the bundle's
+    // top-level files (multiqc_config.yml, quant tables, ...) land at results/<file>.
+    def fetch = { String url, String dir ->
+        def zipFile = file("${dir}.zip")
+        zipFile.withOutputStream { out -> out << new URL(url).openStream() }
+        def resultsDir = file(dir)
+        resultsDir.mkdirs()
+        new java.util.zip.ZipFile(zipFile).withCloseable { zip ->
+            zip.entries().each { entry ->
+                if (!entry.isDirectory()) {
+                    def extractFile = new File(resultsDir, entry.name)
+                    extractFile.parentFile.mkdirs()
+                    extractFile.withOutputStream { out -> out << zip.getInputStream(entry) }
+                }
+            }
+        }
+        zipFile.delete()
+        return resultsDir
+    }
+
+    test("Should generate MultiQC report") {
+
+        when {
+            def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
+            def resultsDir = fetch(zipUrl, "test_results")
+            process {
+                """
+                input[0] = file('${resultsDir.getAbsolutePath()}/**')
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.ch_pmultiqc_report.size() > 0 },
+                { assert process.out.ch_pmultiqc_report[0].toString().endsWith('.html') },
+                { assert process.out.data.size() > 0 },
+                { assert process.out.versions.size() > 0 }
+            )
+        }
+
+        cleanup {
+            file("test_results").deleteDir()
+        }
+    }
+
+    test("Should generate MultiQC report for DIANN") {
+        config "./nextflow.config.diann"
+
+        when {
+            def zipUrl = (params.test_data?.proteomics?.qc?.diann_results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/PXD063291.zip"
+            def resultsDir = fetch(zipUrl, "test_diann_results")
+            process {
+                """
+                input[0] = file('${resultsDir.getAbsolutePath()}/**')
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.ch_pmultiqc_report.size() > 0 },
+                { assert process.out.ch_pmultiqc_report[0].toString().endsWith('.html') },
+                { assert process.out.data.size() > 0 },
+                { assert process.out.versions.size() > 0 }
+            )
+        }
+
+        cleanup {
+            file("test_diann_results").deleteDir()
+        }
+    }
+
+    test("Should generate MultiQC report for quantms") {
+        config "./nextflow.config.quantms"
+
+        when {
+            def zipUrl = (params.test_data?.proteomics?.qc?.quantms_results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
+            def resultsDir = fetch(zipUrl, "test_quantms_results")
+            process {
+                """
+                input[0] = file('${resultsDir.getAbsolutePath()}/**')
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.ch_pmultiqc_report.size() > 0 },
+                { assert process.out.ch_pmultiqc_report[0].toString().endsWith('.html') },
+                { assert process.out.data.size() > 0 },
+                { assert process.out.versions.size() > 0 }
+            )
+            // quantms may generate a database file
+            if (process.out.ch_pmultiqc_db.size() > 0) {
+                assert process.out.ch_pmultiqc_db[0].toString().endsWith('.db')
+            }
+        }
+
+        cleanup {
+            file("test_quantms_results").deleteDir()
+        }
+    }
+
+    test("Should run stub mode") {
+
+        options "-stub"
+
+        when {
+            def zipUrl = (params.test_data?.proteomics?.qc?.results) ?: "https://ftp.pride.ebi.ac.uk/pub/databases/pride/resources/proteomes/pmultiqc/example-projects/LFQ_PXD007683.zip"
+            def resultsDir = fetch(zipUrl, "test_stub_results")
+            process {
+                """
+                input[0] = file('${resultsDir.getAbsolutePath()}/**')
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.ch_pmultiqc_report.size() > 0 },
+                { assert process.out.data.size() > 0 },
+                { assert process.out.versions.size() > 0 }
+            )
+        }
+
+        cleanup {
+            file("test_stub_results").deleteDir()
+        }
+    }
+}
