@@ -3,6 +3,21 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] bigbio/quantms - [15/08/2026] - [London]
+
+### `Changed`
+
+- [#729](https://github.com/bigbio/quantms/pull/729) **Migrate to the shared `bigbio/pmultiqc` nf-module**: the local `pmultiqc` module is replaced by the community-maintained nf-module and `pmultiqc` is bumped to `0.0.47`. MultiQC flags previously hard-coded inside the module are now passed via `ext.args` in `conf/modules/shared.config`, and the quantms logo is staged alongside the report inputs.
+
+### `Fixed`
+
+- [#728](https://github.com/bigbio/quantms/pull/728) Clean dead document and modules.
+- [#728](https://github.com/bigbio/quantms/pull/728) Fix recognition of `BEAM-TYPE COLLISION-INDUCED DISSOCIATION` (HCD) in the SDRF experimental design.
+
+### `Dependencies`
+
+- Bumped `pmultiqc` to `0.0.47`.
+
 ## [1.9.0] bigbio/quantms - [06/08/2026] - [Cambridge]
 
 ### `Added`
