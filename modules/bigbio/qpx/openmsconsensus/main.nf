@@ -8,7 +8,7 @@ process QPX_OPENMSCONSENSUS {
     // a single image serves Docker (native) and Singularity (via docker://).
     // BioContainers/Galaxy-depot lag the release, so GHCR is used for containers;
     // -profile conda still resolves the bioconda package in environment.yml.
-    container "ghcr.io/bigbio/qpx:1.1.3"
+    container "ghcr.io/bigbio/qpx:1.1.4"
 
     input:
     path(consensusxml)
@@ -17,7 +17,9 @@ process QPX_OPENMSCONSENSUS {
 
     output:
     path "qpx_output/*", emit: qpx_dataset
-    path "*.h5mu"      , emit: mudata
+    // Optional: the parquet views are the dataset's source of truth, so a MuData
+    // view that cannot be built must not destroy an otherwise complete run.
+    path "*.h5mu"      , emit: mudata, optional: true
     path "versions.yml", emit: versions
 
     when:
@@ -39,14 +41,24 @@ process QPX_OPENMSCONSENSUS {
         ${args}
 
     python - <<'PY'
-from qpx.dataset import Dataset
-from qpx.mudata import build_mudata
+import shutil
+from pathlib import Path
 
-ds = Dataset("qpx_output")
-mdata = build_mudata(ds)
-mdata.write("${prefix}.h5mu")
-ds.close()
-print(f"MuData: {mdata.n_obs} obs x {mdata.n_vars} vars -> ${prefix}.h5mu")
+from qpx.mudata import write_dataset_mudata
+
+# Use qpx's own writer rather than build_mudata + mdata.write. It refuses a
+# MuData that is missing a required quantification modality, writes via a
+# temporary file, and drops a stale view if the build fails. Calling
+# build_mudata directly bypassed that check: a modality that failed to build
+# was logged and skipped, so an INCOMPLETE h5mu was written and the task
+# exited 0 (bigbio/qpx#316 - MSV000085836 shipped proteins with no precursors).
+written = write_dataset_mudata(Path("qpx_output"), "${prefix}")
+if written is None:
+    print("WARNING: no MuData view was written; see the log above. "
+          "The qpx_output parquet views are complete and authoritative.")
+else:
+    shutil.move(str(written), "${prefix}.h5mu")
+    print(f"MuData -> ${prefix}.h5mu")
 PY
 
     cat <<-END_VERSIONS > versions.yml
