@@ -37,12 +37,14 @@ elif name == "SageAdapter":
 elif name == "IDRipper":
     source = Path(args[args.index("-in") + 1])
     for run in json.loads((source / "runs.json").read_text()):
-        Path(run + ".idparquet").mkdir()
+        # Bruker .d directory suffixes are removed by the real IDRipper output.
+        normalized = run[:-2] if run.endswith(".d") else run
+        Path(normalized + ".idparquet").mkdir()
 ''')
             tool.chmod(0o755)
             for name in ("SageAdapter", "IDRipper", "sage"):
                 (bindir / name).symlink_to(tool)
-            runs = [f"sample_fr{n}" for n in range(1, 11)] + ["single"]
+            runs = [f"sample_fr{n}" for n in range(1, 10)] + ["bruker_890.d", "single", "bruker_single.d"]
             for run in runs:
                 (root / f"{run}.mzML").touch()
             (root / "search.fasta").touch()
@@ -65,9 +67,9 @@ params {
 }
 ''')
             (root / "main.nf").write_text(
-                f"include {{ SAGE }} from {json.dumps(str(module))}\n" + '''
+                "include { SAGE } from " + json.dumps(str(module)) + "\n" + '''
 workflow {
-    batches = Channel.of((1..10).collect { "sample_fr${it}" }, ['single'])
+    batches = Channel.of((1..9).collect { "sample_fr${it}" } + ['bruker_890.d'], ['single'], ['bruker_single.d'])
         .map { ids ->
             def metas = ids.collect { id ->
                 [mzml_id: id, enzyme: 'Trypsin', precursormasstolerance: 10,
@@ -93,7 +95,11 @@ workflow {
             )
             self.assertEqual(result.returncode, 0, result.stdout)
             pairs = [line.split("\t") for line in (root / "pairs.tsv").read_text().splitlines()]
-            self.assertCountEqual(pairs, [[run, f"{run}_sage.idparquet"] for run in runs])
+            expected = [
+                [run, f"{run[:-2] if run.endswith('.d') else run}_sage.idparquet"]
+                for run in runs
+            ]
+            self.assertCountEqual(pairs, expected)
 
 
 if __name__ == "__main__":
