@@ -3,8 +3,8 @@ process GENERATE_DECOY_DATABASE {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:v3.6.0' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:v3.6.0' }"
+        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.10.04' :
+        'ghcr.io/bigbio/openms-tools-thirdparty:2026.10.04' }"
 
     input:
     path(db_for_decoy)
