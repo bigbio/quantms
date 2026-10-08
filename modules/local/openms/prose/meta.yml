@@ -1,10 +1,11 @@
 name: prose
-description: Identifies peptides in MS/MS spectra with the OpenMS fragment-index search engine ProSE, including internal Percolator rescoring.
+description: Identifies peptides in MS/MS spectra with the OpenMS fragment-index search engine ProSE, including in-process Percolator rescoring with PeptDeep (ONNX) predicted features.
 keywords:
   - identification
   - OpenMS
   - prose
   - percolator
+  - peptdeep
 tools:
   - ProSE:
       description: |

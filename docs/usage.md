@@ -90,17 +90,13 @@ nextflow pull bigbio/quantms
 ## Search engines and rescoring
 
 The default search engine is [ProSE](https://openms.de), the OpenMS search engine (`--search_engines prose`). ProSE generates
-its own decoys when the database has none, and rescores its PSMs internally with Percolator, so no separate PSM rescoring step is run
-for it. The pipeline fails if ProSE did not report an internal rescoring (e.g. too few PSMs or no decoys).
+its own decoys when the database has none, rescores its PSMs with its in-process Percolator (`-rescore`, no external percolator
+binary) and writes `.idparquet` directly, so no separate PSM rescoring or conversion step is run for it. The pipeline fails if ProSE did not report an internal rescoring (e.g. too few PSMs or no decoys).
 Before rescoring, ProSE adds PeptDeep (AlphaPeptDeep ONNX models, run with ONNX Runtime) predicted fragment intensity and retention
 time features to every PSM (`--prose_peptdeep`, default `true`; instrument class `--prose_peptdeep_instrument`, collision energy is
 calibrated from the data). The pipeline fails if the OpenMS image lacks ONNX support or the models, or if no predicted features were
 added; `--prose_peptdeep false` explicitly rescores without predicted features. ProSE cannot be combined
 with other search engines, `--ms2features_enable` or `--psm_clean`.
-
-> [!NOTE]
-> With the currently pinned OpenMS image, ProSE identifications of data with positional modification isomers (e.g. phospho
-> HCD/EThcD) can make ProteomicsLFQ refuse to write the QPX output. This is fixed in OpenMS/OpenMS#10453 and requires an updated image.
 
 Comet, Sage and MS-GF+ remain available (`--search_engines comet`, `sage`, `msgf` or comma-separated combinations). Their PSMs are
 rescored with OpenMS PercolatorAdapter in-process (no external percolator binary). Peptide- or protein-level Percolator FDRs

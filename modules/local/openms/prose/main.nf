@@ -4,8 +4,8 @@ process PROSE {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.10.04' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2026.10.04' }"
+        'oras://ghcr.io/jpfeuffer/openms-tools-thirdparty-sif:quantms-onnx-bruker' :
+        'ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-bruker' }"
 
     input:
     tuple val(meta), path(ms_file), path(database)
@@ -42,13 +42,13 @@ process PROSE {
     def peptdeep_marker = '\\[PeptDeepRescoring\\] Predicted features added: [1-9][0-9]* / [0-9]+ PSMs'
 
     """
-    # ProSE rescoring with Percolator is mandatory in quantms: downstream steps need Percolator PEPs.
+    # ProSE rescoring with its in-process Percolator is mandatory in quantms: downstream steps need Percolator PEPs.
     ProSE \\
         -in ${vendorPath.call(ms_file)} \\
         -database "${database}" \\
-        -out_idxml ${ms_file.baseName}_prose.idXML \\
+        -out ${ms_file.baseName}_prose.idparquet \\
         -summary_out ${ms_file.baseName}_prose_summary.yaml \\
-        -percolator_executable percolator \\
+        -rescore \\
         -threads $task.cpus \\
         -Search:enzyme "${meta.enzyme}" \\
         -Search:peptide:enzyme_specificity ${specificity} \\
@@ -96,17 +96,9 @@ process PROSE {
         exit 1
     fi
 
-    IDFileConverter \\
-        -in ${ms_file.baseName}_prose.idXML \\
-        -out ${ms_file.baseName}_prose.idparquet \\
-        -threads $task.cpus \\
-        2>&1 | tee ${ms_file.baseName}_prose_idconvert.log
-    rm ${ms_file.baseName}_prose.idXML
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         ProSE: \$(ProSE 2>&1 | grep -E '^Version(.*)' | sed 's/Version: //g' | cut -d ' ' -f 1)
-        percolator: \$(percolator -h 2>&1 | grep -E '^Percolator version(.*)' | sed 's/Percolator version //g')
     END_VERSIONS
     """
 

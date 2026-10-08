@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- **ProSE search engine**: OpenMS ProSE (`--search_engines prose`) is supported and is the new default. ProSE rescores PSMs internally with Percolator, so no separate rescoring step runs for it; the pipeline fails if the internal rescoring did not happen. Results are stored as `.idparquet`.
+- **ProSE search engine**: OpenMS ProSE (`--search_engines prose`) is supported and is the new default. ProSE rescores PSMs with its in-process Percolator (`-rescore`) and writes `.idparquet` directly, so no separate rescoring or conversion step runs for it; the pipeline fails if the internal rescoring did not happen. Results are stored as `.idparquet`.
 - **Direct vendor file reading**: Thermo `.raw` files and Bruker `.d` directories are read directly by the OpenMS tools (no mzML conversion) by default. New `--convert_raw` restores the ThermoRawFileParser conversion; steps that need mzML fail with an explicit error for unconverted vendor files.
 - [#739](https://github.com/bigbio/quantms/issues/739) **Distributed LFQ feature finding**: ProteomicsLFQ feature detection runs per run (`-detect_only -feat_dir`) and a final ProteomicsLFQ task combines the `.featureParquet` checkpoints (new `--lfq_distributed_featurefinding`, default `true`).
 - **ProSE PeptDeep rescoring**: ProSE adds PeptDeep (ONNX) predicted MS2 and RT features before its internal Percolator rescoring (new `--prose_peptdeep`, default `true`, and `--prose_peptdeep_instrument`). The pipeline fails if the predicted features were not computed (OpenMS without ONNX Runtime or models); `--prose_peptdeep false` opts out explicitly.
@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bumped `pmultiqc` to `0.0.47`.
 - Bumped `qpx` to `1.1.5` via the shared `bigbio/qpx/openmsconsensus` nf-module (protein-properties batched rewrite for the pyarrow 2 GB crash on large TMT, bigbio/qpx#338, plus the OpenMS run/identity recovery fixes). The MuData view is now written by `qpxc convert` itself and no longer rebuilt by the module.
+- OpenMS tools image temporarily pinned to the test build `ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-bruker` (OpenMS 3.7.0-pre with ONNX Runtime 1.30.0, PeptDeep models, Bruker TDF SDK on amd64, and OpenMS/OpenMS#9975, #10449, #10450, #10452–#10455, #10460–#10462); to be replaced by the bigbio retag once these are merged.
 
 ## [1.9.0] bigbio/quantms - [06/08/2026] - [Cambridge]
 
