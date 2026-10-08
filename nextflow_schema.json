@@ -248,6 +248,21 @@
                     "help_text": "A comma-separated list of search engines to run in parallel on each spectrum file. Currently supported: prose, comet, msgf and sage (default: prose).\n[ProSE](https://openms.de) is the OpenMS search engine. It performs its own target-decoy handling and internal Percolator rescoring, so no separate PSM rescoring step is run for it; it cannot be combined with other engines, `--ms2features_enable` or `--psm_clean`.\nFor the other engines, PSMs are rescored with OpenMS PercolatorAdapter in-process (the external percolator binary is only used for peptide/protein-level FDR, i.e. `--fdr_level` other than `psm_level_fdrs`).\nIf more than one search engine is given, results are combined based on posterior error probabilities (see the different types\nof estimation procedures under [`--posterior_probabilities`](#posterior_probabilities)). Combination is done with\n[ConsensusID](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_ConsensusID.html).\nSee also its corresponding [`--consensusid_algorithm`](#--consensusid_algorithm) parameter for different combination strategies.\nCombinations may profit from an increased [`--num_hits`](#--num_hits) parameter.",
                     "pattern": "^(prose|comet|msgf|sage)(,(prose|comet|msgf|sage))*$"
                 },
+                "prose_peptdeep": {
+                    "type": "boolean",
+                    "description": "Rescore ProSE PSMs with PeptDeep (ONNX) predicted fragment intensity and retention time features.",
+                    "default": true,
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "With ProSE (`--search_engines prose`), adds the AlphaPeptDeep-predicted features ms2_cosine, ms2_spectral_angle, ms2_pearson, ms2_frac_pred_found and rt_abs_error to every PSM before ProSE's internal Percolator rescoring. Requires an OpenMS image built with ONNX Runtime and the PeptDeep models; the pipeline fails if the prediction features are unavailable or were not computed. Set to false to explicitly rescore without predicted features."
+                },
+                "prose_peptdeep_instrument": {
+                    "type": "string",
+                    "description": "Instrument class for the PeptDeep MS2 prediction model used by ProSE rescoring.",
+                    "default": "QE",
+                    "fa_icon": "fas fa-microscope",
+                    "enum": ["QE", "Lumos", "timsTOF", "SciexTOF", "ThermoTOF"],
+                    "help_text": "Instrument class passed to the PeptDeep MS2 model (`--prose_peptdeep`). Instruments not in the list are best approximated by the closest class (e.g. Orbitrap Exploris/Astral: QE or ThermoTOF; timsTOF: timsTOF). The collision energy is calibrated automatically from the data."
+                },
                 "sage_processes": {
                     "type": "integer",
                     "description": "Number of sage processes to be spawned.",

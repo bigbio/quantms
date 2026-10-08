@@ -44,6 +44,16 @@
 
   > ProSE (search engine), ProteomicsLFQ, IsobaricWorkflow and PercolatorAdapter are part of OpenMS; please cite OpenMS for them.
 
+- [AlphaPeptDeep](https://doi.org/10.1038/s41467-022-34904-3)
+
+  > Zeng WF, Zhou XX, Willems S, et al. AlphaPeptDeep: a modular deep learning framework to predict peptide properties for proteomics. Nat Commun. 2022;13(1):7238. doi: 10.1038/s41467-022-34904-3
+
+- [ONNX Runtime](https://onnxruntime.ai)
+
+- [OpenTIMS](https://github.com/michalsta/opentims) and the Bruker TDF SDK
+
+  > This software uses Bruker Daltonik software (TDF SDK). Copyright © 2019 by Bruker Daltonik GmbH. All rights reserved.
+
 - [MSstats](https://www.ncbi.nlm.nih.gov/pubmed/24794931/)
 
   > Choi M., Chang CY., Clough T., Broudy D., Killeen T., MacLean B., Vitek O. (2014). MSstats: an R package for statistical analysis of quantitative mass spectrometry-based proteomic experiments. Bioinformatics (Oxford, England), 30(17), 2524–2526. doi: 10.1093/bioinformatics/btu305. PubMed PMID: 24794931.

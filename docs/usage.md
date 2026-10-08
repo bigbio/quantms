@@ -33,7 +33,11 @@ Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
 
 Thermo `.raw` files and Bruker `.d` directories are read natively by the OpenMS tools of the pipeline container (ProSE, Comet, Sage
 and ProteomicsLFQ) without an mzML conversion step. Thermo support uses the vendor RawFileReader libraries bundled in the OpenMS
-image, Bruker support uses the open-source OpenTIMS reader. Steps that still require mzML (MS-GF+, multi-engine PSM cleaning,
+image, Bruker timsTOF (TDF) support uses OpenTIMS together with the Bruker TDF SDK (`libtimsdata`) shipped in the amd64 OpenMS
+image. The SDK is required for correct m/z values: the open-source TOF-to-m/z approximation deviates from the vendor calibration by up
+to ~37 ppm (not correctable by linear recalibration), whereas the open-source ion mobility (1/K0) calibration is exact. The pipeline
+fails for `.d` input if the OpenMS tools did not use the Bruker SDK (e.g. on arm64, where no SDK exists). Only TDF-based `.d`
+directories (`analysis.tdf`/`analysis.tdf_bin`) are supported (natively and by `--convert_dotd`); TSF and BAF `.d` data are not. Steps that still require mzML (MS-GF+, multi-engine PSM cleaning,
 OpenMS peak picking, MS²/DeepLC feature generation, PTM localization with onsite and isobaric (TMT/iTRAQ) quantification) stop
 with an explicit error when given an unconverted vendor file; set `--convert_raw` (and/or `--convert_dotd`) for those analyses.
 
@@ -87,7 +91,11 @@ nextflow pull bigbio/quantms
 
 The default search engine is [ProSE](https://openms.de), the OpenMS search engine (`--search_engines prose`). ProSE generates
 its own decoys when the database has none, and rescores its PSMs internally with Percolator, so no separate PSM rescoring step is run
-for it. The pipeline fails if ProSE did not report an internal rescoring (e.g. too few PSMs or no decoys). ProSE cannot be combined
+for it. The pipeline fails if ProSE did not report an internal rescoring (e.g. too few PSMs or no decoys).
+Before rescoring, ProSE adds PeptDeep (AlphaPeptDeep ONNX models, run with ONNX Runtime) predicted fragment intensity and retention
+time features to every PSM (`--prose_peptdeep`, default `true`; instrument class `--prose_peptdeep_instrument`, collision energy is
+calibrated from the data). The pipeline fails if the OpenMS image lacks ONNX support or the models, or if no predicted features were
+added; `--prose_peptdeep false` explicitly rescores without predicted features. ProSE cannot be combined
 with other search engines, `--ms2features_enable` or `--psm_clean`.
 
 > [!NOTE]

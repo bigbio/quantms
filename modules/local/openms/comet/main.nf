@@ -83,6 +83,8 @@ process COMET {
     // symlinks (as staged by Nextflow), so vendor files are passed by their resolved path.
     // The file name stays the same, so run names still match the experimental design.
     def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
+    // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
+    def has_dotd = [mzml_file].any { f -> f.name ==~ /(?i).*\.d/ }
 
     """
     CometAdapter \\
@@ -114,6 +116,11 @@ process COMET {
         -force \\
         $args \\
         2>&1 | tee ${mzml_file.baseName}_comet.log
+
+    if [ "${has_dotd}" = "true" ] && { ! grep -qF 'TIMS calibration: Bruker SDK (m/z + 1/K0)' ${mzml_file.baseName}_comet.log || grep -F 'TIMS calibration:' ${mzml_file.baseName}_comet.log | grep -vqF 'Bruker SDK (m/z'; }; then
+        echo "ERROR: Bruker .d input was not read with the Bruker TDF SDK m/z calibration (needs the amd64 OpenMS image with libtimsdata). See ${mzml_file.baseName}_comet.log." >&2
+        exit 1
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

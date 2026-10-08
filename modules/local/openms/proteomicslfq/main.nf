@@ -42,6 +42,8 @@ process PROTEOMICSLFQ {
     // the staged checkpoints. ProteomicsLFQ then takes neither spectra nor identifications.
     def combine = checkpoints instanceof List ? !checkpoints.isEmpty() : checkpoints != null
     def run_inputs = combine ? "-feat_dir feature_checkpoints" : "-in ${mzml_sorted.collect { f -> vendorPath.call(f) }.join(' ')} -ids ${id_sorted.join(' ')}"
+    // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
+    def has_dotd = (combine ? [] : mzml_sorted).any { f -> f.name ==~ /(?i).*\.d/ }
 
     // Checkpoints record the FASTA by size and modification time; use the same fixed-time local
     // copy as PROTEOMICSLFQ_DETECT (see there).
@@ -66,6 +68,11 @@ process PROTEOMICSLFQ {
         ${msstats_present} \\
         $args \\
         2>&1 | tee proteomicslfq.log
+
+    if [ "${has_dotd}" = "true" ] && { ! grep -qF 'TIMS calibration: Bruker SDK (m/z + 1/K0)' proteomicslfq.log || grep -F 'TIMS calibration:' proteomicslfq.log | grep -vqF 'Bruker SDK (m/z'; }; then
+        echo "ERROR: Bruker .d input was not read with the Bruker TDF SDK m/z calibration (needs the amd64 OpenMS image with libtimsdata). See proteomicslfq.log." >&2
+        exit 1
+    fi
 
     rm ${db_name}
 
