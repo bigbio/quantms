@@ -54,7 +54,7 @@ process {
 
 Keep global Comet-specific options unset when unlisted Da runs should retain their original settings. An unlisted ppm run fails with an explicit configuration error. Do not additionally override these options through `ext.args` or a Comet parameter file: those adapter options can take precedence over quantms' reported settings.
 
-The original SDRF value and unit are never changed. Other engines and rescoring continue to receive their original metadata. The Nextflow log records the run ID, input tolerance, full width, adapter half width, offset, instrument mode, and whether settings were explicit or derived from Da input (which may itself come from the configured fallback). An explicit, valid Comet configuration is logged at INFO; errors and other warnings remain visible.
+The original SDRF value and unit are never changed. Other engines and rescoring continue to receive their original metadata. The Nextflow log records the run ID, input tolerance, full width, adapter half width, offset, instrument mode, and whether settings were explicit or derived from Da input (which may itself come from the configured fallback). These details are logged at DEBUG level, so they appear in `.nextflow.log` but not on the console; errors remain visible.
 
 See the [Comet parameter documentation](https://uwpr.github.io/Comet/parameters/parameters_202602/fragment_bin_tol.html) and [OpenMS adapter documentation](https://openms.de/documentation/html/TOPP_CometAdapter.html).
 
