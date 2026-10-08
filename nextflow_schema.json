@@ -200,11 +200,17 @@
                     "fa_icon": "fas fa-font",
                     "help_text": "Which MS levels to pick as comma separated list, e.g. `--peakpicking_ms_levels 1,2`. Leave empty for auto-detection."
                 },
+                "convert_raw": {
+                    "type": "boolean",
+                    "description": "Convert Thermo .raw files to mzML with ThermoRawFileParser instead of reading them directly",
+                    "fa_icon": "far fa-check-square",
+                    "help_text": "By default, Thermo .raw files are read directly by the OpenMS tools (ProSE, Comet, Sage, ProteomicsLFQ) without conversion. Enable this for steps that require mzML input: MS-GF+, multi-engine searches with PSM cleaning, OpenMS peak picking, MS2 feature rescoring, PTM localization and isobaric (TMT/iTRAQ) quantification. The pipeline stops with an explicit error if such a step receives an unconverted vendor file."
+                },
                 "convert_dotd": {
                     "type": "boolean",
-                    "description": "Convert bruker .d files to mzML",
+                    "description": "Convert Bruker .d directories to mzML instead of reading them directly",
                     "fa_icon": "far fa-check-square",
-                    "help_text": "Whether to convert raw .d bruker files to .mzML"
+                    "help_text": "By default, Bruker .d (timsTOF) directories are read directly by the OpenMS tools without conversion. Enable this to convert them to mzML with tdf2mzml, e.g. for steps that require mzML input (see `--convert_raw`)."
                 },
                 "reindex_mzml": {
                     "type": "boolean",
@@ -236,10 +242,11 @@
             "properties": {
                 "search_engines": {
                     "type": "string",
-                    "description": "A comma separated list of search engines to use (and combine). Valid: comet, msgf, sage",
-                    "default": "comet",
+                    "description": "A comma separated list of search engines to use (and combine). Valid: prose (default), comet, msgf, sage",
+                    "default": "prose",
                     "fa_icon": "fas fa-tasks",
-                    "help_text": "A comma-separated list of search engines to run in parallel on each mzML file. Currently supported: comet, msgf and sage (default: comet)\nIf more than one search engine is given, results are combined based on posterior error probabilities (see the different types\nof estimation procedures under [`--posterior_probabilities`](#posterior_probabilities)). Combination is done with\n[ConsensusID](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_ConsensusID.html).\nSee also its corresponding [`--consensusid_algorithm`](#--consensusid_algorithm) parameter for different combination strategies.\nCombinations may profit from an increased [`--num_hits`](#--num_hits) parameter."
+                    "help_text": "A comma-separated list of search engines to run in parallel on each spectrum file. Currently supported: prose, comet, msgf and sage (default: prose).\n[ProSE](https://openms.de) is the OpenMS search engine. It performs its own target-decoy handling and internal Percolator rescoring, so no separate PSM rescoring step is run for it; it cannot be combined with other engines, `--ms2features_enable` or `--psm_clean`.\nFor the other engines, PSMs are rescored with OpenMS PercolatorAdapter in-process (the external percolator binary is only used for peptide/protein-level FDR, i.e. `--fdr_level` other than `psm_level_fdrs`).\nIf more than one search engine is given, results are combined based on posterior error probabilities (see the different types\nof estimation procedures under [`--posterior_probabilities`](#posterior_probabilities)). Combination is done with\n[ConsensusID](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/TOPP_ConsensusID.html).\nSee also its corresponding [`--consensusid_algorithm`](#--consensusid_algorithm) parameter for different combination strategies.\nCombinations may profit from an increased [`--num_hits`](#--num_hits) parameter.",
+                    "pattern": "^(prose|comet|msgf|sage)(,(prose|comet|msgf|sage))*$"
                 },
                 "sage_processes": {
                     "type": "integer",
@@ -1000,6 +1007,13 @@
                     "default": "feature_intensity",
                     "enum": ["feature_intensity", "spectral_counting"],
                     "fa_icon": "fas fa-list-ol"
+                },
+                "lfq_distributed_featurefinding": {
+                    "type": "boolean",
+                    "description": "Run ProteomicsLFQ feature detection as one task per run with feature checkpoints, then combine them in a single task",
+                    "default": true,
+                    "fa_icon": "fas fa-project-diagram",
+                    "help_text": "With 'feature_intensity' quantification, ProteomicsLFQ feature detection is scattered into one `ProteomicsLFQ -detect_only -feat_dir` task per run. The resulting `.featureParquet` checkpoints are gathered by a final ProteomicsLFQ task that performs alignment, linking, inference and quantification. With `-resume`, changing only inference, FDR or protein quantification parameters re-runs only the final task. Set to false to run ProteomicsLFQ as a single task over all runs."
                 },
                 "lfq_seeding_algorithm": {
                     "type": "string",

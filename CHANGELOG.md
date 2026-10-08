@@ -5,7 +5,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.10.0] bigbio/quantms - [15/08/2026] - [London]
 
+### `Added`
+
+- **ProSE search engine**: OpenMS ProSE (`--search_engines prose`) is supported and is the new default. ProSE rescores PSMs internally with Percolator, so no separate rescoring step runs for it; the pipeline fails if the internal rescoring did not happen. Results are stored as `.idparquet`.
+- **Direct vendor file reading**: Thermo `.raw` files and Bruker `.d` directories are read directly by the OpenMS tools (no mzML conversion) by default. New `--convert_raw` restores the ThermoRawFileParser conversion; steps that need mzML fail with an explicit error for unconverted vendor files.
+- [#739](https://github.com/bigbio/quantms/issues/739) **Distributed LFQ feature finding**: ProteomicsLFQ feature detection runs per run (`-detect_only -feat_dir`) and a final ProteomicsLFQ task combines the `.featureParquet` checkpoints (new `--lfq_distributed_featurefinding`, default `true`).
+- New `test_lfq_prose` CI profile (Thermo RAW + ProSE + distributed LFQ).
+
 ### `Changed`
+
+- **BREAKING — default search engine is now `prose`** (previously `comet`).
+- PercolatorAdapter runs Percolator in-process (`-use_subprocess false`); the pipeline fails if PSM-level rescoring silently fell back to the external binary. Peptide/protein-level FDR modes still use the external binary.
+- ProteomicsLFQ and IsobaricWorkflow no longer write the unused mzTab file.
+- Test profiles that use MS-GF+, multi-engine merging, localization or isobaric quantification set `convert_raw = true`.
 
 - [#729](https://github.com/bigbio/quantms/pull/729) **Migrate to the shared `bigbio/pmultiqc` nf-module**: the local `pmultiqc` module is replaced by the community-maintained nf-module and `pmultiqc` is bumped to `0.0.47`. MultiQC flags previously hard-coded inside the module are now passed via `ext.args` in `conf/modules/shared.config`, and the quantms logo is staged alongside the report inputs.
 

@@ -11,7 +11,9 @@ process PROTEOMICSLFQ {
     path(mzmls)
     path(id_files)
     path(expdes)
-    path(fasta)
+    path(fasta, stageAs: 'database/*')
+    path(checkpoints, stageAs: 'feature_checkpoints/*')
+    val(feature_args)
 
     output:
     path "${expdes.baseName}_qpx", emit: out_qpx
@@ -28,43 +30,44 @@ process PROTEOMICSLFQ {
 
     script:
     def args = task.ext.args ?: ''
+    def db_name = fasta.toString().tokenize("/")[-1]
     def msstats_present = params.quantification_method == "feature_intensity" ? "-out_msstats ${expdes.baseName}_msstats_in.csv" : ""
-    def decoys_present = params.quantify_decoys ? '-PeptideQuantification:quantify_decoys' : ''
+    // The in-process Thermo RAW reader of the pinned OpenMS image cannot open .raw files through
+    // symlinks (as staged by Nextflow), so vendor files are passed by their resolved path.
+    // The file name stays the same, so run names still match the experimental design.
+    def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
     def mzml_sorted = mzmls.collect().sort{ a, b -> a.name <=> b.name}
     def id_sorted = id_files.collect().sort{ a, b -> a.name <=> b.name}
-    def feature_with_id_min_score =  "-feature_with_id_min_score ${params.feature_with_id_min_score}"
-    def feature_without_id_min_score = params.targeted_only == false ? "-feature_without_id_min_score ${params.feature_without_id_min_score}" : ""
+    // Combining mode: features were detected per run by PROTEOMICSLFQ_DETECT and are read back from
+    // the staged checkpoints. ProteomicsLFQ then takes neither spectra nor identifications.
+    def combine = checkpoints instanceof List ? !checkpoints.isEmpty() : checkpoints != null
+    def run_inputs = combine ? "-feat_dir feature_checkpoints" : "-in ${mzml_sorted.collect { f -> vendorPath.call(f) }.join(' ')} -ids ${id_sorted.join(' ')}"
 
-    // NB: OpenMS ProteomicsLFQ REQUIRES -out (mzTab). It is produced but deliberately
-    // NOT declared as an output (no emit) so the pipeline neither publishes nor
-    // consumes it — QPX (-out_qpx) is the artifact. Do not remove the -out flag.
+    // Checkpoints record the FASTA by size and modification time; use the same fixed-time local
+    // copy as PROTEOMICSLFQ_DETECT (see there).
     """
+    cp -L ${fasta} ${db_name}
+    touch -m -d @0 ${db_name}
+
     ProteomicsLFQ \\
         -threads ${task.cpus} \\
-        -in ${mzml_sorted.join(' ')} \\
-        -ids ${id_sorted.join(' ')} \\
+        ${run_inputs} \\
         -design ${expdes} \\
-        -fasta ${fasta} \\
+        -fasta ${db_name} \\
+        ${feature_args} \\
         -protein_inference ${params.protein_inference_method} \\
-        -quantification_method ${params.quantification_method} \\
-        -targeted_only ${params.targeted_only} \\
-        ${feature_with_id_min_score} \\
-        ${feature_without_id_min_score} \\
-        -mass_recalibration ${params.mass_recalibration} \\
-        -Seeding:algorithm ${params.lfq_seeding_algorithm} \\
-        -Seeding:intThreshold ${params.lfq_intensity_threshold} \\
         -protein_quantification ${params.protein_quant} \\
         -alignment_order ${params.alignment_order} \\
-        ${decoys_present} \\
         -psmFDR ${params.psm_level_fdr_cutoff} \\
         -proteinFDR ${params.protein_level_fdr_cutoff} \\
         -picked_proteinFDR ${params.picked_fdr} \\
         -out_cxml ${expdes.baseName}_openms.consensusXML \\
-        -out ${expdes.baseName}_openms.mzTab \\
         -out_qpx ${expdes.baseName}_qpx \\
         ${msstats_present} \\
         $args \\
         2>&1 | tee proteomicslfq.log
+
+    rm ${db_name}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

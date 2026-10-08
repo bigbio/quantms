@@ -13,11 +13,11 @@ tools:
 input:
   - mzmls:
       type: file
-      description: Input Spectra in mzML format
-      pattern: "*.mzML"
+      description: Input spectra (mzML, Thermo .raw or Bruker .d). Empty when combining feature checkpoints.
+      pattern: "*.{mzML,raw,d}"
   - id_files:
       type: file
-      description: Identifications in idXML or mzIdentML format with posterior error probabilities as score type.
+      description: Identifications with posterior error probabilities as score type. Empty when combining feature checkpoints.
       pattern: "*.idparquet"
   - expdes:
       type: file
@@ -27,6 +27,15 @@ input:
       type: file
       description: A protein database in with appended decoy sequences in FASTA format.
       pattern: "*.{fasta,fa}"
+  - checkpoints:
+      type: directory
+      description: |
+        ProteomicsLFQ feature checkpoints (one per run) produced by PROTEOMICSLFQ_DETECT.
+        When given, the tool combines them (-feat_dir) instead of running feature detection.
+      pattern: "*.featureParquet"
+  - feature_args:
+      type: string
+      description: Feature-detection parameters; must be identical to the ones used to create the checkpoints.
 output:
   - out_consensusXML:
       type: file

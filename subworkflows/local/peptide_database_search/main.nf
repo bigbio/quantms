@@ -3,6 +3,7 @@ include { MSGF_DB_INDEXING } from '../../../modules/local/utils/msgf_db_indexing
 include { MSGF  } from '../../../modules/local/openms/msgf/main'
 include { COMET } from '../../../modules/local/openms/comet/main'
 include { SAGE  } from '../../../modules/local/openms/sage/main'
+include { PROSE } from '../../../modules/local/openms/prose/main'
 include { PSM_CLEAN            } from '../../../modules/local/utils/psm_clean/main'
 include { MSRESCORE_FINE_TUNING} from '../../../modules/local/utils/msrescore_fine_tuning/main'
 include { MSRESCORE_FEATURES   } from '../../../modules/local/utils/msrescore_features/main'
@@ -16,6 +17,14 @@ workflow PEPTIDE_DATABASE_SEARCH {
 
     main:
     (ch_id_msgf, ch_id_comet, ch_id_sage, ch_versions) = [ channel.empty(), channel.empty(), channel.empty(), channel.empty() ]
+    ch_id_rescored = channel.empty()
+
+    // ProSE rescores its PSMs with Percolator internally; its results bypass all external rescoring steps.
+    if (params.search_engines.tokenize(',').contains("prose")) {
+        PROSE(ch_mzmls_search.combine(ch_searchengine_in_db))
+        ch_versions = ch_versions.mix(PROSE.out.versions)
+        ch_id_rescored = PROSE.out.id_files_prose
+    }
 
     if (params.search_engines.contains("msgf")) {
         MSGF_DB_INDEXING(ch_searchengine_in_db)
@@ -165,6 +174,7 @@ workflow PEPTIDE_DATABASE_SEARCH {
     }
 
     emit:
-    ch_id_files_idx = ch_id_files_out
+    ch_id_files_idx = ch_id_files_out   // identifications that still need Percolator rescoring
+    ch_id_files_rescored = ch_id_rescored // identifications already rescored by the search engine (ProSE)
     versions        = ch_versions
 }

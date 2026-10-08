@@ -78,15 +78,12 @@ workflow FILE_PREPARATION {
         ch_results = ch_results.mix(ch_branched_input.mzML)
     }
 
-    THERMORAWFILEPARSER( ch_branched_input.raw )
-    // Output is
-    // {'convert_files': Tuple[val(meta), path(mzml)],
-    //  'version': Path(versions.yml),
-    //  'log': Path(*.txt)}
-
-    // Where meta is the same as the input meta
-    // ch_versions = ch_versions.mix(THERMORAWFILEPARSER.out.versions_thermorawfileparser)
-    ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.spectra)
+    // Thermo .raw files are read directly by the OpenMS tools (ProSE, Comet, Sage, ProteomicsLFQ)
+    // through the Thermo RawFileReader bridge in the OpenMS image. Conversion to mzML is opt-in.
+    if (params.convert_raw) {
+        THERMORAWFILEPARSER( ch_branched_input.raw )
+        ch_results  = ch_results.mix(THERMORAWFILEPARSER.out.spectra)
+    }
 
     ch_results.map{ it -> [it[0], it[1]] }.set{ indexed_mzml_bundle }
 
@@ -111,18 +108,27 @@ workflow FILE_PREPARATION {
         ch_versions = ch_versions.mix(MZML_STATISTICS.out.versions)
     }
 
-    // Pass through .d files without conversion when convert_dotd=false
-    // (DIA-NN handles them natively; they bypass mzML statistics as they are not mzML)
-    if (!params.convert_dotd) {
-        ch_results = ch_results.mix(ch_branched_input.dotd)
+    // Pass through vendor files that are read directly by OpenMS (no conversion). They bypass
+    // mzML statistics, which only reads mzML.
+    ch_vendor = channel.empty()
+    if (!params.convert_raw) {
+        ch_vendor = ch_vendor.mix(ch_branched_input.raw)
     }
+    if (!params.convert_dotd) {
+        ch_vendor = ch_vendor.mix(ch_branched_input.dotd)
+    }
+    ch_vendor = ch_vendor.map { meta, file ->
+        checkVendorFileSupport(meta, file)
+        [meta, file]
+    }
+    ch_results = ch_results.mix(ch_vendor)
 
     // Pass through .dia files without conversion (DIA-NN handles them natively)
     // Note: .dia files bypass peak picking and mzML statistics (when enabled) as they are only used with DIA-NN
     ch_results = ch_results.mix(ch_branched_input.dia)
 
     if (params.openms_peakpicking) {
-        // If the peak picker is enabled, it will over-write not bypass the .d files
+        // Only mzML can be peak picked; vendor files are rejected by checkVendorFileSupport
         OPENMS_PEAK_PICKER (
             indexed_mzml_bundle
         )
@@ -137,6 +143,42 @@ workflow FILE_PREPARATION {
     ms2_statistics  = ch_ms2_statistics // channel: [ *_ms2_info.parquet ]
     feature_statistics = ch_feature_statistics // channel: [ *_feature_info.parquet ]
     versions        = ch_versions       // channel: [ *.versions.yml ]
+}
+
+//
+// Vendor files (.raw/.d) that are not converted are only read by OpenMS tools with native
+// vendor support. Fail early instead of silently dropping or converting them.
+//
+def checkVendorFileSupport(meta, file) {
+    def reasons = []
+    def engines = params.search_engines.tokenize(',')*.trim()
+    if (engines.contains('msgf')) {
+        reasons << 'MS-GF+ (--search_engines msgf) only reads mzML'
+    }
+    if (params.openms_peakpicking) {
+        reasons << 'PeakPickerHiRes (--openms_peakpicking) only reads mzML'
+    }
+    if (params.ms2features_enable) {
+        reasons << 'MS2 feature generation (--ms2features_enable) only reads mzML'
+    }
+    if (params.psm_clean || (engines.size() > 1 && !params.skip_rescoring)) {
+        reasons << 'PSM cleaning/merging of multiple search engines (quantms-rescoring) only reads mzML'
+    }
+    if (params.enable_mod_localization) {
+        reasons << 'modification localization (--enable_mod_localization, onsite) only reads mzML'
+    }
+    if (meta.labelling_type.contains('tmt') || meta.labelling_type.contains('itraq')) {
+        reasons << 'isobaric quantification (IsobaricWorkflow) only reads mzML'
+    }
+    if (reasons) {
+        def flag = hasExtension(file, '.raw') ? '--convert_raw' : '--convert_dotd'
+        error("Vendor file '${file.name}' is read directly by OpenMS (no conversion), but the following " +
+            "steps require mzML: ${reasons.join('; ')}. Set ${flag} true to convert vendor files to mzML, " +
+            "or disable these steps.")
+    }
+    if (params.mzml_statistics) {
+        log.warn("mzML statistics are not computed for vendor file '${file.name}' (only mzML is supported).")
+    }
 }
 
 //

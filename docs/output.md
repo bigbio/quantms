@@ -10,15 +10,15 @@ The directories listed below will be created in the results directory after the 
 
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps for DDA-LFQ and DDA-ISO data:
 
-1. (optional) Conversion of spectra data to indexedMzML: Using ThermoRawFileParser if Thermo Raw or using OpenMS' FileConverter if just an index is missing
+1. (optional) Conversion of spectra data to indexedMzML: Thermo RAW and Bruker .d files are read directly by OpenMS by default; ThermoRawFileParser/tdf2mzml are only used with `--convert_raw`/`--convert_dotd`. OpenMS' FileConverter is used if just an index is missing
 2. (optional) Decoy database generation for the provided DB (fasta) with OpenMS
-3. Database search with either MSGF+ and/or Comet through OpenMS adapters
+3. Database search with ProSE (default, OpenMS search engine with internal Percolator rescoring) or with MSGF+, Comet and/or Sage through OpenMS adapters
 4. (optional) Performs LC-MS predictors such as MS²PIP and DeepLC to add new peptide spectrum match (PSM) features by quantms-rescoring
 5. (optional) Add spectrum signal-to-noise (SNR) features for Percolator rescore
 6. If multiple search engines were chosen, the results are combined using quantms-rescoring
-7. PSM rescoring using Percolator and single run PSM/Peptide-level FDR filtering
+7. PSM rescoring using in-process Percolator (OpenMS PercolatorAdapter; skipped for ProSE which rescores internally) and single run PSM/Peptide-level FDR filtering
 8. If localization of modifications was requested, onsite is applied.
-9. (**DDA-LFQ**) Protein inference and label-free quantification based on spectral counting or MS1 feature detection, alignment and integration with OpenMS' ProteomicsLFQ. Performs an additional experiment-wide FDR filter on protein (and if requested peptide/PSM-level).
+9. (**DDA-LFQ**) Protein inference and label-free quantification based on spectral counting or MS1 feature detection, alignment and integration with OpenMS' ProteomicsLFQ (feature detection distributed per run via feature checkpoints). Performs an additional experiment-wide FDR filter on protein (and if requested peptide/PSM-level).
 10. (**DDA-ISO**) Extracts and normalizes isobaric labeling
 11. (**DDA-ISO**) Protein inference using the OpenMS ProteinInference tool. In addition, protein FDR filtering is performed in this step for Isobaric datasets (TMT, iTRAQ).
 12. (**DDA-ISO**) Protein Quantification
@@ -128,6 +128,7 @@ results/
 │   │   └── out/
 │   └── mzml_statistics/       # Statistics about mzML files
 ├── peptide_identification/    # Peptide identification results
+│   ├── prose/                 # ProSE search engine results (rescored, .idparquet)
 │   ├── comet/                 # Comet search engine results
 │   └── sage/                  # SAGE search engine results
 │   └── msgf/                  # MSGF search engine results
@@ -201,8 +202,8 @@ The specific files include:
 
 #### Spectra
 
-Quantms main format for spectra is the open [mzML](https://www.psidev.info/mzML) format. However, it also supports Thermo raw files through conversion with
-ThermoRawFileParser. Mixed inputs should be possible but are untested. Conversion results can be cached if run locally or outputted to results.
+Quantms reads the open [mzML](https://www.psidev.info/mzML) format as well as Thermo raw files and Bruker .d directories directly through OpenMS.
+Optionally, vendor files can be converted to mzML with ThermoRawFileParser (`--convert_raw`) or tdf2mzml (`--convert_dotd`). Mixed inputs should be possible but are untested. Conversion results can be cached if run locally or outputted to results.
 Mismatches between file extensions in the design and on disk can be corrected through parameters.
 
 #### Protein database

@@ -1,0 +1,53 @@
+name: proteomicslfq_detect
+description: Runs ProteomicsLFQ feature detection for a single run and writes a reusable feature checkpoint (-detect_only).
+keywords:
+  - label-free
+  - OpenMS
+  - feature detection
+  - checkpoint
+tools:
+  - ProteomicsLFQ:
+      description: |
+        ProteomicsLFQ performs label-free quantification of peptides and proteins. With -feat_dir and -detect_only it
+        only performs the per-run feature detection and stores the result as a feature checkpoint that a later
+        ProteomicsLFQ invocation can combine.
+      homepage: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/release/latest/html/UTILS_ProteomicsLFQ.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing run information
+  - ms_file:
+      type: file
+      description: Input spectra (mzML, Thermo .raw or Bruker .d)
+      pattern: "*.{mzML,raw,d}"
+  - id_file:
+      type: file
+      description: Identifications of this run with posterior error probabilities as score type.
+      pattern: "*.idparquet"
+  - expdes:
+      type: file
+      description: The experimental design of the whole experiment
+      pattern: "*.tsv"
+  - fasta:
+      type: file
+      description: A protein database with appended decoy sequences in FASTA format.
+      pattern: "*.{fasta,fa}"
+  - feature_args:
+      type: string
+      description: Feature-detection parameters; must be identical to the ones used by the combining PROTEOMICSLFQ task.
+output:
+  - checkpoint:
+      type: directory
+      description: Feature checkpoint of this run
+      pattern: "*.featureParquet"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - versions:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@jpfeuffer"

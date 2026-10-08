@@ -42,6 +42,8 @@
 
   > Röst HL., Sachsenberg T., Aiche S., Bielow C., Weisser H., Aicheler F., Andreotti S., Ehrlich HC., Gutenbrunner P., Kenar E., Liang X., Nahnsen S., Nilse L., Pfeuffer J., Rosenberger G., Rurik M., Schmitt U., Veit J., Walzer M., Wojnar D., Wolski WE., Schilling O., Choudhary JS, Malmström L., Aebersold R., Reinert K., Kohlbacher O. (2016). OpenMS: a flexible open-source software platform for mass spectrometry data analysis. Nature methods, 13(9), 741–748. doi: 10.1038/nmeth.3959. PubMed PMID: 27575624; PubMed Central PMCID: PMC5617107.
 
+  > ProSE (search engine), ProteomicsLFQ, IsobaricWorkflow and PercolatorAdapter are part of OpenMS; please cite OpenMS for them.
+
 - [MSstats](https://www.ncbi.nlm.nih.gov/pubmed/24794931/)
 
   > Choi M., Chang CY., Clough T., Broudy D., Killeen T., MacLean B., Vitek O. (2014). MSstats: an R package for statistical analysis of quantitative mass spectrometry-based proteomic experiments. Bioinformatics (Oxford, England), 30(17), 2524–2526. doi: 10.1093/bioinformatics/btu305. PubMed PMID: 24794931.

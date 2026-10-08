@@ -17,6 +17,9 @@ process SDRF_PARSING {
 
     script:
     def args = task.ext.args ?: ''
+    // Spectra file names in the OpenMS design must match the files the OpenMS tools receive:
+    // converted files are mzML, vendor files read directly keep their extension.
+    def rawconversion = params.convert_raw ? "raw:mzML" : "raw:raw"
     if (params.convert_dotd) {
         extensionconversions = ",.d.gz:.mzML,.d.tar.gz:.mzML,d.tar:.mzML,.d.zip:.mzML,.d:.mzML"
     } else {
@@ -29,7 +32,7 @@ process SDRF_PARSING {
 
     parse_sdrf convert-openms \\
         -t2 -l \\
-        --extension_convert raw:mzML$extensionconversions \\
+        --extension_convert ${rawconversion}$extensionconversions \\
         -s ${sdrf} \\
         $args \\
         2>&1 | tee ${sdrf.baseName}_parsing.log

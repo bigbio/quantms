@@ -20,10 +20,9 @@ The input file must be in [Sample-to-data-relationship format (SDRF)](https://pu
 
 The pipeline supports the following mass spectrometry data file formats:
 
-- **`.raw`** - Thermo RAW files (automatically converted to mzML)
+- **`.raw`** - Thermo RAW files (read directly by OpenMS; converted to mzML with ThermoRawFileParser only when `--convert_raw` is set)
 - **`.mzML`** - Open standard mzML files
-- **`.d`** - Bruker timsTOF files (optionally converted to mzML when `--convert_dotd` is set)
-- **`.dia`** - DIA-NN native binary format (passed through without conversion)
+- **`.d`** - Bruker timsTOF directories (read directly by OpenMS; converted to mzML only when `--convert_dotd` is set)
 
 Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
 
@@ -31,6 +30,12 @@ Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
 - `.tar` (tar archive)
 - `.tar.gz` or `.tgz` (tar gzip compressed)
 - `.zip` (zip compressed)
+
+Thermo `.raw` files and Bruker `.d` directories are read natively by the OpenMS tools of the pipeline container (ProSE, Comet, Sage
+and ProteomicsLFQ) without an mzML conversion step. Thermo support uses the vendor RawFileReader libraries bundled in the OpenMS
+image, Bruker support uses the open-source OpenTIMS reader. Steps that still require mzML (MS-GF+, multi-engine PSM cleaning,
+OpenMS peak picking, MS²/DeepLC feature generation, PTM localization with onsite and isobaric (TMT/iTRAQ) quantification) stop
+with an explicit error when given an unconverted vendor file; set `--convert_raw` (and/or `--convert_dotd`) for those analyses.
 
 In the respective "comment[file uri]" or "Spectra_Filepath" columns, the mass spectra files to be processed have to be listed. URIs are possible,
 and the root folder as well as the file endings can be changed in the options in case of previously downloaded, moved or converted experiments.
@@ -77,6 +82,30 @@ When you run the above command, Nextflow automatically pulls the pipeline code f
 ```bash
 nextflow pull bigbio/quantms
 ```
+
+## Search engines and rescoring
+
+The default search engine is [ProSE](https://openms.de), the OpenMS search engine (`--search_engines prose`). ProSE generates
+its own decoys when the database has none, and rescores its PSMs internally with Percolator, so no separate PSM rescoring step is run
+for it. The pipeline fails if ProSE did not report an internal rescoring (e.g. too few PSMs or no decoys). ProSE cannot be combined
+with other search engines, `--ms2features_enable` or `--psm_clean`.
+
+> [!NOTE]
+> With the currently pinned OpenMS image, ProSE identifications of data with positional modification isomers (e.g. phospho
+> HCD/EThcD) can make ProteomicsLFQ refuse to write the QPX output. This is fixed in OpenMS/OpenMS#10453 and requires an updated image.
+
+Comet, Sage and MS-GF+ remain available (`--search_engines comet`, `sage`, `msgf` or comma-separated combinations). Their PSMs are
+rescored with OpenMS PercolatorAdapter in-process (no external percolator binary). Peptide- or protein-level Percolator FDRs
+(`--fdr_level` other than `psm_level_fdrs`) are not supported in-process and still use the external percolator binary.
+
+## Distributed feature finding (DDA-LFQ)
+
+With `--quantification_method feature_intensity` (default), ProteomicsLFQ feature detection runs as one task per run
+(`ProteomicsLFQ -detect_only -feat_dir`) producing a `.featureParquet` feature checkpoint each. A final ProteomicsLFQ task combines
+the checkpoints (`-feat_dir`) and performs alignment, linking, protein inference, FDR filtering and quantification. This spreads the
+memory- and time-intensive feature detection across nodes and, together with `-resume`, means that changing only inference, FDR or
+protein quantification parameters re-runs only the final task. Set `--lfq_distributed_featurefinding false` to run ProteomicsLFQ as
+a single task over all runs.
 
 ## Migration Guide
 

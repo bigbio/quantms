@@ -25,10 +25,15 @@ process SAGE {
 
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 
+    // The in-process Thermo RAW reader of the pinned OpenMS image cannot open .raw files through
+    // symlinks (as staged by Nextflow), so vendor files are passed by their resolved path.
+    // The file name stays the same, so run names still match the experimental design.
+    def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
+
     """
     export SAGE_LOG=trace
     SageAdapter \\
-        -in ${mzml_files} \\
+        -in ${(mzml_files instanceof List ? mzml_files : [mzml_files]).collect { f -> vendorPath.call(f) }.join(' ')} \\
         -out ${outname}_sage.idparquet \\
         -threads $task.cpus \\
         -database "${database}" \\

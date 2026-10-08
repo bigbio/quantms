@@ -113,6 +113,21 @@ workflow QUANTMS {
         if (search_engines.size() != search_engines.unique().size()) {
             error("Duplicated search engines in the search_engines parameter: ${params.search_engines}")
         }
+        def unknown_engines = search_engines - ['prose', 'comet', 'sage', 'msgf']
+        if (unknown_engines) {
+            error("Unknown search engine(s) ${unknown_engines} in --search_engines. Valid: prose, comet, sage, msgf")
+        }
+        // ProSE rescores internally with Percolator; its results cannot be merged with external rescoring.
+        if (search_engines.contains('prose')) {
+            if (search_engines.size() > 1) {
+                error("--search_engines prose cannot be combined with other search engines (got '${params.search_engines}'). Use ProSE alone or choose from comet, sage, msgf.")
+            }
+            if (params.ms2features_enable || params.psm_clean) {
+                error("--search_engines prose performs its own Percolator rescoring and does not support --ms2features_enable or --psm_clean. Use comet, sage or msgf for MS2 feature rescoring.")
+            }
+        } else if (params.fdr_level != 'psm_level_fdrs') {
+            log.warn("--fdr_level ${params.fdr_level} is only implemented by the external percolator executable; PercolatorAdapter will not use the in-process Percolator backend.")
+        }
     }
 
     // Only performing id_only subworkflows .
