@@ -289,21 +289,21 @@
                     "description": "Fragment mass tolerance used for database search. The default of 0.03 Da is for high-resolution instruments.",
                     "default": 0.03,
                     "fa_icon": "fas fa-sliders-h",
-                    "help_text": "The SDRF value takes precedence over this fallback. Comet requires explicit comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument settings for ppm input; Da input keeps the existing half-bin-width interpretation unless Comet-specific settings override it."
+                    "help_text": "The SDRF value takes precedence over this fallback. For Comet, Da input keeps the existing half-bin-width interpretation and ppm input uses a binning guessed from the ppm value; comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument override both."
                 },
                 "fragment_mass_tolerance_unit": {
                     "type": "string",
                     "description": "Fragment mass tolerance unit used for database search. Possible values are 'ppm' and 'Da' (default).",
                     "default": "Da",
                     "fa_icon": "fas fa-list-ol",
-                    "help_text": "The SDRF value takes precedence over this fallback. Comet requires explicit comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument settings for ppm input; Da input keeps the existing half-bin-width interpretation unless Comet-specific settings override it.",
+                    "help_text": "The SDRF value takes precedence over this fallback. For Comet, Da input keeps the existing half-bin-width interpretation and ppm input uses a binning guessed from the ppm value; comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument override both.",
                     "enum": ["Da", "ppm"]
                 },
                 "comet_fragment_bin_tol": {
                     "type": "number",
                     "minimum": 0.01,
                     "description": "Native Comet full fragment bin width in Da, independent of the SDRF fragment tolerance.",
-                    "help_text": "Required together with comet_fragment_bin_offset and comet_instrument for ppm fragment tolerance. OpenMS CometAdapter receives half this width. Does not change SDRF metadata or settings of other engines/rescoring. Per-run task.ext.comet_fragment_bin_tol overrides this value.",
+                    "help_text": "Optional. Set together with comet_fragment_bin_offset and comet_instrument to override the automatic Comet binning. OpenMS CometAdapter receives half this width. Does not change SDRF metadata or settings of other engines/rescoring. Per-run task.ext.comet_fragment_bin_tol overrides this value.",
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "comet_fragment_bin_offset": {

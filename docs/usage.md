@@ -36,7 +36,7 @@ For a search without either fixed or variable modifications, select Comet and/or
 
 Comet scores spectra using fixed-width fragment bins. Its native `fragment_bin_tol` is a **full bin width in Da**, not a ppm matching window. OpenMS `CometAdapter -fragment_mass_tolerance` takes **half** that width. quantms exposes the native width as `--comet_fragment_bin_tol` and divides it by two when calling the adapter.
 
-For ppm fragment tolerances, explicitly set all three Comet options: `--comet_fragment_bin_tol`, `--comet_fragment_bin_offset`, and `--comet_instrument`. For example, `--comet_fragment_bin_tol 0.03 --comet_fragment_bin_offset 0 --comet_instrument high_res` uses a 0.03 Da full bin, passing 0.015 Da to OpenMS. This example preserves quantms' former high-resolution Comet binning, **not an equivalent conversion from 20 ppm**. Select the settings based on the acquisition and the intended Comet search protocol. Missing settings now stop the search instead of guessing resolution from the numerical ppm value.
+For ppm fragment tolerances without Comet-specific settings, quantms guesses the binning from the ppm value and logs a warning: below 50 ppm it uses a 0.03 Da full bin with offset 0 and `high_res`; from 50 ppm it uses a 1.0005 Da full bin with offset 0.4 and `low_res`. This guess is **not an equivalent conversion from ppm**. To choose the binning yourself, set all three Comet options: `--comet_fragment_bin_tol`, `--comet_fragment_bin_offset`, and `--comet_instrument`. For example, `--comet_fragment_bin_tol 0.03 --comet_fragment_bin_offset 0 --comet_instrument high_res` uses a 0.03 Da full bin, passing 0.015 Da to OpenMS. Select the settings based on the acquisition and the intended Comet search protocol.
 
 Without Comet-specific bin settings, a Da SDRF tolerance keeps its existing interpretation as the adapter's half width, including the existing offset and instrument defaults. Supplying an explicit width or offset requires both values and an instrument mode. Width must be finite and at least 0.01 Da (also checked for the inherited Da path, so input tolerances below 0.005 Da are rejected); offset must be finite and between 0 and 1. An explicit offset of zero is preserved.
 
@@ -52,9 +52,9 @@ process {
 }
 ```
 
-Keep global Comet-specific options unset when unlisted Da runs should retain their original settings. An unlisted ppm run fails with an explicit configuration error. Do not additionally override these options through `ext.args` or a Comet parameter file: those adapter options can take precedence over quantms' reported settings.
+Keep global Comet-specific options unset when unlisted runs should keep their automatic settings. Do not additionally override these options through `ext.args` or a Comet parameter file: those adapter options can take precedence over quantms' reported settings.
 
-The original SDRF value and unit are never changed. Other engines and rescoring continue to receive their original metadata. The Nextflow log records the run ID, input tolerance, full width, adapter half width, offset, instrument mode, and whether settings were explicit or derived from Da input (which may itself come from the configured fallback). These details are logged at DEBUG level, so they appear in `.nextflow.log` but not on the console; errors remain visible.
+The original SDRF value and unit are never changed. Other engines and rescoring continue to receive their original metadata. The Nextflow log records the run ID, input tolerance, full width, adapter half width, offset, instrument mode, and whether settings were explicit, derived from Da input (which may itself come from the configured fallback), or guessed from ppm. These details are logged at DEBUG level, so they appear in `.nextflow.log` but not on the console; errors remain visible.
 
 See the [Comet parameter documentation](https://uwpr.github.io/Comet/parameters/parameters_202602/fragment_bin_tol.html) and [OpenMS adapter documentation](https://openms.de/documentation/html/TOPP_CometAdapter.html).
 
