@@ -36,23 +36,23 @@ On release, automated continuous integration tests run the pipeline on a full-si
 
 ### DDA-LFQ (data-dependent label-free quantification)
 
-1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
-2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
+1. Direct reading of Thermo RAW and Bruker .d files with OpenMS (optional conversion to mzML with [`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
+2. Peptide identification using [`ProSE`](https://openms.de) (default, with internal Percolator rescoring) or [`comet`](https://uwpr.github.io/Comet/), [`sage`](https://github.com/lazear/sage) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
 3. (Optional) Add extra PSM features using [`quantms-rescoring`](https://github.com/bigbio/quantms-rescoring)
-4. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
+4. Re-scoring peptide identifications with in-process [`percolator`](https://github.com/percolator/percolator) via OpenMS PercolatorAdapter (not needed for ProSE)
 5. Peptide identification FDR [`openms fdr tool`](https://github.com/bigbio/quantms/blob/HEAD/modules/local/openms/false_discovery_rate/main.nf)
 6. Modification localization [`onsite`](https://github.com/bigbio/onsite)
-7. Quantification: Feature detection [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteomicsLFQ.html)
+7. Quantification: Feature detection distributed per run with feature checkpoints [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteomicsLFQ.html)
 8. Protein inference and quantification [`proteomicsLFQ`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProteomicsLFQ.html)
 9. QC report generation [`pmultiqc`](https://github.com/bigbio/pmultiqc)
 10. Normalization, imputation, significance testing with [`MSstats`](https://github.com/VitekLab/MSstats)
 
 ### DDA-ISO (data-dependent quantification via isobaric labelling)
 
-1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser))
-2. Peptide identification using [`comet`](https://uwpr.github.io/Comet/) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
+1. RAW file conversion to mzML ([`thermorawfileparser`](https://github.com/compomics/ThermoRawFileParser), `--convert_raw`; isobaric quantification currently requires mzML)
+2. Peptide identification using [`ProSE`](https://openms.de) (default, with internal Percolator rescoring) or [`comet`](https://uwpr.github.io/Comet/), [`sage`](https://github.com/lazear/sage) and/or [`msgf+`](https://github.com/MSGFPlus/msgfplus)
 3. (Optional) Add extra PSM features using [`quantms-rescoring`](https://github.com/bigbio/quantms-rescoring)
-4. Re-scoring peptide identifications [`percolator`](https://github.com/percolator/percolator)
+4. Re-scoring peptide identifications with in-process [`percolator`](https://github.com/percolator/percolator) via OpenMS PercolatorAdapter (not needed for ProSE)
 5. Peptide identification FDR [`openms fdr tool`](https://github.com/bigbio/quantms/blob/HEAD/modules/local/openms/false_discovery_rate/main.nf)
 6. Modification localization [`onsite`](https://github.com/bigbio/onsite)
 7. Extracts and normalizes isobaric labeling [`IsobaricAnalyzer`](https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_IsobaricAnalyzer.html)
@@ -78,9 +78,9 @@ A graphical overview of suggested routes through the pipeline depending on conte
 
 The pipeline supports the following mass spectrometry data file formats:
 
-- **`.raw`** - Thermo RAW files (automatically converted to mzML)
+- **`.raw`** - Thermo RAW files (read directly by OpenMS; converted to mzML with ThermoRawFileParser only when `--convert_raw` is set)
 - **`.mzML`** - Open standard mzML files
-- **`.d`** - Bruker timsTOF files (optionally converted to mzML when `--convert_dotd` is set)
+- **`.d`** - Bruker timsTOF directories (read directly by OpenMS; converted to mzML only when `--convert_dotd` is set)
 
 Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
 

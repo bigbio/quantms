@@ -4,8 +4,8 @@ process MZML_INDEXING {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.10.04' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2026.10.04' }"
+        'oras://ghcr.io/jpfeuffer/openms-tools-thirdparty-sif:quantms-onnx-v2' :
+        'ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-v2' }"
 
     input:
     tuple val(meta), path(mzmlfile)

@@ -4,8 +4,8 @@ process COMET {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/bigbio/openms-tools-thirdparty-sif:2026.10.04' :
-        'ghcr.io/bigbio/openms-tools-thirdparty:2026.10.04' }"
+        'oras://ghcr.io/jpfeuffer/openms-tools-thirdparty-sif:quantms-onnx-v2' :
+        'ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-v2' }"
 
     input:
     tuple val(meta), path(mzml_file), path(database)
@@ -79,9 +79,13 @@ process COMET {
 
     met_excision = params.met_excision ? "-clip_nterm_methionine true" : ""
 
+    // The in-process Thermo RAW reader of the pinned OpenMS image cannot open .raw files through
+    // symlinks (as staged by Nextflow), so vendor files are passed by their resolved path.
+    // The file name stays the same, so run names still match the experimental design.
+    def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
     """
     CometAdapter \\
-        -in ${mzml_file} \\
+        -in ${vendorPath.call(mzml_file)} \\
         -out ${mzml_file.baseName}_comet.idparquet \\
         -threads $task.cpus \\
         -database "${database}" \\

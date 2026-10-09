@@ -11,6 +11,7 @@ components:
   - msgf
   - comet
   - sage
+  - prose
 input:
   - ch_input:
       type: file

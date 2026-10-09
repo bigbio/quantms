@@ -39,7 +39,7 @@ workflow DDA_ID {
     //
 
     PERCOLATOR(ch_id_files_feats)
-    ch_rescoring_results = PERCOLATOR.out.id_files_perc
+    ch_rescoring_results = PERCOLATOR.out.id_files_perc.mix(PEPTIDE_DATABASE_SEARCH.out.ch_id_files_rescored)
     ch_software_versions = ch_software_versions.mix(PERCOLATOR.out.versions)
 
     if (params.enable_mod_localization) {

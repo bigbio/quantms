@@ -5,7 +5,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.10.0] bigbio/quantms - [15/08/2026] - [London]
 
+### `Added`
+
+- **ProSE search engine**: OpenMS ProSE (`--search_engines prose`) is supported and is the new default. ProSE rescores PSMs with its in-process Percolator (`-rescore`) and writes `.idparquet` directly, so no separate rescoring or conversion step runs for it; the pipeline fails if the internal rescoring did not happen. Results are stored as `.idparquet`.
+- **Direct vendor file reading**: Thermo `.raw` files and Bruker `.d` directories are read directly by the OpenMS tools (no mzML conversion) by default. New `--convert_raw` restores the ThermoRawFileParser conversion; steps that need mzML fail with an explicit error for unconverted vendor files.
+- [#739](https://github.com/bigbio/quantms/issues/739) **Distributed LFQ feature finding**: ProteomicsLFQ feature detection runs per run (`-detect_only -feat_dir`) and a final ProteomicsLFQ task combines the `.featureParquet` checkpoints (new `--lfq_distributed_featurefinding`, default `true`).
+- **ProSE PeptDeep rescoring**: ProSE adds PeptDeep (ONNX) predicted MS2 and RT features before its internal Percolator rescoring (new `--prose_peptdeep`, default `true`, and `--prose_peptdeep_instrument`). The pipeline fails if the predicted features were not computed (OpenMS without ONNX Runtime or models); `--prose_peptdeep false` opts out explicitly.
+- New `test_lfq_prose` CI profile (Thermo RAW + ProSE + distributed LFQ).
+
 ### `Changed`
+
+- **BREAKING — default search engine is now `prose`** (previously `comet`).
+- PercolatorAdapter runs Percolator in-process (`-use_subprocess false`); the pipeline fails if PSM-level rescoring silently fell back to the external binary. Peptide/protein-level FDR modes still use the external binary.
+- ProteomicsLFQ and IsobaricWorkflow no longer write the unused mzTab file.
+- Test profiles that use MS-GF+, multi-engine merging, localization or isobaric quantification set `convert_raw = true`.
 
 - [#729](https://github.com/bigbio/quantms/pull/729) **Migrate to the shared `bigbio/pmultiqc` nf-module**: the local `pmultiqc` module is replaced by the community-maintained nf-module and `pmultiqc` is bumped to `0.0.47`. MultiQC flags previously hard-coded inside the module are now passed via `ext.args` in `conf/modules/shared.config`, and the quantms logo is staged alongside the report inputs.
 
@@ -18,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bumped `pmultiqc` to `0.0.47`.
 - Bumped `qpx` to `1.1.5` via the shared `bigbio/qpx/openmsconsensus` nf-module (protein-properties batched rewrite for the pyarrow 2 GB crash on large TMT, bigbio/qpx#338, plus the OpenMS run/identity recovery fixes). The MuData view is now written by `qpxc convert` itself and no longer rebuilt by the module.
+- OpenMS tools image temporarily pinned to the test build `ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-v2` (OpenMS develop incl. OpenMS/OpenMS#10449, #10452–#10455, #10457, #10461, #10465, #10469, plus open #9975, #10450, #10460 and #10462: ONNX Runtime 1.30.0 and PeptDeep models, no Bruker SDK); to be replaced by the bigbio retag once these are merged.
 
 ## [1.9.0] bigbio/quantms - [06/08/2026] - [Cambridge]
 

@@ -1,0 +1,48 @@
+name: prose
+description: Identifies peptides in MS/MS spectra with the OpenMS fragment-index search engine ProSE, including in-process Percolator rescoring with PeptDeep (ONNX) predicted features.
+keywords:
+  - identification
+  - OpenMS
+  - prose
+  - percolator
+  - peptdeep
+tools:
+  - ProSE:
+      description: |
+        OpenMS fragment-index peptide search engine with integrated Percolator rescoring.
+      homepage: https://openms.de
+      documentation: https://abibuilder.cs.uni-tuebingen.de/archive/openms/Documentation/nightly/html/TOPP_ProSE.html
+input:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - ms_file:
+      type: file
+      description: Input spectra (mzML, Thermo RAW or Bruker .d)
+      pattern: "*.{mzML,raw,d}"
+  - database:
+      type: file
+      description: Target-decoy fasta file
+      pattern: "*.{fasta,fa}"
+output:
+  - meta:
+      type: map
+      description: Groovy Map containing sample information
+  - id_files_prose:
+      type: file
+      description: Percolator-rescored identifications
+      pattern: "*_prose.idparquet"
+  - summary:
+      type: file
+      description: ProSE search summary
+      pattern: "*_prose_summary.yaml"
+  - log:
+      type: file
+      description: log file
+      pattern: "*.log"
+  - version:
+      type: file
+      description: File containing software version
+      pattern: "versions.yml"
+authors:
+  - "@jpfeuffer"

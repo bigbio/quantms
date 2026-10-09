@@ -30,28 +30,29 @@ workflow ID {
     //
     PSM_RESCORING (PEPTIDE_DATABASE_SEARCH.out.ch_id_files_idx)
     ch_software_versions = ch_software_versions.mix(PSM_RESCORING.out.versions)
+    ch_rescored = PSM_RESCORING.out.results.mix(PEPTIDE_DATABASE_SEARCH.out.ch_id_files_rescored)
 
     //
     // SUBWORKFLOW: PSM_FDR_CONTROL
     //
 
-    ch_psmfdrcontrol = PSM_RESCORING.out.results
+    ch_psmfdrcontrol = ch_rescored
     ch_consensus_results = channel.empty()
 
     //
     // SUBWORKFLOW：PHOSPHOSCORING
     //
     if (params.enable_mod_localization) {
-        PHOSPHO_SCORING(ch_file_preparation_results, PSM_RESCORING.out.results)
+        PHOSPHO_SCORING(ch_file_preparation_results, ch_rescored)
         ch_software_versions = ch_software_versions.mix(PHOSPHO_SCORING.out.versions.ifEmpty(null))
         ch_id_results = PHOSPHO_SCORING.out.id_onsite
     } else {
-        ch_id_results = PSM_RESCORING.out.results
+        ch_id_results = ch_rescored
     }
 
     emit:
     id_results              = ch_id_results
-    psmrescoring_results    = PSM_RESCORING.out.results
+    psmrescoring_results    = ch_rescored
     ch_consensus_results    = ch_consensus_results
     versions                 = ch_software_versions
 }
