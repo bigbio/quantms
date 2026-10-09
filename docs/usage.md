@@ -33,9 +33,9 @@ Compressed variants are supported for `.raw`, `.mzML`, and `.d` formats:
 
 Thermo `.raw` files and Bruker `.d` directories are read natively by the OpenMS tools of the pipeline container (ProSE, Comet, Sage
 and ProteomicsLFQ) without an mzML conversion step. Thermo support uses the vendor RawFileReader libraries bundled in the OpenMS
-image, Bruker timsTOF (TDF) support uses OpenTIMS with OpenMS' open-source m/z and ion mobility (1/K0) calibration from the
-`.d` calibration tables, so no proprietary Bruker SDK is needed (amd64 and arm64). If a Bruker TDF SDK (`libtimsdata`) is available at
-runtime, OpenMS can use it instead; the tools log the calibration mode used (`TIMS calibration: ...`). Only TDF-based `.d`
+image, Bruker timsTOF (TDF) support uses OpenTIMS with OpenMS' open-source m/z (temperature-corrected `MzCalibration` table) and ion
+mobility (1/K0) calibration, so no proprietary Bruker SDK is needed (amd64 and arm64). OpenMS warns if a `.d` file has no usable
+calibration table and a linear m/z approximation is used instead. Only TDF-based `.d`
 directories (`analysis.tdf`/`analysis.tdf_bin`) are supported (natively and by `--convert_dotd`); TSF and BAF `.d` data are not. Steps that still require mzML (MS-GF+, multi-engine PSM cleaning,
 OpenMS peak picking, MS²/DeepLC feature generation, PTM localization with onsite and isobaric (TMT/iTRAQ) quantification) stop
 with an explicit error when given an unconverted vendor file; set `--convert_raw` (and/or `--convert_dotd`) for those analyses.
