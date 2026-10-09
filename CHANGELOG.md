@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### `Dependencies`
 
 - Bumped `pmultiqc` to `0.0.47`.
+- Bumped `qpx` to `1.1.5` via the shared `bigbio/qpx/openmsconsensus` nf-module (protein-properties batched rewrite for the pyarrow 2 GB crash on large TMT, bigbio/qpx#338, plus the OpenMS run/identity recovery fixes). The MuData view is now written by `qpxc convert` itself and no longer rebuilt by the module.
 
 ## [1.9.0] bigbio/quantms - [06/08/2026] - [Cambridge]
 

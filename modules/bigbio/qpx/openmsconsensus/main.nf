@@ -8,7 +8,7 @@ process QPX_OPENMSCONSENSUS {
     // a single image serves Docker (native) and Singularity (via docker://).
     // BioContainers/Galaxy-depot lag the release, so GHCR is used for containers;
     // -profile conda still resolves the bioconda package in environment.yml.
-    container "ghcr.io/bigbio/qpx:1.1.4"
+    container "ghcr.io/bigbio/qpx:1.1.5"
 
     input:
     tuple path(consensusxml), path(sdrf)
@@ -46,28 +46,19 @@ process QPX_OPENMSCONSENSUS {
         --compression zstd \\
         ${args}
 
-    python - <<'PY'
-import shutil
-from pathlib import Path
-
-from qpx.mudata import write_dataset_mudata
-
-# Use qpx's own writer rather than build_mudata + mdata.write. It refuses a
-# MuData that is missing a required quantification modality, writes via a
-# temporary file, and drops a stale view if the build fails. Calling
-# build_mudata directly bypassed that check: a modality that failed to build
-# was logged and skipped, so an INCOMPLETE h5mu was written and the task
-# exited 0 (bigbio/qpx#316 - MSV000085836 shipped proteins with no precursors).
-written = write_dataset_mudata(Path("qpx_output"), "${prefix}")
-if written is None:
-    print(
-        "WARNING: no MuData view was written; see the log above. "
-        "The qpx_output parquet views are complete and authoritative."
-    )
-else:
-    shutil.move(str(written), "${prefix}.h5mu")
-    print(f"MuData -> ${prefix}.h5mu")
-PY
+    # qpx >= 1.1.5 writes the MuData view itself at the end of `convert`
+    # (--mudata, the default), via write_dataset_mudata: it refuses a MuData
+    # missing a required quantification modality (bigbio/qpx#316) and is
+    # best-effort, so a view that cannot be built leaves the parquet views
+    # intact. Building it again here would double the time/memory on large
+    # datasets, so only move it out of qpx_output (keeping it out of the
+    # qpx_dataset emit). `--no-mudata` in ext.args skips the view entirely.
+    if [ -f "qpx_output/${prefix}.h5mu" ]; then
+        mv "qpx_output/${prefix}.h5mu" "${prefix}.h5mu"
+        echo "MuData -> ${prefix}.h5mu"
+    else
+        echo "WARNING: no MuData view was written; see the log above. The qpx_output parquet views are complete and authoritative."
+    fi
 
     cat <<-END_VERSIONS > versions.yml
 "${task.process}":
