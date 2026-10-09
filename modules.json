@@ -17,7 +17,7 @@
                     },
                     "qpx/openmsconsensus": {
                         "branch": "main",
-                        "git_sha": "d9e1b05a107342fb5086aeb90fc3e68bc6b3f336",
+                        "git_sha": "c2c00e74fa8495c219a517631f6c3c9d3554712a",
                         "installed_by": ["modules"]
                     },
                     "thermorawfileparser": {
