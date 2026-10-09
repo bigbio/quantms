@@ -1,0 +1,52 @@
+nextflow_function {
+
+    name "Comet fragment binning contract"
+    script "../main.nf"
+    function "comet_binning"
+    tag "comet"
+
+    [
+        [name: 'preserve high-resolution Da', unit: 'Da', inputTolerance: 0.03, expectedWidth: 0.06, expectedOffset: 0.0, expectedInstrument: 'high_res'],
+        [name: 'preserve low-resolution Da', unit: 'Da', inputTolerance: 0.5, expectedWidth: 1.0, expectedOffset: 0.4, expectedInstrument: 'low_res'],
+        [name: 'explicit ppm uses full width and zero offset', unit: 'ppm', width: 0.03, offset: 0.0, instrument: 'high_res', expectedWidth: 0.03, expectedOffset: 0.0, expectedInstrument: 'high_res'],
+        [name: 'explicit width is independent of ppm magnitude', unit: 'ppm', inputTolerance: 100, width: 0.03, offset: 0.0, instrument: 'high_res', expectedWidth: 0.03, expectedOffset: 0.0, expectedInstrument: 'high_res'],
+        [name: 'explicit Da override', unit: 'Da', width: 1.0005, offset: 0.4, instrument: 'low_res', expectedWidth: 1.0005, expectedOffset: 0.4, expectedInstrument: 'low_res'],
+        [name: 'normalize ppm spelling', unit: ' PPM ', width: 0.03, offset: 0.0, instrument: 'high_res', expectedWidth: 0.03, expectedOffset: 0.0, expectedInstrument: 'high_res'],
+        [name: 'guess high-resolution binning below 50 ppm', unit: 'ppm', inputTolerance: 20, expectedWidth: 0.03, expectedOffset: 0.0, expectedInstrument: 'high_res'],
+        [name: 'guess low-resolution binning from 50 ppm', unit: 'ppm', inputTolerance: 50, expectedWidth: 1.0005, expectedOffset: 0.4, expectedInstrument: 'low_res'],
+        [name: 'reject width without offset', unit: 'ppm', width: 0.03, instrument: 'high_res', error: 'explicit binning requires'],
+        [name: 'reject offset without width', unit: 'Da', offset: 0.0, instrument: 'high_res', error: 'explicit binning requires'],
+        [name: 'reject missing instrument', unit: 'ppm', width: 0.03, offset: 0.0, error: 'explicit binning requires'],
+        [name: 'reject unknown unit', unit: 'ppa', error: 'Unsupported Comet fragment tolerance unit'],
+        [name: 'reject zero width', unit: 'ppm', width: 0, offset: 0.0, instrument: 'high_res', error: 'at least 0.01 Da'],
+        [name: 'reject nonfinite width', unit: 'ppm', width: 'NaN', offset: 0.0, instrument: 'high_res', error: 'must be finite'],
+        [name: 'reject nonnumeric width', unit: 'ppm', width: 'bad', offset: 0.0, instrument: 'high_res', error: 'must be numeric'],
+        [name: 'reject offset out of range', unit: 'ppm', width: 0.03, offset: 1.1, instrument: 'high_res', error: 'between 0 and 1'],
+        [name: 'reject invalid instrument', unit: 'ppm', width: 0.03, offset: 0.0, instrument: 'automatic', error: 'must be high_res or low_res']
+    ].each { example ->
+        test(example.name) {
+            when {
+                function {
+                    """
+                    input[0] = [mzml_id: 'run1', fragmentmasstolerance: ${(example.inputTolerance ?: 20).inspect()}, fragmentmasstoleranceunit: ${example.unit.inspect()}]
+                    input[1] = ${example.width.inspect()}
+                    input[2] = ${example.offset.inspect()}
+                    input[3] = ${example.instrument.inspect()}
+                    """
+                }
+            }
+            then {
+                if (example.error) {
+                    assert function.failed
+                    assert function.stdout.any { it.contains(example.error) }
+                } else {
+                    assert function.success
+                    assert function.result.width == example.expectedWidth
+                    assert function.result.tolerance * 2 == example.expectedWidth
+                    assert function.result.offset == example.expectedOffset
+                    assert function.result.instrument == example.expectedInstrument
+                }
+            }
+        }
+    }
+}

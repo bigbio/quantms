@@ -1,0 +1,41 @@
+nextflow_workflow {
+    name "LFQ groups keep complete run and metadata associations"
+    script "./grouping.nf"
+    workflow "GROUPING_TEST"
+    tag "lfq_groups"
+
+    [
+        [name: 'out-of-order runs retain paired design and SDRF', runs: ['run3', 'run2', 'run1'], success: true],
+        [name: 'a missing search result fails instead of dropping a run', runs: ['run1', 'run3'], success: false],
+        [name: 'duplicate search results fail', runs: ['run1', 'run2', 'run3', 'run1'], success: false],
+    ].each { example ->
+        test(example.name) {
+            when {
+                workflow {
+                    """
+                    input[0] = channel.fromList(${example.runs.inspect()}).map { run ->
+                        tuple([id: run], file(run + '.mzML'), file(run + '.idparquet'))
+                    }
+                    input[1] = channel.value(file('${projectDir}/modules/local/prepare_lfq_groups/tests/lfq_groups.tsv'))
+                    """
+                }
+            }
+            then {
+                if (example.success) {
+                    assert workflow.success
+                    assert workflow.out.inputs.size() == 2
+                    def groups = workflow.out.inputs.collectEntries { row -> [(row[0]): row] }
+                    ['group_A': ['run1', 'run2'], 'group_B': ['run3']].each { group, runs ->
+                        def row = groups[group + '_design.tsv']
+                        assert row[2].tokenize('|') == runs.collect { it + '.mzML' }
+                        assert row[3].tokenize('|') == runs.collect { it + '.idparquet' }
+                        assert row[1] == group + '.sdrf.tsv'
+                    }
+                } else {
+                    assert workflow.failed
+                    assert workflow.stdout.join('\n').toLowerCase().contains('join')
+                }
+            }
+        }
+    }
+}

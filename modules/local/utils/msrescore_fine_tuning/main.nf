@@ -25,7 +25,7 @@ process MSRESCORE_FINE_TUNING {
     def ms2_tolerance = null
     def ms2_tolerance_unit = null
 
-    // ms2pip only supports Da unit, but alphapeptdeep supports both Da and ppm
+    // AlphaPeptDeep fine-tuning uses the SDRF tolerance value and unit directly.
     ms2_tolerance = meta[0]['fragmentmasstolerance']
     ms2_tolerance_unit = meta[0]['fragmentmasstoleranceunit']
 

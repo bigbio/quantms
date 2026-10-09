@@ -11,8 +11,7 @@ process QPX_OPENMSCONSENSUS {
     container "ghcr.io/bigbio/qpx:1.1.5"
 
     input:
-    path(consensusxml)
-    path(sdrf)
+    tuple path(consensusxml), path(sdrf)
     val(project_accession)
     // Optional: the FASTA used for the search, or [] when it is not available.
     // qpx fills null pg.sequence_coverage / pg.molecular_weight and
@@ -32,7 +31,7 @@ process QPX_OPENMSCONSENSUS {
 
     script:
     def args    = task.ext.args ?: ''
-    def prefix  = project_accession ?: 'openms'
+    def prefix  = task.ext.prefix ?: project_accession ?: 'openms'
     def acc_arg = project_accession ? "--project-accession ${project_accession}" : ''
     def fasta_arg = fasta ? "--fasta ${fasta}" : ''
     """
@@ -69,7 +68,7 @@ END_VERSIONS
     """
 
     stub:
-    def prefix = project_accession ?: 'openms'
+    def prefix = task.ext.prefix ?: project_accession ?: 'openms'
     """
     mkdir -p qpx_output
     touch qpx_output/stub.parquet

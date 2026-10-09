@@ -67,8 +67,7 @@ workflow TMT {
     // final clean QPX dataset + MuData (the published quantification artifact).
     //
     QPX_OPENMSCONSENSUS(
-        ISOBARIC_WORKFLOW.out.out_consensusXML,
-        file(params.input),
+        ISOBARIC_WORKFLOW.out.out_consensusXML.map { consensus -> tuple(consensus, file(params.input)) },
         params.accession ?: '',
         // The database the search used. qpx fills null pg.sequence_coverage,
         // pg.molecular_weight and feature.pg_positions from it; decoy entries are

@@ -1,3 +1,43 @@
+def comet_binning(meta, width, offset, instrument) {
+    def unit = meta.fragmentmasstoleranceunit?.toString()?.trim()?.toLowerCase()
+    if (!(unit in ['da', 'ppm'])) {
+        error "Unsupported Comet fragment tolerance unit '${meta.fragmentmasstoleranceunit}' for ${meta.mzml_id}"
+    }
+    def explicit = width != null || offset != null
+    if (explicit && (width == null || offset == null || !instrument)) {
+        error "Comet explicit binning requires comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument for ${meta.mzml_id}"
+    }
+    def number = { value, name ->
+        def result
+        try {
+            result = Double.parseDouble(value?.toString() ?: '')
+        } catch (NumberFormatException exception) {
+            error "Comet ${name} must be numeric for ${meta.mzml_id}: ${exception.message}"
+        }
+        if (!Double.isFinite(result)) {
+            error "Comet ${name} must be finite for ${meta.mzml_id}"
+        }
+        return result
+    }
+    // Comet has no ppm bins: without explicit settings, keep the legacy guess from the ppm value.
+    def guessed = !explicit && unit == 'ppm'
+    def tolerance = explicit ? null : number.call(meta.fragmentmasstolerance, 'fragment tolerance')
+    // OpenMS accepts half the native Comet bin width. Preserve the legacy Da path.
+    def binWidth = explicit ? number.call(width, 'bin width') : (guessed ? (tolerance < 50 ? 0.03 : 1.0005) : 2 * tolerance)
+    def binOffset = explicit ? number.call(offset, 'bin offset') : (binWidth <= 0.1 ? 0.0 : 0.4)
+    def mode = instrument ?: (binWidth <= 0.1 ? 'high_res' : 'low_res')
+    if (binWidth < 0.01) {
+        error "Comet bin width must be at least 0.01 Da for ${meta.mzml_id}"
+    }
+    if (binOffset < 0 || binOffset > 1) {
+        error "Comet bin offset must be between 0 and 1 for ${meta.mzml_id}"
+    }
+    if (!(mode in ['high_res', 'low_res'])) {
+        error "Comet instrument must be high_res or low_res for ${meta.mzml_id}"
+    }
+    return [width: binWidth, tolerance: binWidth / 2, offset: binOffset, instrument: mode, explicit: explicit, guessed: guessed]
+}
+
 process COMET {
     tag "$meta.mzml_id"
     label 'process_medium'
@@ -17,32 +57,22 @@ process COMET {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.mzml_id}"
 
-    if (meta.fragmentmasstoleranceunit == "ppm") {
-        // Note: This uses an arbitrary rule to decide if it was hi-res or low-res
-        // and uses Comet's defaults for bin size, in case unsupported unit "ppm" was given.
-        if (meta.fragmentmasstolerance.toDouble() < 50) {
-            bin_tol = 0.015
-            bin_offset = 0.0
-            inst = params.instrument ?: "high_res"
-        } else {
-            bin_tol = 0.50025
-            bin_offset = 0.4
-            inst = params.instrument ?: "low_res"
-        }
-        log.warn "The chosen search engine Comet does not support ppm fragment tolerances. We guessed a " + inst +
-            " instrument and set the fragment_bin_tolerance to " + bin_tol
-    } else {
-        // TODO expose the fragment_bin_offset parameter of comet
-        bin_tol = meta.fragmentmasstolerance.toDouble()
-        bin_offset = bin_tol <= 0.05 ? 0.0 : 0.4
-        if (!params.instrument)
-        {
-            inst = bin_tol <= 0.05 ? "high_res" : "low_res"
-        } else {
-            inst = params.instrument
-        }
+    def width = task.ext.comet_fragment_bin_tol != null ? task.ext.comet_fragment_bin_tol : params.comet_fragment_bin_tol
+    def offset = task.ext.comet_fragment_bin_offset != null ? task.ext.comet_fragment_bin_offset : params.comet_fragment_bin_offset
+    def instrument = task.ext.comet_instrument != null ? task.ext.comet_instrument : (params.comet_instrument != null ? params.comet_instrument : params.instrument)
+    def binning = comet_binning(meta, width, offset, instrument)
+    def bin_tol = binning.tolerance
+    def bin_offset = binning.offset
+    def inst = binning.instrument
+    log.debug "Comet ${meta.mzml_id}: input fragment tolerance=${meta.fragmentmasstolerance} ${meta.fragmentmasstoleranceunit}; " +
+        "fragment_bin_tol=${binning.width} Da (full width), adapter_fragment_mass_tolerance=${bin_tol} Da, " +
+        "fragment_bin_offset=${bin_offset}, instrument=${inst}, " +
+        "source=${binning.explicit ? 'explicit Comet settings' : (binning.guessed ? 'guessed from ppm' : 'input Da')}"
+    if (binning.guessed) {
+        log.warn "The chosen search engine Comet does not support ppm fragment tolerances. For ${meta.mzml_id}, we guessed a ${inst} " +
+            "instrument with fragment_bin_tol=${binning.width} Da and fragment_bin_offset=${bin_offset}. " +
+            "Set comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument to override."
     }
 
     def isoSlashComet = "0/1"

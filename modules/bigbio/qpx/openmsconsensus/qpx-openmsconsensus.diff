@@ -1,0 +1,56 @@
+Changes in component 'bigbio/qpx/openmsconsensus'
+'modules/bigbio/qpx/openmsconsensus/meta.yml' is unchanged
+'modules/bigbio/qpx/openmsconsensus/environment.yml' is unchanged
+Changes in 'qpx/openmsconsensus/main.nf':
+--- modules/bigbio/qpx/openmsconsensus/main.nf
++++ modules/bigbio/qpx/openmsconsensus/main.nf
+@@ -11,8 +11,7 @@
+     container "ghcr.io/bigbio/qpx:1.1.5"
+ 
+     input:
+-    path(consensusxml)
+-    path(sdrf)
++    tuple path(consensusxml), path(sdrf)
+     val(project_accession)
+     // Optional: the FASTA used for the search, or [] when it is not available.
+     // qpx fills null pg.sequence_coverage / pg.molecular_weight and
+@@ -32,7 +31,7 @@
+ 
+     script:
+     def args    = task.ext.args ?: ''
+-    def prefix  = project_accession ?: 'openms'
++    def prefix  = task.ext.prefix ?: project_accession ?: 'openms'
+     def acc_arg = project_accession ? "--project-accession ${project_accession}" : ''
+     def fasta_arg = fasta ? "--fasta ${fasta}" : ''
+     """
+@@ -69,7 +68,7 @@
+     """
+ 
+     stub:
+-    def prefix = project_accession ?: 'openms'
++    def prefix = task.ext.prefix ?: project_accession ?: 'openms'
+     """
+     mkdir -p qpx_output
+     touch qpx_output/stub.parquet
+
+Changes in 'qpx/openmsconsensus/tests/main.nf.test':
+--- modules/bigbio/qpx/openmsconsensus/tests/main.nf.test
++++ modules/bigbio/qpx/openmsconsensus/tests/main.nf.test
+@@ -23,10 +23,9 @@
+         when {
+             process {
+                 """
+-                input[0] = file("stub.consensusXML", checkIfExists: false)
+-                input[1] = file("stub_sample.sdrf.tsv", checkIfExists: false)
+-                input[2] = "PXD026600"
+-                input[3] = []
++                input[0] = [file("stub.consensusXML", checkIfExists: false), file("stub_sample.sdrf.tsv", checkIfExists: false)]
++                input[1] = "PXD026600"
++                input[2] = []
+                 """
+             }
+         }
+
+'modules/bigbio/qpx/openmsconsensus/tests/nextflow.config' is unchanged
+'modules/bigbio/qpx/openmsconsensus/tests/main.nf.test.snap' is unchanged
+************************************************************

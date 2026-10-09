@@ -1,0 +1,97 @@
+nextflow_function {
+
+    name "SDRF search modification metadata"
+    script "../main.nf"
+    function "create_meta_channel"
+    tag "create_input_channel"
+
+    [
+        [name: 'empty fixed set', fixed: '', variable: 'Carbamidomethyl (C),Oxidation (M),Propionamide (C)'],
+        [name: 'missing fixed set', fixed: null, variable: 'Oxidation (M)'],
+        [
+            name: 'whitespace fixed set', fixed: '  ',
+            variable: 'Carbamidomethyl (C),Oxidation (M),Acetyl (Protein N-term)'
+        ],
+        [name: 'nonempty fixed set', fixed: 'Carbamidomethyl (C)', variable: 'Oxidation (M)'],
+        [name: 'variable fallback', fixed: '', variable: null],
+        [
+            name: 'trim SDRF variable set', fixed: '', variable: '  Oxidation (M)  ',
+            fallback: 'Acetyl (Protein N-term)', expectedVariable: 'Oxidation (M)'
+        ],
+        [
+            name: 'trim variable fallback', fixed: '', variable: null,
+            fallback: '  Oxidation (M)  ', expectedVariable: 'Oxidation (M)'
+        ],
+        [
+            name: 'whitespace SDRF uses fallback', fixed: '', variable: '  ',
+            expectedVariable: 'Oxidation (M)'
+        ],
+        [name: 'no modifications with Comet', fixed: '', variable: '', fallback: '', engines: 'comet'],
+        [name: 'no modifications with Sage', fixed: '', variable: '', fallback: '', engines: 'sage'],
+        [
+            name: 'whitespace fallback with Comet', fixed: '', variable: '', fallback: '  ',
+            engines: 'comet', expectedVariable: ''
+        ],
+        [
+            name: 'null fallback with Sage', fixed: '', variable: null, fallback: null,
+            engines: 'sage', expectedVariable: ''
+        ],
+        [
+            name: 'reject MSGF implicit CAM', fixed: '', variable: '', fallback: '',
+            error: 'Both modification lists are empty'
+        ],
+        [
+            name: 'reject MSGF whitespace fallback', fixed: '', variable: '', fallback: '  ',
+            error: 'Both modification lists are empty'
+        ],
+        [
+            name: 'require label', fixed: '', variable: 'Oxidation (M)', label: '',
+            error: 'Missing or empty required SDRF columns'
+        ],
+        [
+            name: 'require enzyme', fixed: '', variable: 'Oxidation (M)', enzyme: '',
+            error: 'Missing or empty required SDRF columns'
+        ],
+    ].each { example ->
+        test(example.name) {
+            when {
+                params {
+                    root_folder = null
+                    search_engines = example.engines ?: 'comet,msgf,sage'
+                    variable_mods = example.containsKey('fallback') ? example.fallback : 'Oxidation (M)'
+                }
+                function {
+                    """
+                    input[0] = [
+                        URI: "${projectDir}/main.nf",
+                        'Proteomics Data Acquisition Method': 'data-dependent acquisition',
+                        DissociationMethod: 'BEAM-TYPE COLLISION-INDUCED DISSOCIATION',
+                        Label: ${(example.containsKey('label') ? example.label : 'label free sample').inspect()},
+                        Enzyme: ${(example.containsKey('enzyme') ? example.enzyme : 'Trypsin').inspect()},
+                        FixedModifications: ${example.fixed.inspect()},
+                        VariableModifications: ${example.variable.inspect()}
+                    ]
+                    input[1] = [] as Set
+                    input[2] = [] as Set
+                    input[3] = [labelling_type: '', experiment_id: 'test.sdrf.tsv']
+                    """
+                }
+            }
+            then {
+                if (example.error) {
+                    assert function.failed
+                    assert function.stdout.any { it.contains(example.error) }
+                } else {
+                    assert function.success
+                    assert function.result[0].fixedmodifications == (example.fixed?.trim() ?: '')
+                    def fallback = example.containsKey('fallback') ? example.fallback : 'Oxidation (M)'
+                    def expectedVariable = example.containsKey('expectedVariable')
+                        ? example.expectedVariable : (example.variable ?: fallback)
+                    assert function.result[0].variablemodifications == expectedVariable
+                    assert function.result[0].enzyme == 'Trypsin'
+                    assert function.result[0].labelling_type == 'label free sample'
+                }
+            }
+        }
+    }
+}

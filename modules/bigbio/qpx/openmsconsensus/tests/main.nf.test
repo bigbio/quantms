@@ -23,10 +23,9 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = file("stub.consensusXML", checkIfExists: false)
-                input[1] = file("stub_sample.sdrf.tsv", checkIfExists: false)
-                input[2] = "PXD026600"
-                input[3] = []
+                input[0] = [file("stub.consensusXML", checkIfExists: false), file("stub_sample.sdrf.tsv", checkIfExists: false)]
+                input[1] = "PXD026600"
+                input[2] = []
                 """
             }
         }

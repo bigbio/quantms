@@ -16,6 +16,56 @@ nextflow run bigbio/quantms --input '/url/path/to/your/experiment_design.sdrf.ts
 
 The input file must be in [Sample-to-data-relationship format (SDRF)](https://pubs.acs.org/doi/abs/10.1021/acs.jproteome.0c00376) and can have `.sdrf`, `.tsv`, or `.csv` file extensions.
 
+### Independent LFQ groups
+
+Use `--lfq_group_by 'comment[instrument],comment[gradient duration]'` when a complete LFQ SDRF contains acquisitions that must be quantified separately. The named columns must exist and contain a value for every run. The default is a single LFQ analysis, as before.
+
+All runs are retained. The pipeline creates an OpenMS design and an SDRF for each combination of grouping values, then performs alignment, linking, protein inference and quantification independently within that group. A fractionated sample cannot cross groups. Missing runs or conflicting group assignments are errors. The original SDRF is not modified; condition and biological-replicate annotations are preserved in the generated files. Choose columns from the experimental design, not from the observed quantification results.
+
+Search and rescoring remain per run and precede grouping. They can be reused with `-resume` when their inputs and settings are unchanged. Each group's QPX retains the original project accession and has a distinct output prefix. Groups are separate analyses, not extra independent studies or biological replicates; cross-group feature matching is not performed.
+
+### Search modifications from SDRF
+
+Fixed modifications are read exclusively from the SDRF modification annotations. If the parsed `FixedModifications` value is empty, quantms preserves an empty fixed-modification set instead of rejecting the input or adding a default modification such as Carbamidomethyl (C). Annotate modifications according to the experimental protocol; a modification that is variable must not be declared fixed just to make the input pass validation.
+
+Variable modifications are read from the SDRF when present. If the parsed variable-modification set is empty or contains only whitespace, quantms uses `--variable_mods`, whose default is `Oxidation (M)`. Leading and trailing whitespace is removed from the selected SDRF or fallback value before validation; a whitespace-only fallback is treated as an empty set. An empty fixed-modification set with a nonempty variable-modification set is supported with Comet, MS-GF+, and Sage.
+
+For a search without either fixed or variable modifications, select Comet and/or Sage and set `variable_mods` to an empty string. When `--search_engines` includes `msgf`, quantms rejects an empty final set of both modification types: the current OpenMS MSGFPlusAdapter would otherwise enable fixed Carbamidomethyl (C). This check runs after the variable-modification fallback has been applied.
+
+### Comet fragment binning
+
+Comet scores spectra using fixed-width fragment bins. Its native `fragment_bin_tol` is a **full bin width in Da**, not a ppm matching window. OpenMS `CometAdapter -fragment_mass_tolerance` takes **half** that width. quantms exposes the native width as `--comet_fragment_bin_tol` and divides it by two when calling the adapter.
+
+For ppm fragment tolerances without Comet-specific settings, quantms guesses the binning from the ppm value and logs a warning: below 50 ppm it uses a 0.03 Da full bin with offset 0 and `high_res`; from 50 ppm it uses a 1.0005 Da full bin with offset 0.4 and `low_res`. This guess is **not an equivalent conversion from ppm**. To choose the binning yourself, set all three Comet options: `--comet_fragment_bin_tol`, `--comet_fragment_bin_offset`, and `--comet_instrument`. For example, `--comet_fragment_bin_tol 0.03 --comet_fragment_bin_offset 0 --comet_instrument high_res` uses a 0.03 Da full bin, passing 0.015 Da to OpenMS. Select the settings based on the acquisition and the intended Comet search protocol.
+
+Without Comet-specific bin settings, a Da SDRF tolerance keeps its existing interpretation as the adapter's half width, including the existing offset and instrument defaults. Supplying an explicit width or offset requires both values and an instrument mode. Width must be finite and at least 0.01 Da (also checked for the inherited Da path, so input tolerances below 0.005 Da are rejected); offset must be finite and between 0 and 1. An explicit offset of zero is preserved.
+
+For projects with mixed acquisition settings, use `ext.comet_fragment_bin_tol`, `ext.comet_fragment_bin_offset`, and `ext.comet_instrument` closures under `process.withName: 'COMET'`. These override the corresponding global settings. For the instrument mode, `params.instrument` is a final compatibility fallback shared with MS-GF+; use `comet_instrument` or its per-run override to change only Comet. Use verified run identifiers rather than inferring resolution from the ppm value:
+
+```groovy
+process {
+    withName: 'COMET' {
+        ext.comet_fragment_bin_tol = { meta.mzml_id == 'verified_high_res_run' ? 0.03 : null }
+        ext.comet_fragment_bin_offset = { meta.mzml_id == 'verified_high_res_run' ? 0.0 : null }
+        ext.comet_instrument = { meta.mzml_id == 'verified_high_res_run' ? 'high_res' : null }
+    }
+}
+```
+
+Keep global Comet-specific options unset when unlisted runs should keep their automatic settings. Do not additionally override these options through `ext.args` or a Comet parameter file: those adapter options can take precedence over quantms' reported settings.
+
+The original SDRF value and unit are never changed. Other engines and rescoring continue to receive their original metadata. The Nextflow log records the run ID, input tolerance, full width, adapter half width, offset, instrument mode, and whether settings were explicit, derived from Da input (which may itself come from the configured fallback), or guessed from ppm. These details are logged at DEBUG level, so they appear in `.nextflow.log` but not on the console; errors remain visible.
+
+See the [Comet parameter documentation](https://uwpr.github.io/Comet/parameters/parameters_202602/fragment_bin_tol.html) and [OpenMS adapter documentation](https://openms.de/documentation/html/TOPP_CometAdapter.html).
+
+### Fragment tolerance for MS2-based rescoring
+
+`MSRESCORE_FEATURES` passes the SDRF fragment mass tolerance value and unit together to quantms-rescoring. A value such as `20 ppm` remains `20 ppm`; it is not replaced with the configured Da fallback. Unit spelling is normalized to `Da` or `ppm` without changing the numeric value.
+
+The module uses `--ms2features_tolerance` and `--ms2features_tolerance_unit` only when both SDRF tolerance fields are absent. If only one field is missing, or the unit is unsupported, it stops with an error instead of combining SDRF and fallback values.
+
+MS2PIP with ppm requires MS2PIP 4.2 or newer and a quantms-rescoring adapter that supports its unit-aware API. The default quantms-rescoring `0.0.24` container does not provide this support. Before requesting MS2PIP with ppm, configure a compatible container for `MSRESCORE_FEATURES` in a custom Nextflow configuration. AlphaPeptDeep supports both Da and ppm.
+
 ### Supported file formats
 
 The pipeline supports the following mass spectrometry data file formats:

@@ -105,8 +105,7 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
     // Validate required SDRF columns - these parameters are exclusively read from SDRF (no command-line override)
     def requiredColumns = [
         'Label': row.Label,
-        'Enzyme': row.Enzyme,
-        'FixedModifications': row.FixedModifications
+        'Enzyme': row.Enzyme
     ]
 
     def missingColumns = []
@@ -122,9 +121,9 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
         exit(1)
     }
 
-    // Set values from SDRF (required columns)
+    // An empty fixed-modification set must remain an empty string for the search adapters.
     meta.labelling_type = row.Label
-    meta.fixedmodifications = row.FixedModifications
+    meta.fixedmodifications = row.FixedModifications?.toString()?.trim() ?: ''
     meta.enzyme = row.Enzyme
 
     // Set tolerance values: use SDRF if available, otherwise fall back to params
@@ -181,6 +180,13 @@ def create_meta_channel(LinkedHashMap row, enzymes, files, wrapper) {
         meta.variablemodifications = row.VariableModifications
     } else {
         meta.variablemodifications = params.variable_mods
+    }
+    meta.variablemodifications = meta.variablemodifications?.toString()?.trim() ?: ''
+
+    if (params.search_engines.contains('msgf') && !meta.fixedmodifications && !meta.variablemodifications) {
+        exit(1, "ERROR: Both modification lists are empty for '${filestr}', " +
+            'but OpenMS MSGFPlusAdapter would enable fixed Carbamidomethyl (C) in this case. ' +
+            'Use Comet or Sage for a search without modifications.')
     }
 
     enzymes += row.Enzyme

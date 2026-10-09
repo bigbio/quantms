@@ -33,31 +33,24 @@ process MSRESCORE_FEATURES {
         ms2_model_dir = "--ms2_model_dir ./"
     }
 
-    // Determine if using ms2pip or alphapeptdeep based on ms2features_generators
-    def using_ms2pip = params.ms2features_generators.toLowerCase().contains('ms2pip')
-    def using_alphapeptdeep = params.ms2features_generators.toLowerCase().contains('alphapeptdeep')
-
-    // Initialize tolerance variables
-    def ms2_tolerance = null
-    def ms2_tolerance_unit = null
-
-    // ms2pip only supports Da unit, but alphapeptdeep supports both Da and ppm
-    ms2_tolerance = meta['fragmentmasstolerance']
-    ms2_tolerance_unit = meta['fragmentmasstoleranceunit']
-    if (using_ms2pip) {
-        // ms2pip only supports Da unit
-        ms2_tolerance_unit = 'Da'
+    // MS2PIP >=4.2 and AlphaPeptDeep both accept Da and ppm. Keep
+    // the SDRF value and unit together; use config only if both are absent.
+    def ms2_tolerance = meta['fragmentmasstolerance']
+    def ms2_tolerance_unit = meta['fragmentmasstoleranceunit']
+    if (ms2_tolerance == null && !ms2_tolerance_unit) {
         ms2_tolerance = params.ms2features_tolerance
-        def fragment_unit_lower = meta['fragmentmasstoleranceunit'].toLowerCase()
-        if (fragment_unit_lower.endsWith('da')) {
-            ms2_tolerance = meta['fragmentmasstolerance']
-        } else if (fragment_unit_lower == 'ppm' || params.ms2features_tolerance_unit == 'ppm') {
-            log.warn "Warning: MS2pip only supports Da unit. Using default from config!"
-            ms2_tolerance = params.ms2features_tolerance
-        } else {
-            log.warn "Warning: MS2pip only supports Da unit. Fragment mass tolerance unit '${meta['fragmentmasstoleranceunit']}' is not supported. Using default from config! In the future, please use 'Da' or 'ppm'."
-            ms2_tolerance = params.ms2features_tolerance
-        }
+        ms2_tolerance_unit = params.ms2features_tolerance_unit
+    }
+    if (ms2_tolerance == null || !ms2_tolerance_unit) {
+        error "Fragment mass tolerance requires both a value and unit for ${meta.mzml_id}"
+    }
+    def unit = ms2_tolerance_unit.toString().trim().toLowerCase()
+    if (unit in ['da', 'dalton', 'daltons']) {
+        ms2_tolerance_unit = 'Da'
+    } else if (unit == 'ppm') {
+        ms2_tolerance_unit = 'ppm'
+    } else {
+        error "Unsupported fragment mass tolerance unit '${ms2_tolerance_unit}' for ${meta.mzml_id}"
     }
 
     if (params.decoy_string_position == "prefix") {

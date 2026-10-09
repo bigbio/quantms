@@ -18,10 +18,12 @@ process SAGE {
     script:
     def meta             = metas[0] // due to groupTuple they should all be the same (TODO check to use groupBy?)
     // Make sure that the output order is consistent with the meta ids
-    meta_order_files     = metas.collect{ m -> m.mzml_id.toString() + "*_sage.idparquet" }
+    // IDRipper removes a trailing `.d` from Bruker run names when splitting
+    // identifications; mirror that normalization in the declared output paths.
+    meta_order_files     = metas.collect{ m -> m.mzml_id.toString().replaceFirst(/\.d$/, '') + "_sage.idparquet" }
     def args             = task.ext.args ?: ''
     enzyme               = meta.enzyme
-    outname              = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName
+    outname              = mzml_files.size() > 1 ? "out_${batch}" : mzml_files[0].baseName.toString().replaceFirst(/\.d$/, '')
 
     il_equiv = params.IL_equivalent ? "-PeptideIndexing:IL_equivalent" : ""
 

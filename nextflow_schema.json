@@ -19,7 +19,7 @@
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.(?:csv|tsv|sdrf)$",
                     "description": "URI/path to an SDRF file in SDRF format with .sdrf, .tsv, or .csv extension. For more info see help text or docs.",
-                    "help_text": "Input is specified by using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and annotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\n\nThe SDRF file can have .sdrf, .tsv, or .csv extensions. An OpenMS-style experimental design will be generated based on the factor columns of the SDRF.\n\nThe following parameters are read **exclusively** from the SDRF file (required columns):\n\n    * `acquisition_method` (from 'Proteomics Data Acquisition Method' column),\n    * `labelling_type` (from 'Label' column),\n    * `enzyme` (from 'Enzyme' column),\n    * `fixed_mods` (from 'FixedModifications' column)\n\nThe following parameters are read from SDRF but can be **overridden via command line**:\n\n    * `precursor_mass_tolerance` (from 'PrecursorMassTolerance' column),\n    * `precursor_mass_tolerance_unit` (from 'PrecursorMassToleranceUnit' column),\n    * `fragment_mass_tolerance` (from 'FragmentMassTolerance' column),\n    * `fragment_mass_tolerance_unit` (from 'FragmentMassToleranceUnit' column),\n    * `variable_mods` (from 'VariableModifications' column)",
+                    "help_text": "Input is specified by using a path or URI to a PRIDE Sample to Data Relation Format file (SDRF), e.g. as part of a submitted and annotated PRIDE experiment (see [here](https://github.com/bigbio/proteomics-metadata-standard/tree/master/annotated-projects) for examples). Input files will be downloaded and cached from the URIs specified in the SDRF file.\n\nThe SDRF file can have .sdrf, .tsv, or .csv extensions. An OpenMS-style experimental design will be generated based on the factor columns of the SDRF.\n\nThe following parameters are read **exclusively** from the SDRF file (required columns):\n\n    * `acquisition_method` (from 'Proteomics Data Acquisition Method' column),\n    * `labelling_type` (from 'Label' column),\n    * `enzyme` (from 'Enzyme' column)\n\nFixed modifications are also read exclusively from the SDRF ('FixedModifications' column). An empty set is supported and does not add a default fixed modification. When using MS-GF+, at least one fixed or variable modification must remain after applying the variable-modification fallback, because OpenMS MSGFPlusAdapter otherwise enables fixed Carbamidomethyl (C). Use Comet or Sage for a search without modifications.\n\nThe following parameters are read from SDRF but can be **overridden via command line**:\n\n    * `precursor_mass_tolerance` (from 'PrecursorMassTolerance' column),\n    * `precursor_mass_tolerance_unit` (from 'PrecursorMassToleranceUnit' column),\n    * `fragment_mass_tolerance` (from 'FragmentMassTolerance' column),\n    * `fragment_mass_tolerance_unit` (from 'FragmentMassToleranceUnit' column),\n    * `variable_mods` (from 'VariableModifications' column)",
                     "fa_icon": "fas fa-file-csv"
                 },
                 "outdir": {
@@ -289,15 +289,37 @@
                     "description": "Fragment mass tolerance used for database search. The default of 0.03 Da is for high-resolution instruments.",
                     "default": 0.03,
                     "fa_icon": "fas fa-sliders-h",
-                    "help_text": "Caution: for Comet we are estimating the `fragment_bin_tolerance` parameter based on this automatically. This value can be overridden via command line. If not specified, the value from the SDRF file will be used."
+                    "help_text": "The SDRF value takes precedence over this fallback. For Comet, Da input keeps the existing half-bin-width interpretation and ppm input uses a binning guessed from the ppm value; comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument override both."
                 },
                 "fragment_mass_tolerance_unit": {
                     "type": "string",
                     "description": "Fragment mass tolerance unit used for database search. Possible values are 'ppm' and 'Da' (default).",
                     "default": "Da",
                     "fa_icon": "fas fa-list-ol",
-                    "help_text": "Caution: for Comet we are estimating the `fragment_bin_tolerance` parameter based on this automatically. This value can be overridden via command line. If not specified, the value from the SDRF file will be used.",
+                    "help_text": "The SDRF value takes precedence over this fallback. For Comet, Da input keeps the existing half-bin-width interpretation and ppm input uses a binning guessed from the ppm value; comet_fragment_bin_tol, comet_fragment_bin_offset and comet_instrument override both.",
                     "enum": ["Da", "ppm"]
+                },
+                "comet_fragment_bin_tol": {
+                    "type": "number",
+                    "minimum": 0.01,
+                    "description": "Native Comet full fragment bin width in Da, independent of the SDRF fragment tolerance.",
+                    "help_text": "Optional. Set together with comet_fragment_bin_offset and comet_instrument to override the automatic Comet binning. OpenMS CometAdapter receives half this width. Does not change SDRF metadata or settings of other engines/rescoring. Per-run task.ext.comet_fragment_bin_tol overrides this value.",
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "comet_fragment_bin_offset": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Comet fragment bin offset as a fraction of the bin width (0 to 1).",
+                    "help_text": "Required with an explicit comet_fragment_bin_tol and comet_instrument. Common settings are 0.0 for high-resolution spectra and 0.4 for low-resolution spectra. Per-run task.ext.comet_fragment_bin_offset overrides this value; zero is a valid explicit setting.",
+                    "fa_icon": "fas fa-sliders-h"
+                },
+                "comet_instrument": {
+                    "type": "string",
+                    "enum": ["high_res", "low_res"],
+                    "description": "Comet-only fragment-ion representation, independent of other search engines.",
+                    "help_text": "Set with explicit Comet width and offset. Per-run task.ext.comet_instrument overrides this value; the shared instrument parameter is used only when neither override is set.",
+                    "fa_icon": "fas fa-sliders-h"
                 },
                 "variable_mods": {
                     "type": "string",
@@ -323,7 +345,7 @@
                 },
                 "instrument": {
                     "type": "string",
-                    "description": "Type of instrument that generated the data. 'low_res' or 'high_res' (default; refers to LCQ and LTQ instruments)",
+                    "description": "Shared high_res/low_res instrument setting used by Comet and MS-GF+. Use comet_instrument for a Comet-only override; when unset, engines infer their mode from the fragment tolerance.",
                     "fa_icon": "fas fa-list-ol"
                 },
                 "protocol": {
@@ -614,7 +636,7 @@
                 "ms2features_generators": {
                     "type": "string",
                     "description": "Feature generators for MS2-based rescoring. Comma-separated list of tools to use.",
-                    "help_text": "Available generators: 'deeplc' (retention time prediction, always recommended), 'alphapeptdeep' (MS2 prediction, supports both Da and ppm), 'ms2pip' (MS2 prediction, Da only). Order matters: deeplc should be first. Examples: 'deeplc,alphapeptdeep' (default), 'deeplc,ms2pip', 'deeplc' (only retention time).",
+                    "help_text": "Available generators: 'deeplc' (retention time prediction, always recommended), 'alphapeptdeep' (MS2 prediction, supports both Da and ppm), 'ms2pip' (MS2 prediction; ppm requires MS2PIP 4.2 or newer and a compatible quantms-rescoring adapter). Order matters: deeplc should be first. Examples: 'deeplc,alphapeptdeep' (default), 'deeplc,ms2pip', 'deeplc' (only retention time). The default quantms-rescoring 0.0.24 container does not support MS2PIP with ppm; configure a compatible container before using that combination.",
                     "fa_icon": "fas fa-font",
                     "default": "deeplc,alphapeptdeep"
                 },
@@ -627,14 +649,15 @@
                 },
                 "ms2features_tolerance": {
                     "type": "number",
-                    "description": "Fragment mass tolerance for MS2Features (fallback when SDRF values are incompatible)",
-                    "help_text": "Fallback tolerance value used when SDRF fragment tolerance cannot be used (e.g., ppm values with ms2pip). Should match your instrument's fragment mass accuracy. Typical values: 0.02-0.05 Da for high-resolution instruments, 0.1-0.5 Da for low-resolution instruments.",
+                    "description": "Fragment mass tolerance for MS2Features when the SDRF tolerance value and unit are both absent",
+                    "help_text": "Used together with ms2features_tolerance_unit only when both SDRF fragment tolerance fields are absent. A complete SDRF value/unit pair takes precedence, including ppm; its numeric value is passed unchanged. Incomplete pairs and unsupported units are rejected instead of falling back. MS2PIP with ppm requires MS2PIP 4.2 or newer and a compatible quantms-rescoring adapter; the default 0.0.24 container does not provide this support.",
                     "default": 0.05,
                     "fa_icon": "fas fa-sliders-h"
                 },
                 "ms2features_tolerance_unit": {
                     "type": "string",
-                    "description": "Unit for ms2features_tolerance (Da or ppm)",
+                    "description": "Unit paired with the fallback ms2features_tolerance (Da or ppm)",
+                    "help_text": "The fallback value and unit are used together only when both SDRF fragment tolerance fields are absent. Existing SDRF Da or ppm tolerances are not converted or replaced.",
                     "default": "Da",
                     "enum": ["Da", "ppm"],
                     "fa_icon": "fas fa-sliders-h"
@@ -994,6 +1017,11 @@
             "description": "",
             "default": "",
             "properties": {
+                "lfq_group_by": {
+                    "type": "string",
+                    "description": "Comma-separated SDRF columns defining independent LFQ groups (for example, comment[instrument],comment[gradient duration]). All runs are retained; alignment, linking and protein inference are performed separately within each group.",
+                    "fa_icon": "fas fa-layer-group"
+                },
                 "quantification_method": {
                     "type": "string",
                     "description": "Choose between feature-based quantification based on integrated MS1 signals ('feature_intensity'; default) or spectral counting of PSMs ('spectral_counting'). **WARNING:** 'spectral_counting' is not compatible with our MSstats step yet. MSstats will therefore be disabled automatically with that choice.",

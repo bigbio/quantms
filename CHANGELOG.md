@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### `Fixed`
+
+- Support independent LFQ groups selected by explicit SDRF columns (`lfq_group_by`). Preserve the complete input and run identities, keep fractionated samples together, and pair each consensusXML with its group-specific SDRF for separately named QPX outputs.
+- Add optional Comet bin settings (native full-width `comet_fragment_bin_tol`, `comet_fragment_bin_offset` and `comet_instrument`) with per-run overrides, divide the width by two for OpenMS, and log the original SDRF tolerance and effective Comet settings without changing metadata used by other engines or rescoring. Without these settings, Da and ppm tolerances keep their existing automatic binning.
+- Preserve the SDRF fragment tolerance value and Da/ppm unit in MS2-based rescoring; use the configured fallback only when both fields are absent, and reject incomplete pairs or unsupported units. MS2PIP with ppm requires a compatible quantms-rescoring container with MS2PIP 4.2 or newer; the default `0.0.24` container is unchanged and does not provide this support.
+- Allow an empty fixed-modification set from SDRF without adding a default modification. Reject searches using MS-GF+ when both modification sets remain empty after the variable-modification fallback, to prevent OpenMS MSGFPlusAdapter from silently enabling fixed Carbamidomethyl (C).
+- Trim the selected variable-modification value before validation so a whitespace-only fallback cannot bypass the MS-GF+ empty-modification check.
+- Match each Sage identification file to its run by exact name. A run such as `fr1` no longer also collects the identifications of `fr10` after IDRipper splits a multi-run search.
+- Declare Sage outputs for Bruker `.d` runs without the `.d` suffix, as IDRipper names them.
+
 ## [1.10.0] bigbio/quantms - [15/08/2026] - [London]
 
 ### `Changed`

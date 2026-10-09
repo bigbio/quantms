@@ -1,0 +1,4 @@
+group_id	run_id	sdrf_file	design_file
+group_A	run1	group_A.sdrf.tsv	group_A_design.tsv
+group_A	run2	group_A.sdrf.tsv	group_A_design.tsv
+group_B	run3	group_B.sdrf.tsv	group_B_design.tsv

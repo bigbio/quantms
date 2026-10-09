@@ -8,14 +8,12 @@ process PROTEOMICSLFQ {
         'ghcr.io/bigbio/openms-tools-thirdparty:2026.10.04' }"
 
     input:
-    path(mzmls)
-    path(id_files)
-    path(expdes)
+    tuple path(mzmls), path(id_files), path(expdes), path(sdrf)
     path(fasta)
 
     output:
     path "${expdes.baseName}_qpx", emit: out_qpx
-    path "${expdes.baseName}_openms.consensusXML", emit: out_consensusXML
+    tuple path("${expdes.baseName}_openms.consensusXML"), path(sdrf), emit: out_consensusXML
     path "*msstats_in.csv", emit: out_msstats, optional: true
     path "debug_mergedIDs.idparquet", emit: debug_mergedIDs, optional: true
     path "debug_mergedIDs_inference.idparquet", emit: debug_mergedIDs_inference, optional: true
