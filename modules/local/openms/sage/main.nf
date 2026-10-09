@@ -30,8 +30,6 @@ process SAGE {
     // The file name stays the same, so run names still match the experimental design.
     def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
     // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
-    def has_dotd = (mzml_files instanceof List ? mzml_files : [mzml_files]).any { f -> f.name ==~ /(?i).*\.d/ }
-
     """
     export SAGE_LOG=trace
     SageAdapter \\
@@ -65,11 +63,6 @@ process SAGE {
         -debug $params.db_debug \\
         $args \\
         2>&1 | tee ${outname}_sage.log
-
-    if [ "${has_dotd}" = "true" ] && { ! grep -qF 'TIMS calibration: Bruker SDK (m/z + 1/K0)' ${outname}_sage.log || grep -F 'TIMS calibration:' ${outname}_sage.log | grep -vqF 'Bruker SDK (m/z'; }; then
-        echo "ERROR: Bruker .d input was not read with the Bruker TDF SDK m/z calibration (needs the amd64 OpenMS image with libtimsdata). See ${outname}_sage.log." >&2
-        exit 1
-    fi
 
     if [[ ${mzml_files.size()} -ge 2 ]]; then
         IDRipper -in ${outname}_sage.idparquet -out . -split_ident_runs

@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Direct vendor file reading**: Thermo `.raw` files and Bruker `.d` directories are read directly by the OpenMS tools (no mzML conversion) by default. New `--convert_raw` restores the ThermoRawFileParser conversion; steps that need mzML fail with an explicit error for unconverted vendor files.
 - [#739](https://github.com/bigbio/quantms/issues/739) **Distributed LFQ feature finding**: ProteomicsLFQ feature detection runs per run (`-detect_only -feat_dir`) and a final ProteomicsLFQ task combines the `.featureParquet` checkpoints (new `--lfq_distributed_featurefinding`, default `true`).
 - **ProSE PeptDeep rescoring**: ProSE adds PeptDeep (ONNX) predicted MS2 and RT features before its internal Percolator rescoring (new `--prose_peptdeep`, default `true`, and `--prose_peptdeep_instrument`). The pipeline fails if the predicted features were not computed (OpenMS without ONNX Runtime or models); `--prose_peptdeep false` opts out explicitly.
-- **Bruker TDF SDK for `.d` m/z calibration**: `.d` input requires the OpenMS tools to use the Bruker SDK (amd64 image); the open-source m/z approximation deviates by up to ~37 ppm, so the pipeline fails instead of silently using it.
 - New `test_lfq_prose` CI profile (Thermo RAW + ProSE + distributed LFQ).
 
 ### `Changed`

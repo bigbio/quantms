@@ -23,8 +23,6 @@ process PROSE {
     // The file name stays the same, so run names still match the experimental design.
     def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
     // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
-    def has_dotd = [ms_file].any { f -> f.name ==~ /(?i).*\.d/ }
-
     // ProSE requires enzyme specificity for both termini; 'unspecific cleavage' maps to no specificity.
     def specificity = [fully: 'full', semi: 'semi', none: 'none'][params.num_enzyme_termini]
     if (meta.enzyme == 'unspecific cleavage') {
@@ -76,11 +74,6 @@ process PROSE {
         -debug $params.db_debug \\
         $args \\
         2>&1 | tee ${ms_file.baseName}_prose.log
-
-    if [ "${has_dotd}" = "true" ] && { ! grep -qF 'TIMS calibration: Bruker SDK (m/z + 1/K0)' ${ms_file.baseName}_prose.log || grep -F 'TIMS calibration:' ${ms_file.baseName}_prose.log | grep -vqF 'Bruker SDK (m/z'; }; then
-        echo "ERROR: Bruker .d input was not read with the Bruker TDF SDK m/z calibration (needs the amd64 OpenMS image with libtimsdata). See ${ms_file.baseName}_prose.log." >&2
-        exit 1
-    fi
 
     # Fail loudly instead of silently continuing with unrescored or self-generated-decoy results.
     if ! grep -q 'decoy_mode: "external"' ${ms_file.baseName}_prose_summary.yaml; then

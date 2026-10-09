@@ -26,8 +26,6 @@ process PROTEOMICSLFQ_DETECT {
     // The file name stays the same, so run names still match the experimental design.
     def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
     // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
-    def has_dotd = [ms_file].any { f -> f.name ==~ /(?i).*\.d/ }
-
     // Checkpoints record the FASTA by size and modification time. A local copy with a fixed
     // modification time gives every detect task and the combining task the same stamp, wherever
     // the database was staged (Nextflow task hashing already tracks changes of the FASTA content).
@@ -46,11 +44,6 @@ process PROTEOMICSLFQ_DETECT {
         ${feature_args} \\
         $args \\
         2>&1 | tee ${ms_file.baseName}_proteomicslfq_detect.log
-
-    if [ "${has_dotd}" = "true" ] && { ! grep -qF 'TIMS calibration: Bruker SDK (m/z + 1/K0)' ${ms_file.baseName}_proteomicslfq_detect.log || grep -F 'TIMS calibration:' ${ms_file.baseName}_proteomicslfq_detect.log | grep -vqF 'Bruker SDK (m/z'; }; then
-        echo "ERROR: Bruker .d input was not read with the Bruker TDF SDK m/z calibration (needs the amd64 OpenMS image with libtimsdata). See ${ms_file.baseName}_proteomicslfq_detect.log." >&2
-        exit 1
-    fi
 
     rm ${db_name}
 

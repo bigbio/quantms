@@ -50,9 +50,7 @@
 
 - [ONNX Runtime](https://onnxruntime.ai)
 
-- [OpenTIMS](https://github.com/michalsta/opentims) and the Bruker TDF SDK
-
-  > This software uses Bruker Daltonik software (TDF SDK). Copyright © 2019 by Bruker Daltonik GmbH. All rights reserved.
+- [OpenTIMS](https://github.com/michalsta/opentims)
 
 - [MSstats](https://www.ncbi.nlm.nih.gov/pubmed/24794931/)
 
