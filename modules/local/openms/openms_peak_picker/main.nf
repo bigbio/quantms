@@ -4,8 +4,8 @@ process OPENMS_PEAK_PICKER {
     label 'openms'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'oras://ghcr.io/jpfeuffer/openms-tools-thirdparty-sif:quantms-onnx-bruker' :
-        'ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-bruker' }"
+        'oras://ghcr.io/jpfeuffer/openms-tools-thirdparty-sif:quantms-onnx-v2' :
+        'ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-v2' }"
 
     input:
     tuple val(meta), path(mzml_file)

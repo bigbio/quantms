@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bumped `pmultiqc` to `0.0.47`.
 - Bumped `qpx` to `1.1.5` via the shared `bigbio/qpx/openmsconsensus` nf-module (protein-properties batched rewrite for the pyarrow 2 GB crash on large TMT, bigbio/qpx#338, plus the OpenMS run/identity recovery fixes). The MuData view is now written by `qpxc convert` itself and no longer rebuilt by the module.
-- OpenMS tools image temporarily pinned to the test build `ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-bruker` (OpenMS 3.7.0-pre with ONNX Runtime 1.30.0, PeptDeep models, Bruker TDF SDK on amd64, and OpenMS/OpenMS#9975, #10449, #10450, #10452–#10455, #10460–#10462); to be replaced by the bigbio retag once these are merged.
+- OpenMS tools image temporarily pinned to the test build `ghcr.io/jpfeuffer/openms-tools-thirdparty:quantms-onnx-v2` (OpenMS develop incl. OpenMS/OpenMS#10449, #10452–#10455, #10457, #10461, #10465, #10469, plus open #9975, #10450, #10460 and #10462: ONNX Runtime 1.30.0 and PeptDeep models, no Bruker SDK); to be replaced by the bigbio retag once these are merged.
 
 ## [1.9.0] bigbio/quantms - [06/08/2026] - [Cambridge]
 
