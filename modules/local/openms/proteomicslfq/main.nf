@@ -42,7 +42,6 @@ process PROTEOMICSLFQ {
     // the staged checkpoints. ProteomicsLFQ then takes neither spectra nor identifications.
     def combine = checkpoints instanceof List ? !checkpoints.isEmpty() : checkpoints != null
     def run_inputs = combine ? "-feat_dir feature_checkpoints" : "-in ${mzml_sorted.collect { f -> vendorPath.call(f) }.join(' ')} -ids ${id_sorted.join(' ')}"
-    // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
     // Checkpoints record the FASTA by size and modification time; use the same fixed-time local
     // copy as PROTEOMICSLFQ_DETECT (see there).
     """

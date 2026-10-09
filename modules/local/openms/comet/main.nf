@@ -83,7 +83,6 @@ process COMET {
     // symlinks (as staged by Nextflow), so vendor files are passed by their resolved path.
     // The file name stays the same, so run names still match the experimental design.
     def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
-    // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
     """
     CometAdapter \\
         -in ${vendorPath.call(mzml_file)} \\

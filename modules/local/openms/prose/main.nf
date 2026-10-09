@@ -22,7 +22,6 @@ process PROSE {
     // symlinks (as staged by Nextflow), so vendor files are passed by their resolved path.
     // The file name stays the same, so run names still match the experimental design.
     def vendorPath = { f -> f.name ==~ /(?i).*\.(raw|d)/ ? "\$(readlink -f ${f})" : "${f}" }
-    // Bruker .d m/z values are only correct with the Bruker TDF SDK (open-source approximation: up to ~37 ppm off)
     // ProSE requires enzyme specificity for both termini; 'unspecific cleavage' maps to no specificity.
     def specificity = [fully: 'full', semi: 'semi', none: 'none'][params.num_enzyme_termini]
     if (meta.enzyme == 'unspecific cleavage') {
